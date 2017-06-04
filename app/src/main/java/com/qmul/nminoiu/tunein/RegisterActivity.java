@@ -1,6 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.ProgressDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
@@ -87,10 +91,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         //if validations are ok a progress bar is shown
-        progressDialog.setMessage("Registering User...");
+        progressDialog.setMessage("Registering user...");
         progressDialog.show();
 
-      // firebaseAuth.createUserWithEmailAndPassword(email,passwor).ad
+        firebaseAuth.createUserWithEmailAndPassword(email,passwor).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                  if(task.isSuccessful()){
+                      //user is registered
+                      Toast.makeText(RegisterActivity.this, "Registration successfull", Toast.LENGTH_SHORT).show();
+                      //progressDialog.hide();
+                  }
+                  else{
+                      Toast.makeText(RegisterActivity.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
+
+                  }
+            }
+        });
 
 
     }
