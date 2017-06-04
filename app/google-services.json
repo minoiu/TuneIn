@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "279206932334",
+    "firebase_url": "https://tunein-633e5.firebaseio.com",
+    "project_id": "tunein-633e5",
+    "storage_bucket": "tunein-633e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279206932334:android:14a7153a2b37f9cf",
+        "android_client_info": {
+          "package_name": "com.qmul.nminoiu.tunein"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279206932334-7mt3m0bmqegdcok15kvuf26d39hqc2fv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qmul.nminoiu.tunein",
+            "certificate_hash": "0bd896755877fcea129b70b812604863415869b4"
+          }
+        },
+        {
+          "client_id": "279206932334-otlh90g3hukcjpa9ld8e44f2t78o5r0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBae8otbAOFVV97OjC-S4VQP0JbdEIOwWI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279206932334-otlh90g3hukcjpa9ld8e44f2t78o5r0u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

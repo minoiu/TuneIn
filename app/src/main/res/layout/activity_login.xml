@@ -79,12 +79,19 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/button_selector"
                 android:fontFamily="sans-serif"
-                android:text="@string/button_register"
                 android:onClick="register"
+                android:text="@string/button_register"
                 android:textAlignment="viewStart"
+                android:layout_gravity="start"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimaryDark"
                 android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textViewCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Condition" />
 
         </LinearLayout>
     </ScrollView>
