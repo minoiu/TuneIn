@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity{
     private View mProgressView;
     private View mLoginFormView;
     private FirebaseAuth firebaseAuth;
+    private Button forgotPassword;
     //TextView mConditionTextView;
 
 
@@ -133,6 +134,32 @@ public class LoginActivity extends AppCompatActivity{
 //
 //
 //        }}
+    }
+
+    public void forgotPassword(View v){
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        forgotPassword = (Button)findViewById(R.id.forgotPassword);
+
+        forgotPassword.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                String email = mEmailView.getText().toString().trim();
+
+                firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, "Please check your email to reset password", Toast.LENGTH_LONG).show();
+                            Intent loginIntent = new Intent (LoginActivity.this, LoginActivity.class);
+                            startActivity(loginIntent);
+                        }
+                    }
+                });
+            }
+        });
+
+
     }
 
     public void signin(View v){
