@@ -19,6 +19,9 @@
     <string name="action_register">\"                               Register\"</string>
     <string name="signup_button">Sign up!</string>
     <string name="textViewSignin" translatable="false">Sign in</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>
