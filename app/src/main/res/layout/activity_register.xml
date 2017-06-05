@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.qmul.nminoiu.tunein.LoginActivity">
+    tools:context="com.qmul.nminoiu.tunein.LoginActivity"
+    android:weightSum="1">
 
 
     <!--register progress-->
@@ -24,7 +25,8 @@
     <ScrollView
         android:id="@+id/register_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:fillViewport="false"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
@@ -99,6 +101,38 @@
                 android:onClick="register"
                 android:text="@string/signup_button"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="23dp"
+                android:layout_weight="0.93"
+                android:elevation="14dp"
+                android:gravity="center"
+                android:text="Already have an account?"
+                android:textAlignment="center"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textViewSignin"
+                android:layout_width="match_parent"
+                android:layout_height="23dp"
+                android:autoLink="email"
+                android:text="@string/textViewSignin"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/layoutregister"
+                android:layout_width="match_parent"
+                android:layout_height="171dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

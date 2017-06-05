@@ -1,15 +1,19 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText last_name;
     private AutoCompleteTextView email_register;
     private EditText password;
+    private TextView textViewSignin;
 
     private ProgressDialog progressDialog;
 
@@ -46,6 +51,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         password = (EditText) findViewById(R.id.password);
 
         signup_button.setOnClickListener(this);
+        //textViewSingin.setOnClickListener(this);
+        final TextView textViewSignin = (TextView) this.findViewById(R.id.textViewSignin);
+        textViewSignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
+        });
+
     }
 
     @Override
@@ -54,6 +68,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerUser();
         }
     }
+
+    public void signin(View view){
+        Intent nextActivity = new Intent(this, LoginActivity.class );
+        startActivity(nextActivity);
+    }
+
 
 
     private void registerUser() {
@@ -99,11 +119,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                   if(task.isSuccessful()){
                       //user is registered
-                      Toast.makeText(RegisterActivity.this, "Registration successfull", Toast.LENGTH_SHORT).show();
-                      //progressDialog.hide();
+                      Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                      progressDialog.hide();
+                      Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+                      //i.putExtra("Email", )
+                      startActivity(i);
                   }
                   else{
                       Toast.makeText(RegisterActivity.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
+                      //progressDialog.hide(RegisterActivity.this,LoginActivity.class);
 
                   }
             }
