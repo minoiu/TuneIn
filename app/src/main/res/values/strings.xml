@@ -19,6 +19,12 @@
     <string name="action_register">\"                               Register\"</string>
     <string name="signup_button">Sign up!</string>
     <string name="textViewSignin" translatable="false">Sign in</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>
