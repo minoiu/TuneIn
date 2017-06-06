@@ -22,19 +22,13 @@ public class SettingsActivity extends AppCompatActivity
 
     private TextView email;
     private FirebaseAuth firebaseAuth;
+    private String username = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-        //email = (TextView)findViewById(R.id.emailProfile);
-
-//        firebaseAuth = FirebaseAuth.getInstance();
-//        email = (TextView)findViewById(R.id.emailProfile);
-//        email.setText(firebaseAuth.getCurrentUser().getEmail());
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,14 +50,22 @@ public class SettingsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.emailProfile);
+        nav_user.setText(getIntent().getExtras().getString("Email"));
         toolbar.setTitle("Profile");
-
     }
+
+
+    //nav_header_settings
+
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            email = (TextView) findViewById(R.id.emailProfile);
+            email.setText(getIntent().getExtras().getString("Email"));
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
