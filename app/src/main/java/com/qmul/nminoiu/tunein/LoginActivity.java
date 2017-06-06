@@ -55,8 +55,9 @@ public class LoginActivity extends AppCompatActivity{
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    //private static final  R = ;
 
-   // DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    // DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     //DatabaseReference mConditionRef = mRootRef.child("condition");
 
 
@@ -384,7 +385,7 @@ public class LoginActivity extends AppCompatActivity{
 //                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 //
 //        mEmailView.setAdapter(adapter);
-//    }
+//    }}
 
 
         };
