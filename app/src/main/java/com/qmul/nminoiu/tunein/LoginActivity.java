@@ -364,7 +364,8 @@ public class LoginActivity extends AppCompatActivity{
 //        List<String> emails = new ArrayList<>();
 //        cursor.moveToFirst();
 //        while (!cursor.isAfterLast()) {
-//            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+//            emails.add(cursor.getString(
+// ileQuery.ADDRESS));
 //            cursor.moveToNext();
 //        }
 //
@@ -448,6 +449,6 @@ public class LoginActivity extends AppCompatActivity{
 //            showProgress(false);
 //        }
 
-    }
+
 
 

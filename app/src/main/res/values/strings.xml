@@ -19,6 +19,8 @@
     <string name="action_register">\"                               Register\"</string>
     <string name="signup_button">Sign up!</string>
     <string name="textViewSignin" translatable="false">Sign in</string>
+    <string name="navigation_drawer_open" />
+    <string name="navigation_drawer_close" />
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>
