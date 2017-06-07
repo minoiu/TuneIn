@@ -21,6 +21,7 @@
     <string name="textViewSignin" translatable="false">Sign in</string>
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
+    <string name="title_activity_audio_player">AudioPlayer</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>

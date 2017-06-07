@@ -1,5 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -100,6 +101,8 @@ public class SettingsActivity extends AppCompatActivity
         if (id == R.id.nav_friends) {
             // Handle the camera action
         } else if (id == R.id.nav_Playlists) {
+            Intent nextActivity = new Intent(this, AudioPlayer.class);
+            startActivity(nextActivity);
 
         } else if (id == R.id.nav_delete) {
 

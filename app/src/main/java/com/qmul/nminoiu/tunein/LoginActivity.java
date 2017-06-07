@@ -159,8 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     public void signin(View v) {
