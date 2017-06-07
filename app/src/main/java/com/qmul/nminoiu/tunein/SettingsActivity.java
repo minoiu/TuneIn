@@ -2,8 +2,10 @@ package com.qmul.nminoiu.tunein;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class SettingsActivity extends AppCompatActivity
@@ -24,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity
     private TextView email;
     private FirebaseAuth firebaseAuth;
     private String username = "";
+    private static final String TAG = "MainActivity";
 
 
     @Override
@@ -105,9 +113,41 @@ public class SettingsActivity extends AppCompatActivity
             startActivity(nextActivity);
 
         } else if (id == R.id.nav_delete) {
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+            // Get auth credentials from the user for re-authentication. The example below shows
+            // email and password credentials but there are multiple possible providers,
+            // such as GoogleAuthProvider or FacebookAuthProvider.
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential("user@example.com", "password1234");
+
+            // Prompt the user to re-provide their sign-in credentials
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            user.delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User account deleted.");
+
+
+                                            }
+                                        }
+                                    });
+
+                        }
+                    });
+            Intent nextActivity = new Intent(this, RegisterActivity.class);
+            startActivity(nextActivity);
 
         } else if (id == R.id.nav_logout) {
-
+            FirebaseAuth.getInstance().signOut();
+            Intent nextActivity = new Intent(this, LoginActivity.class);
+            startActivity(nextActivity);
         } else if (id == R.id.nav_Visibility) {
 
         }
@@ -116,4 +156,22 @@ public class SettingsActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+//    private void deleteAccount() {
+//        Log.d(TAG, "ingreso a deleteAccount");
+//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+//        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Log.d(TAG,"OK! Works fine!");
+//                    startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+//                    finish();
+//                } else {
+//                    Log.w(TAG,"Something is wrong!");
+//                }
+//            }
+//        });
+//    }
 }
