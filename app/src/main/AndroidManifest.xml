@@ -29,7 +29,8 @@
             android:name=".SettingsActivity"
             android:label="Profile"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AudioPlayer"></activity>
+        <activity android:name=".AudioPlayer" />
+        <activity android:name=".SearchingActivity" />
     </application>
 
 </manifest>

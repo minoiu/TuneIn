@@ -1,5 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,6 +80,11 @@ public class SettingsActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void searchClick(View v) {
+        Intent i = new Intent(SettingsActivity.this, SearchingActivity.class);
+        startActivity(i);
     }
 
     @Override

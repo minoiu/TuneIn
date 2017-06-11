@@ -25,6 +25,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_search_black_24dp"
+                android:onClick="searchClick"
                 android:paddingBottom="13dp"
                 android:paddingRight="23dp" />
         </android.support.v7.widget.Toolbar>
