@@ -20,7 +20,6 @@
         />
 
 
-
     <com.miguelcatalan.materialsearchview.MaterialSearchView
 
         android:id="@+id/search_view"

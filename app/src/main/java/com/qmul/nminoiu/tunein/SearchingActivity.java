@@ -69,7 +69,7 @@ public class SearchingActivity extends AppCompatActivity {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searching);
+        setContentView(R.layout.activity_settings);
 
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -91,7 +91,6 @@ public class SearchingActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewClosed() {
-
 
 
                 //If closed Search View , lstView will return default

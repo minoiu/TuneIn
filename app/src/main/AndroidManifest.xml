@@ -27,7 +27,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="Profile"
+            android:label="Now playing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
         <activity android:name=".SearchingActivity"
