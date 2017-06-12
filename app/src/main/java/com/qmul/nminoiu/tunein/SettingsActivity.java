@@ -83,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void searchClick(View v) {
+
         Intent i = new Intent(SettingsActivity.this, SearchingActivity.class);
         startActivity(i);
     }

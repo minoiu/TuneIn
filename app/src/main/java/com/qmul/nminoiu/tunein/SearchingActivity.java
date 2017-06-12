@@ -74,7 +74,7 @@ public class SearchingActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Material Search");
+        getSupportActionBar().setTitle("Now Playing");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
         lstView = (ListView)findViewById(R.id.lstView);
@@ -86,11 +86,13 @@ public class SearchingActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewShown() {
-
+                lstView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onSearchViewClosed() {
+
+
 
                 //If closed Search View , lstView will return default
 
@@ -99,6 +101,9 @@ public class SearchingActivity extends AppCompatActivity {
                 ArrayAdapter adapter = new ArrayAdapter(SearchingActivity.this,android.R.layout.simple_list_item_1,lstSource);
 
                 lstView.setAdapter(adapter);
+
+                lstView.setVisibility(View.INVISIBLE);
+
             }
 
         });
@@ -164,6 +169,7 @@ public class SearchingActivity extends AppCompatActivity {
     @Override
 
     public boolean onCreateOptionsMenu(Menu menu) {
+
 
         getMenuInflater().inflate(R.menu.menu_item,menu);
 
