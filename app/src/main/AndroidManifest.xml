@@ -30,8 +30,6 @@
             android:label="Now playing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
-        <activity android:name=".SearchingActivity"
-            android:theme="@style/NewTheme"/>
     </application>
 
 </manifest>
