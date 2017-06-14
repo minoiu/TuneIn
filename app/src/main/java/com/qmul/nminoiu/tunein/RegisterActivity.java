@@ -16,11 +16,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,16 +40,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_register);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         progressDialog = new ProgressDialog(this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         signup_button = (Button) findViewById(R.id.signup_button);
         first_name = (EditText) findViewById(R.id.first_name);
@@ -78,10 +87,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void registerUser() {
-        String email = email_register.getText().toString().trim();
+        final String email = email_register.getText().toString().trim();
         String passwor = password.getText().toString().trim();
-        String firstname = first_name.getText().toString().trim();
-        String lastname = last_name.getText().toString().trim();
+        final String firstname = first_name.getText().toString().trim();
+        final String lastname = last_name.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)) {
             //email is empty
@@ -120,6 +129,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                   if(task.isSuccessful()){
                       //user is registered
+
+                      int index = email.indexOf('@');
+                      String username = email.substring(0,index);
+
+                      Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                      Firebase userRef = ref.child("users");
+                      User newUser = new User(email, firstname, lastname);
+                      userRef.setValue(newUser);
+
+
+
                       Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                       progressDialog.hide();
                       Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
@@ -133,6 +153,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                   }
             }
         });
+
 
 
     }
