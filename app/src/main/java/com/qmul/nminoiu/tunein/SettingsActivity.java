@@ -91,7 +91,7 @@ public class SettingsActivity extends AppCompatActivity
         slistView.setAdapter(adapter);
 
         plistView = (ListView)findViewById(R.id.plistView);
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
+        ArrayAdapter adapterNew = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
         plistView.setAdapter(adapter);
 
         searchLayout = (LinearLayout)findViewById(R.id.searchLayout);
@@ -137,19 +137,19 @@ public class SettingsActivity extends AppCompatActivity
 
                 slistView = (ListView)findViewById(R.id.slistView);
 
-                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistSource);
+                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
 
                 slistView.setAdapter(adapter);
 
 
                 plistView = (ListView)findViewById(R.id.plistView);
 
-                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,plistSource);
+                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
 
                 plistView.setAdapter(adapterNew);
 
 
-                searchLayout.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.INVISIBLE);
 
             }
 
@@ -187,8 +187,9 @@ public class SettingsActivity extends AppCompatActivity
 
 
                     ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstFound);
-
-                    lstView.setAdapter(adapter);
+                    ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstFound);
+                    slistView.setAdapter(adapter);
+                    plistView.setAdapter(adapterNew);
 
                 }
 
@@ -200,8 +201,8 @@ public class SettingsActivity extends AppCompatActivity
 
                     ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
 
-                    lstView.setAdapter(adapter);
-
+                    plistView.setAdapter(adapter);
+                    slistView.setAdapter(adapter);
                 }
 
                 return true;

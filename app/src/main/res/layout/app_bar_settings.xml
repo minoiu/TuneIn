@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.qmul.nminoiu.tunein.SettingsActivity"
     tools:layout_editor_absoluteY="0dp"
-    tools:layout_editor_absoluteX="0dp">
+    tools:layout_editor_absoluteX="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
     <android.support.design.widget.AppBarLayout
@@ -51,7 +52,7 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
 
         android:dividerHeight="5dp"
 
@@ -71,10 +72,19 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="508dp"
+        android:layout_gravity="bottom"
+        android:isScrollContainer="false">
+        >
 
 
     </ScrollView>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
 
     <LinearLayout
         android:id="@+id/searchLayout"
@@ -82,40 +92,50 @@
         android:layout_height="506dp"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:weightSum="1">
 
         <TextView
+            android:id="@+id/stextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
             android:gravity="center_vertical"
             android:text="Songs"
             android:textAlignment="center"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_above="@+id/search_view"/>
+
 
         <ListView
             android:id="@+id/slistView"
             android:layout_width="match_parent"
-            android:layout_height="197dp"
+            android:layout_height="210dp"
             android:layout_below="@+id/toolbar"
             android:layout_gravity="bottom"
             android:layout_marginBottom="1dip"
+            android:layout_weight="0.57"
             android:divider="#806326"
             android:dividerHeight="1dp"
-            android:visibility="visible">
+            android:scrollbars="none"
+            android:visibility="visible"
+            android:maxHeight="210dp"
+            android:layout_above="@+id/stextView">
 
         </ListView>
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/ptextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:gravity="bottom"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
+            android:gravity="center_vertical"
             android:text="Profiles"
             android:textAlignment="center"
-            android:textAllCaps="false"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -123,15 +143,19 @@
 
             android:id="@+id/plistView"
             android:layout_width="match_parent"
-            android:layout_height="218dp"
+            android:layout_height="210dp"
             android:layout_below="@+id/toolbar"
-            android:layout_marginTop="30dip"
+            android:layout_weight="0.34"
             android:divider="#806326"
             android:dividerHeight="1dp"
-            android:visibility="visible" />
+            android:scrollbars="none"
+            android:visibility="visible"
+            android:maxHeight="210dp"
+        />
 
 
     </LinearLayout>
+    </RelativeLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>
