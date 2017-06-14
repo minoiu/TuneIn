@@ -129,14 +129,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                   if(task.isSuccessful()){
                       //user is registered
+                      String username = email_register.getText().toString().trim();
+                      int index = username.indexOf("@");
+                      username = username.substring(0,index);
 
-                      int index = email.indexOf('@');
-                      String username = email.substring(0,index);
 
                       Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                      Firebase userRef = ref.child("users");
+                      Firebase userRef = ref.child("/Storage/Users/").child(username);
                       User newUser = new User(email, firstname, lastname);
                       userRef.setValue(newUser);
+
+
+
 
 
 
