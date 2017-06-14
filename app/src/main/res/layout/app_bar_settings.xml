@@ -36,23 +36,6 @@
 </android.support.v7.widget.Toolbar>
 
 
-<ListView
-
-android:id="@+id/lstView"
-
-android:layout_width="match_parent"
-
-android:layout_height="fill_parent"
-
-android:layout_below="@+id/toolbar"
-
-android:divider="#806326"
-
-android:dividerHeight="1dp"
-
-android:visibility="invisible" />
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="63dp"
@@ -68,7 +51,9 @@ android:visibility="invisible" />
 
         android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
+
+        android:dividerHeight="5dp"
 
         android:textColor="#FFFFFF"
 
@@ -82,9 +67,71 @@ android:visibility="invisible" />
 
         app:searchSuggestionBackground="@color/colorPrimary"
 
-        app:searchSuggestionIcon="@drawable/ic_suggestion"
+        app:searchSuggestionIcon="@drawable/ic_suggestion" />
 
-        />
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="506dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center_vertical"
+            android:text="Songs"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/slistView"
+            android:layout_width="match_parent"
+            android:layout_height="197dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="1dip"
+            android:divider="#806326"
+            android:dividerHeight="1dp"
+            android:visibility="visible">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="bottom"
+            android:text="Profiles"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ListView
+
+            android:id="@+id/plistView"
+            android:layout_width="match_parent"
+            android:layout_height="218dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="30dip"
+            android:divider="#806326"
+            android:dividerHeight="1dp"
+            android:visibility="visible" />
+
+
+    </LinearLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

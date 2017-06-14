@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,8 +39,9 @@ public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     MaterialSearchView searchView;
-
-    ListView lstView;
+    LinearLayout searchLayout;
+    ListView slistView;
+    ListView plistView;
 
     String[] lstSource = {
 
@@ -83,9 +86,15 @@ public class SettingsActivity extends AppCompatActivity
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-        lstView = (ListView)findViewById(R.id.lstView);
+        slistView = (ListView)findViewById(R.id.slistView);
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
-        lstView.setAdapter(adapter);
+        slistView.setAdapter(adapter);
+
+        plistView = (ListView)findViewById(R.id.plistView);
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
+        plistView.setAdapter(adapter);
+
+        searchLayout = (LinearLayout)findViewById(R.id.searchLayout);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -115,7 +124,7 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewShown() {
-                lstView.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.VISIBLE);
 
             }
 
@@ -126,13 +135,21 @@ public class SettingsActivity extends AppCompatActivity
 
                 //If closed Search View , lstView will return default
 
-                lstView = (ListView)findViewById(R.id.lstView);
+                slistView = (ListView)findViewById(R.id.slistView);
 
-                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
+                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistSource);
 
-                lstView.setAdapter(adapter);
+                slistView.setAdapter(adapter);
 
-                lstView.setVisibility(View.INVISIBLE);
+
+                plistView = (ListView)findViewById(R.id.plistView);
+
+                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,plistSource);
+
+                plistView.setAdapter(adapterNew);
+
+
+                searchLayout.setVisibility(View.VISIBLE);
 
             }
 
