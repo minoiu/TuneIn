@@ -75,9 +75,6 @@
         android:layout_height="508dp"
         android:layout_gravity="bottom"
         android:isScrollContainer="false">
-        >
-
-
     </ScrollView>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -122,7 +119,9 @@
             android:scrollbars="none"
             android:visibility="visible"
             android:maxHeight="210dp"
-            android:layout_above="@+id/stextView">
+            android:layout_above="@+id/stextView"
+            android:isScrollContainer="false">
+
 
         </ListView>
 
@@ -151,7 +150,7 @@
             android:scrollbars="none"
             android:visibility="visible"
             android:maxHeight="210dp"
-        />
+            android:isScrollContainer="false"/>
 
 
     </LinearLayout>

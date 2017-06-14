@@ -23,6 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -43,35 +48,15 @@ public class SettingsActivity extends AppCompatActivity
     ListView slistView;
     ListView plistView;
 
-    String[] lstSource = {
-
-            "Harry",
-
-            "Ron",
-
-            "Hermione",
-
-            "Snape",
-
-            "Malfoy",
-
-            "One",
-
-            "Two",
-
-            "Three",
-
-            "Four",
-
-            "Five",
-
-            "Six"
-    };
-
     private TextView email;
     private FirebaseAuth firebaseAuth;
     private String username = "";
     private static final String TAG = "MainActivity";
+    private Firebase mref;
+    private ArrayList<String> musers = new ArrayList<>();
+    private ArrayAdapter<User> adapter;
+
+
 
 
     @Override
@@ -85,13 +70,64 @@ public class SettingsActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Now Playing");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
+        mref= new Firebase("https://tunein-633e5.firebaseio.com/Users/");
+        Firebase childref = mref.child("Users");
+        childref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        slistView = (ListView)findViewById(R.id.slistView);
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
-        slistView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
 
         plistView = (ListView)findViewById(R.id.plistView);
-        ArrayAdapter adapterNew = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
+        plistView.setScrollContainer(false);
+
+
+      //adapter = new FirebaseListAdapter<User>(this,User.class,R.layout.app_bar_settings, mref);
+       // plistView.setAdapter(adapter);
+
+        mref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String value = dataSnapshot.getValue(String.class);
+                musers.add(value);
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String value = dataSnapshot.getValue(String.class);
+                musers.add(value);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        plistView = (ListView)findViewById(R.id.plistView);
+        plistView.setScrollContainer(false);
+
+        ArrayAdapter adapterNew = new ArrayAdapter(this,android.R.layout.simple_list_item_1,musers);
         plistView.setAdapter(adapter);
 
         searchLayout = (LinearLayout)findViewById(R.id.searchLayout);
@@ -137,14 +173,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 slistView = (ListView)findViewById(R.id.slistView);
 
-                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
+                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
 
                 slistView.setAdapter(adapter);
 
 
                 plistView = (ListView)findViewById(R.id.plistView);
 
-                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
+                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
 
                 plistView.setAdapter(adapterNew);
 
@@ -176,7 +212,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     List<String> lstFound = new ArrayList<String>();
 
-                    for(String item:lstSource){
+                    for(String item:musers){
 
                         if(item.contains(newText))
 
@@ -199,10 +235,10 @@ public class SettingsActivity extends AppCompatActivity
 
                     //return default
 
-                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstSource);
+                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
 
                     plistView.setAdapter(adapter);
-                    slistView.setAdapter(adapter);
+                    //slistView.setAdapter(adapter);
                 }
 
                 return true;
@@ -312,6 +348,13 @@ public class SettingsActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+//    public void listUsers(){
+//        Firebase mref;
+//        mref = new Firebase("https://tunein-633e5.firebaseio.com/Storage/Users");
+//        ArrayAdapter uAdapter = new FirebaseListAdapter<User>(this, User.class, R.simple_list_item_1.)
+//
+//    }
 
 //    private void deleteAccount() {
 //        Log.d(TAG, "ingreso a deleteAccount");
