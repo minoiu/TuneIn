@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -87,6 +88,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Firebase.setAndroidContext(this);
+
 
         //mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
         // Set up the login form.
@@ -170,6 +173,18 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if (task.isSuccessful()) {
+
+                    String email = mEmailView.getText().toString().trim();
+                    String username = mEmailView.getText().toString().trim();
+                    int index = username.indexOf("@");
+                    username = username.substring(0,index);
+
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase userRef = ref.child("/Storage/Active Users/").child(username);
+                    User newUser = new User(email);
+                    userRef.setValue(newUser);
+
+
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(LoginActivity.this, SettingsActivity.class);
                     i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());

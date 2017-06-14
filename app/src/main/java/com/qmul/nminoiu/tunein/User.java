@@ -6,12 +6,9 @@ package com.qmul.nminoiu.tunein;
 
 public class User {
 
-    public String username;
     public String email;
     public String firstname;
     public String lastname;
-
-
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -26,7 +23,9 @@ public class User {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
-
     }
 
+    public User(String email) {
+        this.email = email;
+    }
 }
