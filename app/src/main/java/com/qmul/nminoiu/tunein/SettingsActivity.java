@@ -66,11 +66,7 @@ public class SettingsActivity extends AppCompatActivity
 
             "Seven",
 
-            "Eight",
-
-            "Nine",
-
-            "Ten"
+            "Eight"
     };
 
     private TextView email;
