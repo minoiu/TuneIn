@@ -1,39 +1,40 @@
 package com.qmul.nminoiu.tunein;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.Layout;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
@@ -50,13 +51,14 @@ public class SettingsActivity extends AppCompatActivity
 
     private TextView email;
     private FirebaseAuth firebaseAuth;
-    private String username = "";
+   // private String username = "";
     private static final String TAG = "MainActivity";
-    private Firebase mref;
     private ArrayList<String> musers = new ArrayList<>();
-    private ArrayAdapter<User> adapter;
-
-
+    private DatabaseReference myRef;
+    private FirebaseDatabase mFirebaseDatabase;
+    ArrayList<String> list = new ArrayList<>();
+    ArrayAdapter<String> newadapter;
+    //private String userID;
 
 
     @Override
@@ -70,42 +72,27 @@ public class SettingsActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Now Playing");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
-        mref= new Firebase("https://tunein-633e5.firebaseio.com/Users/");
-        Firebase childref = mref.child("Users");
-        childref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-
-        plistView = (ListView)findViewById(R.id.plistView);
+        plistView = (ListView) findViewById(R.id.plistView);
+        newadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,list);
+        plistView.setAdapter(newadapter);
         plistView.setScrollContainer(false);
-
-
-      //adapter = new FirebaseListAdapter<User>(this,User.class,R.layout.app_bar_settings, mref);
-       // plistView.setAdapter(adapter);
-
-        mref.addChildEventListener(new ChildEventListener() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String value = dataSnapshot.getValue(String.class);
-                musers.add(value);
-                adapter.notifyDataSetChanged();
 
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                String userID = user.getUid();
+                String value = dataSnapshot.child("Users").child("gk1DQwHto4dqjseLHZCORxpwJ0k2").child("firstname").getValue(String.class);
+                list.add(value);
+                newadapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String value = dataSnapshot.getValue(String.class);
-                musers.add(value);
-                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -119,18 +106,13 @@ public class SettingsActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-        plistView = (ListView)findViewById(R.id.plistView);
-        plistView.setScrollContainer(false);
 
-        ArrayAdapter adapterNew = new ArrayAdapter(this,android.R.layout.simple_list_item_1,musers);
-        plistView.setAdapter(adapter);
-
-        searchLayout = (LinearLayout)findViewById(R.id.searchLayout);
+        searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -150,12 +132,12 @@ public class SettingsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.emailProfile);
+        View hView = navigationView.getHeaderView(0);
+        TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
         nav_user.setText(getIntent().getExtras().getString("Email"));
-        toolbar.setTitle("Profile");
+        toolbar.setTitle("Now Playing");
 
-        searchView = (MaterialSearchView)findViewById(R.id.search_view);
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
             @Override
@@ -167,30 +149,11 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onSearchViewClosed() {
 
-
-
-                //If closed Search View , lstView will return default
-
-                slistView = (ListView)findViewById(R.id.slistView);
-
-                ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
-
-                slistView.setAdapter(adapter);
-
-
-                plistView = (ListView)findViewById(R.id.plistView);
-
-                ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
-
-                plistView.setAdapter(adapterNew);
-
-
                 searchLayout.setVisibility(View.INVISIBLE);
 
             }
 
         });
-
 
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -208,37 +171,34 @@ public class SettingsActivity extends AppCompatActivity
 
             public boolean onQueryTextChange(String newText) {
 
-                if(newText != null && !newText.isEmpty()){
+                if (newText != null && !newText.isEmpty()) {
 
                     List<String> lstFound = new ArrayList<String>();
 
-                    for(String item:musers){
+                    for (String item : musers) {
 
-                        if(item.contains(newText))
+                        if (item.contains(newText))
 
                             lstFound.add(item);
 
                     }
 
 
+//                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, lstFound);
+//                    ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, lstFound);
+//                    slistView.setAdapter(adapter);
+//                    plistView.setAdapter(adapterNew);
 
-                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstFound);
-                    ArrayAdapter adapterNew = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,lstFound);
-                    slistView.setAdapter(adapter);
-                    plistView.setAdapter(adapterNew);
-
-                }
-
-                else{
+                } else {
 
                     //if search text is null
 
                     //return default
 
-                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,musers);
-
-                    plistView.setAdapter(adapter);
-                    //slistView.setAdapter(adapter);
+//                    ArrayAdapter adapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, musers);
+//
+//                    plistView.setAdapter(adapter);
+                    //slistView.setAdapter(adapter);setAdapter
                 }
 
                 return true;
@@ -249,12 +209,29 @@ public class SettingsActivity extends AppCompatActivity
 
     }
 
+//    private void showData(DataSnapshot dataSnapshot){
+//        //User user = new User();
+//
+//        User user = dataSnapshot.getValue(User.class);
+//
+//        //user.setFirstname(dataSnapshot.child("minaj36").getValue(User.class).getFirstname());
+//       // user.setFirstname(dataSnapshot.child("User").getValue(User.class).getLastname());
+//
+//
+//
+//        ArrayList<String> array = new ArrayList<>();
+//        array.add(user.getFirstname());
+//       // array.add(user.getLastname());
+//        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, array);
+//        plistView.setAdapter(adapter);
+//    }
+
     @Override
 
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
-        getMenuInflater().inflate(R.menu.menu_item,menu);
+        getMenuInflater().inflate(R.menu.menu_item, menu);
 
         MenuItem item = menu.findItem(R.id.action_search);
 
@@ -264,9 +241,8 @@ public class SettingsActivity extends AppCompatActivity
 
     }
 
+
     //nav_header_settings
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -349,34 +325,7 @@ public class SettingsActivity extends AppCompatActivity
         return true;
     }
 
-//    public void listUsers(){
-//        Firebase mref;
-//        mref = new Firebase("https://tunein-633e5.firebaseio.com/Storage/Users");
-//        ArrayAdapter uAdapter = new FirebaseListAdapter<User>(this, User.class, R.simple_list_item_1.)
-//
-//    }
-
-//    private void deleteAccount() {
-//        Log.d(TAG, "ingreso a deleteAccount");
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-//        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG,"OK! Works fine!");
-//                    startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
-//                    finish();
-//                } else {
-//                    Log.w(TAG,"Something is wrong!");
-//                }
-//            }
-//        });
-//    }
-
-
-
-        }
+}
 
 
 
