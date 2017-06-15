@@ -91,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String passwor = password.getText().toString().trim();
         final String firstname = first_name.getText().toString().trim();
         final String lastname = last_name.getText().toString().trim();
+        final String fullname = firstname + " " + lastname;
 
         if (TextUtils.isEmpty(email)) {
             //email is empty
@@ -130,14 +131,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (task.isSuccessful()) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     //user is registered
-                    String username = email_register.getText().toString().trim();
-                    int index = username.indexOf("@");
-                    username = username.substring(0, index);
+                    //String username = email_register.getText().toString().trim();
+                    //int index = username.indexOf("@");
+                    //username = username.substring(0, index);
 
 
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase userRef = ref.child("/Storage/Users/").child(user.getUid());
-                    User newUser = new User(email, firstname, lastname);
+                    User newUser = new User(email, fullname);
                     userRef.setValue(newUser);
 
 
