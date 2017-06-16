@@ -34,6 +34,10 @@ public class User {
         return email;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
