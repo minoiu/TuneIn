@@ -28,6 +28,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
@@ -64,34 +69,9 @@ import java.util.List;
 
         };
 
-        String[] ulistSource = {
+        ArrayList ulistSource;
 
-                "Harry",
 
-                "Ron",
-
-                "Hermione",
-
-                "Snape",
-
-                "Malfoy",
-
-                "One",
-
-                "Two",
-
-                "Three",
-
-                "Four",
-
-                "Five",
-
-                "Six",
-
-                "Seven",
-
-                "Eight"
-        };
 
 
         private TextView email;
@@ -102,6 +82,31 @@ import java.util.List;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
+
+            //retrieve fullnames
+            final List<User> users = new ArrayList<User>();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = database.getReference();
+            databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                    for(DataSnapshot child : children){
+                        User user = child.getValue(User.class);
+
+                            ulistSource.add(user);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_settings);
@@ -117,7 +122,7 @@ import java.util.List;
             slistView.setAdapter(sadapter);
 
             ulistView = (ListView)findViewById(R.id.plistView);
-            ArrayAdapter uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ulistSource);
+            ArrayAdapter<User> uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,users);
             ulistView.setAdapter(uadapter);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -168,7 +173,7 @@ import java.util.List;
 
                     ulistView = (ListView)findViewById(R.id.plistView);
 
-                    ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistSource);
+                    ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistSource);
 
                     ulistView.setAdapter(uadapter);
 
@@ -216,13 +221,16 @@ import java.util.List;
                         slistView.setAdapter(sadapter);
 
 
+
                         List<String> ulistFound = new ArrayList<String>();
 
-                        for(String item:ulistSource){
 
-                            if(item.contains(newText))
+                        for(User user : users){
+                            String name = user.getFullname();
 
-                                ulistFound.add(item);
+                            if(name.contains(newText))
+
+                                ulistFound.add(name);
 
                         }
 
@@ -245,7 +253,7 @@ import java.util.List;
                         slistView.setAdapter(sadapter);
 
 
-                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistSource);
+                        ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
 
                         ulistView.setAdapter(uadapter);
 
