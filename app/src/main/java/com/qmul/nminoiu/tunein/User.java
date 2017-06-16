@@ -6,55 +6,22 @@ package com.qmul.nminoiu.tunein;
 
 public class User {
 
-    public String email;
-    public String firstname;
-    public String lastname;
-    public String fullname;
+    private String fullname;
+    private String email;
 
-    public User() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    public String getFullname() {
+        return fullname;
     }
 
-    public User(String email, String fullname) {
-        this.email = email;
+    public void setFullname(String fullname) {
         this.fullname = fullname;
-    }
-
-    public User(String email, String firstname, String lastname) {
-        this.email = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
-    }
-
-    public User(String email) {
-        this.email = email;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getFullname() {
-        return fullname;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 }

@@ -182,8 +182,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase userRef = ref.child("/Storage/Active Users/").child(username);
-                    User newUser = new User(email);
-                    userRef.setValue(newUser);
+                   // User newUser = new User(email);
+                    //userRef.setValue(newUser);
 
 
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();

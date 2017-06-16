@@ -136,10 +136,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     //username = username.substring(0, index);
 
 
-                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                    Firebase userRef = ref.child("/Storage/Users/").child(user.getUid());
-                    User newUser = new User(email, fullname);
-                    userRef.setValue(newUser);
+//                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+//                    Firebase userRef = ref.child("/Storage/Users/").child(user.getUid());
+//                   // User newUser = new User(email, fullname);
+                    //userRef.setValue(newUser);
 
 
                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();

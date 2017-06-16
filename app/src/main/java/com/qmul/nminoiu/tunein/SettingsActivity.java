@@ -1,5 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,28 +48,26 @@ import java.util.List;
 
         LinearLayout searchLayout;
 
-        ListView slistView;
 
         ListView ulistView;
 
 
-        String[] slistSource = {
-
-                "Can't remember to forget you",
-
-                "Titanic",
-
-                "Alina Baraz",
-
-                "Rude boy",
-
-                "One more time",
-
-                "Ain't nobody",
-
-                "Time for Africa",
-
-        };
+//        String[] slistSource = {
+//
+//                "Can't remember to forget you",
+//
+//                "Titanic",
+//
+//                "Alina Baraz",
+//
+//                "Rude boy",
+//
+//                "One more time",
+//
+//                "Ain't nobody",
+//
+//                "Time for Africa",
+//        };
 
         ArrayList ulistSource;
 
@@ -78,25 +78,67 @@ import java.util.List;
         private FirebaseAuth firebaseAuth;
         private String username = "";
         private static final String TAG = "MainActivity";
+        private ArrayList<String> songs = new ArrayList<>();
+        private DatabaseReference db;
+        private ArrayAdapter<String> sadapter;
+        private ListView slistView;
+      //  Activity view;
+
 
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
+            setContentView(R.layout.app_bar_settings);
 
             //retrieve fullnames
-            final List<User> users = new ArrayList<User>();
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = database.getReference();
-            databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
+            //final List<User> users = new ArrayList<User>();
+
+            db = FirebaseDatabase.getInstance().getReference();
+
+            slistView = (ListView)findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
+            slistView.setAdapter(sadapter);
+            db.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String value = dataSnapshot.getValue(String.class);
+                    songs.add(value);
+                    Log.i(value,"songs");
+                    sadapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+            db.child("Users").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
                     for(DataSnapshot child : children){
-                        User user = child.getValue(User.class);
+//                        User user = child.getValue("fullname");
 
-                            ulistSource.add(user);
+//                            ulistSource.add(user);
                     }
                 }
 
@@ -117,13 +159,17 @@ import java.util.List;
             toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-            slistView = (ListView)findViewById(R.id.slistView);
-            ArrayAdapter sadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,slistSource);
+             slistView = (ListView)findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
             slistView.setAdapter(sadapter);
 
-            ulistView = (ListView)findViewById(R.id.plistView);
-            ArrayAdapter<User> uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,users);
-            ulistView.setAdapter(uadapter);
+//            slistView = (ListView)findViewById(R.id.slistView);
+//            ArrayAdapter sadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,slistSource);
+//            slistView.setAdapter(sadapter);
+
+//            ulistView = (ListView)findViewById(R.id.plistView);
+//            ArrayAdapter<User> uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,users);
+//            ulistView.setAdapter(uadapter);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -164,18 +210,14 @@ import java.util.List;
 
                     //If closed Search View , lstView will return default
 
-                    slistView = (ListView)findViewById(R.id.slistView);
-
-                    ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistSource);
-
-                    slistView.setAdapter(sadapter);
+//
 
 
-                    ulistView = (ListView)findViewById(R.id.plistView);
-
-                    ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistSource);
-
-                    ulistView.setAdapter(uadapter);
+//                    ulistView = (ListView)findViewById(R.id.plistView);
+//
+//                    ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistSource);
+//
+//                    ulistView.setAdapter(uadapter);
 
 
 
@@ -206,7 +248,7 @@ import java.util.List;
 
                         List<String> slistFound = new ArrayList<String>();
 
-                        for(String item:slistSource){
+                        for(String item:songs){
 
                             if(item.contains(newText))
 
@@ -222,23 +264,23 @@ import java.util.List;
 
 
 
-                        List<String> ulistFound = new ArrayList<String>();
-
-
-                        for(User user : users){
-                            String name = user.getFullname();
-
-                            if(name.contains(newText))
-
-                                ulistFound.add(name);
-
-                        }
-
-
-
-                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistFound);
-
-                        ulistView.setAdapter(uadapter);
+//                        List<String> ulistFound = new ArrayList<String>();
+//
+//
+//                        for(User user : users){
+//                            String name = user.getFullname();
+//
+//                            if(name.contains(newText))
+//
+//                                ulistFound.add(name);
+//
+//                        }
+//
+//
+//
+//                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistFound);
+//
+//                        ulistView.setAdapter(uadapter);
 
                     }
 
@@ -248,14 +290,14 @@ import java.util.List;
 
                         //return default
 
-                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistSource);
+                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,songs);
 
                         slistView.setAdapter(sadapter);
-
-
-                        ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
-
-                        ulistView.setAdapter(uadapter);
+//
+//
+//                        ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
+//
+//                        ulistView.setAdapter(uadapter);
 
                     }
 
@@ -300,7 +342,7 @@ import java.util.List;
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-            // Handle action bar item clicks here. The action bar will
+            // Handle actifon bar item clicks here. The action bar will
             // automatically handle clicks on the Home/Up button, so long
             // as you specify a parent activity in AndroidManifest.xml.
             int id = item.getItemId();
