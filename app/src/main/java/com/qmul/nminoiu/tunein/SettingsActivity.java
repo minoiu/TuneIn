@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -209,7 +210,7 @@ import java.util.List;
 //            ArrayAdapter<User> uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,users);
 //            ulistView.setAdapter(uadapter);
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -238,6 +239,8 @@ import java.util.List;
                 @Override
                 public void onSearchViewShown() {
                     searchLayout.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.INVISIBLE);
+
 
                 }
 
@@ -260,6 +263,8 @@ import java.util.List;
 
 
                     searchLayout.setVisibility(View.INVISIBLE);
+                    fab.setVisibility(View.VISIBLE);
+
 
                 }
 
@@ -282,13 +287,14 @@ import java.util.List;
 
                 public boolean onQueryTextChange(String newText) {
 
-                    if(newText != null && !newText.isEmpty()){
+                    if(newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()){
 
                         List<String> ulistFound = new ArrayList<String>();
 
                         for(String item:users){
 
-                            if(item.contains(newText))
+
+                            if(item.toLowerCase().contains(newText.toLowerCase()))
 
                                 ulistFound.add(item);
 
@@ -305,7 +311,7 @@ import java.util.List;
 
                         for(String item:songs){
 
-                            if(item.contains(newText))
+                            if(item.toLowerCase().contains(newText.toLowerCase()))
 
                                 slistFound.add(item);
 
@@ -442,23 +448,17 @@ import java.util.List;
             return true;
         }
 
-//    private void deleteAccount() {
-//        Log.d(TAG, "ingreso a deleteAccount");
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-//        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG,"OK! Works fine!");
-//                    startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
-//                    finish();
-//                } else {
-//                    Log.w(TAG,"Something is wrong!");
-//                }
-//            }
-//        });
-//    }
+
+        public static void hideSoftKeyboard(Activity activity) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) activity.getSystemService(
+                            Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(), 0);
+        }
+
+        //trying media player
+
 
 
 
