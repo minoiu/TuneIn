@@ -93,7 +93,7 @@ import java.util.List;
             //retrieve fullnames
             //final List<User> users = new ArrayList<User>();
 
-            db = FirebaseDatabase.getInstance().getReference();
+            db = FirebaseDatabase.getInstance().getReference().child("Users");
 
             slistView = (ListView)findViewById(R.id.slistView);
             sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
