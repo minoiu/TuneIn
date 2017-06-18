@@ -48,41 +48,20 @@ import java.util.List;
 
         LinearLayout searchLayout;
 
-
-        ListView ulistView;
-
-
-//        String[] slistSource = {
-//
-//                "Can't remember to forget you",
-//
-//                "Titanic",
-//
-//                "Alina Baraz",
-//
-//                "Rude boy",
-//
-//                "One more time",
-//
-//                "Ain't nobody",
-//
-//                "Time for Africa",
-//        };
-
         ArrayList ulistSource;
-
-
-
 
         private TextView email;
         private FirebaseAuth firebaseAuth;
         private String username = "";
         private static final String TAG = "MainActivity";
         private ArrayList<String> songs = new ArrayList<>();
+        private ArrayList<String> users = new ArrayList<>();
         private DatabaseReference db;
+        private DatabaseReference db1;
         private ArrayAdapter<String> sadapter;
+        private ArrayAdapter<String> uadapter;
         private ListView slistView;
-      //  Activity view;
+        private ListView ulistView;
 
 
 
@@ -94,17 +73,22 @@ import java.util.List;
             //final List<User> users = new ArrayList<User>();
 
             db = FirebaseDatabase.getInstance().getReference().child("Users");
+            db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
+
+            ulistView = (ListView)findViewById(R.id.plistView);
+            uadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,users);
+            ulistView.setAdapter(uadapter);
 
             slistView = (ListView)findViewById(R.id.slistView);
             sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
             slistView.setAdapter(sadapter);
+
             db.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     String value = dataSnapshot.getValue(String.class);
-                    songs.add(value);
-                    Log.i(value,"songs");
-                    sadapter.notifyDataSetChanged();
+                    users.add(value);
+                    uadapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -129,7 +113,38 @@ import java.util.List;
             });
 
 
-            db.child("Users").addValueEventListener(new ValueEventListener() {
+            //trying for songs
+
+            db1.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String value = dataSnapshot.getValue(String.class);
+                    songs.add(value);
+                    sadapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            db.child("Songs").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -142,12 +157,35 @@ import java.util.List;
                     }
                 }
 
+
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
             });
 
+
+            db1.child("Users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                    for(DataSnapshot child : children){
+//                        User user = child.getValue("fullname");
+
+//                            ulistSource.add(user);
+                    }
+                }
+
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
 
             super.onCreate(savedInstanceState);
@@ -159,13 +197,13 @@ import java.util.List;
             toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-             slistView = (ListView)findViewById(R.id.slistView);
-            sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
-            slistView.setAdapter(sadapter);
+            ulistView = (ListView)findViewById(R.id.plistView);
+            uadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,users);
+            ulistView.setAdapter(uadapter);
 
-//            slistView = (ListView)findViewById(R.id.slistView);
-//            ArrayAdapter sadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,slistSource);
-//            slistView.setAdapter(sadapter);
+            slistView = (ListView)findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,songs);
+            slistView.setAdapter(sadapter);
 
 //            ulistView = (ListView)findViewById(R.id.plistView);
 //            ArrayAdapter<User> uadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,users);
@@ -246,6 +284,23 @@ import java.util.List;
 
                     if(newText != null && !newText.isEmpty()){
 
+                        List<String> ulistFound = new ArrayList<String>();
+
+                        for(String item:users){
+
+                            if(item.contains(newText))
+
+                                ulistFound.add(item);
+
+                        }
+
+
+
+                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistFound);
+
+                        ulistView.setAdapter(uadapter);
+
+
                         List<String> slistFound = new ArrayList<String>();
 
                         for(String item:songs){
@@ -261,27 +316,6 @@ import java.util.List;
                         ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistFound);
 
                         slistView.setAdapter(sadapter);
-
-
-
-//                        List<String> ulistFound = new ArrayList<String>();
-//
-//
-//                        for(User user : users){
-//                            String name = user.getFullname();
-//
-//                            if(name.contains(newText))
-//
-//                                ulistFound.add(name);
-//
-//                        }
-//
-//
-//
-//                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistFound);
-//
-//                        ulistView.setAdapter(uadapter);
-
                     }
 
                     else{
@@ -290,15 +324,14 @@ import java.util.List;
 
                         //return default
 
+                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
+
+                        ulistView.setAdapter(uadapter);
+//
                         ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,songs);
 
                         slistView.setAdapter(sadapter);
 //
-//
-//                        ArrayAdapter<User> uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
-//
-//                        ulistView.setAdapter(uadapter);
-
                     }
 
                     return true;
