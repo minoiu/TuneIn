@@ -14,8 +14,8 @@ public class AudioPlayer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.app_bar_settings);
-        ImageView play = (ImageView) findViewById(R.id.play);
-        ImageView pause = (ImageView) findViewById(R.id.pause);
+       // ImageView play = (ImageView) findViewById(R.id.play);
+        //ImageView pause = (ImageView) findViewById(R.id.pause);
 
         final MediaPlayer mp = new MediaPlayer();
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);

@@ -77,9 +77,9 @@ class Player extends AsyncTask<String, Void, Boolean> {
         intialStage = false;
     }
 
-    public Player() {
-        progress = new ProgressDialog(Player.this);
-    }
+//    public Player() {
+//        progress = new ProgressDialog(Player.this);
+//    }
 
     @Override
     protected void onPreExecute() {
@@ -89,15 +89,15 @@ class Player extends AsyncTask<String, Void, Boolean> {
         this.progress.show();
 
     }
-}
 
-    @Override
+   // @Override
     protected void onPause() {
         // TODO Auto-generated method stub
-        super.onPause();
+        //super.onPause();
         if (mediaPlayer != null) {
             mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }
     }
+}
