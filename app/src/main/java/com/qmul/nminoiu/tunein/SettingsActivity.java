@@ -619,6 +619,58 @@ import java.util.List;
 //        }
 //    }
 
+
+        public void musicPlay(View playPause) throws IOException {
+
+            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+            final MediaPlayer mediaPlayer = new MediaPlayer();
+//
+            try {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setDataSource(url);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+//                if (mediaPlayer.isPlaying()) {
+//                    mediaPlayer.pause();
+//                    btn.setBackgroundResource(R.drawable.ic_media_play);
+//                } else {
+//                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+
+
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//
+//                public void onPrepared(MediaPlayer mediaPlayer){
+//                    mediaPlayer.start();
+//                }
+//            });
+//
+//
+//            if (mediaPlayer.isPlaying()) {
+//                mediaPlayer.pause();
+//                btn.setBackgroundResource(R.drawable.ic_media_play);
+//            } else {
+//                btn.setBackgroundResource(R.drawable.ic_media_pause);
+//            }
+//
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mediaPlayer.setDataSource(url);
+//            mediaPlayer.prepareAsync();
+//
+//
+//
+//
+//
+//        @Override
+//        protected void onCreate(Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_radio);
+//        }
+
     }
 
 
