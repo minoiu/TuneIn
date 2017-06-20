@@ -175,7 +175,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="30dp"
                 android:background="@android:drawable/ic_media_play"
-                android:onClick="musicPlay" />
+                android:onClick="playSong" />
 
 
         </android.support.v7.widget.Toolbar>

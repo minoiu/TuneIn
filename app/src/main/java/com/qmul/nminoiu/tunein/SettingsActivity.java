@@ -51,6 +51,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import android.view.View.OnClickListener;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,13 +82,11 @@ import java.util.List;
         private ListView ulistView;
         private Toolbar play_toolbar;
         private TextView track_title;
-        private  MediaPlayer mediaPlayer;
+        private MediaPlayer mediaPlayer;
         private StorageReference storage;
         private boolean playPause;
         private boolean intialStage = true;
         private Button btn;
-
-
 
 
         @Override
@@ -101,31 +101,31 @@ import java.util.List;
 //            mp = new MediaPlayer();
 //            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //            fetchAudioUrlFromFirebase();
+            String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
 
             btn = (Button) findViewById(R.id.button);
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            btn.setOnClickListener(pausePlay);
+//            mediaPlayer = new MediaPlayer();
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //btn.setOnClickListener(this);
+//            mediaPlayer.start();
 
             db = FirebaseDatabase.getInstance().getReference().child("Users");
             db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
 
-            ulistView = (ListView)findViewById(R.id.plistView);
-            uadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,users);
+            ulistView = (ListView) findViewById(R.id.plistView);
+            uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
             ulistView.setAdapter(uadapter);
 
-            slistView = (ListView)findViewById(R.id.slistView);
-            sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
+            slistView = (ListView) findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
             slistView.setAdapter(sadapter);
 
-            play_toolbar = (Toolbar)findViewById(R.id.play_toolbar);
+            play_toolbar = (Toolbar) findViewById(R.id.play_toolbar);
 
-            slistView = (ListView)findViewById(R.id.slistView);
-            sadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songs);
+            slistView = (ListView) findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
 
             slistView.setClickable(true);
-
-
 
 
             slistView.setAdapter(sadapter);
@@ -198,13 +198,12 @@ import java.util.List;
 
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-                    for(DataSnapshot child : children){
+                    for (DataSnapshot child : children) {
 //                        User user = child.getValue("fullname");
 
 //                            ulistSource.add(user);
                     }
                 }
-
 
 
                 @Override
@@ -220,13 +219,12 @@ import java.util.List;
 
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-                    for(DataSnapshot child : children){
+                    for (DataSnapshot child : children) {
 //                        User user = child.getValue("fullname");
 
 //                            ulistSource.add(user);
                     }
                 }
-
 
 
                 @Override
@@ -245,13 +243,12 @@ import java.util.List;
             toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-            ulistView = (ListView)findViewById(R.id.plistView);
-            uadapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,users);
+            ulistView = (ListView) findViewById(R.id.plistView);
+            uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
             ulistView.setAdapter(uadapter);
 
-            slistView = (ListView)findViewById(R.id.slistView);
-            sadapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,songs);
-
+            slistView = (ListView) findViewById(R.id.slistView);
+            sadapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, songs);
 
 
             //add click listeners for songs listview
@@ -261,7 +258,7 @@ import java.util.List;
                     String song = ((TextView) view).getText().toString();
                     play_toolbar.setVisibility(View.VISIBLE);
                     //Toast.makeText(SettingsActivity.this, song, Toast.LENGTH_LONG).show();
-                    track_title = (TextView)findViewById(R.id.track_title);
+                    track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
 
 //                    Intent intent = new Intent(SettingsActivity.this, AudioPlayer.class);
@@ -274,7 +271,6 @@ import java.util.List;
 
 
             slistView.setAdapter(sadapter);
-
 
 
             ///trying mediaplayer
@@ -301,13 +297,13 @@ import java.util.List;
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
-            View hView =  navigationView.getHeaderView(0);
-            TextView nav_user = (TextView)hView.findViewById(R.id.emailProfile);
+            View hView = navigationView.getHeaderView(0);
+            TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
             nav_user.setText(getIntent().getExtras().getString("Email"));
             toolbar.setTitle("Profile");
 
-            searchLayout = (LinearLayout)findViewById(R.id.searchLayout);
-            searchView = (MaterialSearchView)findViewById(R.id.search_view);
+            searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
+            searchView = (MaterialSearchView) findViewById(R.id.search_view);
             searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
                 @Override
@@ -318,12 +314,10 @@ import java.util.List;
                     //play_toolbar.setVisibility(View.INVISIBLE);
 
 
-
                 }
 
                 @Override
                 public void onSearchViewClosed() {
-
 
 
                     //If closed Search View , lstView will return default
@@ -338,7 +332,6 @@ import java.util.List;
 //                    ulistView.setAdapter(uadapter);
 
 
-
                     searchLayout.setVisibility(View.INVISIBLE);
                     fab.setVisibility(View.VISIBLE);
 
@@ -346,7 +339,6 @@ import java.util.List;
                 }
 
             });
-
 
 
             searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -364,54 +356,50 @@ import java.util.List;
 
                 public boolean onQueryTextChange(String newText) {
 
-                    if(newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()){
+                    if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
 
                         List<String> ulistFound = new ArrayList<String>();
 
-                        for(String item:users){
+                        for (String item : users) {
 
 
-                            if(item.toLowerCase().contains(newText.toLowerCase()))
+                            if (item.toLowerCase().contains(newText.toLowerCase()))
 
                                 ulistFound.add(item);
 
                         }
 
 
-
-                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,ulistFound);
+                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, ulistFound);
 
                         ulistView.setAdapter(uadapter);
 
 
                         List<String> slistFound = new ArrayList<String>();
 
-                        for(String item:songs){
+                        for (String item : songs) {
 
-                            if(item.toLowerCase().contains(newText.toLowerCase()))
+                            if (item.toLowerCase().contains(newText.toLowerCase()))
 
                                 slistFound.add(item);
 
                         }
 
 
-
-                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,slistFound);
+                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, slistFound);
 
                         slistView.setAdapter(sadapter);
-                    }
-
-                    else{
+                    } else {
 
                         //if search text is null
 
                         //return default
 
-                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,users);
+                        ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, users);
 
                         ulistView.setAdapter(uadapter);
 //
-                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this,android.R.layout.simple_list_item_1,songs);
+                        ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, songs);
 
                         slistView.setAdapter(sadapter);
 //
@@ -430,7 +418,7 @@ import java.util.List;
         public boolean onCreateOptionsMenu(Menu menu) {
 
 
-            getMenuInflater().inflate(R.menu.menu_item,menu);
+            getMenuInflater().inflate(R.menu.menu_item, menu);
 
             MenuItem item = menu.findItem(R.id.action_search);
 
@@ -439,41 +427,6 @@ import java.util.List;
             return true;
 
         }
-
-
-        ///mplay
-
-        private View.OnClickListener pausePlay = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                // TODO Auto-generated method stub
-
-                if (!playPause) {
-                    btn.setBackgroundResource(R.drawable.ic_media_pause);
-                    if (intialStage)
-                        new Player().execute("gs://tunein-633e5.appspot.com/Tracks/The Soul's Release - Catching Fireflies.mp3");
-                    else {
-                        if (!mediaPlayer.isPlaying())
-                            mediaPlayer.start();
-                    }
-                    playPause = true;
-                } else {
-                    btn.setBackgroundResource(R.drawable.ic_media_play);
-                    if (mediaPlayer.isPlaying())
-                        mediaPlayer.pause();
-                    playPause = false;
-                }
-            }
-        };
-
-
-
-
-
-
-        //nav_header_settings
 
 
         @Override
@@ -567,79 +520,150 @@ import java.util.List;
                     activity.getCurrentFocus().getWindowToken(), 0);
         }
 
-        //trying media player
+
+        // btn.setOnClickListener(new OnClickListener() {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        private void fetchAudioUrlFromFirebase() {
-//            storage = FirebaseStorage.getInstance().getReference();
-//// Create a storage reference from our app
-//// StorageReference storageRef = storage.getReferenceFromUrl("PATH_OF_YOUR_AUDIO_FILE");
-//            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    try {
-//                        // Download url of file
-//                        final String url = uri.toString();
-//                        mp.setDataSource(url);
-//                        // wait for media player to get prepare
-//                        mp.setOnPreparedListener(SettingsActivity.this);
-//                        mp.prepareAsync();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.i("TAG", e.getMessage());
-//                        }
-//                    });
-//
-//        }
-//
-//        @Override
-//        public void onPrepared(MediaPlayer mp) {
-//            mp.start();
-//        }
-//    }
-
-
-        public void musicPlay(View playPause) throws IOException {
-
+        public void playSong(View v) {
             final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
             final MediaPlayer mediaPlayer = new MediaPlayer();
-//
-            try {
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.setDataSource(url);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-//                if (mediaPlayer.isPlaying()) {
-//                    mediaPlayer.pause();
-//                    btn.setBackgroundResource(R.drawable.ic_media_play);
-//                } else {
-//                    btn.setBackgroundResource(R.drawable.ic_media_pause);
-//                }
-            } catch (Exception e) {
-                // TODO: handle exception
+            Boolean playOn = true;
+            mediaPlayer.reset();
+
+            if (v.getId() == R.id.button) {
+
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    Button btn = (Button) this.findViewById(R.id.button);
+                    btn.setBackgroundResource(R.drawable.ic_media_play);
+                    playOn = false;
+
+
+                } else {
+
+                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        try {
+                            mediaPlayer.setDataSource(url);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            mediaPlayer.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        mediaPlayer.start();
+                        Button btn = (Button) this.findViewById(R.id.button);
+
+                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                        playOn = true;
+                        //playSong(v);
+                    }
+                }
+            }
+
+            //return v;
+            //nicolemiplaySong(v);
+
+
+        private void stopPlaying() {
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
             }
         }
+    }
+
+
+
+//        View.OnClickListener pausePlay = new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                // TODO Auto-generated method stub
+//
+//                if (!playPause) {
+//                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                    if (intialStage)
+//                        new Player().execute("gs://tunein-633e5.appspot.com/Tracks/The Soul's Release - Catching Fireflies.mp3");
+//                    else {
+//                        if (!mediaPlayer.isPlaying())
+//                            mediaPlayer.start();
+//                    }
+//                    playPause = true;
+//                } else {
+//                    btn.setBackgroundResource(R.drawable.ic_media_play);
+//                    if (mediaPlayer.isPlaying())
+//                        mediaPlayer.pause();
+//                    playPause = false;
+//                }
+//            }
+//        };
+
+
+
+
+
+
+
+//
+//            try {
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                mediaPlayer.setDataSource(url);
+//                mediaPlayer.prepare();
+//                mediaPlayer.start();
+////                if (mediaPlayer.isPlaying()) {
+////                    mediaPlayer.pause();
+////                    btn.setBackgroundResource(R.drawable.ic_media_play);
+////                } else {
+////                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+////                }
+//            } catch (Exception e) {
+//                // TODO: handle exception
+//            }
+//        }
+//
+//        public void musicPause(View playPause) throws IOException {
+//
+//            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//            final MediaPlayer mediaPlayer = new MediaPlayer();
+//
+//            }
+////
+//            try {
+////                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+////                mediaPlayer.setDataSource(url);
+////                mediaPlayer.prepare();
+//                mediaPlayer.pause();
+////                if (mediaPlayer.isPlaying()) {
+////                    mediaPlayer.pause();
+////                    btn.setBackgroundResource(R.drawable.ic_media_play);
+////                } else {
+////                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+////                }
+//            } catch (Exception e) {
+//                // TODO: handle exception
+//            }
+//        }
+
+
+//        public void tryButton(View v) throws IOException {
+//            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//            final MediaPlayer mediaPlayer = new MediaPlayer();
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mediaPlayer.setDataSource(url);
+//            mediaPlayer.prepare();
+//            mediaPlayer.start();
+//
+//            if (mediaPlayer.isPlaying()) {
+//                mediaPlayer.pause();
+//                btn.setBackgroundResource(R.drawable.ic_media_play);
+//            } else {
+//                btn.setBackgroundResource(R.drawable.ic_media_pause);
+//            }
+//        }
 
 
 //            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -671,7 +695,7 @@ import java.util.List;
 //            setContentView(R.layout.activity_radio);
 //        }
 
-    }
+
 
 
 
