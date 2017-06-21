@@ -162,17 +162,16 @@
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="80dp"
-                    android:layout_height="75dp"
+                    android:layout_width="70dp"
+                    android:layout_height="65dp"
                     android:foregroundGravity="left"
-                    android:background="@drawable/headphones" />
+                    android:background="@drawable/note" />
 
                 <TextView
                     android:id="@+id/track_title"
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textAlignment="textStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="20dp"
                     android:textColor="@color/common_google_signin_btn_text_dark_default"
                     android:textSize="13sp"
                     android:textStyle="bold" />
