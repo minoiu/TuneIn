@@ -568,10 +568,12 @@ import java.util.List;
         }
 
         public void playMusic(View v){
+            Integer length =mediaPlayer.getCurrentPosition();;
             final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
             //final MediaPlayer mediaPlayer = new MediaPlayer();
         if(mediaPlayer.isPlaying()){
             mediaPlayer.pause();
+            length = mediaPlayer.getCurrentPosition();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_play);
         } else {
@@ -588,6 +590,7 @@ import java.util.List;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        mediaPlayer.seekTo(length);
                         mediaPlayer.start();
                         Button btn = (Button) this.findViewById(R.id.button);
 
