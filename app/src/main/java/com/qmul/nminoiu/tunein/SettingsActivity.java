@@ -359,8 +359,6 @@ import java.util.List;
                     fab.setVisibility(View.INVISIBLE);
                     play_toolbar.setVisibility(View.GONE);
                     //play_toolbar.setVisibility(View.INVISIBLE);
-
-
                 }
 
                 @Override
@@ -470,6 +468,8 @@ import java.util.List;
             MenuItem item = menu.findItem(R.id.action_search);
 
             searchView.setMenuItem(item);
+
+            play_toolbar.setVisibility(View.GONE);
 
             return true;
 
@@ -662,6 +662,10 @@ import java.util.List;
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
+        }
+
+        public void hideToolbar(){
+            play_toolbar.setVisibility(View.GONE);
         }
 //
 //        public void playSong(View v) {
