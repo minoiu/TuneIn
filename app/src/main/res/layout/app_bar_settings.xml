@@ -77,111 +77,111 @@
         android:isScrollContainer="false">
     </ScrollView>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom">
-
-    <LinearLayout
-        android:id="@+id/searchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="506dp"
         android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:visibility="invisible"
-        android:weightSum="1">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/stextView"
+        <LinearLayout
+            android:id="@+id/searchLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/common_google_signin_btn_text_dark_disabled"
-            android:gravity="center_vertical"
-            android:text="Songs"
-            android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_above="@+id/search_view"/>
-
-
-        <ListView
-            android:id="@+id/slistView"
-            android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:layout_below="@+id/toolbar"
+            android:layout_height="506dp"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="1dip"
-            android:layout_weight="0.57"
-            android:divider="#806326"
-            android:dividerHeight="1dp"
-            android:scrollbars="none"
-            android:visibility="visible"
-            android:maxHeight="210dp"
-            android:layout_above="@+id/stextView"
-            android:isScrollContainer="false">
-
-
-        </ListView>
-
-        <TextView
-            android:id="@+id/ptextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@color/common_google_signin_btn_text_dark_disabled"
-            android:gravity="center_vertical"
-            android:text="Profiles"
-            android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ListView
-
-            android:id="@+id/plistView"
-            android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:layout_below="@+id/toolbar"
-            android:layout_weight="0.34"
-            android:divider="#806326"
-            android:dividerHeight="1dp"
-            android:scrollbars="none"
-            android:visibility="visible"
-            android:maxHeight="210dp"
-            android:isScrollContainer="false"/>
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/play_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="#333333"
-            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:weightSum="1">
 
             <TextView
-                android:id="@+id/track_title"
-                android:layout_width="wrap_content"
+                android:id="@+id/stextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:textAlignment="textStart"
-                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                android:layout_above="@+id/search_view"
+                android:background="@color/common_google_signin_btn_text_dark_disabled"
+                android:gravity="center_vertical"
+                android:text="Songs"
+                android:textAlignment="center"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="30dp"
-                android:background="@android:drawable/ic_media_play"
-                android:onClick="playSong" />
+
+            <ListView
+                android:id="@+id/slistView"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_above="@+id/stextView"
+                android:layout_below="@+id/toolbar"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="1dip"
+                android:layout_weight="0.57"
+                android:divider="#806326"
+                android:dividerHeight="1dp"
+                android:isScrollContainer="false"
+                android:maxHeight="210dp"
+                android:scrollbars="none"
+                android:visibility="visible">
 
 
-        </android.support.v7.widget.Toolbar>
+            </ListView>
+
+            <TextView
+                android:id="@+id/ptextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/common_google_signin_btn_text_dark_disabled"
+                android:gravity="center_vertical"
+                android:text="Profiles"
+                android:textAlignment="center"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ListView
+
+                android:id="@+id/plistView"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_below="@+id/toolbar"
+                android:layout_weight="0.34"
+                android:divider="#806326"
+                android:dividerHeight="1dp"
+                android:isScrollContainer="false"
+                android:maxHeight="210dp"
+                android:scrollbars="none"
+                android:visibility="visible" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/play_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#333333"
+                android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <TextView
+                    android:id="@+id/track_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/common_google_signin_btn_text_dark_default"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="30dp"
+                    android:background="@android:drawable/ic_media_pause"
+                    android:onClick="playMusic" />
 
 
-    </LinearLayout>
+            </android.support.v7.widget.Toolbar>
+
+
+        </LinearLayout>
     </RelativeLayout>
 
 

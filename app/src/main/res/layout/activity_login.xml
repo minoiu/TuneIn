@@ -69,11 +69,11 @@
 
             <Button
                 android:id="@+id/email_sign_in_button"
-                android:onClick="signin"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:onClick="signin"
                 android:text="@string/action_sign_in"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 

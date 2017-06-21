@@ -87,7 +87,8 @@ import java.util.List;
         private boolean playPause;
         private boolean intialStage = true;
         private Button btn;
-
+        private boolean play;
+        private boolean pause;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +102,10 @@ import java.util.List;
 //            mp = new MediaPlayer();
 //            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //            fetchAudioUrlFromFirebase();
-            String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
 
             btn = (Button) findViewById(R.id.button);
-//            mediaPlayer = new MediaPlayer();
+            mediaPlayer = new MediaPlayer();
 //            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             //btn.setOnClickListener(this);
 //            mediaPlayer.start();
@@ -129,6 +130,41 @@ import java.util.List;
 
 
             slistView.setAdapter(sadapter);
+
+//            btn.setOnClickListener(new View.OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                    final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//                    final MediaPlayer mediaPlayer = new MediaPlayer();
+////                    Boolean playOn = false;
+////
+//                    if (mediaPlayer.isPlaying()) {
+//                        mediaPlayer.pause();
+//                        //Button btn = (Button) this.findViewById(R.id.button);
+//                        btn.setBackgroundResource(R.drawable.ic_media_play);
+//                        //playOn = false;
+//
+//
+//                    } else {
+////
+//                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+////                        try {
+////                            mediaPlayer.setDataSource(url);
+//                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
+////                        try {
+//                            mediaPlayer.prepare();
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
+//                        mediaPlayer.start();
+////                        //Button btn = (Button) this.findViewById(R.id.button);
+////                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                    }
+//                }
+//            });
 
 
             db.addChildEventListener(new ChildEventListener() {
@@ -261,11 +297,22 @@ import java.util.List;
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
 
-//                    Intent intent = new Intent(SettingsActivity.this, AudioPlayer.class);
-//                    intent.putExtra("Song", slistView.getItemAtPosition(position).toString());
-//                    //based on item add info to intent
-//
-//                    startActivity(intent);
+                    //final MediaPlayer mediaPlayer = new MediaPlayer();
+
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    try {
+                        mediaPlayer.setDataSource(url);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    mediaPlayer.start();
+
                 }
             });
 
@@ -520,28 +567,17 @@ import java.util.List;
                     activity.getCurrentFocus().getWindowToken(), 0);
         }
 
-
-        // btn.setOnClickListener(new OnClickListener() {
-
-
-        public void playSong(View v) {
+        public void playMusic(View v){
             final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
-            final MediaPlayer mediaPlayer = new MediaPlayer();
-            Boolean playOn = true;
+            //final MediaPlayer mediaPlayer = new MediaPlayer();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_play);
+        } else {
+            //stopPlaying();
             mediaPlayer.reset();
-
-            if (v.getId() == R.id.button) {
-
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    Button btn = (Button) this.findViewById(R.id.button);
-                    btn.setBackgroundResource(R.drawable.ic_media_play);
-                    playOn = false;
-
-
-                } else {
-
-                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         try {
                             mediaPlayer.setDataSource(url);
                         } catch (IOException e) {
@@ -556,14 +592,65 @@ import java.util.List;
                         Button btn = (Button) this.findViewById(R.id.button);
 
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
-                        playOn = true;
-                        //playSong(v);
-                    }
-                }
-            }
+        }
 
-            //return v;
-            //nicolemiplaySong(v);
+    }
+
+
+        // btn.setOnClickListener(new OnClickListener() {
+
+
+//        public void playSong(View v) {
+//            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//            final MediaPlayer mediaPlayer = new MediaPlayer();
+//            Boolean playOn = false;
+//            stopPlaying();
+//
+//                if (mediaPlayer.isPlaying() && playOn) {
+//                    mediaPlayer.pause();
+//                    Button btn = (Button) this.findViewById(R.id.button);
+//                    btn.setBackgroundResource(R.drawable.ic_media_play);
+//                    playOn = false;
+//
+//
+//                } else {
+//
+//                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                        try {
+//                            mediaPlayer.setDataSource(url);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            mediaPlayer.prepare();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        mediaPlayer.start();
+//                        Button btn = (Button) this.findViewById(R.id.button);
+//
+//                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                        playOn = true;
+//
+//                        //playSong(v);
+//                    }
+//                }
+//
+//                btn.setOnClickListener(new View.OnClickListener() {
+//
+//            public void onClick(View view) {
+//
+//                if (mediaPlayer.isPlaying()) {
+//                    mediaPlayer.pause();
+//                } else {
+//                    mediaPlayer.start();
+//                }
+//            }
+//        });
+
+
+        //return v;
+        //nicolemiplaySong(v);
 
 
         private void stopPlaying() {
@@ -573,6 +660,108 @@ import java.util.List;
                 mediaPlayer = null;
             }
         }
+//
+//        public void playSong(View v) {
+//            boolean play = true;
+//            boolean pause = false;
+//
+//            final Button btn = (Button) this.findViewById(R.id.button);
+//            btn.setOnClickListener(new View.OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                    final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//                    final MediaPlayer mediaPlayer = new MediaPlayer();
+//                    Boolean playOn = false;
+//
+//                    if (mediaPlayer.isPlaying()) {
+//                        mediaPlayer.pause();
+//                        //Button btn = (Button) this.findViewById(R.id.button);
+//                        btn.setBackgroundResource(R.drawable.ic_media_play);
+//                        //playOn = false;
+//
+//
+//                    } else {
+//
+//                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                        try {
+//                            mediaPlayer.setDataSource(url);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            mediaPlayer.prepare();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        mediaPlayer.start();
+//                        //Button btn = (Button) this.findViewById(R.id.button);
+//                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                    }
+//                }
+//            });
+//
+
+//   }
+
+
+//        public void pSong(View v) {
+//            play = true;
+//            pause = false;
+//
+//            final Button btn = (Button) this.findViewById(R.id.button);
+//            btn.setOnClickListener(new View.OnClickListener() {
+//
+//
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//
+//                final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
+//                    final MediaPlayer mediaPlayer = new MediaPlayer();
+//                    Boolean playOn = false;
+//
+//                    if (play) {
+//                        play = false;
+//                        pause = true;
+//                        btn.setBackgroundResource(R.drawable.ic_media_play);
+//
+//
+//                        //mediaPlayer.pause();
+//                        //Button btn = (Button) this.findViewById(R.id.button);
+//                        //playOn = false;
+//
+//                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                        try {
+//                            mediaPlayer.setDataSource(url);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            mediaPlayer.prepare();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        btn.setClickable(true);
+//                        mediaPlayer.start();
+//
+//                        //Button btn = (Button) this.findViewById(R.id.button);
+//                    }
+//                    if(pause){
+//                        play = true;
+//                        pause = false;
+//
+//                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+//                        mediaPlayer.pause();
+//                        btn.setClickable(true);
+//
+//                    }
+//                }
+//            });
+//
+//        }
+
     }
 
 
