@@ -35,6 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,10 +57,12 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import android.view.View.OnClickListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-    public class SettingsActivity extends AppCompatActivity
+public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
         MaterialSearchView searchView;
@@ -71,6 +75,7 @@ import java.util.List;
         private ArrayList<String> users = new ArrayList<>();
         private DatabaseReference db;
         private DatabaseReference db1;
+        private DatabaseReference db2;
         private ArrayAdapter<String> sadapter;
         private ArrayAdapter<String> uadapter;
         private ListView slistView;
@@ -98,6 +103,7 @@ import java.util.List;
             //getting users and songs from database
             db = FirebaseDatabase.getInstance().getReference().child("Users");
             db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
+            db2 = FirebaseDatabase.getInstance().getReference().child("URL");
 
             ulistView = (ListView) findViewById(R.id.plistView);
             uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
@@ -187,6 +193,8 @@ import java.util.List;
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                     for (DataSnapshot child : children) {
+                        Toast.makeText(SettingsActivity.this, dataSnapshot.toString().trim(), Toast.LENGTH_LONG).show();
+
                     }
                 }
 
@@ -223,6 +231,20 @@ import java.util.List;
                     play_toolbar.setVisibility(View.VISIBLE);
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
+
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase songRef = ref.child("Test").child(song);
+
+
+                   String newurl = songRef.toString();
+                   Toast.makeText(SettingsActivity.this, newurl, Toast.LENGTH_LONG).show();
+
+
+
+
+//                    String songID = songPos.toString().trim().getKey().toString();
+
+
 
                     //starting media player when song is clicked
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
