@@ -89,13 +89,13 @@ public class SettingsActivity extends AppCompatActivity
         private Button btn;
         private boolean play;
         private boolean pause;
+        private String url;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             setContentView(R.layout.app_bar_settings);
 
             //media player
-            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
             btn = (Button) findViewById(R.id.button);
             mediaPlayer = new MediaPlayer();
             play_toolbar = (Toolbar) findViewById(R.id.play_toolbar);
@@ -235,31 +235,24 @@ public class SettingsActivity extends AppCompatActivity
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("Test").child(song);
 
+                    songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                            for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                btn.setBackgroundResource(R.drawable.ic_media_play);
+                                url = String.valueOf(dsp.getValue());
+                                startMusic(url);
+                            }
+                        }
 
-                   String newurl = songRef.toString();
-                   Toast.makeText(SettingsActivity.this, newurl, Toast.LENGTH_LONG).show();
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
 
+                        }
+                    });
 
+                    Toast.makeText(SettingsActivity.this, url, Toast.LENGTH_LONG).show();
 
-
-//                    String songID = songPos.toString().trim().getKey().toString();
-
-
-
-                    //starting media player when song is clicked
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    try {
-                        mediaPlayer.setDataSource(url);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        mediaPlayer.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    btn.setBackgroundResource(R.drawable.ic_media_pause);
-                    mediaPlayer.start();
 
                 }
             });
@@ -441,33 +434,64 @@ public class SettingsActivity extends AppCompatActivity
                     activity.getCurrentFocus().getWindowToken(), 0);
         }
 
+        public void startMusic(String link) {
+            mediaPlayer.reset();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
+                mediaPlayer.setDataSource(link);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            btn.setBackgroundResource(R.drawable.ic_media_pause);
+            mediaPlayer.start();
+        }
+
+        public void stopMusic(Integer length) {
+            length = mediaPlayer.getCurrentPosition();
+            btn.setBackgroundResource(R.drawable.ic_media_play);
+            mediaPlayer.pause();
+        }
+
+
         //play song method with signle button background handling
-        public void playMusic(View v) {
+        public void playPauseMusic(View v) {
+
             Integer length = mediaPlayer.getCurrentPosition();
-            final String url = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/Tracks%2FMotoramaGhost.mp3?alt=media&token=98a5ad87-82d9-431c-88ef-59a9e659cde6";
             if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
                 length = mediaPlayer.getCurrentPosition();
+                mediaPlayer.pause();
                 Button btn = (Button) this.findViewById(R.id.button);
                 btn.setBackgroundResource(R.drawable.ic_media_play);
             } else {
-                mediaPlayer.reset();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 mediaPlayer.seekTo(length);
-                mediaPlayer.start();
+                playFromPause(length,url);
                 Button btn = (Button) this.findViewById(R.id.button);
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
             }
+        }
+
+        public void playFromPause(Integer time, String link){
+            mediaPlayer.reset();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
+                mediaPlayer.setDataSource(link);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mediaPlayer.seekTo(time);
+            mediaPlayer.start();
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_pause);
         }
     }
 
