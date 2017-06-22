@@ -250,10 +250,6 @@ public class SettingsActivity extends AppCompatActivity
 
                         }
                     });
-
-                    Toast.makeText(SettingsActivity.this, url, Toast.LENGTH_LONG).show();
-
-
                 }
             });
             slistView.setAdapter(sadapter);
