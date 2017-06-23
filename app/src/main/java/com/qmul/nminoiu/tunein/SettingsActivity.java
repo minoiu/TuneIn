@@ -120,6 +120,7 @@ public class SettingsActivity extends AppCompatActivity
             sadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
             slistView.setAdapter(sadapter);
 
+            ulistView.setClickable(true);
             slistView.setClickable(true);
 
             //event listener for users
@@ -228,6 +229,20 @@ public class SettingsActivity extends AppCompatActivity
             //loading songs in slistView
             slistView = (ListView) findViewById(R.id.slistView);
             sadapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, songs);
+
+            //add click listenerr for users in ulistView
+            ulistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    String user = ((TextView) view).getText().toString();
+                    play_toolbar.setVisibility(View.GONE);
+                    play_toolbar.requestLayout();
+                }
+            });
+
+
+
 
             //add click listeners for songs listview
             //showing clicked song in play_toolbar
