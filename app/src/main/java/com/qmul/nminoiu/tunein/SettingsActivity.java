@@ -81,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity
         private ArrayAdapter<String> uadapter;
         private ListView slistView;
         private ListView ulistView;
-        private Toolbar play_toolbar;
+        private LinearLayout play_toolbar;
         private TextView track_title;
         private MediaPlayer mediaPlayer;
         private StorageReference storage;
@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity
             //media player
             btn = (Button) findViewById(R.id.button);
             mediaPlayer = new MediaPlayer();
-            play_toolbar = (Toolbar) findViewById(R.id.play_toolbar);
+            play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
 
             //getting users and songs from database
             db = FirebaseDatabase.getInstance().getReference().child("Users");
