@@ -151,43 +151,49 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="20dp"
             android:background="#333333"
-            android:visibility="visible"
-            android:weightSum="1">
+            android:visibility="gone"
+            android:weightSum="1"
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
+                android:layout_margin="@dimen/fab_margin"
                 android:background="@drawable/musicone"
                 android:foregroundGravity="left"
-                android:layout_margin="@dimen/fab_margin"/>
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/track_title"
                 android:layout_width="150dp"
                 android:layout_height="17dp"
-                android:layout_marginLeft="30dp"
                 android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="0.82"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textSize="13sp"
-                android:layout_margin="@dimen/fab_margin"
                 android:textStyle="bold"
-                android:layout_weight="0.82" />
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
                 android:background="@android:drawable/ic_media_pause"
                 android:foregroundGravity="center_vertical"
-                android:onClick="playPauseMusic" />
-
+                android:onClick="playPauseMusic"
+                android:visibility="visible" />
+        </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+
+
+
 
 
 

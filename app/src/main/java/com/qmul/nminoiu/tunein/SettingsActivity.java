@@ -9,12 +9,15 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.WidgetContainer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,6 +54,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -91,6 +95,7 @@ public class SettingsActivity extends AppCompatActivity
         private boolean play;
         private boolean pause;
         private String url;
+        private Handler mResultHandler;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +103,9 @@ public class SettingsActivity extends AppCompatActivity
 
             //media player
             btn = (Button) findViewById(R.id.button);
-            mediaPlayer = new MediaPlayer();
             play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+            mediaPlayer = new MediaPlayer();
+
 
             //getting users and songs from database
             db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -228,8 +234,12 @@ public class SettingsActivity extends AppCompatActivity
             slistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                     String song = ((TextView) view).getText().toString();
                     play_toolbar.setVisibility(View.VISIBLE);
+                    play_toolbar.requestLayout();
+                    play_toolbar.bringToFront();
+
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
 
@@ -239,8 +249,14 @@ public class SettingsActivity extends AppCompatActivity
                     songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                         @Override
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 btn.setBackgroundResource(R.drawable.ic_media_pause);
+                                play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+                                play_toolbar.bringToFront();
+                                play_toolbar.setVisibility(View.VISIBLE);
+                                play_toolbar.requestLayout();
+                                play_toolbar.invalidate();
                                 url = String.valueOf(dsp.getValue());
                                 startMusic(url);
                             }
@@ -290,7 +306,7 @@ public class SettingsActivity extends AppCompatActivity
                 public void onSearchViewShown() {
                     searchLayout.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.INVISIBLE);
-                    play_toolbar.setVisibility(View.GONE);
+                    play_toolbar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -347,7 +363,6 @@ public class SettingsActivity extends AppCompatActivity
             getMenuInflater().inflate(R.menu.menu_item, menu);
             MenuItem item = menu.findItem(R.id.action_search);
             searchView.setMenuItem(item);
-            play_toolbar.setVisibility(View.GONE);
             return true;
         }
 
@@ -432,6 +447,9 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         public void startMusic(String link) {
+            play_toolbar.setVisibility(View.VISIBLE);
+            play_toolbar.bringToFront();
+
             mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
@@ -450,6 +468,8 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         public void stopMusic(Integer length) {
+            play_toolbar.setVisibility(View.VISIBLE);
+            play_toolbar.bringToFront();
             length = mediaPlayer.getCurrentPosition();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_play);
@@ -459,6 +479,9 @@ public class SettingsActivity extends AppCompatActivity
 
         //play song method with signle button background handling
         public void playPauseMusic(View v) {
+
+            play_toolbar.setVisibility(View.VISIBLE);
+            play_toolbar.bringToFront();
 
             Integer length = mediaPlayer.getCurrentPosition();
             if (mediaPlayer.isPlaying()) {
@@ -475,6 +498,8 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         public void playFromPause(Integer time, String link){
+            play_toolbar.setVisibility(View.VISIBLE);
+            play_toolbar.bringToFront();
             mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
