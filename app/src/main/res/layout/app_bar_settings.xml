@@ -74,12 +74,14 @@
     <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"
-        android:layout_height="511dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_gravity="bottom"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:visibility="invisible"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="-30dp"
         android:weightSum="1">
 
         <TextView
@@ -104,7 +106,7 @@
             android:layout_below="@+id/toolbar"
             android:layout_gravity="bottom"
             android:layout_marginBottom="1dip"
-            android:layout_weight="0.57"
+            android:layout_weight="0.40"
             android:divider="#806326"
             android:dividerHeight="1dp"
             android:isScrollContainer="false"
@@ -134,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:layout_below="@+id/toolbar"
-            android:layout_weight="0.34"
+            android:layout_weight="0.40"
             android:divider="#806326"
             android:dividerHeight="1dp"
             android:isScrollContainer="false"
