@@ -14,12 +14,10 @@ import java.io.IOException;
 
 class Player extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog progress;
-    private  MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private boolean intialStage = true;
     private boolean playPause;
     private Button btn;
-
-
 
     @Override
     protected Boolean doInBackground(String... params) {

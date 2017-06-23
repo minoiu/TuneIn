@@ -87,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity
         private ListView slistView;
         private ListView ulistView;
         private LinearLayout play_toolbar;
-        private TextView track_title;
+        public TextView track_title;
         private MediaPlayer mediaPlayer;
         private StorageReference storage;
         private boolean playPause;
@@ -95,8 +95,9 @@ public class SettingsActivity extends AppCompatActivity
         private Button btn;
         private boolean play;
         private boolean pause;
-        private String url;
+        public static String url;
         private Handler mResultHandler;
+        public static String song;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -258,7 +259,7 @@ public class SettingsActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    String song = ((TextView) view).getText().toString();
+                    song = ((TextView) view).getText().toString();
                     play_toolbar.setVisibility(View.VISIBLE);
                     play_toolbar.requestLayout();
                     play_toolbar.bringToFront();
@@ -541,7 +542,7 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         public void openPlayerPage(View v){
-            Intent i = new Intent(SettingsActivity.this, RegisterActivity.class);
+            Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
             startActivity(i);
         }
     }
