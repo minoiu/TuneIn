@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -193,7 +194,7 @@ public class SettingsActivity extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                     for (DataSnapshot child : children) {
-                        Toast.makeText(SettingsActivity.this, dataSnapshot.toString().trim(), Toast.LENGTH_LONG).show();
+                       // Toast.makeText(SettingsActivity.this, dataSnapshot.toString().trim(), Toast.LENGTH_LONG).show();
 
                     }
                 }
@@ -239,7 +240,7 @@ public class SettingsActivity extends AppCompatActivity
                         @Override
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                btn.setBackgroundResource(R.drawable.ic_media_play);
+                                btn.setBackgroundResource(R.drawable.ic_media_pause);
                                 url = String.valueOf(dsp.getValue());
                                 startMusic(url);
                             }
@@ -255,7 +256,7 @@ public class SettingsActivity extends AppCompatActivity
             slistView.setAdapter(sadapter);
 
             // TODO: 21/06/2017 chat button and function
-            final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            final ImageButton fab = (ImageButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -443,12 +444,14 @@ public class SettingsActivity extends AppCompatActivity
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
             mediaPlayer.start();
         }
 
         public void stopMusic(Integer length) {
             length = mediaPlayer.getCurrentPosition();
+            Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_play);
             mediaPlayer.pause();
         }
