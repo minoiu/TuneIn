@@ -150,10 +150,12 @@
             android:layout_height="100dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="20dp"
+            android:animateLayoutChanges="true"
             android:background="#333333"
+            android:clickable="true"
+            android:onClick="openPlayerPage"
             android:visibility="gone"
-            android:weightSum="1"
-            android:animateLayoutChanges="true">
+            android:weightSum="1">
 
             <ImageView
                 android:id="@+id/imageView2"

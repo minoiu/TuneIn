@@ -30,6 +30,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -122,6 +123,7 @@ public class SettingsActivity extends AppCompatActivity
 
             ulistView.setClickable(true);
             slistView.setClickable(true);
+            play_toolbar.setClickable(true);
 
             //event listener for users
             db.addChildEventListener(new ChildEventListener() {
@@ -231,7 +233,7 @@ public class SettingsActivity extends AppCompatActivity
             sadapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, songs);
 
             //add click listenerr for users in ulistView
-            ulistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            ulistView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -241,12 +243,18 @@ public class SettingsActivity extends AppCompatActivity
                 }
             });
 
-
-
+            //ass click listener for play bar
+            play_toolbar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(SettingsActivity.this, RegisterActivity.class);
+                    startActivity(i);
+                }
+            });
 
             //add click listeners for songs listview
             //showing clicked song in play_toolbar
-            slistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            slistView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -254,7 +262,6 @@ public class SettingsActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                     play_toolbar.requestLayout();
                     play_toolbar.bringToFront();
-
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
 
@@ -531,6 +538,11 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.start();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
+        }
+
+        public void openPlayerPage(View v){
+            Intent i = new Intent(SettingsActivity.this, RegisterActivity.class);
+            startActivity(i);
         }
     }
 
