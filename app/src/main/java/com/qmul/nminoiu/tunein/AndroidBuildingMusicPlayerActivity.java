@@ -28,12 +28,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private ImageButton btnPlaylist;
 	private ImageButton btnRepeat;
 	private ImageButton btnShuffle;
-	private SeekBar songProgressBar;
+	public static SeekBar songProgressBar;
 	private TextView songTitleLabel;
 	private TextView songCurrentDurationLabel;
 	private TextView songTotalDurationLabel;
 	// Media Player
-	private MediaPlayer mp;
+//	private MediaPlayer mp;
 	// Handler to update UI timer, progress bar etc,.
 	private Handler mHandler = new Handler();
 	;
@@ -67,19 +67,19 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
 
 		// Mediaplayer
-		mp = new MediaPlayer();
+//		mp = new MediaPlayer();
 		songManager = new SongsManager();
 		utils = new Utilities();
 //
 		// Listeners
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
-		mp.setOnCompletionListener(this); // Important
+		SettingsActivity.mediaPlayer.setOnCompletionListener(this); // Important
 
 //		// Getting all songs list
 //		songsList = songManager.getPlayList();
 //
 //		// By default play first song
-//		playSong(0);
+		//playSong(0);
 //
 //		/**
 //		 * Play button click event
@@ -91,16 +91,16 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// check for already playing
-				if (mp.isPlaying()) {
-					if (mp != null) {
-						mp.pause();
+				if (SettingsActivity.mediaPlayer.isPlaying()) {
+					if (SettingsActivity.mediaPlayer != null) {
+						SettingsActivity.mediaPlayer.pause();
 						// Changing button image to play button
 						btnPlay.setImageResource(R.drawable.btn_play);
 					}
 				} else {
 					// Resume song
-					if (mp != null) {
-						mp.start();
+					if (SettingsActivity.mediaPlayer != null) {
+						SettingsActivity.mediaPlayer.start();
 						// Changing button image to pause button
 						btnPlay.setImageResource(R.drawable.btn_pause);
 					}
@@ -118,14 +118,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = mp.getCurrentPosition();
+				int currentPosition = SettingsActivity.mediaPlayer.getCurrentPosition();
 				// check if seekForward time is lesser than song duration
-				if (currentPosition + seekForwardTime <= mp.getDuration()) {
+				if (currentPosition + seekForwardTime <= SettingsActivity.mediaPlayer.getDuration()) {
 					// forward song
-					mp.seekTo(currentPosition + seekForwardTime);
+					SettingsActivity.mediaPlayer.seekTo(currentPosition + seekForwardTime);
 				} else {
 					// forward to end position
-					mp.seekTo(mp.getDuration());
+					SettingsActivity.mediaPlayer.seekTo(SettingsActivity.mediaPlayer.getDuration());
 				}
 			}
 		});
@@ -139,14 +139,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = mp.getCurrentPosition();
+				int currentPosition = SettingsActivity.mediaPlayer.getCurrentPosition();
 				// check if seekBackward time is greater than 0 sec
 				if (currentPosition - seekBackwardTime >= 0) {
 					// forward song
-					mp.seekTo(currentPosition - seekBackwardTime);
+					SettingsActivity.mediaPlayer.seekTo(currentPosition - seekBackwardTime);
 				} else {
 					// backward to starting position
-					mp.seekTo(0);
+					SettingsActivity.mediaPlayer.seekTo(0);
 				}
 
 			}
@@ -215,31 +215,32 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				}
 			}
 		});
-	}
-//
+
+
 //		/**
 //		 * Button Click event for Shuffle button
 //		 * Enables shuffle flag to true
 //		 * */
-//		btnShuffle.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				if(isShuffle){
-//					isShuffle = false;
-//					Toast.makeText(getApplicationContext(), "Shuffle is OFF", Toast.LENGTH_SHORT).show();
-//					btnShuffle.setImageResource(R.drawable.btn_shuffle);
-//				}else{
-//					// make repeat to true
-//					isShuffle= true;
-//					Toast.makeText(getApplicationContext(), "Shuffle is ON", Toast.LENGTH_SHORT).show();
-//					// make shuffle to false
-//					isRepeat = false;
-//					btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
-//					btnRepeat.setImageResource(R.drawable.btn_repeat);
-//				}
-//			}
-//		});
+		btnShuffle.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				if (isShuffle) {
+					isShuffle = false;
+					Toast.makeText(getApplicationContext(), "Shuffle is OFF", Toast.LENGTH_SHORT).show();
+					btnShuffle.setImageResource(R.drawable.btn_shuffle);
+				} else {
+					// make repeat to true
+					isShuffle = true;
+					Toast.makeText(getApplicationContext(), "Shuffle is ON", Toast.LENGTH_SHORT).show();
+					// make shuffle to false
+					isRepeat = false;
+					btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
+					btnRepeat.setImageResource(R.drawable.btn_repeat);
+				}
+			}
+		});
+	}
 //
 //		/**
 //		 * Button Click event for Play list click event
@@ -269,21 +270,23 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 //         	 // play selected song
 //             playSong(currentSongIndex);
 //        }
-//
 //    }
-//
+
 		/**
 		 * Function to play a song
 		 * @param songIndex - index of song
 		 * */
 
 	public void playSong(int songIndex) {
+
+		//btnPlay.setImageResource(R.drawable.btn_pause);
+
 		// Play song
 		try {
-			mp.reset();
-			mp.setDataSource(songsList.get(songIndex).get("songPath"));
-			mp.prepare();
-			mp.start();
+			SettingsActivity.mediaPlayer.reset();
+			SettingsActivity.mediaPlayer.setDataSource(SettingsActivity.url);
+			SettingsActivity.mediaPlayer.prepare();
+			SettingsActivity.mediaPlayer.start();
 
 			// Displaying Song title
 			String songTitle = SettingsActivity.song;
@@ -306,7 +309,6 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			e.printStackTrace();
 		}
 	}
-//
 
 	/**
 	 * Update timer on seekbar
@@ -320,8 +322,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 */
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			long totalDuration = mp.getDuration();
-			long currentDuration = mp.getCurrentPosition();
+			long totalDuration = SettingsActivity.mediaPlayer.getDuration();
+			long currentDuration = SettingsActivity.mediaPlayer.getCurrentPosition();
 
 			// Displaying Total Duration time
 			songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
@@ -337,40 +339,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			mHandler.postDelayed(this, 100);
 		}
 	};
-//
-//	/**
-//	 *
-//	 * */
-//	@Override
-//	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-//
-//	}
-//
-//	/**
-//	 * When user starts moving the progress handler
-//	 * */
-//	@Override
-//	public void onStartTrackingTouch(SeekBar seekBar) {
-//		// remove message Handler from updating progress bar
-//		mHandler.removeCallbacks(mUpdateTimeTask);
-//    }
-//
-//	/**
-//	 * When user stops moving the progress hanlder
-//	 * */
-//	@Override
-//    public void onStopTrackingTouch(SeekBar seekBar) {
-//		mHandler.removeCallbacks(mUpdateTimeTask);
-//		int totalDuration = mp.getDuration();
-//		int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
-//
-//		// forward or backward to certain seconds
-//		mp.seekTo(currentPosition);
-//
-//		// update timer progress again
-//		updateProgressBar();
-//    }
-//
+
+
 	/**
 	 * On Song Playing completed
 	 * if repeat is ON play same song again
@@ -404,7 +374,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	@Override
 	 public void onDestroy(){
 	 super.onDestroy();
-	    mp.release();
+		SettingsActivity.mediaPlayer.release();
 }
 
 	@Override
@@ -414,12 +384,24 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-
+//		// remove message Handler from updating progress bar
+		mHandler.removeCallbacks(mUpdateTimeTask);
 	}
 
+	//	/**
+	//	 * When user stops moving the progress hanlder
+	//	 * */
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
+		mHandler.removeCallbacks(mUpdateTimeTask);
+		int totalDuration = SettingsActivity.mediaPlayer.getDuration();
+		int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
 
+		// forward or backward to certain seconds
+		SettingsActivity.mediaPlayer.seekTo(currentPosition);
+
+		// update timer progress again
+		updateProgressBar();
 	}
 }
 

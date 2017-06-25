@@ -95,11 +95,14 @@ public class LoginActivity extends AppCompatActivity {
         //mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView.setText("nicoleminoiu@gmail.com");
+
         // populateAutoComplete();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setText("123456");
 //        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
 //            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

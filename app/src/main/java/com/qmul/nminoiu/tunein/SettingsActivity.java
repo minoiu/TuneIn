@@ -88,7 +88,7 @@ public class SettingsActivity extends AppCompatActivity
         private ListView ulistView;
         private LinearLayout play_toolbar;
         public TextView track_title;
-        private MediaPlayer mediaPlayer;
+        public static MediaPlayer mediaPlayer;
         private StorageReference storage;
         private boolean playPause;
         private boolean intialStage = true;
@@ -514,10 +514,15 @@ public class SettingsActivity extends AppCompatActivity
                 btn.setBackgroundResource(R.drawable.ic_media_play);
             } else {
                 mediaPlayer.seekTo(length);
-                playFromPause(length,url);
+                playFromPause(length, url);
                 Button btn = (Button) this.findViewById(R.id.button);
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
             }
+
+            AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
+            AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
+
+            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
         }
 
         public void playFromPause(Integer time, String link){
