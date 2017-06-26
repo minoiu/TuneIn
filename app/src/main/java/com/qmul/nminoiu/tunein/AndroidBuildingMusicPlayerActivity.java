@@ -74,6 +74,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		// Listeners
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
 		SettingsActivity.mediaPlayer.setOnCompletionListener(this); // Important
+        SettingsActivity.mediaPlayer.getCurrentPosition();
+        songProgressBar.setProgress(SettingsActivity.mediaPlayer.getCurrentPosition());
+        songProgressBar.setMax(100);
+//
+        // Updating progress bar
+        updateProgressBar();
 
 //		// Getting all songs list
 //		songsList = songManager.getPlayList();

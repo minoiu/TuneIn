@@ -485,6 +485,7 @@ public class SettingsActivity extends AppCompatActivity
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
+                updateProgressBar();
             }
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
@@ -520,8 +521,9 @@ public class SettingsActivity extends AppCompatActivity
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
             }
 
-            AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-            AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
+            mediaPlayer.getCurrentPosition();
+            //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
+            //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
 
             new AndroidBuildingMusicPlayerActivity().updateProgressBar();
         }
@@ -538,6 +540,7 @@ public class SettingsActivity extends AppCompatActivity
             }
             try {
                 mediaPlayer.prepare();
+                updateProgressBar();
             } catch (IOException e) {
                 e.printStackTrace();
             }
