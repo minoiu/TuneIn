@@ -30,8 +30,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private ImageButton btnShuffle;
 	public static SeekBar songProgressBar;
 	private TextView songTitleLabel;
-	private TextView songCurrentDurationLabel;
-	private TextView songTotalDurationLabel;
+	public static TextView songCurrentDurationLabel;
+	public static TextView songTotalDurationLabel;
 	// Media Player
 //	private MediaPlayer mp;
 	// Handler to update UI timer, progress bar etc,.

@@ -98,6 +98,7 @@ public class SettingsActivity extends AppCompatActivity
         public static String url;
         private Handler mResultHandler;
         public static String song;
+        private Handler mHandler;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -550,5 +551,35 @@ public class SettingsActivity extends AppCompatActivity
             Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
             startActivity(i);
         }
+
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    /**
+     * Background Runnable thread
+     */
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            Utilities utils = new Utilities();
+            long totalDuration = SettingsActivity.mediaPlayer.getDuration();
+            long currentDuration = SettingsActivity.mediaPlayer.getCurrentPosition();
+
+            // Displaying Total Duration time
+            AndroidBuildingMusicPlayerActivity.songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            AndroidBuildingMusicPlayerActivity.songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
+
+
     }
 
