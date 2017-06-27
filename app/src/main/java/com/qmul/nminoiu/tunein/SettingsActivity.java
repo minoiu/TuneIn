@@ -255,7 +255,7 @@ public class SettingsActivity extends AppCompatActivity
             });
 
             //add click listeners for songs listview
-            //showing clicked song in play toolbar
+            //showing clicked song in play toolbar.
             slistView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
