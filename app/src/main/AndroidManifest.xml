@@ -30,6 +30,7 @@
             android:label="Now playing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
+        <activity android:name=".Users" />
         <activity
             android:name=".AndroidBuildingMusicPlayerActivity"
             android:label="@string/app_name"
