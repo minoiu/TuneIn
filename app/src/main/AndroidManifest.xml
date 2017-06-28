@@ -44,7 +44,8 @@
 
         <activity
             android:name=".PlayListActivity" />
-        <activity android:name=".Chat" />
+        <activity android:name=".Chat"
+            android:label="Chat" />
     </application>
 
 </manifest>
