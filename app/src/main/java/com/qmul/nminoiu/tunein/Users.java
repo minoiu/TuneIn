@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,9 @@ public class Users extends AppCompatActivity {
     ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> uadapter;
     private DatabaseReference db;
+    private DatabaseReference db1;
+    private String value;
+
     private FirebaseAuth firebaseAuth;
 
 
@@ -54,7 +58,13 @@ public class Users extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        FirebaseUser currentuser = firebaseAuth.getCurrentUser();
+        String curUser = currentuser.getUid().toString();
+
         db = FirebaseDatabase.getInstance().getReference().child("Users");
+        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+
+
 
         usersList = (ListView) findViewById(R.id.usersList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
@@ -89,25 +99,32 @@ public class Users extends AppCompatActivity {
             }
         });
 
+        db1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                value = dataSnapshot.getValue(String.class);
+                UserDetails.username = value;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String user = ((TextView) view).getText().toString();
                 UserDetails.chatWith = user;
-                FirebaseUser currentuser = firebaseAuth.getCurrentUser();
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase userRef = ref.child("Users").child(currentuser.getUid());
+
                 //Map<String,Object> uinfo = new HashMap<String, Object>();
-                String curUser = currentuser.getEmail().toString();
 
-
-
-
-                UserDetails.username = curUser;
-
-
-                Toast.makeText(Users.this, UserDetails.username, Toast.LENGTH_LONG).show();
+                Toast.makeText(Users.this, UserDetails.username, Toast.LENGTH_SHORT).show();
 
 
                 startActivity(new Intent(Users.this, Chat.class));
