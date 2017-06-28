@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private AutoCompleteTextView email_register;
     private EditText password;
     private TextView textViewSignin;
+    public static String fullname;
 
     private ProgressDialog progressDialog;
 
@@ -91,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String passwor = password.getText().toString().trim();
         final String firstname = first_name.getText().toString().trim();
         final String lastname = last_name.getText().toString().trim();
-        final String fullname = firstname + " " + lastname;
+        fullname = firstname + " " + lastname;
 
         if (TextUtils.isEmpty(email)) {
             //email is empty

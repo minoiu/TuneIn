@@ -111,7 +111,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
             //getting users and songs from database
-            db = FirebaseDatabase.getInstance().getReference().child("Users");
+            db = FirebaseDatabase.getInstance().getReference().child("UsersList");
             db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
             db2 = FirebaseDatabase.getInstance().getReference().child("URL");
 
@@ -187,7 +187,7 @@ public class SettingsActivity extends AppCompatActivity
                 }
             });
 
-            db.child("Users").addValueEventListener(new ValueEventListener() {
+            db.child("UsersList").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Iterable<DataSnapshot> children = dataSnapshot.getChildren();
