@@ -45,7 +45,11 @@
         <activity
             android:name=".PlayListActivity" />
         <activity android:name=".Chat"
-            android:label="Chat" />
+            android:label="Chat" >
+            </activity>
+        <activity android:name=".ScrollingActivity" >
+            </activity>
+
     </application>
 
 </manifest>
