@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 public class ScrollingActivity extends AppCompatActivity {
 
+    public static String fullname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
         TextView name = (TextView) findViewById(R.id.name);
         name.setText(UserDetails.username);
+        User user = new User();
+        //user.setFullname(UserDetails.chatWith);
+
+        fullname = UserDetails.chatWith;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -32,7 +38,6 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ScrollingActivity.this, RequestActivity.class);
                 startActivity(i);
-                Toast.makeText(ScrollingActivity.this, "Friend request sent", Toast.LENGTH_LONG).show();
 
             }
         });

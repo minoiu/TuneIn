@@ -49,6 +49,8 @@
             </activity>
         <activity android:name=".ScrollingActivity" >
             </activity>
+        <activity android:name=".RequestActivity" >
+        </activity>
 
     </application>
 
