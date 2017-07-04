@@ -60,6 +60,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.onesignal.OneSignal;
+
 import android.view.View.OnClickListener;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,10 +101,24 @@ public class SettingsActivity extends AppCompatActivity
         private Handler mResultHandler;
         public static String song;
         private Handler mHandler;
+        private FirebaseAuth firebaseAuth1;
+        private FirebaseUser user;
+        public static String loggedEmail;
+        private String ID;
 
-        @Override
+
+
+
+    @Override
         protected void onCreate(Bundle savedInstanceState) {
             setContentView(R.layout.app_bar_settings);
+
+            //setting notification tags for current user
+            firebaseAuth1 = FirebaseAuth.getInstance();
+            user = firebaseAuth1.getCurrentUser();
+            loggedEmail = user.getEmail();
+            ID = user.getUid();
+            OneSignal.sendTag("User_ID", loggedEmail);
 
             //media player
             btn = (Button) findViewById(R.id.button);

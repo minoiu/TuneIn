@@ -118,10 +118,6 @@ public class LoginActivity extends AppCompatActivity {
 
         //setting notification tags for current user
         firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
-        loggedEmail = user.getEmail();
-        ID = user.getUid();
-        OneSignal.sendTag("User_ID", loggedEmail);
 
 
         mPasswordView = (EditText) findViewById(R.id.password);
