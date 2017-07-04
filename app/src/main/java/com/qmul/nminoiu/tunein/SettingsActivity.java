@@ -113,7 +113,9 @@ public class SettingsActivity extends AppCompatActivity
         protected void onCreate(Bundle savedInstanceState) {
             setContentView(R.layout.app_bar_settings);
 
-            //setting notification tags for current user
+            OneSignal.startInit(this).init();
+
+        //setting notification tags for current user
             firebaseAuth1 = FirebaseAuth.getInstance();
             user = firebaseAuth1.getCurrentUser();
             loggedEmail = user.getEmail();
