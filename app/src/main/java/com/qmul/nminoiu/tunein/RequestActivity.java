@@ -22,7 +22,9 @@ import com.onesignal.OneSignal;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class RequestActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
     private String sender;
+    private String receiver;
+
 
     private Firebase reference;
     private ArrayList<String> requests = new ArrayList<>();
@@ -49,23 +53,23 @@ public class RequestActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         String user = firebaseAuth.getCurrentUser().getUid();
-        String loggedUserEmail = firebaseAuth.getCurrentUser().getEmail();
+        sender = firebaseAuth.getCurrentUser().getEmail();
 
         // reference = new Firebase("https://tunein-633e5.firebaseio.com/FriendRequests/" + user);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("FriendRequests").child(user);
-        //mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(UserDetails.username).child("Email");
 
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(UserDetails.username)){
-                   Toast.makeText(RequestActivity.this, "Already sent a friend request", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
                 }
                 else{
                     final Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("Accepted", "false");
+                    map.put("Date", getDate());
                     mDatabase.child(UserDetails.username).updateChildren(map);
-                    Toast.makeText(RequestActivity.this, "Friend request sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RequestActivity.this, "You are now following " + UserDetails.username, Toast.LENGTH_SHORT).show();
                     sendNotification();
                 }
             }
@@ -75,6 +79,22 @@ public class RequestActivity extends AppCompatActivity {
 
             }
         });
+
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                receiver = dataSnapshot.getValue().toString();
+                Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -95,10 +115,10 @@ public class RequestActivity extends AppCompatActivity {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (LoginActivity.loggedEmail.equals("nicoleminoiu@gmail.com")) {
-                        send_email = "lili@ana.com";
+                    if (LoginActivity.loggedEmail.equals(sender)) {
+                        send_email = receiver;
                     } else {
-                        send_email = "nicoleminoiu@gmail.com";
+                        send_email = sender;
                     }
 
                     try {
@@ -153,5 +173,13 @@ public class RequestActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public String getDate(){
+        Date date = new Date();
+        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String stringdate = dt.format(newDate);
+        return stringdate;
     }
 }

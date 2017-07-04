@@ -215,9 +215,6 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(LoginActivity.this, SettingsActivity.class);
                     i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
                     startActivity(i);
-                    final Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("Email", loggedEmail);
-                    mDatabase.child(ID).updateChildren(map);
 
                 } else {
                     Log.e("ERROR", task.getException().toString());
