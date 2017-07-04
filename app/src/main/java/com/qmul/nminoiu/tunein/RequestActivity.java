@@ -117,6 +117,9 @@ public class RequestActivity extends AppCompatActivity {
                     //This is a Simple Logic to Send Notification different Device Programmatically....
                     if (LoginActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
+                        Toast.makeText(RequestActivity.this, UserDetails.receiver, Toast.LENGTH_SHORT).show();
+
+
                     } else {
                         send_email = sender;
                     }
