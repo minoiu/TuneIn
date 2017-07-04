@@ -3,6 +3,7 @@ package com.qmul.nminoiu.tunein;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
 import android.content.CursorLoader;
@@ -31,6 +32,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.onesignal.OneSignal;
+
+
 
 
 import com.firebase.client.Firebase;
@@ -45,7 +50,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -83,7 +90,12 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
     private FirebaseAuth firebaseAuth;
     private Button forgotPassword;
+    private FirebaseUser user;
     //TextView mConditionTextView;
+    public static String loggedEmail;
+    private DatabaseReference mDatabase;
+    private String ID;
+
 
 
     @Override
@@ -92,15 +104,25 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Firebase.setAndroidContext(this);
 
+        OneSignal.startInit(this).init();
+        //String loggedEmail = firebaseAuth.getCurrentUser().getEmail();
 
         //mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText("nicoleminoiu@gmail.com");
+        //mEmailView.setText("nicoleminoiu@gmail.com");
 
-        // populateAutoComplete();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Emails");
+
+
+        //setting notification tags for current user
         firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        loggedEmail = user.getEmail();
+        ID = user.getUid();
+        OneSignal.sendTag("User_ID", loggedEmail);
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setText("123456");
@@ -193,6 +215,9 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(LoginActivity.this, SettingsActivity.class);
                     i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
                     startActivity(i);
+                    final Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("Email", loggedEmail);
+                    mDatabase.child(ID).updateChildren(map);
 
                 } else {
                     Log.e("ERROR", task.getException().toString());
