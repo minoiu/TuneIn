@@ -40,7 +40,6 @@ public class RequestActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
     private String sender;
-    private String receiver;
 
 
     private Firebase reference;
@@ -54,10 +53,12 @@ public class RequestActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         String user = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
+        //final String receiver;
 
         // reference = new Firebase("https://tunein-633e5.firebaseio.com/FriendRequests/" + user);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(UserDetails.username).child("Email");
+       // receiver = mDatabase1.get
 
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
@@ -83,9 +84,8 @@ public class RequestActivity extends AppCompatActivity {
         mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                receiver = dataSnapshot.getValue().toString();
-                Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -116,7 +116,7 @@ public class RequestActivity extends AppCompatActivity {
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
                     if (LoginActivity.loggedEmail.equals(sender)) {
-                        send_email = receiver;
+                        send_email = UserDetails.receiver;
                     } else {
                         send_email = sender;
                     }
