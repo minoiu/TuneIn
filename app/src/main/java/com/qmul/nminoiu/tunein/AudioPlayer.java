@@ -39,9 +39,7 @@ public class AudioPlayer extends AppCompatActivity {
 //        pause.setOnClickListener(new View.OnClickListener(){
 //            @Override
 //            public void onClick(View v){
-//                mp.stop();
-//            }
-//        });
+//                mp.stop()
 
 
     }
