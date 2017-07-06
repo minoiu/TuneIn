@@ -109,9 +109,16 @@ public class SettingsActivity extends AppCompatActivity
         private String ID;
         private DatabaseReference mDatabase;
         private DatabaseReference mDatabase1;
+        private DatabaseReference mDatabase2;
+        private DatabaseReference mDatabase3;
+
+
 
         public String fullname;
-        LinearLayout nowPlayingLayout;
+        public boolean following;
+        public boolean nowPlaying;
+
+    LinearLayout nowPlayingLayout;
 
 
 
@@ -134,8 +141,13 @@ public class SettingsActivity extends AppCompatActivity
 
 
             mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-            mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(ID);
+
             getFulname();
+            mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(fullname);
+            mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
+            mDatabase3 = FirebaseDatabase.getInstance().getReference().child("NowListening");
+            checkNowPlaying();
+            checkFollowing();
 
 
         //media player
@@ -427,11 +439,8 @@ public class SettingsActivity extends AppCompatActivity
 
     private void nowPlaying(String songName) {
 
-        Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(user.getUid());
+        Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(fullname);
         Map<String,Object> uinfo4 = new HashMap<String, Object>();
-        uinfo4.put("Name",fullname);
-        //Toast.makeText(SettingsActivity.this, getFulname(), Toast.LENGTH_SHORT).show();
-
         uinfo4.put("Song",songName);
         ref4.updateChildren(uinfo4);
 
@@ -675,6 +684,55 @@ public class SettingsActivity extends AppCompatActivity
 
         });
 
+    }
+
+    public void checkFollowing(){
+
+        mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(fullname)){
+                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                    following = true;
+                }
+                else{
+                    following = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void checkNowPlaying(){
+
+        mDatabase3.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(fullname)){
+                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                    nowPlaying = true;
+                }
+                else{
+                    nowPlaying = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void displayOnHomepage()
+    {
+        checkFollowing();
+        checkNowPlaying();
+        if (following && nowPlaying) {
+            //add song to text view
+        }
     }
 }
 
