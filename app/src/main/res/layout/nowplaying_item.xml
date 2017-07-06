@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nowPlaying"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/feed_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -36,8 +37,9 @@
                 android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
 
             <LinearLayout
-                android:layout_width="388dp"
-                android:layout_height="77dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.85"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/feed_item_profile_info_padd">
 
@@ -65,27 +67,16 @@
 
                 <Button
                     android:id="@+id/button3"
-                    android:layout_width="77dp"
-                    android:layout_height="37dp"
+                    android:layout_width="37dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
+                    android:background="@drawable/btn_play"
                     android:scaleType="fitCenter"
-                    android:text="SYNC"
                     android:textAlignment="center"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="8sp" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/sync"
-                android:layout_width="67dp"
-                android:layout_height="35dp"
-                android:layout_gravity="bottom"
-                android:fontFamily="sans-serif-smallcaps"
-                android:gravity="center_vertical"
-                android:scaleType="fitCenter"
-                android:text="SYNC"
-                android:textAlignment="center"
-                android:textAllCaps="false" />
 
 
         </LinearLayout>

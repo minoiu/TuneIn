@@ -70,6 +70,8 @@ import java.util.List;
 import java.util.Map;
 
 
+
+
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -105,6 +107,11 @@ public class SettingsActivity extends AppCompatActivity
         private FirebaseUser user;
         public static String loggedEmail;
         private String ID;
+        private DatabaseReference mDatabase;
+        private DatabaseReference mDatabase1;
+
+        public String fullname;
+        LinearLayout nowPlayingLayout;
 
 
 
@@ -122,7 +129,16 @@ public class SettingsActivity extends AppCompatActivity
             ID = user.getUid();
             OneSignal.sendTag("User_ID", loggedEmail);
 
-            //media player
+
+            nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
+
+
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+            mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(ID);
+            getFulname();
+
+
+        //media player
             btn = (Button) findViewById(R.id.button);
             play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
             mediaPlayer = new MediaPlayer();
@@ -259,6 +275,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     String user = ((TextView) view).getText().toString();
                     play_toolbar.setVisibility(View.GONE);
+                    nowPlayingLayout.setVisibility(View.GONE);
                     play_toolbar.requestLayout();
 
                     UserDetails.username = user;
@@ -307,6 +324,7 @@ public class SettingsActivity extends AppCompatActivity
                                 play_toolbar.invalidate();
                                 url = String.valueOf(dsp.getValue());
                                 startMusic(url);
+                                nowPlaying(song);
                             }
                         }
 
@@ -317,6 +335,7 @@ public class SettingsActivity extends AppCompatActivity
                     });
                 }
             });
+
             slistView.setAdapter(sadapter);
 
             // TODO: 21/06/2017 chat button and function
@@ -352,6 +371,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 @Override
                 public void onSearchViewShown() {
+                    nowPlayingLayout.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.INVISIBLE);
                     play_toolbar.setVisibility(View.VISIBLE);
@@ -405,7 +425,20 @@ public class SettingsActivity extends AppCompatActivity
             });
         }
 
-        //showing searching layout
+    private void nowPlaying(String songName) {
+
+        Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(user.getUid());
+        Map<String,Object> uinfo4 = new HashMap<String, Object>();
+        uinfo4.put("Name",fullname);
+        //Toast.makeText(SettingsActivity.this, getFulname(), Toast.LENGTH_SHORT).show();
+
+        uinfo4.put("Song",songName);
+        ref4.updateChildren(uinfo4);
+
+    }
+
+
+    //showing searching layout
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             getMenuInflater().inflate(R.menu.menu_item, menu);
@@ -538,6 +571,8 @@ public class SettingsActivity extends AppCompatActivity
                 mediaPlayer.pause();
                 Button btn = (Button) this.findViewById(R.id.button);
                 btn.setBackgroundResource(R.drawable.ic_media_play);
+                eraseFromFirebase();
+
             } else {
                 mediaPlayer.seekTo(length);
                 playFromPause(length, url);
@@ -549,10 +584,26 @@ public class SettingsActivity extends AppCompatActivity
             //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
             //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
 
-            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
         }
 
-        public void playFromPause(Integer time, String link){
+    private void eraseFromFirebase() {
+        mDatabase1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+    }
+
+    public void playFromPause(Integer time, String link){
             play_toolbar.setVisibility(View.VISIBLE);
             play_toolbar.bringToFront();
             mediaPlayer.reset();
@@ -564,7 +615,7 @@ public class SettingsActivity extends AppCompatActivity
             }
             try {
                 mediaPlayer.prepare();
-                updateProgressBar();
+              //  updateProgressBar();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -572,6 +623,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.start();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
+            nowPlaying(song);
         }
 
         public void openPlayerPage(View v){
@@ -608,5 +660,21 @@ public class SettingsActivity extends AppCompatActivity
     };
 
 
+    public void getFulname() {
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                fullname = dataSnapshot.getValue().toString();
+                Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
     }
+}
 

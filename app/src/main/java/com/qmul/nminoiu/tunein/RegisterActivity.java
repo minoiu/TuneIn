@@ -152,6 +152,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     uinfo2.put("Email",email);
                     ref2.updateChildren(uinfo2);
 
+                    Firebase ref3 = new Firebase("https://tunein-633e5.firebaseio.com/").child("Fullname").child(user.getUid());
+                    Map<String,Object> uinfo3 = new HashMap<String, Object>();
+                    uinfo3.put("Name",fullname);
+                    ref3.updateChildren(uinfo3);
+
 
                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     progressDialog.hide();

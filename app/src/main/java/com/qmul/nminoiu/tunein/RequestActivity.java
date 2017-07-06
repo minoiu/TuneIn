@@ -40,6 +40,7 @@ public class RequestActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
     private String sender;
+    private Boolean following;
 
 
     private Firebase reference;
@@ -65,6 +66,7 @@ public class RequestActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(UserDetails.username)){
                    Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                    following = true;
                 }
                 else{
                     final Map<String, Object> map = new HashMap<String, Object>();
@@ -72,6 +74,7 @@ public class RequestActivity extends AppCompatActivity {
                     mDatabase.child(UserDetails.username).updateChildren(map);
                     Toast.makeText(RequestActivity.this, "You are now following " + UserDetails.username, Toast.LENGTH_SHORT).show();
                     sendNotification();
+                    following = false;
                 }
             }
 

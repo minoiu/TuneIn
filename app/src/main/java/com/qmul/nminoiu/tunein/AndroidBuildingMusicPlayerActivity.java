@@ -409,5 +409,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		// update timer progress again
 		updateProgressBar();
 	}
+
+	public void showSong(){
+
+	}
 }
 
