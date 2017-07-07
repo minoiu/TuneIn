@@ -79,6 +79,7 @@
 
         <include
             layout="@layout/nowplaying_item"
+            android:id="@+id/test1"
             android:visibility="visible" />
 
     </LinearLayout>

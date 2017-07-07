@@ -212,6 +212,8 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
                     startActivity(i);
 
+
+
                 } else {
                     Log.e("ERROR", task.getException().toString());
                     Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();

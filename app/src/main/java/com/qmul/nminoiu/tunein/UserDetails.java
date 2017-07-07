@@ -6,4 +6,7 @@ public class UserDetails {
     static String chatWith = "";
     static String receiver = "";
     static String fullname = "";
+    static Boolean nowPlaying = false;
+    static Boolean following = false;
+
 }
