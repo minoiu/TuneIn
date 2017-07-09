@@ -55,7 +55,7 @@
         android:cropToPadding="false"
         android:scaleType="fitCenter"
         android:background="@xml/roundcorner"
-        app:srcCompat="@mipmap/ic_note" />
+        app:srcCompat="@drawable/music" />
 
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView
