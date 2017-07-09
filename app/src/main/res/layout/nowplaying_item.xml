@@ -9,6 +9,8 @@
     android:visibility="visible">
 
     <LinearLayout
+        android:id="@+id/nowPlaying1"
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
 
@@ -22,6 +24,8 @@
         android:weightSum="1">
 
         <LinearLayout
+            android:id="@+id/nowPlaying2"
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.05"
@@ -34,10 +38,12 @@
                 android:id="@+id/profilePic"
                 android:layout_width="77dp"
                 android:layout_height="77dp"
-                android:layout_weight="0.21"
+                android:layout_weight="0.01"
                 android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
 
             <LinearLayout
+                android:id="@+id/nowPlaying3"
+
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.85"
@@ -46,14 +52,14 @@
 
                 <TextView
                     android:id="@+id/name"
-                    android:layout_width="377dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Lili Ana"
                     android:textSize="@dimen/feed_item_profile_name"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="376dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Now playing:"
                     android:textColor="@color/timestamp"
@@ -61,9 +67,10 @@
 
                 <TextView
                     android:id="@+id/songName"
-                    android:layout_width="378dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Drake -Best I've ever had" />
+
+                    android:text="Drake - Best I've ever had" />
 
                 <Button
                     android:id="@+id/button3"

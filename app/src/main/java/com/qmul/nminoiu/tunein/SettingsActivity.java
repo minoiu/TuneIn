@@ -63,14 +63,14 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.onesignal.OneSignal;
 
 import android.view.View.OnClickListener;
+
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-
 
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,8 +93,7 @@ public class SettingsActivity extends AppCompatActivity
         private LinearLayout play_toolbar;
         public TextView track_title;
         public TextView sName;
-
-    public static MediaPlayer mediaPlayer;
+        public static MediaPlayer mediaPlayer;
         private StorageReference storage;
         private boolean playPause;
         private boolean intialStage = true;
@@ -114,59 +113,56 @@ public class SettingsActivity extends AppCompatActivity
         private DatabaseReference mDatabase2;
         private DatabaseReference mDatabase3;
         private DatabaseReference mDatabase4;
-
-
-
-
-    public String fullname;
+        private View nowPlayingLayout;
+        public String fullname;
         public boolean following;
         public boolean nowPlaying;
-
-    LinearLayout nowPlayingLayout;
-
-
+        public TextView tv;
+        public ImageButton fab;
+        public ImageButton fab1;
 
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
-            setContentView(R.layout.app_bar_settings);
+            //setContentView(savedInstanceState);
 
-            OneSignal.startInit(this).init();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+
+        //setStartUpScreenText() ;
+
+            tv = (TextView) findViewById(R.id.songName);
+//            tv.setText("please work!!");
+            fab = (ImageButton) findViewById(R.id.fab);
+            fab1 = (ImageButton) findViewById(R.id.fab1);
+            fab.bringToFront();
+            fab1.bringToFront();
 
 
-        //setting notification tags for current user
+        OneSignal.startInit(this).init();
+
+            //setting notification tags for current user
             firebaseAuth1 = FirebaseAuth.getInstance();
             user = firebaseAuth1.getCurrentUser();
             loggedEmail = user.getEmail();
             ID = user.getUid();
             OneSignal.sendTag("User_ID", loggedEmail);
 
-
-             getFulname();
-
-             fullname = UserDetails.fullname;
-
-            nowPlayingLayout = (LinearLayout) findViewById(R.id.test1);
-            sName = (TextView) nowPlayingLayout.findViewById(R.id.songName);
-            sName.setText("blah");
-            //songName = (TextView) findViewById(R.id.songName);
-
-        //String song = dataSnapshot.getValue().toString();
-
-
-
+            getFulname();
+            fullname = UserDetails.fullname;
             Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
 
-            mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
+
+
+        mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
             checkNowPlaying();
             checkFollowing();
+            displayOnHomepage();
 
-
-        //media player
+            //media player
             btn = (Button) findViewById(R.id.button);
             play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
             mediaPlayer = new MediaPlayer();
-
 
             //getting users and songs from database
             db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -185,10 +181,6 @@ public class SettingsActivity extends AppCompatActivity
             slistView.setClickable(true);
             play_toolbar.setClickable(true);
 
-
-
-
-             displayOnHomepage();
 
             //event listener for users
             db.addChildEventListener(new ChildEventListener() {
@@ -279,14 +271,15 @@ public class SettingsActivity extends AppCompatActivity
             });
 
             //on create
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_settings);
 
-            //homepage toolbar
+
+
+        //homepage toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("Now Playing");
             toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+
 
             //loading users in plistView
             ulistView = (ListView) findViewById(R.id.plistView);
@@ -304,7 +297,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     String user = ((TextView) view).getText().toString();
                     play_toolbar.setVisibility(View.GONE);
-                    nowPlayingLayout.setVisibility(View.GONE);
+                    //nowPlayingLayout.setVisibility(View.GONE);
                     play_toolbar.requestLayout();
 
                     UserDetails.username = user;
@@ -315,7 +308,7 @@ public class SettingsActivity extends AppCompatActivity
                 }
             });
 
-            //ass click listener for play bar
+            //add click listener for play bar
             play_toolbar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -368,7 +361,6 @@ public class SettingsActivity extends AppCompatActivity
             slistView.setAdapter(sadapter);
 
             // TODO: 21/06/2017 chat button and function
-            final ImageButton fab = (ImageButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -393,14 +385,16 @@ public class SettingsActivity extends AppCompatActivity
             nav_user.setText(getIntent().getExtras().getString("Email"));
             toolbar.setTitle("Profile");
 
-            //search layout and functions
+
+
+        //search layout and functions
             searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
             searchView = (MaterialSearchView) findViewById(R.id.search_view);
             searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
                 @Override
                 public void onSearchViewShown() {
-                    nowPlayingLayout.setVisibility(View.GONE);
+                    //nowPlayingLayout.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.INVISIBLE);
                     play_toolbar.setVisibility(View.VISIBLE);
@@ -454,19 +448,17 @@ public class SettingsActivity extends AppCompatActivity
             });
         }
 
-    private void nowPlaying(String songName) {
+        private void nowPlaying(String songName) {
         getFulname();
-
 
         Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(UserDetails.fullname);
         Map<String,Object> uinfo4 = new HashMap<String, Object>();
         uinfo4.put("Song",songName);
         ref4.updateChildren(uinfo4);
+        }
 
-    }
 
-
-    //showing searching layout
+        //showing searching layout
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             getMenuInflater().inflate(R.menu.menu_item, menu);
@@ -586,7 +578,6 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.pause();
         }
 
-
         //play song method with signle button background handling
         public void playPauseMusic(View v) {
 
@@ -611,14 +602,12 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.getCurrentPosition();
             //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
             //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-
 //            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
         }
 
-    private void eraseFromFirebase() {
-        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(fullname);
-
-        mDatabase1.addListenerForSingleValueEvent(
+        private void eraseFromFirebase() {
+            mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(fullname);
+            mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -631,9 +620,9 @@ public class SettingsActivity extends AppCompatActivity
                         Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
                     }
                 });
-    }
+        }
 
-    public void playFromPause(Integer time, String link){
+        public void playFromPause(Integer time, String link){
             play_toolbar.setVisibility(View.VISIBLE);
             play_toolbar.bringToFront();
             mediaPlayer.reset();
@@ -661,14 +650,14 @@ public class SettingsActivity extends AppCompatActivity
             startActivity(i);
         }
 
-    public void updateProgressBar() {
+        public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
-    /**
-     * Background Runnable thread
-     */
-    private Runnable mUpdateTimeTask = new Runnable() {
+        /**
+        * Background Runnable thread
+        */
+        private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             Utilities utils = new Utilities();
             long totalDuration = SettingsActivity.mediaPlayer.getDuration();
@@ -686,21 +675,20 @@ public class SettingsActivity extends AppCompatActivity
 
             // Running this thread after 100 milliseconds
             mHandler.postDelayed(this, 100);
-        }
-    };
+            }
+        };
 
 
-    public String getFulname() {
-        ID = user.getUid();
-        final String[] name = new String[1];
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+        public void getFulname() {
 
-        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            ID = user.getUid();
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+            mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                name[0] = dataSnapshot.getValue().toString();
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -709,82 +697,92 @@ public class SettingsActivity extends AppCompatActivity
             }
 
         });
-        return name[0];
-    }
+        }
 
-    public void checkFollowing(){
+        public void checkFollowing(){
 
-        mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(fullname)){
-                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
-                    UserDetails.following = true;
-                }
-                else{
-                    UserDetails.following = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    public boolean checkNowPlaying(){
-        getFulname();
-        mDatabase3 = FirebaseDatabase.getInstance().getReference().child("NowListening");
-        mDatabase3.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(fullname)){
-                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
-                    UserDetails.nowPlaying = true;
-                }
-                else{
-                    UserDetails.nowPlaying = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return false;
-    }
-
-    public void displayOnHomepage()
-    {
-        nowPlayingLayout.setVisibility(View.VISIBLE);
-
-        getFulname();
-        mDatabase4 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(UserDetails.fullname).child("Song");
-
-        if (UserDetails.following && UserDetails.nowPlaying) {
-
-
-            mDatabase4.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Toast.makeText(SettingsActivity.this, "following and playing" + UserDetails.username, Toast.LENGTH_SHORT).show();
-
-                    View test1View = findViewById(R.id.test1);
-                    sName = (TextView) test1View.findViewById(R.id.songName);
-                    //String song = dataSnapshot.getValue().toString();
-                    sName.setText("blah");
-                    //Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
+                    if(dataSnapshot.hasChild(fullname)){
+                        //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                        UserDetails.following = true;
+                    }
+                    else{
+                        UserDetails.following = false;
+                    }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
 
+        public boolean checkNowPlaying(){
+            getFulname();
+            mDatabase3 = FirebaseDatabase.getInstance().getReference().child("NowListening");
+            mDatabase3.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(UserDetails.fullname)){
+                        //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                        UserDetails.nowPlaying = true;
+                    }
+                    else{
+                        UserDetails.nowPlaying = false;
+                    }
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
             });
+            return false;
+        }
 
-            //add song to text view
+        public void displayOnHomepage()
+        {
+            Toast.makeText(SettingsActivity.this, "display called" + UserDetails.username, Toast.LENGTH_SHORT).show();
+
+            //nowPlayingLayout.setVisibility(View.VISIBLE);
+
+            getFulname();
+            checkFollowing();
+            checkNowPlaying();
+
+            Toast.makeText(SettingsActivity.this, UserDetails.following +" "+ UserDetails.nowPlaying, Toast.LENGTH_SHORT).show();
+
+
+            mDatabase4 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(UserDetails.fullname).child("Song");
+
+            if (UserDetails.following && UserDetails.nowPlaying) {
+
+
+                mDatabase4.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Toast.makeText(SettingsActivity.this, "following and playing" + UserDetails.username, Toast.LENGTH_SHORT).show();
+
+                        //TextView tv = (TextView) findViewById(R.id.songName);
+                        tv.setText("song name here soon");
+
+
+
+                        //View test1View = findViewById(R.id.test1);
+                        //sName = (TextView) test1View.findViewById(R.id.songName);
+                        //String song = dataSnapshot.getValue().toString();
+                       // sName.setText("blah");
+                        //Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+                //add song to text view
+            }
         }
     }
-}
 
