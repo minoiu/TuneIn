@@ -11,5 +11,6 @@ public class UserDetails {
     static Boolean nowPlaying = false;
     static Boolean following = false;
     static ArrayList<String> myFollowers = new ArrayList<>();
+    static String myname = "";
 
 }

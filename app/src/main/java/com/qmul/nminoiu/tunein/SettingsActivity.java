@@ -73,6 +73,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.R.attr.id;
+
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -597,7 +599,7 @@ public class SettingsActivity extends AppCompatActivity
         uinfo4.put("Song",songName);
         ref4.updateChildren(uinfo4);
         }
-    
+
         //showing searching layout
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -926,7 +928,7 @@ public class SettingsActivity extends AppCompatActivity
         }
 
 
-        private void addToFirebaseHome(final String myvalue, final String mysong) {
+        private void addToFirebaseHome(String myvalue, final String mysong) {
 
             String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -934,8 +936,8 @@ public class SettingsActivity extends AppCompatActivity
             mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    UserDetails.fullname = dataSnapshot.getValue().toString();
-                    Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
+                    UserDetails.myname = dataSnapshot.getValue().toString();
+                    Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -950,22 +952,13 @@ public class SettingsActivity extends AppCompatActivity
             mDatabase6.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    String value = dataSnapshot.getKey();
-//                    Toast.makeText(SettingsActivity.this, value+" first follower", Toast.LENGTH_LONG).show();
 
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("Song", mysong);
-                    Toast.makeText(SettingsActivity.this, myvalue + " id to get fullname for", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
 
-                    mDatabase6.child(UserDetails.fullname).updateChildren(map);
-//                    Map<String, Object> map = new HashMap<String, Object>();
-//                    map = (Map<String, Object>) dataSnapshot.getValue();
-//                    String followerID = map.get();
-//                    myFollowers.add(followerID);
-//                    Toast.makeText(SettingsActivity.this, myFollowers.get(0)+" first follower", Toast.LENGTH_LONG).show();
-                    //checkNowPlaying();
-                    //checkFollowing();
-                    //addToHomepage();
+                    mDatabase6.child(UserDetails.myname).updateChildren(map);
+
                 }
 
                 @Override
@@ -988,6 +981,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 }
             });
+        }
 
 
 //                                          mDatabase6 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(myvalue);
@@ -1008,25 +1002,24 @@ public class SettingsActivity extends AppCompatActivity
 //
 //        }
 
-//        private void getFriendFullname(String id) {
-//
-//            mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
-//
-//            mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    UserDetails.fullname = dataSnapshot.getValue().toString();
-//                    Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-//        }
+        private void getFriendFullname(String id) {
+
+            mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
+
+            mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserDetails.fullname = dataSnapshot.getValue().toString();
+                    Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
         }
 
-}
 
