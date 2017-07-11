@@ -57,7 +57,6 @@ public class RequestActivity extends AppCompatActivity {
         sender = firebaseAuth.getCurrentUser().getEmail();
         //final String receiver;
 
-        // reference = new Firebase("https://tunein-633e5.firebaseio.com/FriendRequests/" + user);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(UserDetails.username).child("Email");
         followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(UserDetails.username);
