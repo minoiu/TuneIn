@@ -16,6 +16,7 @@ import android.support.constraint.solver.widgets.WidgetContainer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.test.mock.MockApplication;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -88,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity
         private DatabaseReference db2;
         private ArrayAdapter<String> sadapter;
         private ArrayAdapter<String> uadapter;
+        private ArrayAdapter<String> fadapter;
         private ListView slistView;
         private ListView ulistView;
         private LinearLayout play_toolbar;
@@ -107,12 +109,12 @@ public class SettingsActivity extends AppCompatActivity
         private FirebaseAuth firebaseAuth1;
         private FirebaseUser user;
         public static String loggedEmail;
-        private String ID;
         private DatabaseReference mDatabase;
         private DatabaseReference mDatabase1;
         private DatabaseReference mDatabase2;
         private DatabaseReference mDatabase3;
         private DatabaseReference mDatabase4;
+        private DatabaseReference mDatabase5;
         private View nowPlayingLayout;
         public String fullname;
         public boolean following;
@@ -120,6 +122,11 @@ public class SettingsActivity extends AppCompatActivity
         public TextView tv;
         public ImageButton fab;
         public ImageButton fab1;
+        private DatabaseReference fdb;
+        private ArrayList<String> myFollowers;
+        public String ID;
+
+
 
 
     @Override
@@ -137,6 +144,8 @@ public class SettingsActivity extends AppCompatActivity
             fab1 = (ImageButton) findViewById(R.id.fab1);
             fab.bringToFront();
             fab1.bringToFront();
+            myFollowers = new ArrayList<>();
+
 
 
         OneSignal.startInit(this).init();
@@ -148,16 +157,30 @@ public class SettingsActivity extends AppCompatActivity
             ID = user.getUid();
             OneSignal.sendTag("User_ID", loggedEmail);
 
-            getFulname();
-            fullname = UserDetails.fullname;
-            Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
+            ID = user.getUid();
+            mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+            mDatabase5.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserDetails.fullname = dataSnapshot.getValue().toString();
+                    //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                    getFollowers(UserDetails.fullname);
+                    //Toast.makeText(SettingsActivity.this, myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+
+            });
 
 
 
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
-            checkNowPlaying();
-            checkFollowing();
-            displayOnHomepage();
+//            checkNowPlaying();
+//            checkFollowing();
+//            displayOnHomepage();
 
             //media player
             btn = (Button) findViewById(R.id.button);
@@ -168,6 +191,8 @@ public class SettingsActivity extends AppCompatActivity
             db = FirebaseDatabase.getInstance().getReference().child("Users");
             db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
             db2 = FirebaseDatabase.getInstance().getReference().child("URL");
+        Toast.makeText(SettingsActivity.this, " my Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+
 
             ulistView = (ListView) findViewById(R.id.plistView);
             uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
@@ -182,7 +207,47 @@ public class SettingsActivity extends AppCompatActivity
             play_toolbar.setClickable(true);
 
 
-            //event listener for users
+        //to be used also for friend list
+//            fdb.addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                    String value = dataSnapshot.getKey();
+//                    Toast.makeText(SettingsActivity.this, value+" first follower", Toast.LENGTH_LONG).show();
+//
+//
+////                    Map<String, Object> map = new HashMap<String, Object>();
+////                    map = (Map<String, Object>) dataSnapshot.getValue();
+////                    String followerID = map.get();
+////                    myFollowers.add(followerID);
+////                    Toast.makeText(SettingsActivity.this, myFollowers.get(0)+" first follower", Toast.LENGTH_LONG).show();
+//                    //checkNowPlaying();
+//                    //checkFollowing();
+//                    //addToHomepage();
+//                }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+        //event listener for users
             db.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -269,6 +334,8 @@ public class SettingsActivity extends AppCompatActivity
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
+
+
 
             //on create
 
@@ -448,7 +515,46 @@ public class SettingsActivity extends AppCompatActivity
             });
         }
 
-        private void nowPlaying(String songName) {
+    private void getFollowers(String fullname) {
+        fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
+        fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
+        fdb.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String value = snapshot.getKey();
+                    //Toast.makeText(SettingsActivity.this, value+" first follower", Toast.LENGTH_LONG).show();
+                    myFollowers.add(value);
+                    UserDetails.myFollowers.add(value);
+
+                    fadapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
+    }
+
+    private void nowPlaying(String songName) {
         getFulname();
 
         Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(UserDetails.fullname);

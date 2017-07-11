@@ -1,5 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
+import java.util.ArrayList;
+
 public class UserDetails {
     static String username = "";
     static String password = "";
@@ -8,5 +10,6 @@ public class UserDetails {
     static String fullname = "";
     static Boolean nowPlaying = false;
     static Boolean following = false;
+    static ArrayList<String> myFollowers = new ArrayList<>();
 
 }
