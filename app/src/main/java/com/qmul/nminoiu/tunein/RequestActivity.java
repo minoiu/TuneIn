@@ -39,6 +39,7 @@ public class RequestActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
+    private DatabaseReference followersdb;
     private String sender;
     private Boolean following;
 
@@ -59,6 +60,7 @@ public class RequestActivity extends AppCompatActivity {
         // reference = new Firebase("https://tunein-633e5.firebaseio.com/FriendRequests/" + user);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(UserDetails.username).child("Email");
+        followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(UserDetails.username);
        // receiver = mDatabase1.get
 
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -83,12 +85,26 @@ public class RequestActivity extends AppCompatActivity {
             }
         });
 
+        followersdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    final Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("Date", getDate());
+                    followersdb.child(me).updateChildren(map);
+                    Toast.makeText(RequestActivity.this, "You are now a follower for " + UserDetails.username, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
         mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.receiver = dataSnapshot.getValue().toString();
                 //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -96,8 +112,6 @@ public class RequestActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
 //    private String getSenderEmail(){
