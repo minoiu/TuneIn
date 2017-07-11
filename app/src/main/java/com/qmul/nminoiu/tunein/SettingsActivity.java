@@ -597,8 +597,7 @@ public class SettingsActivity extends AppCompatActivity
         uinfo4.put("Song",songName);
         ref4.updateChildren(uinfo4);
         }
-
-
+    
         //showing searching layout
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
