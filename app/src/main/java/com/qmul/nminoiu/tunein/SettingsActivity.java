@@ -129,8 +129,9 @@ public class SettingsActivity extends AppCompatActivity
         public ImageButton fab;
         public ImageButton fab1;
         private DatabaseReference fdb;
-        private ArrayList<String> myFollowers;
+        private List<String> myFollowers;
         public String ID;
+        public String me;
 
 
 
@@ -517,17 +518,19 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //myFollowers.clear();
                     String value = snapshot.getKey();
-                    Toast.makeText(SettingsActivity.this, value, Toast.LENGTH_LONG).show();
                     myFollowers.add(value);
-                    addToFirebaseHome(value, mysong);
                     UserDetails.myFollowers.add(value);
-
+                    //addToFirebaseHome(value, mysong);
                     fadapter.notifyDataSetChanged();
-                    Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
                 }
 
-            }
+                    addToHome(UserDetails.myFollowers, mysong);
+                    Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() +" is the size" , Toast.LENGTH_LONG).show();
+
+                }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -982,23 +985,36 @@ public class SettingsActivity extends AppCompatActivity
         }
 
 
-//                                          mDatabase6 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(myvalue);
-//            mDatabase6.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                        final Map<String, Object> map = new HashMap<String, Object>();
-//                        map.put("Song", mysong);
-//                    Toast.makeText(SettingsActivity.this, myvalue + " id to get fullname for", Toast.LENGTH_SHORT).show();
-//
-//                        mDatabase6.child(UserDetails.fullname).updateChildren(map);
-//                    }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            });
-//
-//        }
+    private void addToHome(List<String> myvalue, final String mysong) {
+
+        String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+        mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.myname = dataSnapshot.getValue().toString();
+                me = dataSnapshot.getValue().toString();
+                Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+            Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
+            Map<String, Object> uinfo = new HashMap<>();
+            uinfo.put("Song", mysong);
+            ref4.child(UserDetails.fullname).updateChildren(uinfo);
+
+
+        }
+    }
 
         private void getFriendFullname(String id) {
 
