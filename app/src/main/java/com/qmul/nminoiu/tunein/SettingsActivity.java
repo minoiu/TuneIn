@@ -948,7 +948,6 @@ public class SettingsActivity extends AppCompatActivity
             });
 
             mDatabase6 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(myvalue);
-
             mDatabase6.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -956,7 +955,6 @@ public class SettingsActivity extends AppCompatActivity
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("Song", mysong);
                     Toast.makeText(SettingsActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
-
                     mDatabase6.child(UserDetails.myname).updateChildren(map);
 
                 }
