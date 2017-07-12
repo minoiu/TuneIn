@@ -6,21 +6,25 @@ package com.qmul.nminoiu.tunein;
 
 public class NowPlayingItem {
     private int id;
-    private String name, status, image, profilePic, timeStamp, url;
+    private String name, song, image, profilePic, timeStamp, url;
 
     public NowPlayingItem(){
     }
 
-    public NowPlayingItem(int id, String name, String image, String status,
+    public NowPlayingItem(int id, String name, String image, String song,
                           String profilePic, String timeStamp, String url){
         super();
         this.id = id;
         this.name = name;
         this.image = image;
-        this.status = status;
+        this.song = song;
         this.profilePic = profilePic;
         this.timeStamp = timeStamp;
         this.url = url;
+    }
+
+    public NowPlayingItem(String song){
+        this.song = song;
     }
 
     public int getId() {
@@ -47,12 +51,12 @@ public class NowPlayingItem {
         this.image = image;
     }
 
-    public String getStatus() {
-        return status;
+    public String getSong() {
+        return song;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSong(String song) {
+        this.song = song;
     }
 
     public String getProfilePic() {
