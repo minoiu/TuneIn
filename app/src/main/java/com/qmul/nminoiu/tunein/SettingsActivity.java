@@ -225,7 +225,9 @@ public class SettingsActivity extends AppCompatActivity
                     item.setSong(text);
                     nameText.setText(text);
                     Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
-                    
+
+                    String mysong = dataSnapshot.child(text).child("Song").getValue().toString();
+                    songText.setText(mysong);
                 }
             }
 
