@@ -139,6 +139,8 @@ public class SettingsActivity extends AppCompatActivity
     public String ID;
     public String me;
     public String text;
+    public String addr;
+    private String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,8 +167,9 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
-                sendTimeRequest(personNowPlaying);
-                getSongName();
+                //sendTimeRequest(personNowPlaying);
+                //getSongName();
+                getTimeFromFirebase();
                 //mediaPlayer.seekTo(getTimeFromFirebase());
 
                 //getCurrentPlayingTime();
@@ -179,9 +182,10 @@ public class SettingsActivity extends AppCompatActivity
         firebaseAuth1 = FirebaseAuth.getInstance();
         user = firebaseAuth1.getCurrentUser();
         loggedEmail = user.getEmail();
-        ID = user.getUid();
+        ID = firebaseAuth1.getCurrentUser().getUid();
         OneSignal.sendTag("User_ID", loggedEmail);
         NowPlayingItem item = new NowPlayingItem();
+        getTimeFromFirebase();
 
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
 //            checkNowPlaying();
@@ -242,7 +246,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     if(snapshot.getValue().equals(UserDetails.fullname)) {
                         addTimeToFirebase(otherUser);
-                        getCurrentPlayingTime();
+                        //getCurrentPlayingTime();
                         Toast.makeText(SettingsActivity.this, "has child" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     }
@@ -1161,8 +1165,13 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
-                    playMusic(url);
                     //startMusic((url));
+
+                    //Track track = new Track(url);
+                    //track.setURL(url);
+                    //setUrlValue(url);
+                    UserDetails.song = url;
+                    //getTimeFromFirebase();
                 }
             }
             @Override
@@ -1180,7 +1189,6 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Name", listenerFullname);
         ref.updateChildren(uinfo);
-
     }
 
     public void addTimeToFirebase(String otherUser){
@@ -1192,61 +1200,104 @@ public class SettingsActivity extends AppCompatActivity
 
     public int getCurrentPlayingTime() {
         if (mediaPlayer.isPlaying())
-            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition()+" actual time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition()+"it shouldnt be called", Toast.LENGTH_SHORT).show();
         return mediaPlayer.getCurrentPosition();
     }
 
-    public int getTimeFromFirebase(){
+    public void getTimeFromFirebase(){
+
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase timeRef = ref.child("TimeRequest").child(ID).child("Time");
+
+        timeRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    time = String.valueOf(dsp.getValue());
+                    Toast.makeText(SettingsActivity.this, time+"time this time", Toast.LENGTH_SHORT).show();
+
+                    //startMusic((url));
+
+                    //Track track = new Track(url);
+                    //track.setURL(url);
+                    //setUrlValue(url);
+                    //getTimeFromFirebase();
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
 
 //        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + ID);
 //        Firebase timeref = ref.child("Time");
 //        time = timeref.
 
-        DatabaseReference mDatabase10;
+//        DatabaseReference mDatabase10;
+//
+//        mDatabase10 = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID).child("Time");
+//
+//        mDatabase10.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                    String time = dataSnapshot.getValue().toString();
+//                Toast.makeText(SettingsActivity.this, time+"url this time", Toast.LENGTH_SHORT).show();
+//
+//                int finalTime = Integer.parseInt(time);
+//                Toast.makeText(SettingsActivity.this, finalTime+"url this time", Toast.LENGTH_SHORT).show();
+//                playMusic(UserDetails.song, finalTime);
+//
+//                   // UserDetails.time = finalTime;
+//                    //myuser.setTime(finalTime);
+//                    //setTime(finalTime);
+//
+//            }
+//
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-        mDatabase10 = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID).child("Time");
-
-        mDatabase10.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    String time = dataSnapshot.getValue().toString();
-                    int finalTime = Integer.parseInt(time);
-                    UserDetails.time = finalTime;
-                    myuser.setTime(finalTime);
-                    //setTime(finalTime);
-                    Toast.makeText(SettingsActivity.this, time, Toast.LENGTH_SHORT).show();
-
-            }
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return myuser.getTime();
+        //return myuser.getTime();
     }
 
-    public void playMusic(String link) {
+    public void setUrlValue(String address){
+        addr = address;
+    }
 
-        Toast.makeText(SettingsActivity.this, getTimeFromFirebase()+" starting time", Toast.LENGTH_SHORT).show();
+    public String getUrlValue(){
+
+        return addr;
+    }
+
+    public void playMusic(String link,int time) {
+        Track track = new Track();
+
+
+        Toast.makeText(SettingsActivity.this, time + " starting time", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SettingsActivity.this, track.getURL() + " url time", Toast.LENGTH_SHORT).show();
 
 
         mediaPlayer.reset();
@@ -1265,7 +1316,7 @@ public class SettingsActivity extends AppCompatActivity
             updateProgressBar();
         }
 
-            mediaPlayer.seekTo(getTimeFromFirebase());
+            mediaPlayer.seekTo(time);
             mediaPlayer.start();
             //methodSeek(time);
 

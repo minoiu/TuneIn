@@ -9,11 +9,13 @@ public class Track {
     private String name;
     private String URL;
 
-    public Track() {
+    public Track(String URL) {
+        this.URL = URL;
+
     }
 
-    public Track(String name){
-        this.name = name;
+    public Track(){
+        //this.name = name;
     }
 
     public String getName() {
