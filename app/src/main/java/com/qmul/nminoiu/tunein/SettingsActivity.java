@@ -121,8 +121,9 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase6;
     private DatabaseReference mDatabase7;
     private DatabaseReference mDatabase8;
+    private DatabaseReference mDatabase9;
 
-
+    private Button syncButton;
 
     private View nowPlayingLayout;
     public String fullname;
@@ -138,7 +139,6 @@ public class SettingsActivity extends AppCompatActivity
     public String me;
     public String text;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //setContentView(savedInstanceState);
@@ -151,12 +151,21 @@ public class SettingsActivity extends AppCompatActivity
 
         fab = (ImageButton) findViewById(R.id.fab);
         fab1 = (ImageButton) findViewById(R.id.fab1);
+        syncButton = (Button) findViewById(R.id.syncButton);
         fab.bringToFront();
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
 
-
         OneSignal.startInit(this).init();
+
+        syncButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String personNowPlaying = getPersonNowPlaying();
+                sendTimeRequest(personNowPlaying);
+                //getSongName();
+            }
+        });
 
         //setting notification tags for current user
         firebaseAuth1 = FirebaseAuth.getInstance();
@@ -198,7 +207,6 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
-
         });
 
         ulistView = (ListView) findViewById(R.id.plistView);
@@ -213,21 +221,62 @@ public class SettingsActivity extends AppCompatActivity
         slistView.setClickable(true);
         play_toolbar.setClickable(true);
 
+        mDatabase9 = FirebaseDatabase.getInstance().getReference().child("TimeRequest");
 
-        mDatabase8 = FirebaseDatabase.getInstance().getReference().child("Homepage");
+        mDatabase9.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String otherUser;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    otherUser = snapshot.getKey();
+
+                    if(snapshot.child(otherUser).child("Name").equals(UserDetails.fullname)) {
+                        //addTimeToFirebase(otherUser);
+                        Toast.makeText(SettingsActivity.this, "has child" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        mDatabase8 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(ID);
 
         mDatabase8.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    text = snapshot.getKey();
-                    NowPlayingItem item = new NowPlayingItem(text);
-                    item.setSong(text);
-                    nameText.setText(text);
-                    Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
-                    String mysong = dataSnapshot.child(text).child("Song").getValue().toString();
-                    songText.setText(mysong);
+                        text = dataSnapshot.getKey();
+                        NowPlayingItem item = new NowPlayingItem(text);
+                        item.setSong(text);
+                        nameText.setText(text);
+                        Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+
+                        String mysong = dataSnapshot.child("Song").getValue().toString();
+                        songText.setText(mysong);
                 }
             }
 
@@ -1080,8 +1129,53 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
+    //trying to sync song
 
-    //loading data to first page
+    //getting the name of the song
+    public void getSongName(){
+        String songToPlay = songText.getText().toString();
+        Toast.makeText(SettingsActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
+        getUrl(songToPlay);
+    }
+
+    public String getPersonNowPlaying(){
+        return nameText.getText().toString();
+    }
+
+    public void getUrl(String song){
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("URL").child(song);
+
+        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    url = String.valueOf(dsp.getValue());
+                    startMusic(url);
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void sendTimeRequest(String listenerFullname){
+
+        String me = firebaseAuth1.getCurrentUser().getUid();
+
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + me);
+        Map<String, Object> uinfo = new HashMap<>();
+        uinfo.put("Name", listenerFullname);
+        ref.updateChildren(uinfo);
+
+    }
+
+    public void addTimeToFirebase(String otherUser){
+
+    }
+
 }
 
 

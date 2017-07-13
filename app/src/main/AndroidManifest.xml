@@ -55,7 +55,8 @@
             </activity>
         <activity android:name=".RequestActivity" >
         </activity>
-
+        <activity android:name=".SyncActivity"
+            android:theme="@android:style/Theme.NoDisplay"/>
 
     </application>
 

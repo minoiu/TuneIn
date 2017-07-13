@@ -54,7 +54,7 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lili Ana"
+                    android:text="friend name"
                     android:textSize="@dimen/feed_item_profile_name"
                     android:textStyle="bold" />
 
@@ -70,10 +70,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:text="Drake - Best I've ever had" />
+                    android:text="song name" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/syncButton"
                     android:layout_width="37dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
