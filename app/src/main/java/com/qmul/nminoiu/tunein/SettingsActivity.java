@@ -122,6 +122,7 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase7;
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
+    public User myuser;
 
     private Button syncButton;
 
@@ -155,6 +156,8 @@ public class SettingsActivity extends AppCompatActivity
         fab.bringToFront();
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
+        myuser = new User();
+
 
         OneSignal.startInit(this).init();
 
@@ -163,7 +166,12 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
                 sendTimeRequest(personNowPlaying);
-                //getSongName();
+                getSongName();
+                //mediaPlayer.seekTo(getTimeFromFirebase());
+
+                //getCurrentPlayingTime();
+                //getTimeFromFirebase();
+                //Toast.makeText(SettingsActivity.this, getTimeFromFirebase() + " * time from fb", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -228,14 +236,16 @@ public class SettingsActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String otherUser;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    otherUser = snapshot.getKey();
+                    otherUser = dataSnapshot.getKey();
+                    Toast.makeText(SettingsActivity.this, "in for" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
-                    if(snapshot.child(otherUser).child("Name").equals(UserDetails.fullname)) {
-                        //addTimeToFirebase(otherUser);
+                    if(snapshot.getValue().equals(UserDetails.fullname)) {
+                        addTimeToFirebase(otherUser);
+                        getCurrentPlayingTime();
                         Toast.makeText(SettingsActivity.this, "has child" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     }
-
                 }
             }
 
@@ -431,7 +441,7 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SettingsActivity.this, RegisterActivity.class);
+                Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
                 startActivity(i);
             }
         });
@@ -1151,7 +1161,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
-                    startMusic(url);
+                    playMusic(url);
+                    //startMusic((url));
                 }
             }
             @Override
@@ -1173,6 +1184,101 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void addTimeToFirebase(String otherUser){
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + otherUser);
+        Map<String, Object> uinfo = new HashMap<>();
+        uinfo.put("Time", getCurrentPlayingTime());
+        ref.updateChildren(uinfo);
+    }
+
+    public int getCurrentPlayingTime() {
+        if (mediaPlayer.isPlaying())
+            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition()+" actual time", Toast.LENGTH_SHORT).show();
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    public int getTimeFromFirebase(){
+
+//        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + ID);
+//        Firebase timeref = ref.child("Time");
+//        time = timeref.
+
+        DatabaseReference mDatabase10;
+
+        mDatabase10 = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID).child("Time");
+
+        mDatabase10.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    String time = dataSnapshot.getValue().toString();
+                    int finalTime = Integer.parseInt(time);
+                    UserDetails.time = finalTime;
+                    myuser.setTime(finalTime);
+                    //setTime(finalTime);
+                    Toast.makeText(SettingsActivity.this, time, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return myuser.getTime();
+    }
+
+    public void playMusic(String link) {
+
+        Toast.makeText(SettingsActivity.this, getTimeFromFirebase()+" starting time", Toast.LENGTH_SHORT).show();
+
+
+        mediaPlayer.reset();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(link);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            mediaPlayer.prepare();
+           // mediaPlayer.setVolume(0,0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            updateProgressBar();
+        }
+
+            mediaPlayer.seekTo(getTimeFromFirebase());
+            mediaPlayer.start();
+            //methodSeek(time);
+
+
+    }
+
+    public void methodSeek(int time){
+       // if (mediaPlayer.getCurrentPosition()>0) {
+            mediaPlayer.pause();
+            mediaPlayer.seekTo(10000);
+            //mediaPlayer.setVolume(1, 1);
+            //mediaPlayer.start();
+        //}
 
     }
 

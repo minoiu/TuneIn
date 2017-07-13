@@ -8,6 +8,7 @@ public class User {
 
     private String fullname;
     private String email;
+    private int time;
 
     public String getFullname() {
         return fullname;
@@ -24,4 +25,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setTime(int time) { this.time = time;}
+
+    public int getTime(){ return time; }
 }
