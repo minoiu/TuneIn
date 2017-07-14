@@ -122,6 +122,7 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase7;
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
+    private DatabaseReference timeref;
     public User myuser;
 
     private Button syncButton;
@@ -204,7 +205,7 @@ public class SettingsActivity extends AppCompatActivity
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        ID = user.getUid();
+        //ID = user.getUid();
         mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
         mDatabase5.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -313,6 +314,55 @@ public class SettingsActivity extends AppCompatActivity
 
             }
         });
+
+
+        ///try
+        timeref = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+
+        timeref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String x = dataSnapshot.getKey();
+                    Toast.makeText(SettingsActivity.this, "id is " + x , Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+
+                    if (!x.equals(ID)) {
+                        String time = snapshot.child("Time").getValue().toString();
+                        int newtime = Integer.parseInt(time);
+                        Toast.makeText(SettingsActivity.this, time + " in child added ", Toast.LENGTH_SHORT).show();
+                        getSongName();
+                        playMusic(newtime);
+                    }
+                }
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
 
         //event listener for users
         db.addChildEventListener(new ChildEventListener() {
@@ -1165,7 +1215,7 @@ public class SettingsActivity extends AppCompatActivity
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
-                    getTimeFromFirebase();
+                    //getTimeFromFirebase();
                 }
             }
 
@@ -1185,11 +1235,11 @@ public class SettingsActivity extends AppCompatActivity
         uinfo.put("Name", listenerFullname);
         ref.updateChildren(uinfo);
 
-        getSongName();
+        //getSongName();
     }
 
     public void addTimeToFirebase(String otherUser) {
-        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + otherUser);
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeAnswer/" + ID);
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Time", getCurrentPlayingTime());
         ref.updateChildren(uinfo);
