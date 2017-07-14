@@ -167,9 +167,9 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
-                //sendTimeRequest(personNowPlaying);
-                //getSongName();
-                getTimeFromFirebase();
+                sendTimeRequest(personNowPlaying);
+                getSongName();
+                //getTimeFromFirebase();
                 //mediaPlayer.seekTo(getTimeFromFirebase());
 
                 //getCurrentPlayingTime();
@@ -185,7 +185,7 @@ public class SettingsActivity extends AppCompatActivity
         ID = firebaseAuth1.getCurrentUser().getUid();
         OneSignal.sendTag("User_ID", loggedEmail);
         NowPlayingItem item = new NowPlayingItem();
-        getTimeFromFirebase();
+        //getTimeFromFirebase();
 
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
 //            checkNowPlaying();
@@ -213,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity
                 UserDetails.fullname = dataSnapshot.getValue().toString();
                 //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                 //getFollowers(UserDetails.fullname);
-                //Toast.makeText(SettingsActivity.this, myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
+                //Toast.makeText(SettingsActivity.this, myFollowers.size() + " followers", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -241,7 +241,7 @@ public class SettingsActivity extends AppCompatActivity
                 String otherUser;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     otherUser = dataSnapshot.getKey();
-                    Toast.makeText(SettingsActivity.this, "in for" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SettingsActivity.this, "in for" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     if(snapshot.getValue().equals(UserDetails.fullname)) {
@@ -1165,13 +1165,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
-                    //startMusic((url));
-
-                    //Track track = new Track(url);
-                    //track.setURL(url);
-                    //setUrlValue(url);
                     UserDetails.song = url;
-                    //getTimeFromFirebase();
+                    getTimeFromFirebase();
                 }
             }
             @Override
@@ -1206,81 +1201,24 @@ public class SettingsActivity extends AppCompatActivity
 
     public void getTimeFromFirebase(){
 
-        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-        Firebase timeRef = ref.child("TimeRequest").child(ID).child("Time");
+        String myID = firebaseAuth1.getCurrentUser().getUid();
 
-        timeRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+        DatabaseReference timeref = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(myID).child("Time");
+
+        timeref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    time = String.valueOf(dsp.getValue());
-                    Toast.makeText(SettingsActivity.this, time+"time this time", Toast.LENGTH_SHORT).show();
-
-                    //startMusic((url));
-
-                    //Track track = new Track(url);
-                    //track.setURL(url);
-                    //setUrlValue(url);
-                    //getTimeFromFirebase();
-                }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String data = dataSnapshot.getValue().toString();
+                int timeFb = Integer.parseInt(data);
+                //Toast.makeText(SettingsActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
+                playMusic(timeFb);
             }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-
-
-
-//        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + ID);
-//        Firebase timeref = ref.child("Time");
-//        time = timeref.
-
-//        DatabaseReference mDatabase10;
-//
-//        mDatabase10 = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID).child("Time");
-//
-//        mDatabase10.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                    String time = dataSnapshot.getValue().toString();
-//                Toast.makeText(SettingsActivity.this, time+"url this time", Toast.LENGTH_SHORT).show();
-//
-//                int finalTime = Integer.parseInt(time);
-//                Toast.makeText(SettingsActivity.this, finalTime+"url this time", Toast.LENGTH_SHORT).show();
-//                playMusic(UserDetails.song, finalTime);
-//
-//                   // UserDetails.time = finalTime;
-//                    //myuser.setTime(finalTime);
-//                    //setTime(finalTime);
-//
-//            }
-//
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
-        //return myuser.getTime();
     }
 
     public void setUrlValue(String address){
@@ -1292,30 +1230,29 @@ public class SettingsActivity extends AppCompatActivity
         return addr;
     }
 
-    public void playMusic(String link,int time) {
-        Track track = new Track();
+    public void playMusic(int time) {
 
 
-        Toast.makeText(SettingsActivity.this, time + " starting time", Toast.LENGTH_SHORT).show();
-        Toast.makeText(SettingsActivity.this, track.getURL() + " url time", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SettingsActivity.this, UserDetails.song + " the link ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SettingsActivity.this, time + " the time ", Toast.LENGTH_SHORT).show();
 
 
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(link);
+            mediaPlayer.setDataSource(UserDetails.song);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             mediaPlayer.prepare();
-           // mediaPlayer.setVolume(0,0);
+            mediaPlayer.setVolume(1, 1);
+
 
         } catch (IOException e) {
             e.printStackTrace();
             updateProgressBar();
         }
-
             mediaPlayer.seekTo(time);
             mediaPlayer.start();
             //methodSeek(time);
