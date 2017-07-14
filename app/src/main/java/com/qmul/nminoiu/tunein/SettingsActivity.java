@@ -163,7 +163,7 @@ public class SettingsActivity extends AppCompatActivity
 
         OneSignal.startInit(this).init();
 
-        syncButton.setOnClickListener(new View.OnClickListener(){
+        syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
@@ -244,7 +244,7 @@ public class SettingsActivity extends AppCompatActivity
                     //Toast.makeText(SettingsActivity.this, "in for" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
-                    if(snapshot.getValue().equals(UserDetails.fullname)) {
+                    if (snapshot.getValue().equals(UserDetails.fullname)) {
                         addTimeToFirebase(otherUser);
                         //getCurrentPlayingTime();
                         Toast.makeText(SettingsActivity.this, "has child" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
@@ -275,7 +275,6 @@ public class SettingsActivity extends AppCompatActivity
         });
 
 
-
         mDatabase8 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(ID);
 
         mDatabase8.addChildEventListener(new ChildEventListener() {
@@ -283,14 +282,14 @@ public class SettingsActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                        text = dataSnapshot.getKey();
-                        NowPlayingItem item = new NowPlayingItem(text);
-                        item.setSong(text);
-                        nameText.setText(text);
-                        Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+                    text = dataSnapshot.getKey();
+                    NowPlayingItem item = new NowPlayingItem(text);
+                    item.setSong(text);
+                    nameText.setText(text);
+                    Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
-                        String mysong = dataSnapshot.child("Song").getValue().toString();
-                        songText.setText(mysong);
+                    String mysong = dataSnapshot.child("Song").getValue().toString();
+                    songText.setText(mysong);
                 }
             }
 
@@ -1146,17 +1145,17 @@ public class SettingsActivity extends AppCompatActivity
     //trying to sync song
 
     //getting the name of the song
-    public void getSongName(){
+    public void getSongName() {
         String songToPlay = songText.getText().toString();
         Toast.makeText(SettingsActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
         getUrl(songToPlay);
     }
 
-    public String getPersonNowPlaying(){
+    public String getPersonNowPlaying() {
         return nameText.getText().toString();
     }
 
-    public void getUrl(String song){
+    public void getUrl(String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase songRef = ref.child("URL").child(song);
 
@@ -1169,6 +1168,7 @@ public class SettingsActivity extends AppCompatActivity
                     getTimeFromFirebase();
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -1176,7 +1176,7 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
-    public void sendTimeRequest(String listenerFullname){
+    public void sendTimeRequest(String listenerFullname) {
 
         String me = firebaseAuth1.getCurrentUser().getUid();
 
@@ -1186,7 +1186,7 @@ public class SettingsActivity extends AppCompatActivity
         ref.updateChildren(uinfo);
     }
 
-    public void addTimeToFirebase(String otherUser){
+    public void addTimeToFirebase(String otherUser) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + otherUser);
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Time", getCurrentPlayingTime());
@@ -1195,11 +1195,11 @@ public class SettingsActivity extends AppCompatActivity
 
     public int getCurrentPlayingTime() {
         if (mediaPlayer.isPlaying())
-            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition()+"it shouldnt be called", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition() + "it shouldnt be called", Toast.LENGTH_SHORT).show();
         return mediaPlayer.getCurrentPosition();
     }
 
-    public void getTimeFromFirebase(){
+    public void getTimeFromFirebase() {
 
         String myID = firebaseAuth1.getCurrentUser().getUid();
 
@@ -1221,11 +1221,11 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
-    public void setUrlValue(String address){
+    public void setUrlValue(String address) {
         addr = address;
     }
 
-    public String getUrlValue(){
+    public String getUrlValue() {
 
         return addr;
     }
@@ -1236,40 +1236,52 @@ public class SettingsActivity extends AppCompatActivity
         Toast.makeText(SettingsActivity.this, UserDetails.song + " the link ", Toast.LENGTH_SHORT).show();
         Toast.makeText(SettingsActivity.this, time + " the time ", Toast.LENGTH_SHORT).show();
 
-
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(UserDetails.song);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             mediaPlayer.prepare();
-            mediaPlayer.setVolume(1, 1);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            updateProgressBar();
-        }
             mediaPlayer.seekTo(time);
             mediaPlayer.start();
-            //methodSeek(time);
+        } catch (
+                IllegalArgumentException e)
 
+        {
+            e.printStackTrace();
+        } catch (
+                IllegalStateException e)
+
+        {
+            e.printStackTrace();
+        } catch (
+                IOException e)
+
+        {
+            e.printStackTrace();
+        }
+
+
+//
+//        mediaPlayer.reset();
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        try {
+//            mediaPlayer.setDataSource(UserDetails.song);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            mediaPlayer.prepare();
+//            mediaPlayer.setVolume(1, 1);
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            updateProgressBar();
+//        }
+//            mediaPlayer.seekTo(time);
+//            mediaPlayer.start();
+//    }
 
     }
-
-    public void methodSeek(int time){
-       // if (mediaPlayer.getCurrentPosition()>0) {
-            mediaPlayer.pause();
-            mediaPlayer.seekTo(10000);
-            //mediaPlayer.setVolume(1, 1);
-            //mediaPlayer.start();
-        //}
-
-    }
-
 }
 
 
