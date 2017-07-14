@@ -168,7 +168,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
                 sendTimeRequest(personNowPlaying);
-                getSongName();
+
                 //getTimeFromFirebase();
                 //mediaPlayer.seekTo(getTimeFromFirebase());
 
@@ -1184,6 +1184,8 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Name", listenerFullname);
         ref.updateChildren(uinfo);
+
+        getSongName();
     }
 
     public void addTimeToFirebase(String otherUser) {
@@ -1204,10 +1206,9 @@ public class SettingsActivity extends AppCompatActivity
         String myID = firebaseAuth1.getCurrentUser().getUid();
 
         DatabaseReference timeref = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(myID).child("Time");
-
-        timeref.addListenerForSingleValueEvent(new ValueEventListener() {
+        timeref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String data = dataSnapshot.getValue().toString();
                 int timeFb = Integer.parseInt(data);
                 //Toast.makeText(SettingsActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
@@ -1215,9 +1216,26 @@ public class SettingsActivity extends AppCompatActivity
             }
 
             @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
+
         });
     }
 
