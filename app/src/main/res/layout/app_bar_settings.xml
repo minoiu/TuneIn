@@ -35,14 +35,14 @@
 
     <ImageButton
         android:id="@+id/fab"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:scaleType="fitCenter"
         android:background="@xml/roundcorner"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/message" />
 
     <ImageButton
@@ -52,9 +52,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:scaleType="fitCenter"
         android:background="@xml/roundcorner"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/music" />
 
 
@@ -88,11 +88,11 @@
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <include
-            layout="@layout/nowplaying_item"
             android:id="@+id/test1"
+            layout="@layout/nowplaying_item"
             android:visibility="visible" />
 
     </LinearLayout>

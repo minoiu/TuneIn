@@ -124,13 +124,13 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase9;
     private DatabaseReference timeref;
     public User myuser;
+    LinearLayout nowPlayingLayout;
 
     private Button syncButton;
 
-    private View nowPlayingLayout;
     public String fullname;
     public boolean following;
-    public boolean nowPlaying;
+    //public boolean nowPlaying;
     public TextView songText;
     public TextView nameText;
     public ImageButton fab;
@@ -160,6 +160,7 @@ public class SettingsActivity extends AppCompatActivity
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
         myuser = new User();
+        nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
 
 
         OneSignal.startInit(this).init();
@@ -285,8 +286,10 @@ public class SettingsActivity extends AppCompatActivity
 
                     text = dataSnapshot.getKey();
                     NowPlayingItem item = new NowPlayingItem(text);
+                    nowPlayingLayout.setVisibility(View.VISIBLE);
                     item.setSong(text);
                     nameText.setText(text);
+
                     Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
                     String mysong = dataSnapshot.child("Song").getValue().toString();
@@ -608,6 +611,7 @@ public class SettingsActivity extends AppCompatActivity
                 //nowPlayingLayout.setVisibility(View.GONE);
                 searchLayout.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
+                fab1.setVisibility(View.INVISIBLE);
                 play_toolbar.setVisibility(View.VISIBLE);
             }
 
@@ -615,6 +619,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onSearchViewClosed() {
                 searchLayout.setVisibility(View.INVISIBLE);
                 fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
             }
         });
 
