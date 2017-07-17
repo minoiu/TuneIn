@@ -326,14 +326,40 @@ public class SettingsActivity extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String x = dataSnapshot.getKey();
                     Toast.makeText(SettingsActivity.this, "id is " + x , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString() , Toast.LENGTH_SHORT).show();
+
                     //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     if (!x.equals(ID)) {
-                        String time = snapshot.child("Time").getValue().toString();
-                        int newtime = Integer.parseInt(time);
+                        String time = snapshot.getValue().toString();
+                        final int newtime = Integer.parseInt(time);
                         Toast.makeText(SettingsActivity.this, time + " in child added ", Toast.LENGTH_SHORT).show();
-                        getSongName();
-                        playMusic(newtime);
+                        String songtosync = getSongName();
+
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase songRef = ref.child("URL").child(songtosync);
+
+                        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                            @Override
+                            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                    url = String.valueOf(dsp.getValue());
+                                    UserDetails.song = url;
+                                    Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                                    playMusic(newtime);
+                                    //getTimeFromFirebase();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+
+
+                        //getUrl(songtosync);
+                       // playMusic(newtime);
                     }
                 }
             }
@@ -1195,10 +1221,10 @@ public class SettingsActivity extends AppCompatActivity
     //trying to sync song
 
     //getting the name of the song
-    public void getSongName() {
+    public String getSongName() {
         String songToPlay = songText.getText().toString();
         Toast.makeText(SettingsActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
-        getUrl(songToPlay);
+        return songToPlay;
     }
 
     public String getPersonNowPlaying() {
@@ -1215,6 +1241,7 @@ public class SettingsActivity extends AppCompatActivity
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
+                    Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                     //getTimeFromFirebase();
                 }
             }
@@ -1308,7 +1335,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.reset();
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time);
+            mediaPlayer.seekTo(time+2);
             mediaPlayer.start();
         } catch (
                 IllegalArgumentException e)
