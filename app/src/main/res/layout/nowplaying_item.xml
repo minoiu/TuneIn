@@ -15,15 +15,14 @@
 
 
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="189dp"
 
         android:layout_marginLeft="@dimen/feed_item_margin"
         android:layout_marginRight="@dimen/feed_item_margin"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:layout_weight="0.08"
         android:background="@drawable/parent_rounded_corner"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/feed_item_padding_top_bottom"
+        android:paddingBottom="2dp"
         android:weightSum="1">
 
         <TextView
@@ -127,99 +126,89 @@
 
         </LinearLayout>
 
+        <include
+            android:id="@+id/divider1"
+            layout="@layout/item_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp" />
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.39"
             android:orientation="horizontal"
             android:weightSum="1">
 
             <ImageButton
                 android:id="@+id/youtube"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="130dp"
+                android:layout_marginLeft="40dp"
                 android:layout_marginTop="2dp"
                 android:layout_toRightOf="@+id/syncButton"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="true"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/view_on" />
+                app:srcCompat="@drawable/youtube" />
 
             <ImageButton
                 android:id="@+id/download"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="25dp"
+                android:layout_height="27dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="2dp"
                 android:layout_toRightOf="@+id/youtube"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/down" />
+                app:srcCompat="@drawable/download_new" />
 
             <ImageButton
                 android:id="@+id/comment"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="35dp"
                 android:layout_marginTop="2dp"
                 android:layout_toRightOf="@+id/download"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/comment" />
+                app:srcCompat="@drawable/comm" />
 
             <ImageButton
                 android:id="@+id/add"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="35dp"
                 android:layout_marginTop="-1dp"
                 android:layout_toRightOf="@+id/comment"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/add" />
+                app:srcCompat="@drawable/plus" />
 
             <ImageButton
                 android:id="@+id/love"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="false"
+                android:layout_gravity="right"
+                android:layout_marginLeft="35dp"
                 android:layout_marginTop="-1dp"
                 android:layout_toRightOf="@+id/comment"
+                android:layout_weight="0.00"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+                app:srcCompat="@drawable/heart" />
 
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtUrl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:linksClickable="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:textColorLink="@color/link" />
-
-        <TextView
-            android:id="@+id/txtStatusMsg"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingTop="@dimen/feed_item_status_pad_top" />
 
     </LinearLayout>
 
