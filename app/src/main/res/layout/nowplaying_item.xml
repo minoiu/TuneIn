@@ -35,7 +35,9 @@
             android:text="friend name"
             android:textAlignment="textStart"
             android:textAllCaps="true"
-            android:textSize="@dimen/feed_item_profile_name" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/feed_item_profile_name"
+            android:textStyle="bold" />
 
         <include
             android:id="@+id/divider"
@@ -92,7 +94,7 @@
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="25dp"
                     android:text="Now playing:"
                     android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
@@ -103,21 +105,21 @@
                     android:layout_height="wrap_content"
 
                     android:text="song name"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 
             <ImageButton
                 android:id="@+id/syncButton"
-                android:layout_width="95dp"
-                android:layout_height="43dp"
+                android:layout_width="81dp"
+                android:layout_height="37dp"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="13dp"
                 android:layout_toLeftOf="@+id/nowPlaying3"
-                android:layout_weight="0.01"
-                android:background="@drawable/newbutton"
+                android:background="@drawable/tunein_new"
                 android:elevation="0dp"
                 android:onClick="getTimeFromFirebase()"
                 android:scaleX="1.2"
@@ -143,9 +145,9 @@
             <ImageButton
                 android:id="@+id/youtube"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="34dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="42dp"
                 android:layout_marginTop="2dp"
                 android:layout_toRightOf="@+id/syncButton"
                 android:background="@xml/roundcorner"
@@ -159,7 +161,7 @@
                 android:layout_height="27dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="35dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:layout_toRightOf="@+id/youtube"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
@@ -168,11 +170,11 @@
 
             <ImageButton
                 android:id="@+id/comment"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="35dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="1dp"
                 android:layout_toRightOf="@+id/download"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
@@ -181,11 +183,11 @@
 
             <ImageButton
                 android:id="@+id/add"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="35dp"
-                android:layout_marginTop="-1dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/comment"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
@@ -194,14 +196,12 @@
 
             <ImageButton
                 android:id="@+id/love"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="false"
-                android:layout_gravity="right"
+                android:layout_width="29dp"
+                android:layout_height="29dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginLeft="35dp"
-                android:layout_marginTop="-1dp"
-                android:layout_toRightOf="@+id/comment"
-                android:layout_weight="0.00"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/add"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
