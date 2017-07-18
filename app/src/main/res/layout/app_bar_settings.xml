@@ -55,7 +55,7 @@
         android:background="@xml/roundcorner"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/music" />
+        app:srcCompat="@drawable/my_music" />
 
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView
