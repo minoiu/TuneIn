@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     public static String loggedEmail;
     private DatabaseReference mDatabase;
     private String ID;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

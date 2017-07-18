@@ -4,24 +4,16 @@
     android:id="@+id/logolayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="@color/black"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center"
-        android:gravity="center_horizontal|center"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/logoimg"
-            android:layout_width="match_parent"
-            android:layout_height="149dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            app:srcCompat="@drawable/logo" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/logoimg"
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:background="@color/black"
+        android:visibility="visible"
+        app:srcCompat="@drawable/logo" />
 
 </LinearLayout>
