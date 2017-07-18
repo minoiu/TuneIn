@@ -177,7 +177,7 @@
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/comm" />
+                app:srcCompat="@drawable/icon" />
 
             <ImageButton
                 android:id="@+id/add"
