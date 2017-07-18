@@ -126,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity
     public User myuser;
     LinearLayout nowPlayingLayout;
 
-    private Button syncButton;
+    private ImageButton syncButton;
 
     public String fullname;
     public boolean following;
@@ -155,7 +155,7 @@ public class SettingsActivity extends AppCompatActivity
 
         fab = (ImageButton) findViewById(R.id.fab);
         fab1 = (ImageButton) findViewById(R.id.fab1);
-        syncButton = (Button) findViewById(R.id.syncButton);
+        syncButton = (ImageButton) findViewById(R.id.syncButton);
         fab.bringToFront();
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
