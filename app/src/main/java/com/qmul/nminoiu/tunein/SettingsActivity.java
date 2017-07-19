@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.test.mock.MockApplication;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -127,6 +128,8 @@ public class SettingsActivity extends AppCompatActivity
     LinearLayout nowPlayingLayout;
 
     private ImageButton syncButton;
+    private ImageButton tuneOutBtn;
+
 
     public String fullname;
     public boolean following;
@@ -142,6 +145,7 @@ public class SettingsActivity extends AppCompatActivity
     public String text;
     public String addr;
     private String time;
+    private Boolean isTunned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +165,14 @@ public class SettingsActivity extends AppCompatActivity
         myFollowers = new ArrayList<>();
         myuser = new User();
         nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
+        tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
+
+        firebaseAuth1 = FirebaseAuth.getInstance();
+        user = firebaseAuth1.getCurrentUser();
+        loggedEmail = user.getEmail();
+        ID = firebaseAuth1.getCurrentUser().getUid();
+        OneSignal.sendTag("User_ID", loggedEmail);
+
 
 
         OneSignal.startInit(this).init();
@@ -170,21 +182,38 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 String personNowPlaying = getPersonNowPlaying();
                 sendTimeRequest(personNowPlaying);
+                syncButton.setVisibility(View.GONE);
+                tuneOutBtn.setVisibility(View.VISIBLE);
+                }
 
-                //getTimeFromFirebase();
-                //mediaPlayer.seekTo(getTimeFromFirebase());
+            });
 
-                //getCurrentPlayingTime();
-                //getTimeFromFirebase();
-                //Toast.makeText(SettingsActivity.this, getTimeFromFirebase() + " * time from fb", Toast.LENGTH_SHORT).show();
+        tuneOutBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tuneOutBtn.setVisibility(View.GONE);
+                syncButton.setVisibility(View.VISIBLE);
+                mediaPlayer.stop();
+
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                return false;
             }
         });
 
         //setting notification tags for current user
-        firebaseAuth1 = FirebaseAuth.getInstance();
-        user = firebaseAuth1.getCurrentUser();
-        loggedEmail = user.getEmail();
-        ID = firebaseAuth1.getCurrentUser().getUid();
         OneSignal.sendTag("User_ID", loggedEmail);
         NowPlayingItem item = new NowPlayingItem();
         //getTimeFromFirebase();
@@ -299,12 +328,24 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
+                    text = dataSnapshot.getKey();
+                    NowPlayingItem item = new NowPlayingItem(text);
+                    nowPlayingLayout.setVisibility(View.VISIBLE);
+                    item.setSong(text);
+                    nameText.setText(text);
+
+                    Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+
+                    String mysong = dataSnapshot.child("Song").getValue().toString();
+                    songText.setText(mysong);
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                nowPlayingLayout.setVisibility(View.GONE);
             }
 
             @Override
@@ -370,7 +411,45 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String x = dataSnapshot.getKey();
+                    Toast.makeText(SettingsActivity.this, "id is " + x , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString() , Toast.LENGTH_SHORT).show();
 
+                    //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+
+                    if (!x.equals(ID)) {
+                        String time = snapshot.getValue().toString();
+                        final int newtime = Integer.parseInt(time);
+                        Toast.makeText(SettingsActivity.this, time + " in child added ", Toast.LENGTH_SHORT).show();
+                        String songtosync = getSongName();
+
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase songRef = ref.child("URL").child(songtosync);
+
+                        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                            @Override
+                            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                    url = String.valueOf(dsp.getValue());
+                                    UserDetails.song = url;
+                                    Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                                    playMusic(newtime);
+                                    //getTimeFromFirebase();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+
+
+                        //getUrl(songtosync);
+                        // playMusic(newtime);
+                    }
+                }
             }
 
             @Override
@@ -597,8 +676,8 @@ public class SettingsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
-        nav_user.setText(getIntent().getExtras().getString("Email"));
-        toolbar.setTitle("Profile");
+        //nav_user.setText(getIntent().getExtras().getString("Email"));
+        toolbar.setTitle("Now Playing");
 
 
         //search layout and functions
@@ -944,18 +1023,28 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void eraseFromFirebase() {
-        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(fullname);
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        dataSnapshot.getRef().removeValue();
-                    }
+                        String v;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            v = snapshot.getKey();
+                            Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                            //getFulname();
+                            if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+                                Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
+                                dataSnapshot.child(v).getRef().removeValue();
+                            }
+                        }
+                    }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+
                     }
                 });
     }
@@ -978,9 +1067,14 @@ public class SettingsActivity extends AppCompatActivity
         }
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
+        TextView title = (TextView) findViewById(R.id.track_title);
+        String songtitle = title.getText().toString();
+        //song = ((TextView) view).getText().toString();
+        getFollowers(UserDetails.fullname, songtitle);
+
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
-        nowPlaying(song);
+        //nowPlaying(song);
     }
 
     public void openPlayerPage(View v) {
@@ -1035,6 +1129,26 @@ public class SettingsActivity extends AppCompatActivity
             }
 
         });
+    }
+
+    public String getMyFullname(String id){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+        return UserDetails.fullname;
     }
 
     public void checkFollowing() {

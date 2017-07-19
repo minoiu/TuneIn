@@ -124,7 +124,24 @@
                 android:onClick="getTimeFromFirebase()"
                 android:scaleX="1.2"
                 android:scaleY="3"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/tuneout_btn"
+                android:layout_width="81dp"
+                android:layout_height="37dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="13dp"
+                android:layout_toLeftOf="@+id/nowPlaying3"
+                android:background="@drawable/tuneout"
+                android:elevation="0dp"
+                android:scaleX="1.2"
+                android:scaleY="3"
+                android:textAllCaps="false"
+                android:visibility="gone" />
 
         </LinearLayout>
 

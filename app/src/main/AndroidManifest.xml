@@ -30,7 +30,8 @@
             android:label="Now playing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
-        <activity android:name=".Users" />
+        <activity android:name=".Users"
+            android:label="Messages"/>
         <activity
             android:name=".AndroidBuildingMusicPlayerActivity"
             android:label="@string/app_name"
@@ -42,9 +43,11 @@
         <activity android:name=".Chat"
             android:label="Chat" >
             </activity>
-        <activity android:name=".ScrollingActivity" >
+        <activity android:name=".ScrollingActivity"
+            android:label="">
             </activity>
-        <activity android:name=".RequestActivity" >
+        <activity android:name=".RequestActivity"
+            android:label="">
         </activity>
         <activity android:name=".SyncActivity"
             android:theme="@android:style/Theme.NoDisplay"/>
