@@ -129,7 +129,8 @@ public class SettingsActivity extends AppCompatActivity
 
     private ImageButton syncButton;
     private ImageButton tuneOutBtn;
-
+    private TextView ptextview;
+    private TextView stextview;
 
     public String fullname;
     public boolean following;
@@ -138,6 +139,7 @@ public class SettingsActivity extends AppCompatActivity
     public TextView nameText;
     public ImageButton fab;
     public ImageButton fab1;
+    public ImageButton youtube;
     private DatabaseReference fdb;
     private List<String> myFollowers;
     public String ID;
@@ -156,6 +158,10 @@ public class SettingsActivity extends AppCompatActivity
 
         songText = (TextView) findViewById(R.id.songName);
         nameText = (TextView) findViewById(R.id.name);
+        ptextview = (TextView) findViewById(R.id.ptextView);
+        stextview = (TextView) findViewById(R.id.stextView);
+        youtube = (ImageButton) findViewById(R.id.youtube);
+
 
         fab = (ImageButton) findViewById(R.id.fab);
         fab1 = (ImageButton) findViewById(R.id.fab1);
@@ -589,6 +595,7 @@ public class SettingsActivity extends AppCompatActivity
                 play_toolbar.setVisibility(View.GONE);
                 //nowPlayingLayout.setVisibility(View.GONE);
                 play_toolbar.requestLayout();
+                hideSoftKeyboard(SettingsActivity.this);
 
                 UserDetails.username = user;
 
@@ -619,6 +626,7 @@ public class SettingsActivity extends AppCompatActivity
                 play_toolbar.bringToFront();
                 track_title = (TextView) findViewById(R.id.track_title);
                 track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -663,6 +671,32 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        youtube.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = getSongName();
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
         //sliding menu settings
         //// TODO: 21/06/2017 add extra settings
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -691,7 +725,7 @@ public class SettingsActivity extends AppCompatActivity
                 searchLayout.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 fab1.setVisibility(View.INVISIBLE);
-                play_toolbar.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
             }
 
             @Override
@@ -699,6 +733,8 @@ public class SettingsActivity extends AppCompatActivity
                 searchLayout.setVisibility(View.INVISIBLE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
 
             }
         });
@@ -1473,30 +1509,32 @@ public class SettingsActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
-
-
-//
-//        mediaPlayer.reset();
-//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        try {
-//            mediaPlayer.setDataSource(UserDetails.song);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            mediaPlayer.prepare();
-//            mediaPlayer.setVolume(1, 1);
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            updateProgressBar();
-//        }
-//            mediaPlayer.seekTo(time);
-//            mediaPlayer.start();
-//    }
-
     }
+
+    public void viewOnYoutube(){
+
+        String songToView = getSongName();
+
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+        videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                    String link = dataSnapshot.getValue().toString();
+                    Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(link));
+                startActivity(viewIntent);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
 }
 
 
