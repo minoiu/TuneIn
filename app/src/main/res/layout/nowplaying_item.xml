@@ -152,7 +152,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="10dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.39"
@@ -163,10 +163,11 @@
                 android:id="@+id/youtube"
                 android:layout_width="30dp"
                 android:layout_height="34dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="42dp"
-                android:layout_marginTop="2dp"
-                android:layout_toRightOf="@+id/syncButton"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/comment"
+                android:layout_marginLeft="37dp"
+                android:layout_marginStart="37dp"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="true"
                 android:scaleType="fitCenter"
@@ -176,10 +177,11 @@
                 android:id="@+id/download"
                 android:layout_width="25dp"
                 android:layout_height="27dp"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="4dp"
-                android:layout_toRightOf="@+id/youtube"
+                android:layout_alignTop="@+id/youtube"
+                android:layout_marginRight="235dp"
+                android:layout_marginTop="5dp"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="centerInside"
@@ -189,10 +191,10 @@
                 android:id="@+id/comment"
                 android:layout_width="32dp"
                 android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="35dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="160dp"
                 android:layout_marginTop="1dp"
-                android:layout_toRightOf="@+id/download"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
@@ -203,29 +205,41 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="35dp"
+                android:layout_marginRight="105dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/comment"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/plus" />
 
             <ImageButton
-                android:id="@+id/love"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
+                android:id="@+id/blackHeart"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="35dp"
+                android:layout_marginRight="37dp"
                 android:layout_marginTop="3dp"
-                android:layout_toRightOf="@+id/add"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/heart" />
+                android:visibility="visible"
+                app:srcCompat="@drawable/dislike" />
+
+            <ImageButton
+                android:id="@+id/redHeart"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="37dp"
+                android:layout_marginTop="3dp"
+                android:background="@xml/roundcorner"
+                android:cropToPadding="false"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:srcCompat="@drawable/like" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

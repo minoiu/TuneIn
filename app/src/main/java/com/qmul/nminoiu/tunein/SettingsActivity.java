@@ -1,8 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -10,16 +8,10 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.constraint.solver.widgets.WidgetContainer;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.test.mock.MockApplication;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,22 +20,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,8 +45,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -66,15 +54,12 @@ import com.onesignal.OneSignal;
 
 import android.view.View.OnClickListener;
 
-import org.w3c.dom.Text;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static android.R.attr.id;
 
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
@@ -125,7 +110,9 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase9;
     private DatabaseReference timeref;
     public User myuser;
+    public File storagePath;
     LinearLayout nowPlayingLayout;
+    private FirebaseStorage mStorage;
 
     private ImageButton syncButton;
     private ImageButton tuneOutBtn;
@@ -140,6 +127,11 @@ public class SettingsActivity extends AppCompatActivity
     public ImageButton fab;
     public ImageButton fab1;
     public ImageButton youtube;
+    public ImageButton download;
+    public ImageButton blackHeart;
+    public ImageButton redHeart;
+
+
     private DatabaseReference fdb;
     private List<String> myFollowers;
     public String ID;
@@ -161,6 +153,8 @@ public class SettingsActivity extends AppCompatActivity
         ptextview = (TextView) findViewById(R.id.ptextView);
         stextview = (TextView) findViewById(R.id.stextView);
         youtube = (ImageButton) findViewById(R.id.youtube);
+        download = (ImageButton) findViewById(R.id.download);
+
 
 
         fab = (ImageButton) findViewById(R.id.fab);
@@ -172,14 +166,16 @@ public class SettingsActivity extends AppCompatActivity
         myuser = new User();
         nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
+        blackHeart = (ImageButton) findViewById(R.id.blackHeart);
+        redHeart = (ImageButton) findViewById(R.id.redHeart);
 
         firebaseAuth1 = FirebaseAuth.getInstance();
         user = firebaseAuth1.getCurrentUser();
+
         loggedEmail = user.getEmail();
         ID = firebaseAuth1.getCurrentUser().getUid();
         OneSignal.sendTag("User_ID", loggedEmail);
-
-
+        mStorage = FirebaseStorage.getInstance();
 
         OneSignal.startInit(this).init();
 
@@ -696,6 +692,95 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
         });
+
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = getSongName();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown+".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath,"track1.mp3");
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath,"track1.mp3");
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        blackHeart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = getSongName();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                blackHeart.setVisibility(View.GONE);
+                redHeart.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        redHeart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = getSongName();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(),"the key: "+ key, Toast.LENGTH_SHORT).show();
+
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(),"in if: "+ songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        redHeart.setVisibility(View.GONE);
+                                        blackHeart.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+
 
         //sliding menu settings
         //// TODO: 21/06/2017 add extra settings
