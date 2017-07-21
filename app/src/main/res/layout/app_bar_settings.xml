@@ -138,6 +138,7 @@
             android:isScrollContainer="false"
             android:maxHeight="210dp"
             android:scrollbars="none"
+            android:theme="@style/AppTheme"
             android:visibility="visible">
 
 

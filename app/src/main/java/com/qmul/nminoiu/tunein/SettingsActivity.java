@@ -885,7 +885,7 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewShown() {
-                //nowPlayingLayout.setVisibility(View.GONE);
+                nowPlayingLayout.setVisibility(View.GONE);
                 searchLayout.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 fab1.setVisibility(View.INVISIBLE);
@@ -898,6 +898,8 @@ public class SettingsActivity extends AppCompatActivity
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
+                nowPlayingLayout.setVisibility(View.VISIBLE);
+
 
 
             }
