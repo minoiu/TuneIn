@@ -127,7 +127,16 @@ public class SettingsActivity extends AppCompatActivity
     public ImageButton fab;
     public ImageButton fab1;
     public ImageButton youtube;
+    public ImageButton youtubecoloured;
+    public ImageButton comment;
+    public ImageButton commentblue;
+    public ImageButton add;
+    public ImageButton addgreen;
+
+
     public ImageButton download;
+    public ImageButton downloadgreen;
+
     public ImageButton blackHeart;
     public ImageButton redHeart;
 
@@ -153,7 +162,13 @@ public class SettingsActivity extends AppCompatActivity
         ptextview = (TextView) findViewById(R.id.ptextView);
         stextview = (TextView) findViewById(R.id.stextView);
         youtube = (ImageButton) findViewById(R.id.youtube);
+        youtubecoloured = (ImageButton) findViewById(R.id.youtubecoloured);
+        comment = (ImageButton) findViewById(R.id.comment);
+        commentblue = (ImageButton) findViewById(R.id.commentblue);
+        add = (ImageButton) findViewById(R.id.add);
+        addgreen = (ImageButton) findViewById(R.id.addgreen);
         download = (ImageButton) findViewById(R.id.download);
+        downloadgreen = (ImageButton) findViewById(R.id.downloadgreen);
 
 
 
@@ -672,6 +687,9 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 String songToView = getSongName();
 
+                youtube.setVisibility(View.GONE);
+                youtubecoloured.setVisibility(View.VISIBLE);
+
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
@@ -690,6 +708,57 @@ public class SettingsActivity extends AppCompatActivity
 
                     }
                 });
+            }
+        });
+
+        youtubecoloured.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = getSongName();
+
+                youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                comment.setVisibility(View.GONE);
+                commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add.setVisibility(View.GONE);
+                addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        addgreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Already added to your playlist",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -715,6 +784,9 @@ public class SettingsActivity extends AppCompatActivity
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
                         Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        download.setVisibility(View.GONE);
+                        downloadgreen.setVisibility(View.VISIBLE);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -723,6 +795,13 @@ public class SettingsActivity extends AppCompatActivity
 
                     }
                 });
+            }
+        });
+
+        downloadgreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Already downloaded at locatiom: " + UserDetails.song,Toast.LENGTH_SHORT).show();
             }
         });
 

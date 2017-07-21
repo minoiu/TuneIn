@@ -174,9 +174,24 @@
                 app:srcCompat="@drawable/youtube" />
 
             <ImageButton
+                android:id="@+id/youtubecoloured"
+                android:layout_width="30dp"
+                android:layout_height="34dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/comment"
+                android:layout_marginLeft="37dp"
+                android:layout_marginStart="37dp"
+                android:background="@xml/roundcorner"
+                android:cropToPadding="true"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:srcCompat="@drawable/yt_icon" />
+
+            <ImageButton
                 android:id="@+id/download"
                 android:layout_width="25dp"
-                android:layout_height="27dp"
+                android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/youtube"
@@ -186,6 +201,21 @@
                 android:cropToPadding="false"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/download_new" />
+
+            <ImageButton
+                android:id="@+id/downloadgreen"
+                android:layout_width="25dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/youtube"
+                android:layout_marginRight="235dp"
+                android:layout_marginTop="5dp"
+                android:background="@xml/roundcorner"
+                android:cropToPadding="false"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                app:srcCompat="@drawable/downloadgreennew" />
 
             <ImageButton
                 android:id="@+id/comment"
@@ -198,7 +228,22 @@
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:srcCompat="@drawable/icon" />
+
+            <ImageButton
+                android:id="@+id/commentblue"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="160dp"
+                android:layout_marginTop="1dp"
+                android:background="@xml/roundcorner"
+                android:cropToPadding="false"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:srcCompat="@drawable/comment_blue" />
 
             <ImageButton
                 android:id="@+id/add"
@@ -210,7 +255,21 @@
                 android:background="@xml/roundcorner"
                 android:cropToPadding="false"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:srcCompat="@drawable/plus" />
+
+            <ImageButton
+                android:id="@+id/addgreen"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="105dp"
+                android:layout_marginTop="5dp"
+                android:background="@xml/roundcorner"
+                android:cropToPadding="false"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:srcCompat="@drawable/plusdarkgreen" />
 
             <ImageButton
                 android:id="@+id/blackHeart"
