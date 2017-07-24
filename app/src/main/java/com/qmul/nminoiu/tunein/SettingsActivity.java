@@ -171,7 +171,6 @@ public class SettingsActivity extends AppCompatActivity
         downloadgreen = (ImageButton) findViewById(R.id.downloadgreen);
 
 
-
         fab = (ImageButton) findViewById(R.id.fab);
         fab1 = (ImageButton) findViewById(R.id.fab1);
         syncButton = (ImageButton) findViewById(R.id.syncButton);
@@ -179,7 +178,7 @@ public class SettingsActivity extends AppCompatActivity
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
         myuser = new User();
-        nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
+        nowPlayingLayout = (LinearLayout) findViewById(R.id.nowPlaying1);
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
         blackHeart = (ImageButton) findViewById(R.id.blackHeart);
         redHeart = (ImageButton) findViewById(R.id.redHeart);
@@ -201,9 +200,8 @@ public class SettingsActivity extends AppCompatActivity
                 sendTimeRequest(personNowPlaying);
                 syncButton.setVisibility(View.GONE);
                 tuneOutBtn.setVisibility(View.VISIBLE);
-                }
-
-            });
+            }
+        });
 
         tuneOutBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -332,7 +330,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     text = dataSnapshot.getKey();
                     NowPlayingItem item = new NowPlayingItem(text);
-                    nowPlayingLayout.setVisibility(View.VISIBLE);
+                    nowPlayingLayout1.setVisibility(View.VISIBLE);
                     item.setSong(text);
                     nameText.setText(text);
 
@@ -386,8 +384,8 @@ public class SettingsActivity extends AppCompatActivity
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String x = dataSnapshot.getKey();
-                    Toast.makeText(SettingsActivity.this, "id is " + x , Toast.LENGTH_SHORT).show();
-                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString() , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "id is " + x, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
 
                     //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
@@ -420,7 +418,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
                         //getUrl(songtosync);
-                       // playMusic(newtime);
+                        // playMusic(newtime);
                     }
                 }
             }
@@ -430,8 +428,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String x = dataSnapshot.getKey();
-                    Toast.makeText(SettingsActivity.this, "id is " + x , Toast.LENGTH_SHORT).show();
-                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString() , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "id is " + x, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "child is " + snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
 
                     //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
@@ -486,7 +484,6 @@ public class SettingsActivity extends AppCompatActivity
 
 
         });
-
 
 
         //event listener for users
@@ -682,185 +679,6 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String songToView = getSongName();
-
-                youtube.setVisibility(View.GONE);
-                youtubecoloured.setVisibility(View.VISIBLE);
-
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
-
-                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                    @Override
-                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                        String link = dataSnapshot.getValue().toString();
-                        Intent viewIntent =
-                                new Intent("android.intent.action.VIEW",
-                                        Uri.parse(link));
-                        startActivity(viewIntent);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-            }
-        });
-
-        youtubecoloured.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String songToView = getSongName();
-
-                youtubecoloured.setVisibility(View.VISIBLE);
-
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
-
-                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                    @Override
-                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                        String link = dataSnapshot.getValue().toString();
-                        Intent viewIntent =
-                                new Intent("android.intent.action.VIEW",
-                                        Uri.parse(link));
-                        startActivity(viewIntent);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-            }
-        });
-
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                comment.setVisibility(View.GONE);
-                commentblue.setVisibility(View.VISIBLE);
-            }
-        });
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                add.setVisibility(View.GONE);
-                addgreen.setVisibility(View.VISIBLE);
-            }
-        });
-
-        addgreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Already added to your playlist",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String songToDown = getSongName();
-
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown+".mp3");
-
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath,"track1.mp3");
-                try {
-                    localFile = File.createTempFile("Audio", "mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final File finalLocalFile = new File(storagePath,"track1.mp3");
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(),Toast.LENGTH_SHORT).show();
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
-                        download.setVisibility(View.GONE);
-                        downloadgreen.setVisibility(View.VISIBLE);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
-            }
-        });
-
-        downloadgreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Already downloaded at locatiom: " + UserDetails.song,Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        blackHeart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String songToLike = getSongName();
-                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
-                likedRef.push().setValue(songToLike);
-
-                blackHeart.setVisibility(View.GONE);
-                redHeart.setVisibility(View.VISIBLE);
-
-            }
-        });
-
-        redHeart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-
-                final String songLiked = getSongName();
-
-                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
-
-                mDatabase1.addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String key = snapshot.getKey();
-
-                                    Toast.makeText(getApplicationContext(),"the key: "+ key, Toast.LENGTH_SHORT).show();
-
-
-
-                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(),"in if: "+ songLiked, Toast.LENGTH_SHORT).show();
-
-                                        dataSnapshot.child(key).getRef().removeValue();
-                                        redHeart.setVisibility(View.GONE);
-                                        blackHeart.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-            }
-        });
-
-
-
         //sliding menu settings
         //// TODO: 21/06/2017 add extra settings
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -899,7 +717,6 @@ public class SettingsActivity extends AppCompatActivity
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
                 nowPlayingLayout.setVisibility(View.VISIBLE);
-
 
 
             }
@@ -1333,7 +1150,7 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
-    public String getMyFullname(String id){
+    public String getMyFullname(String id) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
 
@@ -1657,7 +1474,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.reset();
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time+2);
+            mediaPlayer.seekTo(time + 2);
             mediaPlayer.start();
         } catch (
                 IllegalArgumentException e)
@@ -1677,30 +1494,205 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
-    public void viewOnYoutube(){
+    public void viewOnYoutube(View v) {
 
-        String songToView = getSongName();
-
-        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-        Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
-
-        videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+        youtube.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                    String link = dataSnapshot.getValue().toString();
-                    Intent viewIntent =
-                        new Intent("android.intent.action.VIEW",
-                                Uri.parse(link));
-                startActivity(viewIntent);
+            public void onClick(View view) {
+                String songToView = getSongName();
+
+                youtube.setVisibility(View.GONE);
+                youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
             }
+        });
+    }
+
+    public void viewOnYoutubeAgain(View v) {
+        youtubecoloured.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = getSongName();
+
+                youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void comment(View v) {
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                comment.setVisibility(View.GONE);
+                commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void addToPlaylist(View v){
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add.setVisibility(View.GONE);
+                addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void addToPlaylistAgain(View v) {
+        addgreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Already added to your playlist", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void download(View v){
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = getSongName();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, "track1.mp3");
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, "track1.mp3");
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        download.setVisibility(View.GONE);
+                        downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void downloadAgain(View v){
+        downloadgreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Already downloaded at location: " + UserDetails.song, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void likeSong(View v){
+        blackHeart.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onClick(View v) {
+
+                String songToLike = getSongName();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                blackHeart.setVisibility(View.GONE);
+                redHeart.setVisibility(View.VISIBLE);
 
             }
         });
     }
 
+    public void dislikeSong(View v){
+        redHeart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = getSongName();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        redHeart.setVisibility(View.GONE);
+                                        blackHeart.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+    }
+
+
+
 }
+
+
 
 
