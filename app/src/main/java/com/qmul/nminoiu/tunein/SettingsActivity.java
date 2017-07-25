@@ -56,6 +56,7 @@ import android.view.View.OnClickListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +74,9 @@ public class SettingsActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     private ArrayList<String> songs = new ArrayList<>();
     private ArrayList<String> users = new ArrayList<>();
+    private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> title = new ArrayList<>();
+    private LinearLayout[] ll;
     private DatabaseReference db;
     private DatabaseReference db1;
     private DatabaseReference db2;
@@ -189,8 +193,12 @@ public class SettingsActivity extends AppCompatActivity
         np3 = (LinearLayout) findViewById(R.id.np3);
         np4 = (LinearLayout) findViewById(R.id.np4);
         np5 = (LinearLayout) findViewById(R.id.np5);
-
-
+        ll = new LinearLayout[5];
+        ll[0] = np1;
+        ll[1] = np2;
+        ll[2] = np3;
+        ll[3] = np4;
+        ll[4] = np5;
 
 
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
@@ -344,18 +352,23 @@ public class SettingsActivity extends AppCompatActivity
 
                     text = dataSnapshot.getKey();
                     NowPlayingItem item = new NowPlayingItem(text);
-                    np1.setVisibility(View.VISIBLE);
-                    np2.setVisibility(View.VISIBLE);
-                    np3.setVisibility(View.VISIBLE);
-                    np4.setVisibility(View.VISIBLE);
-                    np5.setVisibility(View.VISIBLE);
-                    item.setSong(text);
-                    nameText.setText(text);
 
+                    item.setSong(text);
+                   // nameText.setText(text);
+                    names.add(text);
                     Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
                     String mysong = dataSnapshot.child("Song").getValue().toString();
-                    songText.setText(mysong);
+                    //songText.setText(mysong);
+                    title.add(mysong);
+                }
+
+                for(int i=0; i <= names.size()-1; i++){
+                    ll[i].setVisibility(View.VISIBLE);
+                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+                    name.setText(names.get(i));
+                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                    song.setText(title.get(i));
                 }
             }
 
