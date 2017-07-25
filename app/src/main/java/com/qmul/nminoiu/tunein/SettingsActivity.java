@@ -111,7 +111,12 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference timeref;
     public User myuser;
     public File storagePath;
-    LinearLayout nowPlayingLayout;
+    public LinearLayout np1;
+    public LinearLayout np2;
+    public LinearLayout np3;
+    public LinearLayout np4;
+    public LinearLayout np5;
+    public LinearLayout nowPlayingLayout;
     private FirebaseStorage mStorage;
 
     private ImageButton syncButton;
@@ -178,7 +183,16 @@ public class SettingsActivity extends AppCompatActivity
         fab1.bringToFront();
         myFollowers = new ArrayList<>();
         myuser = new User();
-        nowPlayingLayout = (LinearLayout) findViewById(R.id.nowPlaying1);
+        nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
+        np1 = (LinearLayout) findViewById(R.id.np1);
+        np2 = (LinearLayout) findViewById(R.id.np2);
+        np3 = (LinearLayout) findViewById(R.id.np3);
+        np4 = (LinearLayout) findViewById(R.id.np4);
+        np5 = (LinearLayout) findViewById(R.id.np5);
+
+
+
+
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
         blackHeart = (ImageButton) findViewById(R.id.blackHeart);
         redHeart = (ImageButton) findViewById(R.id.redHeart);
@@ -330,7 +344,11 @@ public class SettingsActivity extends AppCompatActivity
 
                     text = dataSnapshot.getKey();
                     NowPlayingItem item = new NowPlayingItem(text);
-                    nowPlayingLayout1.setVisibility(View.VISIBLE);
+                    np1.setVisibility(View.VISIBLE);
+                    np2.setVisibility(View.VISIBLE);
+                    np3.setVisibility(View.VISIBLE);
+                    np4.setVisibility(View.VISIBLE);
+                    np5.setVisibility(View.VISIBLE);
                     item.setSong(text);
                     nameText.setText(text);
 
@@ -347,7 +365,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     text = dataSnapshot.getKey();
                     NowPlayingItem item = new NowPlayingItem(text);
-                    nowPlayingLayout.setVisibility(View.VISIBLE);
+                    np1.setVisibility(View.VISIBLE);
                     item.setSong(text);
                     nameText.setText(text);
 
@@ -360,7 +378,7 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                nowPlayingLayout.setVisibility(View.GONE);
+                np1.setVisibility(View.GONE);
             }
 
             @Override
