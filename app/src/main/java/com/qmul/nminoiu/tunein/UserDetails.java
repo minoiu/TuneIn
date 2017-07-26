@@ -13,6 +13,8 @@ public class UserDetails {
     static ArrayList<String> myFollowers = new ArrayList<>();
     static String myname = "";
     static String song = "";
+    static String songname = "";
+
     static int time = 0;
 
 }

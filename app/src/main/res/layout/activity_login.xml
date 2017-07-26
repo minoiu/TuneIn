@@ -21,19 +21,7 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="107dp"
-            android:background="@color/cardview_light_background"
-            android:visibility="visible"
-            app:srcCompat="@drawable/logotunein" />
-    </LinearLayout>
 
     <ScrollView
         android:id="@+id/login_form"
@@ -43,6 +31,8 @@
         android:background="@color/cardview_light_background"
         android:fillViewport="true">
 
+
+
         <LinearLayout
             android:id="@+id/layoutlogin"
             android:layout_width="match_parent"
@@ -50,6 +40,15 @@
             android:orientation="vertical"
 
             android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="match_parent"
+                android:layout_height="107dp"
+                android:background="@color/cardview_light_background"
+                android:visibility="visible"
+                app:srcCompat="@drawable/logotunein" />
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

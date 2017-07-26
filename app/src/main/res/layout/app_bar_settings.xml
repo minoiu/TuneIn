@@ -53,12 +53,12 @@
             <include
                 android:id="@+id/np1"
                 layout="@layout/nowplaying_item"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <include
                 android:id="@+id/np2"
                 layout="@layout/nowplaying_item"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <include
                 android:id="@+id/np3"

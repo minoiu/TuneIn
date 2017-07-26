@@ -23,9 +23,8 @@
         android:text="friend name"
         android:textAlignment="viewStart"
         android:textAllCaps="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/feed_item_profile_name"
-        android:textStyle="bold" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/feed_item_profile_name" />
 
         <include
             android:id="@+id/divider"
@@ -157,7 +156,6 @@
                 android:layout_marginStart="37dp"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="true"
-                android:onClick="viewOnYoutube"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/youtube" />
 
@@ -205,7 +203,7 @@
                 android:onClick="downloadAgain"
                 android:scaleType="centerInside"
                 android:tint="@color/colorPrimary"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:srcCompat="@drawable/downnewblue" />
 
             <ImageButton
@@ -243,7 +241,7 @@
                 android:layout_alignParentRight="false"
                 android:layout_centerInParent="false"
                 android:layout_marginTop="7dp"
-                android:layout_toLeftOf="@+id/blackHeart"
+                android:layout_toLeftOf="@+id/redHeart"
                 android:layout_toRightOf="@+id/comment"
                 android:adjustViewBounds="false"
                 android:background="@xml/roundcorner"
@@ -265,7 +263,7 @@
                 android:onClick="addToPlaylistAgain"
                 android:scaleType="fitCenter"
                 android:tint="@color/colorPrimaryDark"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:srcCompat="@drawable/plusblue" />
 
             <ImageButton
@@ -295,7 +293,7 @@
                 android:onClick="dislikeSong"
                 android:scaleType="fitCenter"
                 android:tint="@android:color/holo_red_dark"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/like" />
 
 
