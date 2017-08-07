@@ -166,6 +166,7 @@ public class SettingsActivity extends AppCompatActivity
     private String time;
     private Boolean isTunned = false;
     private int i;
+   // private Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +174,7 @@ public class SettingsActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        //setSupportActionBar(toolbar);
 
         songText = (TextView) findViewById(R.id.songName);
         nameText = (TextView) findViewById(R.id.name);
@@ -584,12 +586,12 @@ public class SettingsActivity extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     text = dataSnapshot.getKey();
-                    NowPlayingItem item = new NowPlayingItem(text);
+                    //NowPlayingItem item = new NowPlayingItem(text);
 
-                    item.setSong(text);
+                    //item.setSong(text);
                    // nameText.setText(text);
                     names.add(text);
-                    Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
                     String mysong = dataSnapshot.child("Song").getValue().toString();
                     //songText.setText(mysong);
@@ -610,22 +612,65 @@ public class SettingsActivity extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     text = dataSnapshot.getKey();
-                    NowPlayingItem item = new NowPlayingItem(text);
-                    np1.setVisibility(View.VISIBLE);
-                    item.setSong(text);
-                    nameText.setText(text);
-
-                    Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
-
                     String mysong = dataSnapshot.child("Song").getValue().toString();
-                    songText.setText(mysong);
+
+                    for(int i = 0; i <= names.size()-1; i++){
+                        if(text.equals(names.get(i))){
+                            names.set(i, text);
+                            title.set(i, mysong);
+                            //ll[i].setVisibility(View.VISIBLE);
+                            TextView name = (TextView) ll[i].findViewById(R.id.name);
+                            name.setText(text);
+                            TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                            song.setText(mysong);
+                        }
+
+//                        else {
+//                            names.add(text);
+//                            title.add(mysong);
+//                        }
+                    }
+
+                    //item.setSong(text);
+                    // nameText.setText(text);
+                    //names.add(text);
+                    //Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+
+
+                    //songText.setText(mysong);
+                    //title.add(mysong);
                 }
+
+//                for(int i=0; i <= names.size()-1; i++){
+//                    ll[i].setVisibility(View.VISIBLE);
+//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+//                    name.setText(names.get(i));
+//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+//                    song.setText(title.get(i));
+//                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                np1.setVisibility(View.GONE);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    text = dataSnapshot.getKey();
+                    String mysong = dataSnapshot.child("Song").getValue().toString();
+
+
+                    for (int j = 0; j <= names.size() - 1; j++) {
+                        if (text.equals(names.get(j))) {
+                            names.remove(text);
+                            title.remove(mysong);
+                            ll[j].setVisibility(View.GONE);
+                        }
+
+
+                    }
+                }
             }
+
+
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -1003,12 +1048,14 @@ public class SettingsActivity extends AppCompatActivity
         //search layout and functions
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        //searchView.bringToFront();
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
             @Override
             public void onSearchViewShown() {
                 nowPlayingLayout.setVisibility(View.GONE);
                 searchLayout.setVisibility(View.VISIBLE);
+                //searchView.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 fab1.setVisibility(View.INVISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -1016,7 +1063,9 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewClosed() {
-                searchLayout.setVisibility(View.INVISIBLE);
+                searchLayout.setVisibility(View.GONE);
+               // searchView.setVisibility(View.VISIBLE);
+
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -1355,12 +1404,16 @@ public class SettingsActivity extends AppCompatActivity
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
                             Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
                                 Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
-                                dataSnapshot.child(v).getRef().removeValue();
+                               // dataSnapshot.child(v).getRef().removeValue();
+                                dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+
+                                //names.remove(getMyFullname(ID));
+                               // title.remove()
                             }
                         }
                     }

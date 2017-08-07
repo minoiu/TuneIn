@@ -58,7 +58,7 @@
             <include
                 android:id="@+id/np2"
                 layout="@layout/nowplaying_item"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/np3"
