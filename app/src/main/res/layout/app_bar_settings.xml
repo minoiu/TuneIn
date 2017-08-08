@@ -19,6 +19,7 @@
         <include
             layout="@layout/content_settings"
             android:visibility="invisible" />
+    </android.support.design.widget.AppBarLayout>
 
 
     <android.support.v7.widget.Toolbar
@@ -29,7 +30,6 @@
         app:popupTheme="@style/AppTheme.PopupOverlay">
     </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
 
 
     <ScrollView
@@ -126,7 +126,11 @@
 
         app:searchSuggestionBackground="@color/colorPrimary"
 
-        app:searchSuggestionIcon="@drawable/ic_suggestion" />
+        app:searchSuggestionIcon="@drawable/ic_suggestion"
+
+        app:showAsAction="always"
+
+        />
 
 
     <LinearLayout
