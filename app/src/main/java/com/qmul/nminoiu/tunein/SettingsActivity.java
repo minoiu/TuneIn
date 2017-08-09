@@ -163,7 +163,31 @@ public class SettingsActivity extends AppCompatActivity
     public TextView title3;
     public TextView title4;
     public TextView title5;
-
+    public ImageButton bheart1;
+    public ImageButton bheart2;
+    public ImageButton bheart3;
+    public ImageButton bheart4;
+    public ImageButton bheart5;
+    public ImageButton rheart1;
+    public ImageButton rheart2;
+    public ImageButton rheart3;
+    public ImageButton rheart4;
+    public ImageButton rheart5;
+    public ImageButton add1;
+    public ImageButton add2;
+    public ImageButton add3;
+    public ImageButton add4;
+    public ImageButton add5;
+    public ImageButton comment1;
+    public ImageButton comment2;
+    public ImageButton comment3;
+    public ImageButton comment4;
+    public ImageButton comment5;
+    public ImageButton download1;
+    public ImageButton download2;
+    public ImageButton download3;
+    public ImageButton download4;
+    public ImageButton download5;
 
 
     public TextView name1;
@@ -256,87 +280,87 @@ public class SettingsActivity extends AppCompatActivity
 
 
         View a1 = findViewById(R.id.np1);
-        ImageButton download1 = (ImageButton) a1.findViewById(R.id.download);
+         download1 = (ImageButton) a1.findViewById(R.id.download);
        // download1.setOnClickListener(this);
         View a2 = findViewById(R.id.np2);
-        ImageButton download2 = (ImageButton) a2.findViewById(R.id.download);
+         download2 = (ImageButton) a2.findViewById(R.id.download);
        // download2.setOnClickListener(this);
         View a3 = findViewById(R.id.np3);
-        ImageButton download3 = (ImageButton) a3.findViewById(R.id.download);
+         download3 = (ImageButton) a3.findViewById(R.id.download);
        // download3.setOnClickListener(this);
         View a4 = findViewById(R.id.np4);
-        ImageButton download4 = (ImageButton) a4.findViewById(R.id.download);
+         download4 = (ImageButton) a4.findViewById(R.id.download);
      //   download4.setOnClickListener(this);
         View a5 = findViewById(R.id.np5);
-        ImageButton download5 = (ImageButton) a5.findViewById(R.id.download);
+         download5 = (ImageButton) a5.findViewById(R.id.download);
        // download5.setOnClickListener(this);
 
 
         View c1 = findViewById(R.id.np1);
-        ImageButton comment1 = (ImageButton) c1.findViewById(R.id.comment);
+         comment1 = (ImageButton) c1.findViewById(R.id.comment);
        // comment1.setOnClickListener(this);
         View c2 = findViewById(R.id.np2);
-        ImageButton comment2 = (ImageButton) c2.findViewById(R.id.comment);
+         comment2 = (ImageButton) c2.findViewById(R.id.comment);
        // comment2.setOnClickListener(this);
         View c3 = findViewById(R.id.np3);
-        ImageButton comment3 = (ImageButton) c3.findViewById(R.id.comment);
+         comment3 = (ImageButton) c3.findViewById(R.id.comment);
       //  comment3.setOnClickListener(this);
         View c4 = findViewById(R.id.np4);
-        ImageButton comment4 = (ImageButton) c4.findViewById(R.id.comment);
+         comment4 = (ImageButton) c4.findViewById(R.id.comment);
       //  comment4.setOnClickListener(this);
         View c5 = findViewById(R.id.np5);
-        ImageButton comment5 = (ImageButton) c5.findViewById(R.id.comment);
+         comment5 = (ImageButton) c5.findViewById(R.id.comment);
       //  comment5.setOnClickListener(this);
 
 
         View ad1 = findViewById(R.id.np1);
-        ImageButton add1 = (ImageButton) ad1.findViewById(R.id.add);
+         add1 = (ImageButton) ad1.findViewById(R.id.add);
       //  add1.setOnClickListener(this);
         View ad2 = findViewById(R.id.np2);
-        ImageButton add2 = (ImageButton) ad2.findViewById(R.id.add);
+         add2 = (ImageButton) ad2.findViewById(R.id.add);
        // add2.setOnClickListener(this);
         View ad3 = findViewById(R.id.np3);
-        ImageButton add3 = (ImageButton) ad3.findViewById(R.id.add);
+         add3 = (ImageButton) ad3.findViewById(R.id.add);
       //  add3.setOnClickListener(this);
         View ad4 = findViewById(R.id.np4);
-        ImageButton add4 = (ImageButton) ad4.findViewById(R.id.add);
+         add4 = (ImageButton) ad4.findViewById(R.id.add);
       //  add4.setOnClickListener(this);
         View ad5 = findViewById(R.id.np5);
-        ImageButton add5 = (ImageButton) ad5.findViewById(R.id.add);
+         add5 = (ImageButton) ad5.findViewById(R.id.add);
        // add5.setOnClickListener(this);
 
 
         View b1 = findViewById(R.id.np1);
-        ImageButton bheart1 = (ImageButton) b1.findViewById(R.id.blackHeart);
+         bheart1 = (ImageButton) b1.findViewById(R.id.blackHeart);
       //  bheart1.setOnClickListener(this);
         View b2 = findViewById(R.id.np2);
-        ImageButton bheart2 = (ImageButton) b2.findViewById(R.id.blackHeart);
+         bheart2 = (ImageButton) b2.findViewById(R.id.blackHeart);
       //  bheart2.setOnClickListener(this);
         View b3 = findViewById(R.id.np3);
-        ImageButton bheart3 = (ImageButton) b3.findViewById(R.id.blackHeart);
+         bheart3 = (ImageButton) b3.findViewById(R.id.blackHeart);
       //  bheart3.setOnClickListener(this);
         View b4 = findViewById(R.id.np4);
-        ImageButton bheart4 = (ImageButton) b4.findViewById(R.id.blackHeart);
+         bheart4 = (ImageButton) b4.findViewById(R.id.blackHeart);
      //   bheart4.setOnClickListener(this);
         View b5 = findViewById(R.id.np5);
-        ImageButton bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
+         bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
        // bheart5.setOnClickListener(this);
 
 
         View r1 = findViewById(R.id.np1);
-        ImageButton rheart1 = (ImageButton) r1.findViewById(R.id.redHeart);
+         rheart1 = (ImageButton) r1.findViewById(R.id.redHeart);
       //  rheart1.setOnClickListener(this);
         View r2 = findViewById(R.id.np2);
-        ImageButton rheart2 = (ImageButton) r2.findViewById(R.id.redHeart);
+         rheart2 = (ImageButton) r2.findViewById(R.id.redHeart);
       //  rheart2.setOnClickListener(this);
         View r3 = findViewById(R.id.np3);
-        ImageButton rheart3 = (ImageButton) r3.findViewById(R.id.redHeart);
+         rheart3 = (ImageButton) r3.findViewById(R.id.redHeart);
       //  rheart3.setOnClickListener(this);
         View r4 = findViewById(R.id.np4);
-        ImageButton rheart4 = (ImageButton) r4.findViewById(R.id.redHeart);
+         rheart4 = (ImageButton) r4.findViewById(R.id.redHeart);
       //  rheart4.setOnClickListener(this);
         View r5 = findViewById(R.id.np5);
-        ImageButton rheart5 = (ImageButton) r5.findViewById(R.id.redHeart);
+         rheart5 = (ImageButton) r5.findViewById(R.id.redHeart);
       //  rheart5.setOnClickListener(this);
 
         View ti1 = findViewById(R.id.np1);
@@ -436,45 +460,91 @@ public class SettingsActivity extends AppCompatActivity
         tunein1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // mediaPlayer.pause();
                 sendTimeRequest(name1.getText().toString(),title1.getText().toString() );
                 tunein1.setVisibility(View.GONE);
                 tuneout1.setVisibility(View.VISIBLE);
+                tuneout2.setVisibility(View.GONE);
+                tunein2.setVisibility(View.VISIBLE);
+                tuneout3.setVisibility(View.GONE);
+                tunein3.setVisibility(View.VISIBLE);
+                tuneout4.setVisibility(View.GONE);
+                tunein4.setVisibility(View.VISIBLE);
+                tuneout5.setVisibility(View.GONE);
+                tunein5.setVisibility(View.VISIBLE);
+
             }
         });
 
         tunein2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mediaPlayer.pause();
                 sendTimeRequest(name2.getText().toString(), title2.getText().toString());
                 tunein2.setVisibility(View.GONE);
                 tuneout2.setVisibility(View.VISIBLE);
+                tuneout1.setVisibility(View.GONE);
+                tunein1.setVisibility(View.VISIBLE);
+                tuneout3.setVisibility(View.GONE);
+                tunein3.setVisibility(View.VISIBLE);
+                tuneout4.setVisibility(View.GONE);
+                tunein4.setVisibility(View.VISIBLE);
+                tuneout5.setVisibility(View.GONE);
+                tunein5.setVisibility(View.VISIBLE);
             }
         });
 
         tunein3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mediaPlayer.pause();
                 sendTimeRequest(name3.getText().toString(),title3.getText().toString());
                 tunein3.setVisibility(View.GONE);
                 tuneout3.setVisibility(View.VISIBLE);
+                tuneout1.setVisibility(View.GONE);
+                tunein1.setVisibility(View.VISIBLE);
+                tuneout2.setVisibility(View.GONE);
+                tunein2.setVisibility(View.VISIBLE);
+                tuneout4.setVisibility(View.GONE);
+                tunein4.setVisibility(View.VISIBLE);
+                tuneout5.setVisibility(View.GONE);
+                tunein5.setVisibility(View.VISIBLE);
             }
         });
 
         tunein4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mediaPlayer.pause();
                 sendTimeRequest(name4.getText().toString(), title4.getText().toString());
                 tunein4.setVisibility(View.GONE);
                 tuneout4.setVisibility(View.VISIBLE);
+                tuneout1.setVisibility(View.GONE);
+                tunein1.setVisibility(View.VISIBLE);
+                tuneout2.setVisibility(View.GONE);
+                tunein2.setVisibility(View.VISIBLE);
+                tuneout3.setVisibility(View.GONE);
+                tunein3.setVisibility(View.VISIBLE);
+                tuneout5.setVisibility(View.GONE);
+                tunein5.setVisibility(View.VISIBLE);
             }
         });
 
         tunein5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mediaPlayer.pause();
                 sendTimeRequest(name5.getText().toString(), title5.getText().toString());
                 tunein5.setVisibility(View.GONE);
                 tuneout5.setVisibility(View.VISIBLE);
+                tuneout1.setVisibility(View.GONE);
+                tunein1.setVisibility(View.VISIBLE);
+                tuneout2.setVisibility(View.GONE);
+                tunein2.setVisibility(View.VISIBLE);
+                tuneout3.setVisibility(View.GONE);
+                tunein3.setVisibility(View.VISIBLE);
+                tuneout4.setVisibility(View.GONE);
+                tunein4.setVisibility(View.VISIBLE);
             }
         });
 
@@ -675,41 +745,720 @@ public class SettingsActivity extends AppCompatActivity
 //        }
 
 
-        for(i=0; i < youtubeArray.length; i++) {
+        youtube1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title1.getText().toString();
+                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
-            youtubeArray[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String songToView = titlesArray[i].getText().toString();
-                    Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+                //youtube.setVisibility(View.GONE);
+                //youtubecoloured.setVisibility(View.VISIBLE);
 
-                    //youtube.setVisibility(View.GONE);
-                    //youtubecoloured.setVisibility(View.VISIBLE);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                    Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
 
-                    videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                        @Override
-                        public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                            String link = dataSnapshot.getValue().toString();
-                            Intent viewIntent =
-                                    new Intent("android.intent.action.VIEW",
-                                            Uri.parse(link));
-                            startActivity(viewIntent);
-                        }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                    }
+                });
+            }
+        });
 
-                        }
-                    });
+        youtube2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title2.getText().toString();
+                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+
+                //youtube.setVisibility(View.GONE);
+                //youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title3.getText().toString();
+                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+
+                //youtube.setVisibility(View.GONE);
+                //youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        youtube4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title4.getText().toString();
+                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+
+                //youtube.setVisibility(View.GONE);
+                //youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title5.getText().toString();
+                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+
+                //youtube.setVisibility(View.GONE);
+                //youtubecoloured.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        download1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = title1.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = title2.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = title3.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = title4.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToDown = title5.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile("Audio", "mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        comment1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //comment.setVisibility(View.GONE);
+                //commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        comment2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //comment.setVisibility(View.GONE);
+                //commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        comment3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //comment.setVisibility(View.GONE);
+                //commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        comment4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //comment.setVisibility(View.GONE);
+                //commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        comment5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //comment.setVisibility(View.GONE);
+                //commentblue.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add.setVisibility(View.GONE);
+                //addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add.setVisibility(View.GONE);
+                //addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add.setVisibility(View.GONE);
+                //addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add.setVisibility(View.GONE);
+                //addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        add5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add.setVisibility(View.GONE);
+                //addgreen.setVisibility(View.VISIBLE);
+            }
+        });
+
+        bheart1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = title1.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart1.setVisibility(View.GONE);
+                rheart1.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = title2.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart2.setVisibility(View.GONE);
+                rheart2.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = title3.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart3.setVisibility(View.GONE);
+                rheart3.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart4.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = title4.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart4.setVisibility(View.GONE);
+                rheart4.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart5.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String songToLike = title5.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart5.setVisibility(View.GONE);
+                rheart5.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        rheart1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = title1.getText().toString();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart1.setVisibility(View.INVISIBLE);
+                                        bheart1.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = title2.getText().toString();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart2.setVisibility(View.INVISIBLE);
+                                        bheart2.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = title3.getText().toString();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart3.setVisibility(View.INVISIBLE);
+                                        bheart3.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart4.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = title4.getText().toString();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart4.setVisibility(View.INVISIBLE);
+                                        bheart4.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart5.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+
+                final String songLiked = title5.getText().toString();
+
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+
+                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
+
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart5.setVisibility(View.INVISIBLE);
+                                        bheart5.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+
+
+//        for(i=0; i <= 4; i++) {
+//
+//            youtubeArray[i].setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    String songToView = titlesArray[i].getText().toString();
+//                    Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+//
+//                    //youtube.setVisibility(View.GONE);
+//                    //youtubecoloured.setVisibility(View.VISIBLE);
+//
+//                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+//                    Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+//
+//                    videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+//                            String link = dataSnapshot.getValue().toString();
+//                            Intent viewIntent =
+//                                    new Intent("android.intent.action.VIEW",
+//                                            Uri.parse(link));
+//                            startActivity(viewIntent);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(FirebaseError firebaseError) {
+//
+//                        }
+//                    });
+//                }
+//            });
+//        }
 
         //setting notification tags for current user
-        OneSignal.sendTag("User_ID", loggedEmail);
+
         NowPlayingItem item = new NowPlayingItem();
         //getTimeFromFirebase();
 
@@ -812,23 +1561,24 @@ public class SettingsActivity extends AppCompatActivity
                     //NowPlayingItem item = new NowPlayingItem(text);
 
                     //item.setSong(text);
-                   // nameText.setText(text);
+                    // nameText.setText(text);
                     names.add(text);
-                   // Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(SettingsActivity.this, text + " is first friend name", Toast.LENGTH_SHORT).show();
 
                     String mysong = dataSnapshot.child("Song").getValue().toString();
                     //songText.setText(mysong);
                     title.add(mysong);
                 }
 
-                for(int i=0; i <= names.size()-1; i++){
-                    ll[i].setVisibility(View.VISIBLE);
-                    TextView name = (TextView) ll[i].findViewById(R.id.name);
-                    name.setText(names.get(i));
-                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
-                    song.setText(title.get(i));
+                    for (int i = 0; i <= names.size() - 1; i++) {
+                        ll[i].setVisibility(View.VISIBLE);
+                        TextView name = (TextView) ll[i].findViewById(R.id.name);
+                        name.setText(names.get(i));
+                        TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                        song.setText(title.get(i));
+                    }
                 }
-            }
+
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -864,13 +1614,13 @@ public class SettingsActivity extends AppCompatActivity
                     //title.add(mysong);
                 }
 
-//                for(int i=0; i <= names.size()-1; i++){
-//                    ll[i].setVisibility(View.VISIBLE);
-//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
-//                    name.setText(names.get(i));
-//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
-//                    song.setText(title.get(i));
-//                }
+                for(int i=0; i <= names.size()-1; i++){
+                    ll[i].setVisibility(View.VISIBLE);
+                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+                    name.setText(names.get(i));
+                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                    song.setText(title.get(i));
+                }
             }
 
             @Override
@@ -2114,15 +2864,15 @@ public class SettingsActivity extends AppCompatActivity
 //        });
 //    }
 
-    public void comment(View v) {
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //comment.setVisibility(View.GONE);
-                //commentblue.setVisibility(View.VISIBLE);
-            }
-        });
-    }
+//    public void comment(View v) {
+//        comment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //comment.setVisibility(View.GONE);
+//                //commentblue.setVisibility(View.VISIBLE);
+//            }
+//        });
+//    }
 
     public void addToPlaylist(View v){
         add.setOnClickListener(new View.OnClickListener() {
