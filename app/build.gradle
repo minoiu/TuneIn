@@ -10,7 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [onesignal_app_id: "99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00",
+        manifestPlaceholders = [onesignal_app_id               : "99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00",
                                 // Project number pulled from dashboard, local value is ignored.
                                 onesignal_google_project_number: "REMOTE"]
 
@@ -42,6 +42,9 @@ dependencies {
     })
 
     compile 'com.google.firebase:firebase-database:10.2.6'
+
+
+
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:customtabs:25.3.1'
@@ -61,9 +64,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.2.6'
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
-
-
-
     testCompile 'junit:junit:4.12'
 }
 

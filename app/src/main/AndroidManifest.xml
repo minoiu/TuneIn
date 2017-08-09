@@ -12,58 +12,58 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
-
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="Now playing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
-        <activity android:name=".Users"
-            android:label="Messages"/>
+        <activity
+            android:name=".Users"
+            android:label="Messages" />
         <activity
             android:name=".AndroidBuildingMusicPlayerActivity"
-            android:label="@string/app_name"
-            android:configChanges="keyboardHidden|orientation">
-        </activity>
-
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"></activity>
+        <activity android:name=".PlayListActivity" />
         <activity
-            android:name=".PlayListActivity" />
-        <activity android:name=".Chat"
-            android:label="Chat" >
-            </activity>
-        <activity android:name=".ScrollingActivity"
-            android:label="">
-            </activity>
-        <activity android:name=".RequestActivity"
-            android:label="">
-        </activity>
-        <activity android:name=".SyncActivity"
-            android:theme="@android:style/Theme.NoDisplay"/>
-        <activity android:name=".LogoActivity"
+            android:name=".Chat"
+            android:label="Chat"></activity>
+        <activity
+            android:name=".ScrollingActivity"
+            android:label=""></activity>
+        <activity
+            android:name=".RequestActivity"
+            android:label=""></activity>
+        <activity
+            android:name=".SyncActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
+        <activity
+            android:name=".LogoActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            </activity>
-
+        </activity>
+        <activity
+            android:name=".LibraryActivity"
+            android:label="@string/title_activity_library"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
