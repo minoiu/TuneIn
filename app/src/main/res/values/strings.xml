@@ -23,6 +23,8 @@
     <string name="navigation_drawer_close" />
     <string name="title_activity_audio_player">AudioPlayer</string>
     <string name="title_activity_library">LibraryActivity</string>
+    <string name="title_activity_playlists">PlaylistsActivity</string>
+    <string name="title_activity_playlist_songs">PlaylistSongs</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>

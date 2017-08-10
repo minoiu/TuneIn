@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -141,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity
     //public boolean nowPlaying;
     public TextView songText;
     public TextView nameText;
-    public ImageButton fab;
+    public FloatingActionButton fab;
     public ImageButton fab1;
     public ImageButton youtube1;
     public ImageButton youtube2;
@@ -228,7 +229,7 @@ public class SettingsActivity extends AppCompatActivity
         nameText = (TextView) findViewById(R.id.name);
         ptextview = (TextView) findViewById(R.id.ptextView);
         stextview = (TextView) findViewById(R.id.stextView);
-        fab = (ImageButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (ImageButton) findViewById(R.id.fab1);
         syncButton = (ImageButton) findViewById(R.id.syncButton);
         fab.bringToFront();
@@ -329,7 +330,6 @@ public class SettingsActivity extends AppCompatActivity
          add5 = (ImageButton) ad5.findViewById(R.id.add);
        // add5.setOnClickListener(this);
 
-
         View b1 = findViewById(R.id.np1);
          bheart1 = (ImageButton) b1.findViewById(R.id.blackHeart);
       //  bheart1.setOnClickListener(this);
@@ -345,7 +345,6 @@ public class SettingsActivity extends AppCompatActivity
         View b5 = findViewById(R.id.np5);
          bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
        // bheart5.setOnClickListener(this);
-
 
         View r1 = findViewById(R.id.np1);
          rheart1 = (ImageButton) r1.findViewById(R.id.redHeart);
@@ -1120,40 +1119,50 @@ public class SettingsActivity extends AppCompatActivity
         add1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add.setVisibility(View.GONE);
-                //addgreen.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                String song = title1.getText().toString();
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
 
         add2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add.setVisibility(View.GONE);
-                //addgreen.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                String song = title2.getText().toString();
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
 
         add3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add.setVisibility(View.GONE);
-                //addgreen.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                String song = title3.getText().toString();
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
 
         add4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add.setVisibility(View.GONE);
-                //addgreen.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                String song = title4.getText().toString();
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
 
         add5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add.setVisibility(View.GONE);
-                //addgreen.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                String song = title5.getText().toString();
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
 
@@ -1682,6 +1691,9 @@ public class SettingsActivity extends AppCompatActivity
                             String song = dataSnapshot.child("Song").getValue().toString();
                             final int newtime = Integer.parseInt(time);
 
+                            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+                            likedRef.push().setValue(song);
+
                             Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                             Firebase songRef = ref.child("URL").child(song);
 
@@ -1739,6 +1751,9 @@ public class SettingsActivity extends AppCompatActivity
                     String time = dataSnapshot.child("Time").getValue().toString();
                     String song = dataSnapshot.child("Song").getValue().toString();
                     final int newtime = Integer.parseInt(time);
+
+                    Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+                    likedRef.push().setValue(song);
 
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("URL").child(song);
@@ -1842,36 +1857,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        db.child("Users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                for (DataSnapshot child : children) {
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        db1.child("Songs").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                for (DataSnapshot child : children) {
-                    // Toast.makeText(SettingsActivity.this, dataSnapshot.toString().trim(), Toast.LENGTH_LONG).show();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-
-        //on create
 
 
         //homepage toolbar
@@ -1947,7 +1933,7 @@ public class SettingsActivity extends AppCompatActivity
                             play_toolbar.requestLayout();
                             play_toolbar.invalidate();
                             url = String.valueOf(dsp.getValue());
-                            startMusic(url);
+                            startMusic(url, song);
                             Toast.makeText(SettingsActivity.this, "Fullname is this: " + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                             nowPlaying(song);
@@ -1971,6 +1957,14 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, Users.class);
+                startActivity(i);
+            }
+        });
+
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
                 startActivity(i);
             }
         });
@@ -2101,9 +2095,12 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
-    private void getFollowers(String fullname, final String mysong) {
+    public void getFollowers(String fullname, final String mysong) {
+
+        final ArrayAdapter<String> fadapter;
 
         fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
+        DatabaseReference fdb;
         fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
         fdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
@@ -2283,7 +2280,7 @@ public class SettingsActivity extends AppCompatActivity
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
-    public void startMusic(String link) {
+    public void startMusic(String link, String song) {
         play_toolbar.setVisibility(View.VISIBLE);
         play_toolbar.bringToFront();
 
@@ -2303,6 +2300,9 @@ public class SettingsActivity extends AppCompatActivity
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
+
+        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+        likedRef.push().setValue(song);
     }
 
     public void stopMusic(Integer length) {
@@ -2341,7 +2341,7 @@ public class SettingsActivity extends AppCompatActivity
 //            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
     }
 
-    private void eraseFromFirebase() {
+    public void eraseFromFirebase() {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -2350,8 +2350,8 @@ public class SettingsActivity extends AppCompatActivity
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
                                 Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
@@ -2412,7 +2412,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * Background Runnable thread
      */
-    private Runnable mUpdateTimeTask = new Runnable() {
+    public Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             Utilities utils = new Utilities();
             long totalDuration = SettingsActivity.mediaPlayer.getDuration();
@@ -2436,14 +2436,19 @@ public class SettingsActivity extends AppCompatActivity
 
     public void getFulname() {
 
-        ID = user.getUid();
+        FirebaseAuth fb;
+        fb = FirebaseAuth.getInstance();
+
+        String ID;
+        ID = fb.getCurrentUser().getUid();
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -2462,7 +2467,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -2611,7 +2616,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void addToHome(List<String> myvalue, final String mysong) {
+    public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -2621,7 +2626,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
