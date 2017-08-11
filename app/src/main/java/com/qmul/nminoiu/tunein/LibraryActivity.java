@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,11 @@ public class LibraryActivity extends AppCompatActivity {
     private List myFollowers;
     private String me;
     private FloatingActionButton fab;
+    private RelativeLayout playlists;
+    private RelativeLayout downloads;
+    private RelativeLayout favourites;
+
+
 
 
     @Override
@@ -80,8 +86,11 @@ public class LibraryActivity extends AppCompatActivity {
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
-        myFollowers = new ArrayList<>();
+        playlists = (RelativeLayout) findViewById(R.id.playlists);
+        favourites = (RelativeLayout) findViewById(R.id.favourites);
+        downloads = (RelativeLayout) findViewById(R.id.downloads);
 
+        myFollowers = new ArrayList<>();
 
         recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         recentsRef.addChildEventListener(new ChildEventListener() {
@@ -120,6 +129,28 @@ public class LibraryActivity extends AppCompatActivity {
         recentsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recents);
         recentSongs.setAdapter(recentsadapter);
         recentSongs.setClickable(true);
+
+        playlists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LibraryActivity.this, MyPlaylists.class);
+                startActivity(i);
+            }
+        });
+
+        favourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        downloads.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         recentSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

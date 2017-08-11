@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.qmul.nminoiu.tunein.PlaylistsActivity">
+    tools:context="com.qmul.nminoiu.tunein.MyPlaylists">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,8 +25,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
+        app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <LinearLayout
@@ -103,6 +104,69 @@
 
     </LinearLayout>
 
-    <include layout="@layout/content_playlists" />
+    <RelativeLayout
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="164dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/dwnPlaylist"
+            style="@android:style/Widget.Material.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/deletePlaylist"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="-9dp"
+            android:text="Download Playlist"
+            android:textAllCaps="false"
+            android:textColor="@color/link"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/sharePlaylist"
+            style="@android:style/Widget.Material.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dwnPlaylist"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="-9dp"
+            android:text="Share Playlist"
+            android:textAllCaps="false"
+            android:textColor="@color/link"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/deletePlaylist"
+            style="@android:style/Widget.Material.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cancel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="-9dp"
+            android:text="Delete Playlist"
+            android:textAllCaps="false"
+            android:textColor="@color/link"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/cancel"
+            style="@android:style/Widget.Material.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/link"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/content_my_playlists" />
 
 </android.support.design.widget.CoordinatorLayout>

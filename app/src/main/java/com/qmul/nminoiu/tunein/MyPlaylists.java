@@ -1,7 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,11 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,9 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistsActivity extends AppCompatActivity {
+public class MyPlaylists extends AppCompatActivity {
 
-    private String song;
+    private String playlistname;
     private ListView playlists;
     private List<String> playlistsList;
     private ArrayAdapter<String> playlistsadapter;
@@ -45,35 +44,34 @@ public class PlaylistsActivity extends AppCompatActivity {
     private EditText playlistName;
     private Button create;
     private Button cancel;
+    private RelativeLayout buttons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlists);
+        setContentView(R.layout.activity_myplaylists);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         newPlaylist.bringToFront();
         playlistName = (EditText) findViewById(R.id.editText);
         create = (Button) findViewById(R.id.create);
         cancel = (Button) findViewById(R.id.cancel);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        buttons = (RelativeLayout) findViewById(R.id.buttons);
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                song = null;
-            } else {
-                song = extras.getString("Song");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
-        } else {
-            song= (String) savedInstanceState.getSerializable("Song");
-        }
+        });
 
         playlists = (ListView) findViewById(R.id.playlistsList);
         playlistsList = new ArrayList<>();
@@ -112,6 +110,15 @@ public class PlaylistsActivity extends AppCompatActivity {
             }
         });
 
+        playlists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                             @Override
+                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                 playlistname = ((TextView) view).getText().toString();
+                                                 buttons.setVisibility(View.VISIBLE);
+
+                                             }
+                                         });
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,11 +128,9 @@ public class PlaylistsActivity extends AppCompatActivity {
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase playRef = ref.child("Playlists").child(ID);
                 playRef.push().setValue(name);
+                Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
 
-                Firebase sref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
-                splayRef.push().setValue(song);
-                newPlaylist.setVisibility(View.GONE);
+
             }
         });
 
@@ -134,34 +139,14 @@ public class PlaylistsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 newPlaylist.setVisibility(View.GONE);
 
-                }
-            });
+            }
+        });
 
         playlists.setClickable(true);
         playlists.setAdapter(playlistsadapter);
 
-        playlists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                playlist = ((TextView) view).getText().toString();
 
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase songRef = ref.child("PlaylistSongs").child(ID).child(playlist);
-                songRef.push().setValue(song);
-                Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
@@ -197,4 +182,5 @@ public class PlaylistsActivity extends AppCompatActivity {
         startActivity(backMainTest);
         finish();
     }
+
 }

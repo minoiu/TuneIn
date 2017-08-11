@@ -86,21 +86,21 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_dialog_email" />
-
 
 
     <ImageButton
         android:id="@+id/fab1"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_margin="13dp"
         android:adjustViewBounds="false"
         android:background="@xml/roundcorner"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/my_music" />
+        app:srcCompat="@drawable/buttonorg" />
 
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView

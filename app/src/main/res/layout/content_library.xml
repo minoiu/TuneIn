@@ -19,6 +19,7 @@
         android:weightSum="1">
 
         <RelativeLayout
+            android:id="@+id/playlists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -63,6 +64,7 @@
         <include layout="@layout/item_divider" />
 
         <RelativeLayout
+            android:id="@+id/downloads"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -82,18 +84,18 @@
                 android:id="@+id/Playlist2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="19dp"
                 android:layout_marginStart="19dp"
+                android:layout_toEndOf="@id/playlistico1"
+                android:layout_toLeftOf="@+id/next2"
+                android:layout_toRightOf="@id/playlistico1"
+                android:layout_toStartOf="@+id/next2"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Downloads"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/playlistico1"
-                android:layout_toLeftOf="@+id/next2"
-                android:layout_toRightOf="@id/playlistico1"
-                android:layout_toStartOf="@+id/next2"/>
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/next2"
@@ -108,6 +110,7 @@
         <include layout="@layout/item_divider" />
 
         <RelativeLayout
+            android:id="@+id/favourites"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -130,6 +133,7 @@
                 android:id="@+id/Playlist3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/playlistico2"
@@ -140,9 +144,7 @@
                 android:maxLines="1"
                 android:text="Favourites"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_alignParentTop="true"
-                />
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/next3"

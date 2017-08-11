@@ -71,6 +71,10 @@
         <activity
             android:name=".PlaylistSongs"
             android:label="@string/title_activity_playlist_songs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyPlaylists"
+            android:label="@string/title_activity_my_playlists"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
