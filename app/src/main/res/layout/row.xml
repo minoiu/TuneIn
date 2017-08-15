@@ -15,7 +15,8 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:textColor="@color/black"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        />
 
     <ImageView
         android:id="@+id/icon"

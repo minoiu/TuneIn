@@ -84,8 +84,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(MyPlaylists.this, Users.class);
+                startActivity(i);
             }
         });
 
@@ -133,8 +133,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         playlists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                              @Override
                                              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                 playlistname = ((TextView) view).getText().toString();
-                                                 buttons.setVisibility(View.VISIBLE);
+                                                 Toast toast = Toast.makeText(getApplicationContext(),
+                                                         "Item " +  ": " + rowItems.get(position).toString(),
+                                                         Toast.LENGTH_SHORT);
+                                                 toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                 toast.show();
 
                                              }
                                          });
@@ -149,7 +152,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 Firebase playRef = ref.child("Playlists").child(ID);
                 playRef.push().setValue(name);
                 Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
-
+                newPlaylist.setVisibility(View.GONE);
 
             }
         });

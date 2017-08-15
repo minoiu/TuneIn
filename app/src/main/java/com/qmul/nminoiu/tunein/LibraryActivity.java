@@ -98,7 +98,7 @@ public class LibraryActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 String recentSongs = dataSnapshot.getValue(String.class);
-                Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
 
                 recents.add(recentSongs);
                 recentsadapter.notifyDataSetChanged();
