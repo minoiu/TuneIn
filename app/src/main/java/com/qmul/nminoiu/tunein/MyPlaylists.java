@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPlaylists extends AppCompatActivity {
+public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private String playlistname;
     private ListView playlists;
@@ -45,6 +46,17 @@ public class MyPlaylists extends AppCompatActivity {
     private Button create;
     private Button cancel;
     private RelativeLayout buttons;
+    private CustomAdapter adapter;
+
+
+    public static final String[] titles = new String[] { "Strawberry",
+            "Banana", "Orange", "Mixed" };
+
+    public static final Integer[] images = { R.drawable.options,
+            R.drawable.options, R.drawable.options, R.drawable.options };
+
+    ListView listView;
+    List<RowItem> rowItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +65,10 @@ public class MyPlaylists extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        rowItems = new ArrayList<RowItem>();
+        adapter = new CustomAdapter(this, rowItems);
+
 
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         newPlaylist.bringToFront();
@@ -86,7 +102,11 @@ public class MyPlaylists extends AppCompatActivity {
                 //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
 
                 playlistsList.add(playlist);
-                playlistsadapter.notifyDataSetChanged();
+                UserDetails.myPlaylists.add(playlist);
+                RowItem item = new RowItem(R.drawable.options, playlist);
+                rowItems.add(item);
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -143,7 +163,7 @@ public class MyPlaylists extends AppCompatActivity {
         });
 
         playlists.setClickable(true);
-        playlists.setAdapter(playlistsadapter);
+        playlists.setAdapter(adapter);
 
 
 
@@ -183,4 +203,12 @@ public class MyPlaylists extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Item " + (position + 1) + ": " + rowItems.get(position),
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
+    }
 }

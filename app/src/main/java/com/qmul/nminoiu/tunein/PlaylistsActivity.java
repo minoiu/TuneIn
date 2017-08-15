@@ -1,5 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -126,6 +128,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                 Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
                 splayRef.push().setValue(song);
                 newPlaylist.setVisibility(View.GONE);
+                hideSoftKeyboard(PlaylistsActivity.this);
             }
         });
 
@@ -133,8 +136,9 @@ public class PlaylistsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 newPlaylist.setVisibility(View.GONE);
+                hideSoftKeyboard(PlaylistsActivity.this);
 
-                }
+            }
             });
 
         playlists.setClickable(true);
@@ -197,4 +201,13 @@ public class PlaylistsActivity extends AppCompatActivity {
         startActivity(backMainTest);
         finish();
     }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
 }
