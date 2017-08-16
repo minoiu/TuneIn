@@ -1,13 +1,18 @@
 package com.qmul.nminoiu.tunein;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.Firebase;
 
 import java.util.List;
 
@@ -19,11 +24,11 @@ import java.util.List;
 
         private Context mContext;
         List<RowItem> rowItems;
+        private RelativeLayout buttons;
 
-        public CustomAdapter(Context context, List<RowItem> items) {
+    public CustomAdapter(Context context, List<RowItem> items) {
             mContext = context;
             this.rowItems = items;
-
         }
 
     private class ViewHolder {
@@ -31,9 +36,7 @@ import java.util.List;
         TextView txtTitle;
     }
 
-
-
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
 
             ViewHolder holder = null;
             LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -43,16 +46,41 @@ import java.util.List;
                 holder = new ViewHolder();
                 holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
                 holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
+                UserDetails.menuIcons.add(holder.imageView);
+
                 convertView.setTag(holder);
             }
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            RowItem rowItem = (RowItem) getItem(position);
+            final RowItem rowItem = (RowItem) getItem(position);
 
             holder.txtTitle.setText(rowItem.getTitle());
             holder.imageView.setImageResource(rowItem.getImageId());
+
+            MyPlaylists mp = new MyPlaylists();
+           // mp.showMenu(holder.imageView);
+
+            //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
+
+//            holder.txtTitle.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    //mContext.startActivity(new Intent(mContext, LibraryActivity.class));
+//
+////                    Intent intent=new Intent(view.getContext(),LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                    view.getContext().startActivity(intent);
+//                    //mContext.startActivity(new Intent(mContext,LoginActivity.class));
+//
+//
+//                    Toast.makeText(mContext, "CLICK!!!**** " + "Position:" + rowItem.getTitle(), Toast.LENGTH_SHORT).show();
+////                    UserDetails.title = rowItem.getTitle();
+//
+//                    //buttons.setVisibility(View.VISIBLE);
+//                }
+//            });
 
             return convertView;
         }
@@ -71,5 +99,6 @@ import java.util.List;
     public long getItemId(int position) {
         return rowItems.indexOf(getItem(position));
     }
+
     }
 

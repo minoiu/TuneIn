@@ -9,11 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -45,8 +47,9 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private EditText playlistName;
     private Button create;
     private Button cancel;
-    private RelativeLayout buttons;
     private CustomAdapter adapter;
+    private ImageView icon;
+    public RelativeLayout buttons;
 
 
     public static final String[] titles = new String[] { "Strawberry",
@@ -68,7 +71,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
         rowItems = new ArrayList<RowItem>();
         adapter = new CustomAdapter(this, rowItems);
-
+        buttons = (RelativeLayout) findViewById(R.id.buttons);
 
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         newPlaylist.bringToFront();
@@ -76,6 +79,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         create = (Button) findViewById(R.id.create);
         cancel = (Button) findViewById(R.id.cancel);
         buttons = (RelativeLayout) findViewById(R.id.buttons);
+        icon = (ImageView)  findViewById(R.id.icon);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -103,7 +108,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
                 playlistsList.add(playlist);
                 UserDetails.myPlaylists.add(playlist);
-                RowItem item = new RowItem(R.drawable.options, playlist);
+                RowItem item = new RowItem(R.drawable.ic_nextblack, playlist);
+
                 rowItems.add(item);
                 adapter.notifyDataSetChanged();
 
@@ -131,16 +137,48 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         });
 
         playlists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                             @Override
-                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                 Toast toast = Toast.makeText(getApplicationContext(),
-                                                         "Item " +  ": " + rowItems.get(position).toString(),
-                                                         Toast.LENGTH_SHORT);
-                                                 toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                 toast.show();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
+                String item = rowItem.getTitle();
 
-                                             }
-                                         });
+                Toast.makeText(MyPlaylists.this, "click click" + item, Toast.LENGTH_LONG).show();
+            }
+        });
+
+//        ClickListener(new View.OnClickListener() {
+//                                         @Override
+//                                         public void onClick(View v) {
+//                                             Toast.makeText(MyPlaylists.this, "click click", Toast.LENGTH_LONG).show();
+//                                             UserDetails.menuIcons.get(1).setOnClickListener(new View.OnClickListener() {
+//                                                 @Override
+//                                                 public void onClick(View v) {
+//                                                     buttons.setVisibility(View.VISIBLE);
+//
+//                                                 }
+//                                             });
+//
+//                                         }
+//                                     });
+
+
+
+//                                                 Toast toast = Toast.makeText(getApplicationContext(),
+//                                                         "Item " +  ": " + UserDetails.myPlaylists.get(position),
+//                                                         Toast.LENGTH_SHORT);
+//                                                 toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//                                                 toast.show();
+//                                             }
+//                                                 switch (view.getId()) {
+//                                                     case R.id.icon:
+//                                                         //Do it when myimage is clicked
+//                                                         Toast.makeText( MyPlaylists.this, "Icon CLICKED!", Toast.LENGTH_SHORT).show();
+//                                                         break;
+//                                                     case R.id.title:
+//                                                         //Do something when other item is clicked
+//                                                         Toast.makeText( MyPlaylists.this, "title CLICKED!", Toast.LENGTH_SHORT).show();;
+//                                                 }
+
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +195,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
+
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,11 +207,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
         playlists.setClickable(true);
         playlists.setAdapter(adapter);
-
-
-
-
+        playlists.setOnItemClickListener(this);
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,8 +234,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         }
         else onBackPressed();
 
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -208,10 +246,20 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Item " + (position + 1) + ": " + rowItems.get(position),
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-        toast.show();
+       // String item = parent.getItem(position).toString();
+
+        //Toast.makeText(MyPlaylists.this, "click click" + item, Toast.LENGTH_LONG).show();
+
+        //buttons.setVisibility(View.VISIBLE);
     }
+
+    public void showMenu(ImageView img){
+       img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // buttons.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
 }

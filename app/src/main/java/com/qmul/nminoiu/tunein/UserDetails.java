@@ -1,5 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 
 public class UserDetails {
@@ -16,7 +18,8 @@ public class UserDetails {
     static String myname = "";
     static String song = "";
     static String songname = "";
-
+    static String title = "";
+    static ArrayList<ImageView> menuIcons = new ArrayList<>();
     static int time = 0;
 
 }
