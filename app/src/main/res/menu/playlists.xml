@@ -12,7 +12,6 @@
 
         android:title="add"
 
-
         app:showAsAction="always" />
 
 </menu>

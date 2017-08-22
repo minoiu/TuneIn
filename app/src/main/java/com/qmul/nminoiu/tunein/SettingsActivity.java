@@ -215,7 +215,7 @@ public class SettingsActivity extends AppCompatActivity
     private String time;
     private Boolean isTunned = false;
     private int i;
-   // private Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+   // makeprivate Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

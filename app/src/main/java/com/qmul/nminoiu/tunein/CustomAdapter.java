@@ -60,27 +60,23 @@ import java.util.List;
             holder.imageView.setImageResource(rowItem.getImageId());
 
             MyPlaylists mp = new MyPlaylists();
+
+
            // mp.showMenu(holder.imageView);
 
             //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
 
-//            holder.txtTitle.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    //mContext.startActivity(new Intent(mContext, LibraryActivity.class));
-//
-////                    Intent intent=new Intent(view.getContext(),LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-////                    view.getContext().startActivity(intent);
-//                    //mContext.startActivity(new Intent(mContext,LoginActivity.class));
-//
-//
-//                    Toast.makeText(mContext, "CLICK!!!**** " + "Position:" + rowItem.getTitle(), Toast.LENGTH_SHORT).show();
-////                    UserDetails.title = rowItem.getTitle();
-//
-//                    //buttons.setVisibility(View.VISIBLE);
-//                }
-//            });
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(mContext, PlaylistSongs.class);
+                    intent.putExtra("Name", rowItem.getTitle());
+                    mContext.startActivity(intent);
+
+                    Toast.makeText(mContext, "Row " + rowItem.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
             return convertView;
         }

@@ -33,7 +33,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	public static TextView songCurrentDurationLabel;
 	public static TextView songTotalDurationLabel;
 	// Media Player
-//	private MediaPlayer mp;
+//	makeprivate MediaPlayer mp;
 	// Handler to update UI timer, progress bar etc,.
 	private Handler mHandler = new Handler();
 	;
