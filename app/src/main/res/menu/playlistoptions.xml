@@ -8,6 +8,10 @@
         android:icon="@drawable/download_new"
         android:title="Download" />
 
+    <item android:id="@+id/menu_rename"
+        android:icon="@drawable/download_new"
+        android:title="Rename" />
+
         <item android:id="@+id/menu_share"
             android:icon="@drawable/ic_menu_share"
             android:title="Share" />
@@ -16,9 +20,13 @@
             android:icon="@drawable/makeprivate"
             android:title="Make Private" />
 
-        <item android:id="@+id/menu_likedislike"
-            android:icon="@drawable/like"
-            android:title="Like / Dislike" />
+    <item
+        android:id="@+id/menu_likedislike"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:icon="@drawable/redhearts"
+        android:title="Like / Dislike"
+        app:showAsAction="always" />
 
         <item android:id="@+id/menu_preferences"
             android:icon="@drawable/ic_delete_black_24dp"
