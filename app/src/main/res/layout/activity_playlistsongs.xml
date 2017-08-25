@@ -7,14 +7,14 @@
     tools:context="com.qmul.nminoiu.tunein.PlaylistSongs">
 
     <LinearLayout
-        android:id="@+id/createPlaylist"
+        android:id="@+id/renamePlaylist"
         android:layout_width="246dp"
         android:layout_height="172dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:alpha="1"
         android:background="@drawable/background"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView4"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:text="Create New Playlist"
+            android:text="Rename Playlist"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:text="Enter a name for this new playlist"
+            android:text="Enter a new name for this playlist"
             android:textColor="@color/black" />
 
         <EditText
@@ -51,7 +51,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/create"
+                android:id="@+id/rename"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -60,7 +60,8 @@
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
-                android:text="Create"
+                android:text="RENAME"
+                android:textAllCaps="false"
                 android:textColor="@color/link" />
 
             <Button

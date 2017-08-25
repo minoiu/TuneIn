@@ -1,5 +1,6 @@
 package com.qmul.nminoiu.tunein;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -53,6 +55,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private CustomAdapter adapter;
     private ImageView icon;
     public RelativeLayout buttons;
+    private FloatingActionButton fab;
 
 
     public static final String[] titles = new String[] { "Strawberry",
@@ -86,12 +89,14 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         cancel = (Button) findViewById(R.id.cancel);
         buttons = (RelativeLayout) findViewById(R.id.buttons);
         icon = (ImageView)  findViewById(R.id.icon);
+        create.setEnabled(true);
+
 
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,13 +196,18 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(View view) {
 
                 String name = playlistName.getText().toString().trim();
+                if(name.equals("")){
+                    Toast.makeText(MyPlaylists.this, "Please enter a name", Toast.LENGTH_LONG).show();
 
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase playRef = ref.child("Playlists").child(ID);
-                playRef.push().setValue(name);
-                Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
-                newPlaylist.setVisibility(View.GONE);
 
+                } else {
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase playRef = ref.child("Playlists").child(ID);
+                    playRef.push().setValue(name);
+                    Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
+                    newPlaylist.setVisibility(View.GONE);
+                    hideSoftKeyboard(MyPlaylists.this);
+                }
             }
         });
 
@@ -207,7 +217,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onClick(View view) {
                 newPlaylist.setVisibility(View.GONE);
-
+                hideSoftKeyboard(MyPlaylists.this);
             }
         });
 
@@ -236,11 +246,18 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
             newPlaylist.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
             playlistName.setText("");
         }
         else onBackPressed();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkEntry() {
+        if(playlistName.getText().toString().trim().equals("")){
+            create.setEnabled(false);
+        } else create.setEnabled(true);
     }
 
     @Override
@@ -288,5 +305,14 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
     }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
 
 }

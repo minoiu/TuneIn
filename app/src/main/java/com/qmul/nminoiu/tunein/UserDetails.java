@@ -14,12 +14,11 @@ public class UserDetails {
     static Boolean following = false;
     static ArrayList<String> myFollowers = new ArrayList<>();
     static ArrayList<String> myPlaylists = new ArrayList<>();
-
     static String myname = "";
     static String song = "";
     static String songname = "";
     static String title = "";
     static ArrayList<ImageView> menuIcons = new ArrayList<>();
     static int time = 0;
-
+    static Boolean privatePlaylist = false;
 }
