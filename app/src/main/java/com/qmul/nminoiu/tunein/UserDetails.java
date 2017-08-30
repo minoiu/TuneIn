@@ -21,4 +21,6 @@ public class UserDetails {
     static ArrayList<ImageView> menuIcons = new ArrayList<>();
     static int time = 0;
     static Boolean privatePlaylist = false;
+    static Boolean lovedPlaylist = false;
+
 }

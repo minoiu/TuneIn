@@ -2,6 +2,7 @@ package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -52,6 +53,7 @@ public class PlaylistSongs extends AppCompatActivity {
     private Button rename;
     private EditText playlistName;
     private DatabaseReference playlistRef;
+    private DatabaseReference lovedPlaylistRef;
     private DatabaseReference sharedRef;
 
     private String playlist;
@@ -180,6 +182,46 @@ public class PlaylistSongs extends AppCompatActivity {
 
             }
         });
+
+        lovedPlaylistRef = FirebaseDatabase.getInstance().getReference().child("LovedPlaylists").child(ID);
+        lovedPlaylistRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String playlistName = dataSnapshot.getValue(String.class);
+
+                Toast.makeText(PlaylistSongs.this, "playlists name " + getSupportActionBar().getTitle().toString(), Toast.LENGTH_SHORT).show();
+
+                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
+                    UserDetails.lovedPlaylist = true;
+                    Toast.makeText(PlaylistSongs.this, "lovedPlaylists is " + UserDetails.lovedPlaylist, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String playlistName = dataSnapshot.getValue(String.class);
+
+                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
+                    UserDetails.lovedPlaylist = false;
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -187,6 +229,19 @@ public class PlaylistSongs extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.playlistoptions, menu);
         this.menu = menu;
+
+        MenuItem whiteHeart = menu.findItem(R.id.menu_like);
+        MenuItem redHeart = menu.findItem(R.id.menu_dislike);
+
+        if(UserDetails.lovedPlaylist) {
+            redHeart.setVisible(true);
+            whiteHeart.setVisible(false);
+        } else {
+            redHeart.setVisible(false);
+            whiteHeart.setVisible(true);
+        }
+
+        invalidateOptionsMenu();
         return true;
     }
 
@@ -220,6 +275,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_dwn) {
+
             Toast.makeText(PlaylistSongs.this, "Clicked on down ", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.menu_rename) {
@@ -314,63 +370,36 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 }
             });
-//            playlistRef.addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 //
-//                    String playlistName = dataSnapshot.getValue(String.class);
-//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-//
-//                    if (playlistName.equals(playlist)) {
-//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-//                        Toast.makeText(PlaylistSongs.this, "in menu public child added", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                    String playlistName = dataSnapshot.getValue(String.class);
-//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-//
-//                    if (playlistName.equals(playlist)) {
-//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-//                        Toast.makeText(PlaylistSongs.this, "in menu public child changed", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                    String playlistName = dataSnapshot.getValue(String.class);
-//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-//
-//                    if (playlistName.equals(playlist)) {
-//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-//                        Toast.makeText(PlaylistSongs.this, "in menu public child removed", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                    String playlistName = dataSnapshot.getValue(String.class);
-//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-//
-//                    if (playlistName.equals(playlist)) {
-//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-//                        Toast.makeText(PlaylistSongs.this, "in menu public child moved", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
 
-        } else if (id == R.id.menu_likedislike) {
+        } else if (id == R.id.menu_like) {
+
+            addToLikedPlaylists();
+
+        } else if ( id == R.id.menu_dislike){
+
+            playlistRef = FirebaseDatabase.getInstance().getReference().child("LovedPlaylists").child(ID);
+            playlistRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();
+                        Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
+
+
+                        if (dataSnapshot.child(key).getValue().equals(playlist)) {
+
+                            dataSnapshot.child(key).getRef().removeValue();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
 
         } else if (id == R.id.menu_delete) {
@@ -464,6 +493,12 @@ public class PlaylistSongs extends AppCompatActivity {
         playRef.push().setValue(playlist);
     }
 
+    private void addToLikedPlaylists() {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase playRef = ref.child("LovedPlaylists").child(ID);
+        playRef.push().setValue(playlist);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -494,7 +529,6 @@ public class PlaylistSongs extends AppCompatActivity {
 
         MenuItem privateOption = menu.findItem(R.id.menu_private);
         MenuItem publicOption = menu.findItem(R.id.menu_public);
-        Toast.makeText(PlaylistSongs.this, UserDetails.privatePlaylist + " in on prepare", Toast.LENGTH_LONG).show();
 
         if(UserDetails.privatePlaylist) {
             privateOption.setVisible(false);
@@ -503,6 +537,7 @@ public class PlaylistSongs extends AppCompatActivity {
             privateOption.setVisible(true);
             publicOption.setVisible(false);
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 

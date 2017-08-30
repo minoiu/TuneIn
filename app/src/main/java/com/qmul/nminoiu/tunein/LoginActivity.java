@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         //mConditionTextView = (TextView)findViewById(R.id.textViewCondition);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        //mEmailView.setText("nicoleminoiu@gmail.com");
+        mEmailView.setText("mar@zar.com");
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Emails");

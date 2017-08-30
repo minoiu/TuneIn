@@ -20,7 +20,7 @@
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
-        android:title="Share" />
+        android:title="Make Collaborative" />
 
     <item
         android:id="@+id/menu_private"
@@ -34,11 +34,21 @@
         android:visible="false" />
 
     <item
-        android:id="@+id/menu_likedislike"
+        android:id="@+id/menu_like"
         android:layout_width="10dp"
         android:layout_height="10dp"
+        android:icon="@drawable/whiteheart"
+        android:title="Like"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_dislike"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
         android:icon="@drawable/redhearts"
-        android:title="Like / Dislike"
+        android:title="Dislike"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
