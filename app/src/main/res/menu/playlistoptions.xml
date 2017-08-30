@@ -25,11 +25,14 @@
     <item
         android:id="@+id/menu_private"
         android:icon="@drawable/makeprivate"
-        android:title="Make Private" />
+        android:title="Make Private"
+        android:visible="false" />
 
     <item
         android:id="@+id/menu_public"
-        android:title="Make Public" />
+        android:title="Make Public"
+        android:visible="false" />
+
     <item
         android:id="@+id/menu_likedislike"
         android:layout_width="10dp"

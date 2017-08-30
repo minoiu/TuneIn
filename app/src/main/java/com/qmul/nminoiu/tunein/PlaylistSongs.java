@@ -142,7 +142,6 @@ public class PlaylistSongs extends AppCompatActivity {
             }
         });
 
-        invalidateOptionsMenu();
         songs.setAdapter(adapter);
 
         shareRef = FirebaseDatabase.getInstance().getReference().child("PrivatePlaylists").child(ID);
@@ -151,33 +150,23 @@ public class PlaylistSongs extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                     String playlistName = dataSnapshot.getValue(String.class);
-                    Toast.makeText(PlaylistSongs.this, playlistName + " in listener ", Toast.LENGTH_LONG).show();
 
                     if (playlistName.equals(playlist)) {
                         UserDetails.privatePlaylist = true;
-                        Toast.makeText(PlaylistSongs.this, "my playlist is " + UserDetails.privatePlaylist, Toast.LENGTH_SHORT).show();
                     }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String playlistName = dataSnapshot.getValue(String.class);
-                Toast.makeText(PlaylistSongs.this, playlistName + " in listener ", Toast.LENGTH_LONG).show();
 
-                if (playlistName.equals(playlist)) {
-                    UserDetails.privatePlaylist = false;
-                    Toast.makeText(PlaylistSongs.this, "my playlist is " + UserDetails.privatePlaylist, Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String playlistName = dataSnapshot.getValue(String.class);
-                Toast.makeText(PlaylistSongs.this, playlistName + " in listener ", Toast.LENGTH_LONG).show();
 
                 if (playlistName.equals(playlist)) {
                     UserDetails.privatePlaylist = false;
-                    Toast.makeText(PlaylistSongs.this, "my playlist is " + playlistName, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -298,59 +287,26 @@ public class PlaylistSongs extends AppCompatActivity {
 
         } else if (id == R.id.menu_private) {
 
-            Toast.makeText(PlaylistSongs.this, "Clicked on make private ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PlaylistSongs.this, "Your playlist is now private", Toast.LENGTH_SHORT).show();
             addToPrivate();
-            invalidateOptionsMenu();
 
         } else if (id == R.id.menu_public) {
 
             playlistRef = FirebaseDatabase.getInstance().getReference().child("PrivatePlaylists").child(ID);
-            playlistRef.addChildEventListener(new ChildEventListener() {
+            playlistRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();
+                        Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
 
-                    String playlistName = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
 
-                    if (playlistName.equals(playlist)) {
-                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-                        Toast.makeText(PlaylistSongs.this, "Your playlist is now public", Toast.LENGTH_SHORT).show();
+                        if (dataSnapshot.child(key).getValue().equals(playlist)) {
+
+                            dataSnapshot.child(key).getRef().removeValue();
+                        }
+
                     }
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    String playlistName = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-
-                    if (playlistName.equals(playlist)) {
-                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-                    }
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    String playlistName = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-
-                    if (playlistName.equals(playlist)) {
-                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-                    }
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    String playlistName = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-
-                    if (playlistName.equals(playlist)) {
-                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
-                        Toast.makeText(PlaylistSongs.this, "Your playlist is now public", Toast.LENGTH_SHORT).show();
-                    }
-                    invalidateOptionsMenu();
                 }
 
                 @Override
@@ -358,6 +314,61 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 }
             });
+//            playlistRef.addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                    String playlistName = dataSnapshot.getValue(String.class);
+//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+//
+//                    if (playlistName.equals(playlist)) {
+//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
+//                        Toast.makeText(PlaylistSongs.this, "in menu public child added", Toast.LENGTH_LONG).show();
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                    String playlistName = dataSnapshot.getValue(String.class);
+//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+//
+//                    if (playlistName.equals(playlist)) {
+//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
+//                        Toast.makeText(PlaylistSongs.this, "in menu public child changed", Toast.LENGTH_LONG).show();
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                    String playlistName = dataSnapshot.getValue(String.class);
+//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+//
+//                    if (playlistName.equals(playlist)) {
+//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
+//                        Toast.makeText(PlaylistSongs.this, "in menu public child removed", Toast.LENGTH_LONG).show();
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//                    String playlistName = dataSnapshot.getValue(String.class);
+//                    //Toast.makeText(PlaylistsActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+//
+//                    if (playlistName.equals(playlist)) {
+//                        playlistRef.child(dataSnapshot.getKey().toString()).removeValue();
+//                        Toast.makeText(PlaylistSongs.this, "in menu public child moved", Toast.LENGTH_LONG).show();
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
 
         } else if (id == R.id.menu_likedislike) {
 
@@ -403,7 +414,6 @@ public class PlaylistSongs extends AppCompatActivity {
 
             } else onBackPressed();
 
-        invalidateOptionsMenu();
 
         return super.onOptionsItemSelected(item);
         }
