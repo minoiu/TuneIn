@@ -22,5 +22,7 @@ public class UserDetails {
     static int time = 0;
     static Boolean privatePlaylist = false;
     static Boolean lovedPlaylist = false;
+    static Boolean dwnPlaylist = false;
+
 
 }

@@ -7,10 +7,6 @@
         <!-- Single menu item
              Set id, icon and Title for each menu item
         -->
-    <item
-        android:id="@+id/menu_dwn"
-        android:icon="@drawable/download_new"
-        android:title="Download" />
 
     <item
         android:id="@+id/menu_rename"
@@ -18,9 +14,23 @@
         android:title="Rename" />
 
     <item
+        android:id="@+id/menu_dwn"
+        android:icon="@drawable/download_new"
+        android:title="Download"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_remdwn"
+        android:icon="@drawable/download_new"
+        android:title="Remove from Downloads"
+        android:visible="false"/>
+
+
+
+    <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
-        android:title="Make Collaborative" />
+        android:title="Share Ownership" />
 
     <item
         android:id="@+id/menu_private"

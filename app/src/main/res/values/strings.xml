@@ -26,6 +26,7 @@
     <string name="title_activity_playlists">PlaylistsActivity</string>
     <string name="title_activity_playlist_songs">PlaylistSongs</string>
     <string name="title_activity_my_playlists">MyPlaylists</string>
+    <string name="title_activity_share">ShareActivity</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 
 </resources>
