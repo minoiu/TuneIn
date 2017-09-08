@@ -93,7 +93,7 @@ public class SongsAdapter extends BaseAdapter {
                         case R.id.icon:
 
                             PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
-                            popup.getMenuInflater().inflate(R.menu.popup,
+                            popup.getMenuInflater().inflate(R.menu.songoptions,
                                     popup.getMenu());
                             popup.show();
                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

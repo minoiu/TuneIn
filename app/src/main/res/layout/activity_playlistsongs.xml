@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.qmul.nminoiu.tunein.PlaylistSongs">
 
+    <include
+        layout="@layout/serach_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:id="@+id/renamePlaylist"
         android:layout_width="246dp"
@@ -80,22 +85,6 @@
         </RelativeLayout>
 
     </LinearLayout>
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_playlist_songs" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
