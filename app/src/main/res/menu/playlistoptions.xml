@@ -26,11 +26,10 @@
         android:visible="false"/>
 
 
-
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
-        android:title="Share Ownership" />
+        android:title="Share" />
 
     <item
         android:id="@+id/menu_private"

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="13dp"
-            android:text="Share Ownership"
+            android:text="Share Playlist"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
-            android:text="Share playlist ownership with"
+            android:text="Share playlist with"
             android:textAlignment="center"
             android:textColor="@color/black" />
 
@@ -216,6 +216,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
             android:choiceMode="singleChoice"
+            android:visibility="visible"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
     </LinearLayout>
