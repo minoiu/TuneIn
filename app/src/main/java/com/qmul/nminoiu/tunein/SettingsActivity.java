@@ -898,7 +898,7 @@ public class SettingsActivity extends AppCompatActivity
 
         download1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 String songToDown = title1.getText().toString();
 
                 StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
@@ -907,7 +907,7 @@ public class SettingsActivity extends AppCompatActivity
                 storagePath = new File(view.getContext().getFilesDir(), "My_music");
                 File localFile = new File(storagePath, songToDown);
                 try {
-                    localFile = File.createTempFile("Audio", "mp3");
+                    localFile = File.createTempFile(songToDown, ".mp3");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -917,7 +917,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Downloded at location: " + view.getContext().getFilesDir(), Toast.LENGTH_SHORT).show();
                         UserDetails.song = finalLocalFile.getAbsolutePath();
                         //download.setVisibility(View.GONE);
                         //downloadgreen.setVisibility(View.VISIBLE);
@@ -1015,7 +1015,7 @@ public class SettingsActivity extends AppCompatActivity
                 storagePath = new File(view.getContext().getFilesDir(), "My_music");
                 File localFile = new File(storagePath, songToDown);
                 try {
-                    localFile = File.createTempFile("Audio", "mp3");
+                    localFile = File.createTempFile(songToDown, ".mp3");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

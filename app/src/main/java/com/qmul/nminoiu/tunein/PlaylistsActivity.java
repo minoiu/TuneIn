@@ -47,6 +47,8 @@ public class PlaylistsActivity extends AppCompatActivity {
     private EditText playlistName;
     private Button create;
     private Button cancel;
+    private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,16 @@ public class PlaylistsActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PlaylistsActivity.this, Users.class);
+                startActivity(i);
+            }
+        });
+
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -128,6 +140,8 @@ public class PlaylistsActivity extends AppCompatActivity {
                 Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
                 splayRef.push().setValue(song);
                 newPlaylist.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+
                 hideSoftKeyboard(PlaylistsActivity.this);
             }
         });
@@ -137,6 +151,8 @@ public class PlaylistsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 newPlaylist.setVisibility(View.GONE);
                 hideSoftKeyboard(PlaylistsActivity.this);
+                fab.setVisibility(View.VISIBLE);
+
 
             }
             });
@@ -186,6 +202,7 @@ public class PlaylistsActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
             newPlaylist.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
             playlistName.setText("");
         }
         else onBackPressed();

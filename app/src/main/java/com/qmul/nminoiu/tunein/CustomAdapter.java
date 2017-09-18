@@ -74,7 +74,6 @@ import java.util.List;
                     intent.putExtra("Name", rowItem.getTitle());
                     mContext.startActivity(intent);
 
-                    Toast.makeText(mContext, "Row " + rowItem.getTitle(), Toast.LENGTH_SHORT).show();
                 }
             });
 

@@ -145,156 +145,117 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <ImageButton
-                android:id="@+id/youtube"
-                android:layout_width="30dp"
-                android:layout_height="34dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/comment"
-                android:layout_marginLeft="37dp"
-                android:layout_marginStart="37dp"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="true"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/youtube" />
+        <ImageButton
+            android:id="@+id/youtube"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="30dp"
+            android:layout_height="34dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/comment"
+            android:layout_marginLeft="37dp"
+            android:layout_marginStart="37dp"
+            android:background="@xml/roundcorner"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/youtubenotblack" />
+
+        <LinearLayout
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/comment"
+            android:layout_toRightOf="@+id/youtube"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/youtubecoloured"
-                android:layout_width="30dp"
-                android:layout_height="34dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/comment"
-                android:layout_marginLeft="37dp"
-                android:layout_marginStart="37dp"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="true"
-                android:onClick="viewOnYoutubeAgain"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                app:srcCompat="@drawable/yt_icon" />
 
-            <ImageButton
                 android:id="@+id/download"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="25dp"
                 android:layout_height="24dp"
+                android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
-                android:layout_toLeftOf="@+id/comment"
-                android:layout_toRightOf="@+id/youtube"
+                android:adjustViewBounds="false"
                 android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:minHeight="250dp"
+                android:cropToPadding="true"
+                android:foregroundGravity="center"
                 android:onClick="download"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/download_new" />
+                app:srcCompat="@drawable/download_newnotblack" />
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/downloadgreen"
-                android:layout_width="25dp"
-                android:layout_height="23dp"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="false"
-                android:layout_marginTop="6dp"
-                android:layout_toLeftOf="@+id/comment"
-                android:layout_toRightOf="@+id/youtube"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:onClick="downloadAgain"
-                android:scaleType="centerInside"
-                android:tint="@color/colorPrimary"
-                android:visibility="gone"
-                app:srcCompat="@drawable/downnewblue" />
+        <ImageButton
+            android:id="@+id/comment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="32dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="false"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="1dp"
+            android:background="@xml/roundcorner"
+            android:cropToPadding="true"
+            android:onClick="comment"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/iconnotblack" />
 
-            <ImageButton
-                android:id="@+id/comment"
-                android:layout_width="32dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="1dp"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:onClick="comment"
-                android:scaleType="fitCenter"
-                android:visibility="visible"
-                app:srcCompat="@drawable/icon" />
+        <LinearLayout
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/redHeart"
+            android:layout_toRightOf="@+id/comment"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/commentblue"
-                android:layout_width="32dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="false"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="160dp"
-                android:layout_marginTop="1dp"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                app:srcCompat="@drawable/comment_blue" />
 
             <ImageButton
                 android:id="@+id/add"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_alignParentRight="false"
                 android:layout_centerInParent="false"
                 android:layout_marginTop="7dp"
-                android:layout_toLeftOf="@+id/redHeart"
-                android:layout_toRightOf="@+id/comment"
                 android:adjustViewBounds="false"
                 android:background="@xml/roundcorner"
                 android:cropToPadding="true"
                 android:onClick="addToPlaylist"
                 android:scaleType="fitCenter"
                 android:visibility="visible"
-                app:srcCompat="@drawable/add" />
+                app:srcCompat="@drawable/addnotblack" />
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/addgreen"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="7dp"
-                android:layout_toLeftOf="@+id/blackHeart"
-                android:layout_toRightOf="@+id/comment"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:onClick="addToPlaylistAgain"
-                android:scaleType="fitCenter"
-                android:tint="@color/colorPrimaryDark"
-                android:visibility="gone"
-                app:srcCompat="@drawable/plusblue" />
+        <ImageButton
+            android:id="@+id/blackHeart"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="23dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="37dp"
+            android:layout_marginTop="6dp"
+            android:background="@xml/roundcorner"
+            android:backgroundTint="@color/cardview_light_background"
+            android:cropToPadding="true"
+            android:onClick="likeSong"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/dislikenotblack" />
 
-            <ImageButton
-                android:id="@+id/blackHeart"
-                android:layout_width="23dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="37dp"
-                android:layout_marginTop="6dp"
-                android:background="@xml/roundcorner"
-                android:backgroundTint="@color/cardview_light_background"
-                android:cropToPadding="false"
-                android:onClick="likeSong"
-                android:scaleType="fitCenter"
-                android:visibility="visible"
-                app:srcCompat="@drawable/dislike" />
-
-            <ImageButton
-                android:id="@+id/redHeart"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="37dp"
-                android:layout_marginTop="6dp"
-                android:background="@xml/roundcorner"
-                android:cropToPadding="false"
-                android:onClick="dislikeSong"
-                android:scaleType="fitCenter"
-                android:tint="@android:color/holo_red_dark"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/like" />
+        <ImageButton
+            android:id="@+id/redHeart"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="37dp"
+            android:layout_marginTop="6dp"
+            android:background="@xml/roundcorner"
+            android:cropToPadding="false"
+            android:onClick="dislikeSong"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/likenotblack" />
 
 
         </RelativeLayout>

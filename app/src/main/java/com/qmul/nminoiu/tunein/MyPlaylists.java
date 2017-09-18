@@ -152,8 +152,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 String item = rowItem.getTitle();
-
-                Toast.makeText(MyPlaylists.this, "click click" + item, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -206,6 +204,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                     playRef.push().setValue(name);
                     Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
                     newPlaylist.setVisibility(View.GONE);
+                    fab.setVisibility(View.VISIBLE);
+
                     hideSoftKeyboard(MyPlaylists.this);
                 }
             }
@@ -217,6 +217,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onClick(View view) {
                 newPlaylist.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
                 hideSoftKeyboard(MyPlaylists.this);
             }
         });

@@ -489,9 +489,6 @@ public class PlaylistSongs extends AppCompatActivity {
                         Firebase shareRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("PlaylistsInvites").child(UserDetails.fullname).child(UserDetails.myname);
                         shareRef.push().setValue(getSupportActionBar().getTitle().toString());
 
-                        Firebase swithmeplaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedWithMePlaylists").child(UserDetails.fullname);
-                        swithmeplaylists.push().setValue(getSupportActionBar().getTitle().toString());
-
                         Firebase splaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedPlaylists").child(ID);
                         splaylists.push().setValue(getSupportActionBar().getTitle().toString());
 
@@ -1145,7 +1142,7 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
-    private void deleteFromPlaylistSongs(final String oldPlaylist) {
+    private void deleteFromPlaylistSongs(final String name) {
 
         delPlSongsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID);
         delPlSongsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1154,9 +1151,11 @@ public class PlaylistSongs extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
 
-                    if (dataSnapshot.child(key).getValue().equals(oldPlaylist)) {
+                    if (key.equals(name)) {
 
-                        dataSnapshot.child(key).getRef().removeValue();
+                        delPlSongsRef.child(key).getRef().setValue(null);
+                        Toast.makeText(PlaylistSongs.this, dataSnapshot.child(key).toString() + " in if in delete playlistssongs", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -1200,6 +1199,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
             StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
             StorageReference down = storageReference.child(songToDwn + ".mp3");
+            storagePath = new File(getApplicationContext().getFilesDir(), "My_music");
 
             File localFile = new File(storagePath, songToDwn);
             try {
@@ -1227,9 +1227,9 @@ public class PlaylistSongs extends AppCompatActivity {
             });
         }
 
+    }
 //        Toast.makeText(getApplicationContext(), "Downloded at location: " + UserDetails.song , Toast.LENGTH_SHORT).show();
 
-    }
 
 
     private void addToDownloads() {
@@ -1277,7 +1277,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
     private void deleteFPrivate(final String name) {
 
-        delPriPlRef = FirebaseDatabase.getInstance().getReference().child("Playlists").child(ID);
+        delPriPlRef = FirebaseDatabase.getInstance().getReference().child("PrivatePlaylists").child(ID);
         delPriPlRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -1313,7 +1313,7 @@ public class PlaylistSongs extends AppCompatActivity {
     }
 
     private void deleteFromLovedPlaylists(final String oldname){
-        delLovedPlRef = FirebaseDatabase.getInstance().getReference().child("Playlists").child(ID);
+        delLovedPlRef = FirebaseDatabase.getInstance().getReference().child("LovedPlaylists").child(ID);
         delLovedPlRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

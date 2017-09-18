@@ -100,7 +100,7 @@
         android:background="@xml/roundcorner"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/buttonorg" />
+        app:srcCompat="@drawable/buttonorgnotblack" />
 
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView
