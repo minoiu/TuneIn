@@ -420,11 +420,8 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 String playlistName = dataSnapshot.getValue(String.class);
 
-                Toast.makeText(PlaylistSongs.this, "playlists name " + getSupportActionBar().getTitle().toString(), Toast.LENGTH_SHORT).show();
-
                 if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
                     UserDetails.lovedPlaylist = true;
-                    Toast.makeText(PlaylistSongs.this, "lovedPlaylists is " + UserDetails.lovedPlaylist, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -453,6 +450,8 @@ public class PlaylistSongs extends AppCompatActivity {
             }
         });
 
+
+
         //share popup window
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -467,7 +466,6 @@ public class PlaylistSongs extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.myname = dataSnapshot.getValue().toString();
-                        Toast.makeText(PlaylistSongs.this, UserDetails.myname + " is my name", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -484,7 +482,6 @@ public class PlaylistSongs extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
-                        Toast.makeText(PlaylistSongs.this, UserDetails.fullname + " is friend id", Toast.LENGTH_SHORT).show();
 
                         Firebase shareRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("PlaylistsInvites").child(UserDetails.fullname).child(UserDetails.myname);
                         shareRef.push().setValue(getSupportActionBar().getTitle().toString());
@@ -569,9 +566,6 @@ public class PlaylistSongs extends AppCompatActivity {
         if (newname.equals("")) {
             Toast.makeText(PlaylistSongs.this, "Please enter a name", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(PlaylistSongs.this, "rename clicked", Toast.LENGTH_LONG).show();
-            Toast.makeText(PlaylistSongs.this, "text is " + newname, Toast.LENGTH_LONG).show();
-
 
             changeInPlaylist(oldPlaylist);
             changeInLovedPlaylists(oldPlaylist);
@@ -657,7 +651,6 @@ public class PlaylistSongs extends AppCompatActivity {
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            Toast.makeText(PlaylistSongs.this, "names are " + v, Toast.LENGTH_SHORT).show();
                             DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
                             mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -708,7 +701,6 @@ public class PlaylistSongs extends AppCompatActivity {
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            Toast.makeText(PlaylistSongs.this, "playlist name in playlistsongs " + getSupportActionBar().getTitle().toString(), Toast.LENGTH_SHORT).show();
 
                             //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
                             //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
@@ -950,17 +942,17 @@ public class PlaylistSongs extends AppCompatActivity {
 
         } else if (id == R.id.menu_remdwn) {
 
+            //Toast.makeText(PlaylistSongs.this, "Already downloaded ", Toast.LENGTH_SHORT).show();
+
+
             playlistRef = FirebaseDatabase.getInstance().getReference().child("DownloadedPlaylists").child(ID);
             playlistRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String key = snapshot.getKey();
-                        Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
 
                         if (dataSnapshot.child(key).getValue().equals(getSupportActionBar().getTitle().toString())) {
-
                             dataSnapshot.child(key).getRef().removeValue();
                         }
                     }
@@ -985,7 +977,6 @@ public class PlaylistSongs extends AppCompatActivity {
         } else if (id == R.id.menu_share) {
 
             searchLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(PlaylistSongs.this, "Clicked on share ", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.menu_private) {
 
@@ -1000,7 +991,6 @@ public class PlaylistSongs extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String key = snapshot.getKey();
-                        Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
 
 
                         if (dataSnapshot.child(key).getValue().equals(getSupportActionBar().getTitle().toString())) {
@@ -1016,7 +1006,6 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 }
             });
-//
 
         } else if (id == R.id.menu_like) {
 
@@ -1030,8 +1019,6 @@ public class PlaylistSongs extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String key = snapshot.getKey();
-                        Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
 
                         if (dataSnapshot.child(key).getValue().equals(getSupportActionBar().getTitle().toString())) {
 
@@ -1154,7 +1141,6 @@ public class PlaylistSongs extends AppCompatActivity {
                     if (key.equals(name)) {
 
                         delPlSongsRef.child(key).getRef().setValue(null);
-                        Toast.makeText(PlaylistSongs.this, dataSnapshot.child(key).toString() + " in if in delete playlistssongs", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -1194,8 +1180,6 @@ public class PlaylistSongs extends AppCompatActivity {
 
         for (int i = 0; i <= songsList.size() - 1; i++) {
             String songToDwn = songsList.get(i);
-            Toast.makeText(PlaylistSongs.this, "Your songs:" + songToDwn, Toast.LENGTH_SHORT).show();
-
 
             StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
             StorageReference down = storageReference.child(songToDwn + ".mp3");
@@ -1213,7 +1197,7 @@ public class PlaylistSongs extends AppCompatActivity {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     finalLocalFile.getAbsolutePath();
-                    Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Done dowloading ", Toast.LENGTH_SHORT).show();
                     UserDetails.song = finalLocalFile.getAbsolutePath();
                     //download.setVisibility(View.GONE);
                     //downloadgreen.setVisibility(View.VISIBLE);
@@ -1457,7 +1441,6 @@ public class PlaylistSongs extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                Toast.makeText(PlaylistSongs.this, UserDetails.fullname + " is my fullname", Toast.LENGTH_SHORT).show();
 
             }
 

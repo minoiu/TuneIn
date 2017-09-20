@@ -14,7 +14,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -23,17 +23,15 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp">
 
         <ListView
             android:id="@+id/playlistsList"
             android:layout_width="match_parent"
-            android:layout_height="508dp"
-            android:foregroundGravity="bottom"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="59dp" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 

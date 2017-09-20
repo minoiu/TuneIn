@@ -92,6 +92,7 @@
 
     <ImageButton
         android:id="@+id/fab1"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="51dp"
         android:layout_height="51dp"
         android:layout_gravity="bottom|end"
@@ -100,7 +101,7 @@
         android:background="@xml/roundcorner"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/buttonorgnotblack" />
+        app:srcCompat="@drawable/buttonorg" />
 
 
     <com.miguelcatalan.materialsearchview.MaterialSearchView

@@ -23,6 +23,9 @@ public class UserDetails {
     static Boolean privatePlaylist = false;
     static Boolean lovedPlaylist = false;
     static Boolean dwnPlaylist = false;
+    static Boolean dwn = false;
+    static Boolean liked = false;
+
 
 
 }

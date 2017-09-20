@@ -899,7 +899,7 @@ public class SettingsActivity extends AppCompatActivity
         download1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                String songToDown = title1.getText().toString();
+                final String songToDown = title1.getText().toString();
 
                 StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
                 StorageReference down = storageReference.child(songToDown + ".mp3");
@@ -917,7 +917,11 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + view.getContext().getFilesDir(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                            Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                            playRef.push().setValue(songToDown);
+
                         UserDetails.song = finalLocalFile.getAbsolutePath();
                         //download.setVisibility(View.GONE);
                         //downloadgreen.setVisibility(View.VISIBLE);
@@ -935,79 +939,7 @@ public class SettingsActivity extends AppCompatActivity
         download2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String songToDown = title2.getText().toString();
-
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
-
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile("Audio", "mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
-                        //download.setVisibility(View.GONE);
-                        //downloadgreen.setVisibility(View.VISIBLE);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
-            }
-        });
-
-        download3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String songToDown = title3.getText().toString();
-
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
-
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile("Audio", "mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
-                        //download.setVisibility(View.GONE);
-                        //downloadgreen.setVisibility(View.VISIBLE);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
-            }
-        });
-
-        download4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String songToDown = title4.getText().toString();
+                final String songToDown = title2.getText().toString();
 
                 StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
                 StorageReference down = storageReference.child(songToDown + ".mp3");
@@ -1025,8 +957,89 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title3.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                        //download.setVisibility(View.GONE);
+                        //downloadgreen.setVisibility(View.VISIBLE);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title4.getText().toString();
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
                         //download.setVisibility(View.GONE);
                         //downloadgreen.setVisibility(View.VISIBLE);
 
@@ -1043,7 +1056,7 @@ public class SettingsActivity extends AppCompatActivity
         download5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String songToDown = title5.getText().toString();
+                final String songToDown = title5.getText().toString();
 
                 StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
                 StorageReference down = storageReference.child(songToDown + ".mp3");
@@ -1051,7 +1064,7 @@ public class SettingsActivity extends AppCompatActivity
                 storagePath = new File(view.getContext().getFilesDir(), "My_music");
                 File localFile = new File(storagePath, songToDown);
                 try {
-                    localFile = File.createTempFile("Audio", "mp3");
+                    localFile = File.createTempFile(songToDown, ".mp3");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1061,8 +1074,10 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
                         //download.setVisibility(View.GONE);
                         //downloadgreen.setVisibility(View.VISIBLE);
 
@@ -1258,11 +1273,7 @@ public class SettingsActivity extends AppCompatActivity
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String key = snapshot.getKey();
 
-                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
-
                                     if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
 
                                         dataSnapshot.child(key).getRef().removeValue();
                                         rheart1.setVisibility(View.INVISIBLE);
@@ -1296,11 +1307,7 @@ public class SettingsActivity extends AppCompatActivity
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String key = snapshot.getKey();
 
-                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
-
                                     if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
 
                                         dataSnapshot.child(key).getRef().removeValue();
                                         rheart2.setVisibility(View.INVISIBLE);
@@ -1334,11 +1341,7 @@ public class SettingsActivity extends AppCompatActivity
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String key = snapshot.getKey();
 
-                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
-
                                     if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
 
                                         dataSnapshot.child(key).getRef().removeValue();
                                         rheart3.setVisibility(View.INVISIBLE);
@@ -1372,12 +1375,7 @@ public class SettingsActivity extends AppCompatActivity
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String key = snapshot.getKey();
 
-                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
-
                                     if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
-
                                         dataSnapshot.child(key).getRef().removeValue();
                                         rheart4.setVisibility(View.INVISIBLE);
                                         bheart4.setVisibility(View.VISIBLE);
@@ -1410,11 +1408,7 @@ public class SettingsActivity extends AppCompatActivity
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String key = snapshot.getKey();
 
-                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-
-
                                     if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
 
                                         dataSnapshot.child(key).getRef().removeValue();
                                         rheart5.setVisibility(View.INVISIBLE);
@@ -1526,13 +1520,11 @@ public class SettingsActivity extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     otherUser = dataSnapshot.getKey();
                     //Toast.makeText(SettingsActivity.this, "in for" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(SettingsActivity.this, "in for my fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
                         String song = dataSnapshot.child("Song").getValue().toString();
                         addTimeToFirebase(otherUser, song);
                         //getCurrentPlayingTime();
-                        Toast.makeText(SettingsActivity.this, "has child" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -1704,7 +1696,6 @@ public class SettingsActivity extends AppCompatActivity
                                         url = String.valueOf(dsp.getValue());
                                         UserDetails.song = url;
                                         playMusic(newtime);
-                                        Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                                         //getTimeFromFirebase();
                                     }
                                 }
@@ -1765,7 +1756,6 @@ public class SettingsActivity extends AppCompatActivity
                                 url = String.valueOf(dsp.getValue());
                                 UserDetails.song = url;
                                 playMusic(newtime);
-                                Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                                 //getTimeFromFirebase();
                             }
                         }
@@ -1957,6 +1947,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, Users.class);
+                i.putExtra("Uniqid","FromSettings");
                 startActivity(i);
             }
         });
@@ -2115,7 +2106,6 @@ public class SettingsActivity extends AppCompatActivity
                 }
 
                 addToHome(UserDetails.myFollowers, mysong);
-                Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
 
             }
 
@@ -2181,7 +2171,7 @@ public class SettingsActivity extends AppCompatActivity
 //       // Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
 
 
-    private void nowPlaying(String songName) {
+    public void nowPlaying(String songName) {
         //getFulname();
 
         ID = firebaseAuth1.getCurrentUser().getUid();
@@ -2281,8 +2271,8 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void startMusic(String link, String song) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
+        //play_toolbar.setVisibility(View.VISIBLE);
+        //play_toolbar.bringToFront();
 
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -2354,7 +2344,6 @@ public class SettingsActivity extends AppCompatActivity
                             //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
-                                Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
@@ -2778,10 +2767,6 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void playMusic(int time) {
-
-
-        Toast.makeText(SettingsActivity.this, UserDetails.song + " the link ", Toast.LENGTH_SHORT).show();
-        Toast.makeText(SettingsActivity.this, time + " the time ", Toast.LENGTH_SHORT).show();
 
         try {
             mediaPlayer.reset();

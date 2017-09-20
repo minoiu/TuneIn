@@ -22,9 +22,8 @@
     <item
         android:id="@+id/menu_remdwn"
         android:icon="@drawable/download_new"
-        android:title="Remove from Downloads"
+        android:title="Remove download"
         android:visible="false"/>
-
 
     <item
         android:id="@+id/menu_share"

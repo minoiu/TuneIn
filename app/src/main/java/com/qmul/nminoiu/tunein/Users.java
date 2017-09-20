@@ -119,15 +119,30 @@ public class Users extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String user = ((TextView) view).getText().toString();
                 UserDetails.chatWith = user;
+                Intent i = getIntent();
+                if(i!=null){
+                    if(i.hasExtra("Uniqid")) {
+                        String uniqid = i.getStringExtra("Uniqid");
+                        if (uniqid.equals("FromSettings")) {
+                            Toast.makeText(Users.this, "from settings ", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Users.this, Chat.class);
+                            intent.putExtra("Name", user);
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromSongsAdapter")) {
+                            Toast.makeText(Users.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
 
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-
-                //Map<String,Object> uinfo = new HashMap<String, Object>();
-
-                Toast.makeText(Users.this, UserDetails.username, Toast.LENGTH_SHORT).show();
-
-
-                startActivity(new Intent(Users.this, Chat.class));
+                            String song = i.getStringExtra("Song");
+                            Intent intent = new Intent(Users.this, Chat.class);
+                            intent.putExtra("Name", user);
+                            intent.putExtra("Song", song);
+                            startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(Users.this, Chat.class);
+                        intent.putExtra("Name", user);
+                        startActivity(intent);
+                    }
+                }
             }
         });
     }
