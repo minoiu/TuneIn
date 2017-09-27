@@ -186,7 +186,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        playlist = intent.getStringExtra("Name");
+        playlist = intent.getExtras().getString("Name");
 
         getSupportActionBar().setTitle(playlist);
 
@@ -196,7 +196,7 @@ public class PlaylistSongs extends AppCompatActivity {
         songsList = new ArrayList<>();
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songsList);
 
-        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
+        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(intent.getExtras().getString("Name"));
         songsRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

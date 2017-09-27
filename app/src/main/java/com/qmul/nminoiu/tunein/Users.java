@@ -169,25 +169,10 @@ public class Users extends AppCompatActivity {
                             intent.putExtra("Song", song);
                             startActivity(intent);
                         } else if (uniqid.equals("FSAdapter")) {
-
-                            mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
-                            mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    UserDetails.receiver = dataSnapshot.getValue().toString();
-                                    //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-
-
                             String songToJoin = i.getStringExtra("Song");
-                            sendNotification(songToJoin, user);
+                            String playlist = i.getStringExtra("Name");
+
+                            getReceiver(songToJoin, user, playlist);
                             Toast.makeText(Users.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
 
                         }
@@ -198,6 +183,28 @@ public class Users extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }
+            }
+        });
+    }
+
+    private void getReceiver(final String song, final String user, final String playlist) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                sendNotification(song, user);
+                Intent goBack = new Intent(Users.this, PlaylistSongs.class);
+                goBack.putExtra("FriendName", user);
+                goBack.putExtra("Name", playlist);
+                startActivity(goBack);
+
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -240,7 +247,7 @@ public class Users extends AppCompatActivity {
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to " + songToJoin + " together!\"}"
+                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"}"
                                 + "}";
 
                         System.out.println("strJsonBody:\n" + strJsonBody);

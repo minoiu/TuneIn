@@ -125,6 +125,8 @@ public class SongsAdapter extends BaseAdapter {
         MyPlaylists mp = new MyPlaylists();
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
+        final String playlist = ((PlaylistSongs) mContext).getBarTitle();
+
 
 
         // mp.showMenu(holder.imageView);
@@ -157,6 +159,7 @@ public class SongsAdapter extends BaseAdapter {
                                             Intent intent = new Intent(mContext, Users.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
+                                            intent.putExtra("Name", playlist);
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
