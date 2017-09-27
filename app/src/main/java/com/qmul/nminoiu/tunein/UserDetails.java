@@ -25,6 +25,9 @@ public class UserDetails {
     static Boolean dwnPlaylist = false;
     static Boolean dwn = false;
     static Boolean liked = false;
+    static Boolean hasSong = false;
+
+
 
 
 

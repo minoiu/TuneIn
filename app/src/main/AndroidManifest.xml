@@ -46,9 +46,6 @@
             android:name=".ScrollingActivity"
             android:label="" />
         <activity
-            android:name=".RequestActivity"
-            android:label="" />
-        <activity
             android:name=".SyncActivity"
             android:theme="@android:style/Theme.NoDisplay" />
         <activity

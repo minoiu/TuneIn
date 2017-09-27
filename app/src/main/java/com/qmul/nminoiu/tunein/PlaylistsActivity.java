@@ -36,6 +36,7 @@ import java.util.List;
 public class PlaylistsActivity extends AppCompatActivity {
 
     private String song;
+    private String songToAdd;
     private ListView playlists;
     private List<String> playlistsList;
     private ArrayAdapter<String> playlistsadapter;
@@ -77,17 +78,7 @@ public class PlaylistsActivity extends AppCompatActivity {
             }
         });
 
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                song = null;
-            } else {
-                song = extras.getString("Song");
-            }
-        } else {
-            song= (String) savedInstanceState.getSerializable("Song");
-        }
+        song = getIntent().getExtras().getString("Song");
 
         playlists = (ListView) findViewById(R.id.playlistsList);
         playlistsList = new ArrayList<>();
@@ -153,7 +144,6 @@ public class PlaylistsActivity extends AppCompatActivity {
                 hideSoftKeyboard(PlaylistsActivity.this);
                 fab.setVisibility(View.VISIBLE);
 
-
             }
             });
 
@@ -165,24 +155,73 @@ public class PlaylistsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 playlist = ((TextView) view).getText().toString();
+                checkHasSong(song,playlist);
 
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase songRef = ref.child("PlaylistSongs").child(ID).child(playlist);
-                songRef.push().setValue(song);
-                Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_LONG).show();
-
-            }
+                if (UserDetails.hasSong) {
+                            Toast.makeText(PlaylistsActivity.this, song + " is already in this playlist", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            addToPlaylist(playlist,song);
+                        }
+                    }
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(PlaylistsActivity.this, Users.class);
+                i.putExtra("Uniqid","FromPlaylistActivity");
+                startActivity(i);
             }
         });
+    }
 
+    private void addToPlaylist(String playlist, String song) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("PlaylistSongs").child(ID).child(playlist);
+        songRef.push().setValue(song);
+        Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_LONG).show();
+    }
+
+
+    private void checkHasSong(final String song, final String playlist) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
+            ref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    String dwnsong = dataSnapshot.getValue(String.class);
+
+                    if (dwnsong.equals(song)) {
+                        UserDetails.hasSong = true;
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String dwnsong = dataSnapshot.getValue(String.class);
+
+                    if (dwnsong.equals(song)) {
+                        UserDetails.hasSong = false;
+                    }
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
     }
 
     @Override

@@ -1880,6 +1880,7 @@ public class SettingsActivity extends AppCompatActivity
                 UserDetails.username = user;
 
                 Intent i = new Intent(SettingsActivity.this, ScrollingActivity.class);
+                i.putExtra("User", user);
                 startActivity(i);
 
             }

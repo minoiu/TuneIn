@@ -2,7 +2,12 @@ package com.qmul.nminoiu.tunein;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +42,12 @@ import com.qmul.nminoiu.tunein.UserDetails;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
+
 import android.widget.PopupMenu;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
@@ -58,6 +68,10 @@ public class SongsAdapter extends BaseAdapter {
     private Menu menu;
     private DatabaseReference dwnSongRef;
     private DatabaseReference lovedSongsRef;
+    private DatabaseReference delSongRef;
+    private String sender;
+
+
     private LinearLayout searchLayout;
 
 
@@ -110,8 +124,7 @@ public class SongsAdapter extends BaseAdapter {
 
         MyPlaylists mp = new MyPlaylists();
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
-
-
+        sender = firebaseAuth.getCurrentUser().getEmail();
 
 
         // mp.showMenu(holder.imageView);
@@ -140,6 +153,11 @@ public class SongsAdapter extends BaseAdapter {
 
                                     switch (item.getItemId()) {
                                         case R.id.listenwith:
+
+                                            Intent intent = new Intent(mContext, Users.class);
+                                            intent.putExtra("Uniqid","FSAdapter");
+                                            intent.putExtra("Song", rowItem.getTitle());
+                                            mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
                                             Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
@@ -177,23 +195,49 @@ public class SongsAdapter extends BaseAdapter {
 
                                         case R.id.share:
 
-                                            Intent intent = new Intent(mContext, Users.class);
-                                            intent.putExtra("Uniqid","FromSongsAdapter");
-                                            intent.putExtra("Song", rowItem.getTitle());
-                                            mContext.startActivity(intent);
+                                            Intent i = new Intent(mContext, Users.class);
+                                            i.putExtra("Uniqid","FromSongAdapter");
+                                            i.putExtra("Song", rowItem.getTitle());
+                                            mContext.startActivity(i);
 
                                             break;
 
                                         case R.id.addto:
                                             String songToAdd = rowItem.getTitle();
-                                            Intent i = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
-                                            i.putExtra("Song", songToAdd);
-                                            mContext.startActivity(i);
+                                            Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
+                                            newIntent.putExtra("Song", songToAdd);
+                                            mContext.startActivity(newIntent);
                                             break;
 
                                         case R.id.delete:
 
-                                            Toast.makeText(mContext.getApplicationContext(), "listen with " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+                                            final String songToDelete = rowItem.getTitle();
+                                            PlaylistSongs ps = new PlaylistSongs();
+
+                                            String playlist = ((PlaylistSongs) mContext).getBarTitle();
+                                            Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
+
+
+                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
+                                            delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                        String key = snapshot.getKey();
+
+                                                        if (dataSnapshot.child(key).getValue().equals(songToDelete)) {
+                                                            delSongRef.child(key).getRef().setValue(null);
+                                                            notifyDataSetChanged();
+                                                            rowItems.remove(rowItem);
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
 
                                             break;
 
@@ -351,6 +395,87 @@ public class SongsAdapter extends BaseAdapter {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase playRef = ref.child("DownloadedSongs").child(ID);
         playRef.push().setValue(song);
+    }
+
+    public void updateList(List<RowItem> newlist) {
+        rowItems.clear();
+        rowItems.addAll(newlist);
+        this.notifyDataSetChanged();
+    }
+
+    private void sendNotification()
+    {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    String send_email;
+
+                    //This is a Simple Logic to Send Notification different Device Programmatically....
+                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                        send_email = UserDetails.receiver;
+
+
+                    } else {
+                        send_email = sender;
+                    }
+
+                    try {
+                        String jsonResponse;
+
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                        con.setUseCaches(false);
+                        con.setDoOutput(true);
+                        con.setDoInput(true);
+
+                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
+                        con.setRequestMethod("POST");
+
+                        String strJsonBody = "{"
+                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
+
+                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
+
+                                + "\"data\": {\"foo\": \"bar\"},"
+                                + "\"contents\": {\"en\": \"You have a new friend request!\"}"
+                                + "}";
+
+
+                        System.out.println("strJsonBody:\n" + strJsonBody);
+
+                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                        con.setFixedLengthStreamingMode(sendBytes.length);
+
+                        OutputStream outputStream = con.getOutputStream();
+                        outputStream.write(sendBytes);
+
+                        int httpResponse = con.getResponseCode();
+                        System.out.println("httpResponse: " + httpResponse);
+
+                        if (httpResponse >= HttpURLConnection.HTTP_OK
+                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        } else {
+                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+                        System.out.println("jsonResponse:\n" + jsonResponse);
+
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
 

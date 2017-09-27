@@ -224,10 +224,10 @@ public class PlaylistSongs extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                String song = dataSnapshot.getValue(String.class);
-//                songsList.remove(song);
-//                rowItems.remove(new RowItem(R.drawable.options,song));
-//                adapter.notifyDataSetChanged();
+                String song = dataSnapshot.getValue(String.class);
+                songsList.remove(song);
+                rowItems.remove(new RowItem(R.drawable.options,song));
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -1466,6 +1466,12 @@ public class PlaylistSongs extends AppCompatActivity {
             }
         });
     }
+
+    public String getBarTitle(){
+        return getSupportActionBar().getTitle().toString();
+    }
+
+
 
 
 }
