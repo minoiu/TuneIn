@@ -189,6 +189,7 @@ public class SettingsActivity extends AppCompatActivity
     public ImageButton download3;
     public ImageButton download4;
     public ImageButton download5;
+    private int newtime;
 
 
     public TextView name1;
@@ -1681,10 +1682,10 @@ public class SettingsActivity extends AppCompatActivity
                         if (dataSnapshot.child("IDReq").getValue().toString().equals(ID)) {
                             String time = dataSnapshot.child("Time").getValue().toString();
                             String song = dataSnapshot.child("Song").getValue().toString();
-                            final int newtime = Integer.parseInt(time);
+                            newtime = Integer.parseInt(time);
 
-                            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-                            likedRef.push().setValue(song);
+//                            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+//                            likedRef.push().setValue(song);
 
                             Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                             Firebase songRef = ref.child("URL").child(song);
@@ -1741,10 +1742,11 @@ public class SettingsActivity extends AppCompatActivity
                 if (dataSnapshot.child("IDReq").getValue().toString().equals(ID)) {
                     String time = dataSnapshot.child("Time").getValue().toString();
                     String song = dataSnapshot.child("Song").getValue().toString();
-                    final int newtime = Integer.parseInt(time);
-
-                    Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-                    likedRef.push().setValue(song);
+                    newtime = Integer.parseInt(time);
+//
+                    //// TODO: 28/09/2017 add in action buton - tunein add to recentlyplayed 
+//                    Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+//                    likedRef.push().setValue(song);
 
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("URL").child(song);
@@ -2709,6 +2711,8 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Time", getCurrentPlayingTime());
         uinfo.put("IDReq", otherUser);
+
+        //777
         //getUrl(song);
         uinfo.put("Song", song);
         ref.updateChildren(uinfo);
@@ -2773,7 +2777,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.reset();
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time + 5);
+            mediaPlayer.seekTo(time+2000);
             mediaPlayer.start();
         } catch (
                 IllegalArgumentException e)
