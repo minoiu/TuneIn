@@ -2288,7 +2288,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
-            updateProgressBar();
+         //   updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
