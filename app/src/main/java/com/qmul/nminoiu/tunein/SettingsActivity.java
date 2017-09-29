@@ -104,6 +104,10 @@ public class SettingsActivity extends AppCompatActivity
     private boolean playPause;
     private boolean intialStage = true;
     private Button btn;
+    private Button playOnToolbar;
+    private Button pauseOnToolbar;
+
+
     private boolean play;
     private boolean pause;
     public static String url;
@@ -554,6 +558,7 @@ public class SettingsActivity extends AppCompatActivity
                                             tuneout1.setVisibility(View.GONE);
                                             tunein1.setVisibility(View.VISIBLE);
                                             mediaPlayer.stop();
+                                            mediaPlayer.release();
 
                                             DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                                             reqdb.addListenerForSingleValueEvent(
@@ -625,6 +630,8 @@ public class SettingsActivity extends AppCompatActivity
                 tuneout2.setVisibility(View.GONE);
                 tunein2.setVisibility(View.VISIBLE);
                 mediaPlayer.stop();
+                mediaPlayer.release();
+
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -648,6 +655,8 @@ public class SettingsActivity extends AppCompatActivity
                 tuneout3.setVisibility(View.GONE);
                 tunein3.setVisibility(View.VISIBLE);
                 mediaPlayer.stop();
+                mediaPlayer.release();
+
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -671,6 +680,7 @@ public class SettingsActivity extends AppCompatActivity
                 tuneout4.setVisibility(View.GONE);
                 tunein4.setVisibility(View.VISIBLE);
                 mediaPlayer.stop();
+                mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -694,6 +704,7 @@ public class SettingsActivity extends AppCompatActivity
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
                 mediaPlayer.stop();
+                mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -1474,7 +1485,13 @@ public class SettingsActivity extends AppCompatActivity
         //media player
         btn = (Button) findViewById(R.id.button);
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+      //  mediaPlayer.release();
+
         mediaPlayer = new MediaPlayer();
+//        mediaPlayer.reset();
+
+        mediaPlayer.reset();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         //getting users and songs from database
         db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -2278,7 +2295,6 @@ public class SettingsActivity extends AppCompatActivity
         //play_toolbar.bringToFront();
 
         mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(link);
         } catch (IOException e) {
@@ -2307,23 +2323,22 @@ public class SettingsActivity extends AppCompatActivity
         mediaPlayer.pause();
     }
 
+
+
     //play song method with signle button background handling
     public void playPauseMusic(View v) {
 
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
-            length = mediaPlayer.getCurrentPosition();
             mediaPlayer.pause();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_play);
             eraseFromFirebase();
 
         } else {
-            mediaPlayer.seekTo(length);
-            playFromPause(length, url);
+
+            //mediaPlayer.seekTo(length);
+            playFromPause(length);
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
         }
@@ -2364,22 +2379,8 @@ public class SettingsActivity extends AppCompatActivity
                 });
     }
 
-    public void playFromPause(Integer time, String link) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(link);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-            //  updateProgressBar();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void playFromPause(Integer time) {
+
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
@@ -2774,7 +2775,6 @@ public class SettingsActivity extends AppCompatActivity
     public void playMusic(int time) {
 
         try {
-            mediaPlayer.reset();
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
             mediaPlayer.seekTo(time+2000);
