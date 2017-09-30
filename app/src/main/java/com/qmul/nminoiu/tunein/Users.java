@@ -215,6 +215,8 @@ public class Users extends AppCompatActivity {
             public void run() {
                 int SDK_INT = android.os.Build.VERSION.SDK_INT;
                 if (SDK_INT > 8) {
+                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
+
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                             .permitAll().build();
                     StrictMode.setThreadPolicy(policy);
@@ -254,6 +256,7 @@ public class Users extends AppCompatActivity {
                                 + "\"data\": {\"foo\": \"bar\"},"
                                 + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
                                 + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
+                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                 + "}";
 
                         System.out.println("strJsonBody:\n" + strJsonBody);
