@@ -1960,6 +1960,16 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        slistView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                hideSoftKeyboard(SettingsActivity.this);
+
+                return false;
+            }
+        });
+
         slistView.setAdapter(sadapter);
 
         // TODO: 21/06/2017 chat button and function

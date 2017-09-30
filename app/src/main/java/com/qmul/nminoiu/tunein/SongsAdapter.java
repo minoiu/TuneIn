@@ -447,6 +447,8 @@ public class SongsAdapter extends BaseAdapter {
 
                                 + "\"data\": {\"foo\": \"bar\"},"
                                 + "\"contents\": {\"en\": \"You have a new friend request!\"}"
+                                + "\"button1\": {\"Accept\": \"Decline\"},"
+
                                 + "}";
 
 

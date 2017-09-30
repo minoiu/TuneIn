@@ -241,13 +241,19 @@ public class Users extends AppCompatActivity {
                         con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
                         con.setRequestMethod("POST");
 
+//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
+//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
+                                //"'headings': {'en': 'Notification Title'}, " +
+                                //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+
                         String strJsonBody = "{"
                                 + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
 
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"}"
+                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
+                                + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
                                 + "}";
 
                         System.out.println("strJsonBody:\n" + strJsonBody);
@@ -265,6 +271,7 @@ public class Users extends AppCompatActivity {
                                 && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
                             Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
                             jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+
                             scanner.close();
                         } else {
                             Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
