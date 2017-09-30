@@ -6,9 +6,11 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.onesignal.OSNotificationAction;
+import com.onesignal.OSNotificationOpenResult;
+import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +68,6 @@ public class Users extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,6 @@ public class Users extends AppCompatActivity {
         db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
-
 
 
         usersList = (ListView) findViewById(R.id.usersList);
@@ -145,15 +148,14 @@ public class Users extends AppCompatActivity {
         });
 
 
-
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String user = ((TextView) view).getText().toString();
                 UserDetails.chatWith = user;
                 Intent i = getIntent();
-                if(i!=null){
-                    if(i.hasExtra("Uniqid")) {
+                if (i != null) {
+                    if (i.hasExtra("Uniqid")) {
                         String uniqid = i.getStringExtra("Uniqid");
                         if (uniqid.equals("FromSettings")) {
                             Toast.makeText(Users.this, "from settings ", Toast.LENGTH_SHORT).show();
@@ -245,8 +247,8 @@ public class Users extends AppCompatActivity {
 
 //                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
 //                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
-                                //"'headings': {'en': 'Notification Title'}, " +
-                                //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+                        //"'headings': {'en': 'Notification Title'}, " +
+                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
 
                         String strJsonBody = "{"
                                 + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
@@ -281,6 +283,7 @@ public class Users extends AppCompatActivity {
                             jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                             scanner.close();
                         }
+
                         System.out.println("jsonResponse:\n" + jsonResponse);
 
                     } catch (Throwable t) {
@@ -290,7 +293,11 @@ public class Users extends AppCompatActivity {
             }
         });
     }
+
+
+
 }
+
 
 
 

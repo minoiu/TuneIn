@@ -77,6 +77,8 @@
             android:name=".ShareActivity"
             android:label="Share With..."
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
     </application>
 
 </manifest>
