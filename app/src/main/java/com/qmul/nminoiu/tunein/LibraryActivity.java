@@ -37,8 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.qmul.nminoiu.tunein.SettingsActivity.mediaPlayer;
-
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -158,36 +157,56 @@ public class LibraryActivity extends AppCompatActivity {
 
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
-                fab.setVisibility(View.GONE);
-                play_toolbar.requestLayout();
                 play_toolbar.bringToFront();
+                fab.setVisibility(View.GONE);
+//                play_toolbar.requestLayout();
                 track_title = (TextView) findViewById(R.id.track_title);
                 track_title.setText(song);
                 hideSoftKeyboard(LibraryActivity.this);
 
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase songRef = ref.child("URL").child(song);
-
-                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                //
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
+                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                     @Override
-                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-
-                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                            btn.setBackgroundResource(R.drawable.ic_media_pause);
-                            play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
-                            play_toolbar.bringToFront();
-                            play_toolbar.requestLayout();
-                            play_toolbar.invalidate();
-                            url = String.valueOf(dsp.getValue());
-                            startMusic(url, song);
-                        }
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        url = dataSnapshot.getValue().toString();
+                        startMusic(url, song);
+                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError databaseError) {
 
                     }
+
                 });
+                //
+
+//                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+//                Firebase songRef = ref.child("URL").child(song);
+//
+//                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+//
+//                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+//                            url = String.valueOf(dsp.getValue());
+//                            startMusic(url, song);
+//                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+////                            play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+////                            play_toolbar.bringToFront();
+////                            play_toolbar.requestLayout();
+////                            play_toolbar.invalidate();
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(FirebaseError firebaseError) {
+//
+//                    }
+//                });
             }
         });
 
@@ -210,6 +229,8 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent backMainTest = new Intent(this, SettingsActivity.class);
+        backMainTest.putExtra("ID", "FromLibAc");
+        backMainTest.putExtra("Song", track_title.getText().toString());
         startActivity(backMainTest);
         finish();
     }
@@ -223,11 +244,11 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void startMusic(String link, String song) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
 
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+
         try {
             mediaPlayer.setDataSource(link);
         } catch (IOException e) {
@@ -237,16 +258,46 @@ public class LibraryActivity extends AppCompatActivity {
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
-            updateProgressBar();
+            //   updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        getFullname();
-        getFollowers(UserDetails.fullname, song);
+        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+        likedRef.push().setValue(song);
 
-    }
+
+//        play_toolbar.setVisibility(View.VISIBLE);
+//        play_toolbar.bringToFront();
+//
+//        if(mediaPlayer.isPlaying()){
+//            mediaPlayer.start();
+//            getFullname();
+//            getFollowers(UserDetails.fullname, song);
+//        } else{
+//            mediaPlayer.reset();
+//            //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            try {
+//                mediaPlayer.setDataSource(link);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                mediaPlayer.prepare();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                updateProgressBar();
+//            }
+//            Button btn = (Button) this.findViewById(R.id.button);
+//            btn.setBackgroundResource(R.drawable.ic_media_pause);
+//            mediaPlayer.start();
+//
+//            getFullname();
+//            getFollowers(UserDetails.fullname, song);
+
+        }
+
 
     public void updateProgressBar() {
         SettingsActivity sa = new SettingsActivity();
@@ -342,22 +393,8 @@ public class LibraryActivity extends AppCompatActivity {
         }
     }
 
-    public void playFromPause(Integer time, String link) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(link);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-            //  updateProgressBar();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void playFromPause(Integer time) {
+
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
@@ -367,30 +404,27 @@ public class LibraryActivity extends AppCompatActivity {
 
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
-        //nowPlaying(song);
     }
 
     public void playPauseMusic(View v) {
 
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
-            length = mediaPlayer.getCurrentPosition();
             mediaPlayer.pause();
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_play);
             eraseFromFirebase();
 
         } else {
-            mediaPlayer.seekTo(length);
-            playFromPause(length, url);
+
+            //mediaPlayer.seekTo(length);
+            playFromPause(length);
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
         }
 
         mediaPlayer.getCurrentPosition();
+
         //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
         //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
 //            new AndroidBuildingMusicPlayerActivity().updateProgressBar();

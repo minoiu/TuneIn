@@ -67,6 +67,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
+
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -103,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity
     private LinearLayout play_toolbar;
     public TextView track_title;
     public TextView sName;
-    public static MediaPlayer mediaPlayer;
+   // public static MediaPlayer mediaPlayer;
     private StorageReference storage;
     private boolean playPause;
     private boolean intialStage = true;
@@ -269,10 +272,38 @@ public class SettingsActivity extends AppCompatActivity
         ID = firebaseAuth1.getCurrentUser().getUid();
         OneSignal.sendTag("User_ID", loggedEmail);
         mStorage = FirebaseStorage.getInstance();
+        btn = (Button) findViewById(R.id.button);
+        play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+        track_title = (TextView) findViewById(R.id.track_title);
+
 
         OneSignal.startInit(this)
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
                 .init();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("ID")) {
+                String uniqid = intent.getStringExtra("ID");
+                if (uniqid.equals("FromLibAc")) {
+                    if(mediaPlayer.isPlaying()){
+                        String songFromLib = intent.getStringExtra("Song");
+                        play_toolbar.setVisibility(View.VISIBLE);
+                        track_title.setText(songFromLib);
+                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    } else {
+
+                    }
+                }
+            }
+        }
+
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.reset();
+
+//        mediaPlayer.reset();
+        //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
 
         View v1 = findViewById(R.id.np1);
         ImageButton youtube1 = (ImageButton) v1.findViewById(R.id.youtube);
@@ -766,7 +797,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 String songToView = title1.getText().toString();
-                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
                 //youtube.setVisibility(View.GONE);
                 //youtubecoloured.setVisibility(View.VISIBLE);
@@ -796,7 +827,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 String songToView = title2.getText().toString();
-                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
                 //youtube.setVisibility(View.GONE);
                 //youtubecoloured.setVisibility(View.VISIBLE);
@@ -826,7 +857,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 String songToView = title3.getText().toString();
-                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
                 //youtube.setVisibility(View.GONE);
                 //youtubecoloured.setVisibility(View.VISIBLE);
@@ -857,7 +888,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 String songToView = title4.getText().toString();
-                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
                 //youtube.setVisibility(View.GONE);
                 //youtubecoloured.setVisibility(View.VISIBLE);
@@ -887,7 +918,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 String songToView = title5.getText().toString();
-                Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(SettingsActivity.this, "songname and view" + songToView + i, Toast.LENGTH_SHORT).show();
 
                 //youtube.setVisibility(View.GONE);
                 //youtubecoloured.setVisibility(View.VISIBLE);
@@ -1489,15 +1520,9 @@ public class SettingsActivity extends AppCompatActivity
 //            displayOnHomepage();
 
         //media player
-        btn = (Button) findViewById(R.id.button);
-        play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+
       //  mediaPlayer.release();
 
-        mediaPlayer = new MediaPlayer();
-//        mediaPlayer.reset();
-
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         //getting users and songs from database
         db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -1661,6 +1686,12 @@ public class SettingsActivity extends AppCompatActivity
                             names.remove(text);
                             title.remove(mysong);
                             ll[j].setVisibility(View.GONE);
+                            if(mediaPlayer.isPlaying()){
+                                play_toolbar.setVisibility(View.VISIBLE);
+                                track_title = (TextView) findViewById(R.id.track_title);
+                                track_title.setText(mysong);
+
+                            }
                         }
 
 
@@ -2311,6 +2342,8 @@ public class SettingsActivity extends AppCompatActivity
         //play_toolbar.bringToFront();
 
         mediaPlayer.reset();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         try {
             mediaPlayer.setDataSource(link);
         } catch (IOException e) {
@@ -2424,8 +2457,8 @@ public class SettingsActivity extends AppCompatActivity
     public Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             Utilities utils = new Utilities();
-            long totalDuration = SettingsActivity.mediaPlayer.getDuration();
-            long currentDuration = SettingsActivity.mediaPlayer.getCurrentPosition();
+            long totalDuration = mediaPlayer.getDuration();
+            long currentDuration = mediaPlayer.getCurrentPosition();
 
             // Displaying Total Duration time
             AndroidBuildingMusicPlayerActivity.songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));

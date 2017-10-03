@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -97,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String ID;
     private Handler mHandler = new Handler();
+    public static MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,9 @@ public class LoginActivity extends AppCompatActivity {
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText("mar@zar.com");
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset();
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Emails");

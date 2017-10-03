@@ -39,7 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 import static android.os.Build.ID;
-import static com.qmul.nminoiu.tunein.SettingsActivity.mediaPlayer;
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 
 public class Chat extends AppCompatActivity {
     LinearLayout layout;

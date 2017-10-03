@@ -12,11 +12,14 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 
 public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
@@ -73,9 +76,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 //
 		// Listeners
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
-		SettingsActivity.mediaPlayer.setOnCompletionListener(this); // Important
-        SettingsActivity.mediaPlayer.getCurrentPosition();
-        songProgressBar.setProgress(SettingsActivity.mediaPlayer.getCurrentPosition());
+		mediaPlayer.setOnCompletionListener(this); // Important
+        mediaPlayer.getCurrentPosition();
+        songProgressBar.setProgress(mediaPlayer.getCurrentPosition());
         songProgressBar.setMax(100);
 //
         // Updating progress bar
@@ -97,16 +100,16 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// check for already playing
-				if (SettingsActivity.mediaPlayer.isPlaying()) {
-					if (SettingsActivity.mediaPlayer != null) {
-						SettingsActivity.mediaPlayer.pause();
+				if (mediaPlayer.isPlaying()) {
+					if (mediaPlayer != null) {
+						mediaPlayer.pause();
 						// Changing button image to play button
 						btnPlay.setImageResource(R.drawable.btn_play);
 					}
 				} else {
 					// Resume song
-					if (SettingsActivity.mediaPlayer != null) {
-						SettingsActivity.mediaPlayer.start();
+					if (mediaPlayer != null) {
+						mediaPlayer.start();
 						// Changing button image to pause button
 						btnPlay.setImageResource(R.drawable.btn_pause);
 					}
@@ -124,14 +127,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = SettingsActivity.mediaPlayer.getCurrentPosition();
+				int currentPosition = mediaPlayer.getCurrentPosition();
 				// check if seekForward time is lesser than song duration
-				if (currentPosition + seekForwardTime <= SettingsActivity.mediaPlayer.getDuration()) {
+				if (currentPosition + seekForwardTime <= mediaPlayer.getDuration()) {
 					// forward song
-					SettingsActivity.mediaPlayer.seekTo(currentPosition + seekForwardTime);
+					mediaPlayer.seekTo(currentPosition + seekForwardTime);
 				} else {
 					// forward to end position
-					SettingsActivity.mediaPlayer.seekTo(SettingsActivity.mediaPlayer.getDuration());
+					mediaPlayer.seekTo(mediaPlayer.getDuration());
 				}
 			}
 		});
@@ -145,14 +148,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = SettingsActivity.mediaPlayer.getCurrentPosition();
+				int currentPosition = mediaPlayer.getCurrentPosition();
 				// check if seekBackward time is greater than 0 sec
 				if (currentPosition - seekBackwardTime >= 0) {
 					// forward song
-					SettingsActivity.mediaPlayer.seekTo(currentPosition - seekBackwardTime);
+					mediaPlayer.seekTo(currentPosition - seekBackwardTime);
 				} else {
 					// backward to starting position
-					SettingsActivity.mediaPlayer.seekTo(0);
+					mediaPlayer.seekTo(0);
 				}
 
 			}
@@ -289,10 +292,10 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 		// Play song
 		try {
-			SettingsActivity.mediaPlayer.reset();
-			SettingsActivity.mediaPlayer.setDataSource(SettingsActivity.url);
-			SettingsActivity.mediaPlayer.prepare();
-			SettingsActivity.mediaPlayer.start();
+			mediaPlayer.reset();
+			mediaPlayer.setDataSource(SettingsActivity.url);
+			mediaPlayer.prepare();
+			mediaPlayer.start();
 
 			// Displaying Song title
 			String songTitle = SettingsActivity.song;
@@ -328,8 +331,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 */
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			long totalDuration = SettingsActivity.mediaPlayer.getDuration();
-			long currentDuration = SettingsActivity.mediaPlayer.getCurrentPosition();
+			long totalDuration = mediaPlayer.getDuration();
+			long currentDuration = mediaPlayer.getCurrentPosition();
 
 			// Displaying Total Duration time
 			songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
@@ -380,7 +383,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	@Override
 	 public void onDestroy(){
 	 super.onDestroy();
-		SettingsActivity.mediaPlayer.release();
+		mediaPlayer.release();
 }
 
 	@Override
@@ -400,11 +403,11 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		mHandler.removeCallbacks(mUpdateTimeTask);
-		int totalDuration = SettingsActivity.mediaPlayer.getDuration();
+		int totalDuration = mediaPlayer.getDuration();
 		int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
 
 		// forward or backward to certain seconds
-		SettingsActivity.mediaPlayer.seekTo(currentPosition);
+		mediaPlayer.seekTo(currentPosition);
 
 		// update timer progress again
 		updateProgressBar();
