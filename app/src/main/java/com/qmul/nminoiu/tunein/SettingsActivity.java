@@ -2084,7 +2084,7 @@ public class SettingsActivity extends AppCompatActivity
         //search layout and functions
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
-        //searchView.bringToFront();
+        //searchView.bringToFront();//
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
             @Override
