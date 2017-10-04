@@ -86,6 +86,7 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorAccent"
+        app:elevation="1dp"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
@@ -100,6 +101,7 @@
         android:adjustViewBounds="false"
         android:background="@xml/roundcorner"
         android:cropToPadding="false"
+
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/buttonorg" />
 
@@ -213,23 +215,22 @@
     <LinearLayout
         android:id="@+id/play_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="40dp"
         android:layout_gravity="bottom"
         android:animateLayoutChanges="true"
         android:background="#333333"
         android:clickable="true"
         android:onClick="openPlayerPage"
         android:visibility="gone"
-        android:weightSum="1"
-        android:orientation="vertical">
+        android:weightSum="1">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/fab_margin"
-            android:background="@drawable/musicone"
+            android:background="@mipmap/uparrow"
             android:foregroundGravity="left"
             android:visibility="visible" />
 
@@ -237,10 +238,10 @@
             android:id="@+id/track_title"
             android:layout_width="150dp"
             android:layout_height="17dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:layout_margin="@dimen/fab_margin"
-            android:layout_marginLeft="30dp"
             android:layout_weight="0.82"
+            android:textAlignment="center"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
             android:textSize="13sp"
             android:textStyle="bold"

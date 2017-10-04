@@ -5,11 +5,16 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -39,7 +44,7 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
-public class LibraryActivity extends AppCompatActivity {
+public class LibraryActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener{
 
     private ListView recentSongs;
     private ArrayList<String> recents = new ArrayList<>();
@@ -59,8 +64,10 @@ public class LibraryActivity extends AppCompatActivity {
     private RelativeLayout playlists;
     private RelativeLayout downloads;
     private RelativeLayout favourites;
-
-
+    private GestureDetector gestureDetector;
+    View.OnTouchListener gestureListener;
+    private SimpleGestureFilter detector;
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -70,15 +77,7 @@ public class LibraryActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(LibraryActivity.this, Users.class);
-                startActivity(i);
-            }
-        });
+        detector = new SimpleGestureFilter(this,this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -88,8 +87,17 @@ public class LibraryActivity extends AppCompatActivity {
         playlists = (RelativeLayout) findViewById(R.id.playlists);
         favourites = (RelativeLayout) findViewById(R.id.favourites);
         downloads = (RelativeLayout) findViewById(R.id.downloads);
-
+        track_title = (TextView) findViewById(R.id.track_title);
         myFollowers = new ArrayList<>();
+
+        Intent i = getIntent();
+        if(i.hasExtra("Song")){
+            String title = i.getStringExtra("Song");
+            track_title.setText(title);
+        }
+        if(mediaPlayer.isPlaying()){
+            play_toolbar.setVisibility(View.VISIBLE);
+        } else play_toolbar.setVisibility(View.GONE);
 
         recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         recentsRef.addChildEventListener(new ChildEventListener() {
@@ -154,32 +162,24 @@ public class LibraryActivity extends AppCompatActivity {
         recentSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
                 play_toolbar.bringToFront();
-                fab.setVisibility(View.GONE);
-//                play_toolbar.requestLayout();
-                track_title = (TextView) findViewById(R.id.track_title);
                 track_title.setText(song);
                 hideSoftKeyboard(LibraryActivity.this);
 
-                //
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         url = dataSnapshot.getValue().toString();
                         startMusic(url, song);
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
-                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
-
                 });
                 //
 
@@ -213,8 +213,11 @@ public class LibraryActivity extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
-                startActivity(i);
+                Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Song", track_title.getText().toString());
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+
             }
         });
 
@@ -244,11 +247,8 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void startMusic(String link, String song) {
-
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-
         try {
             mediaPlayer.setDataSource(link);
         } catch (IOException e) {
@@ -266,38 +266,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
         likedRef.push().setValue(song);
-
-
-//        play_toolbar.setVisibility(View.VISIBLE);
-//        play_toolbar.bringToFront();
-//
-//        if(mediaPlayer.isPlaying()){
-//            mediaPlayer.start();
-//            getFullname();
-//            getFollowers(UserDetails.fullname, song);
-//        } else{
-//            mediaPlayer.reset();
-//            //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//            try {
-//                mediaPlayer.setDataSource(link);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                mediaPlayer.prepare();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                updateProgressBar();
-//            }
-//            Button btn = (Button) this.findViewById(R.id.button);
-//            btn.setBackgroundResource(R.drawable.ic_media_pause);
-//            mediaPlayer.start();
-//
-//            getFullname();
-//            getFollowers(UserDetails.fullname, song);
-
-        }
-
+    }
 
     public void updateProgressBar() {
         SettingsActivity sa = new SettingsActivity();
@@ -388,8 +357,6 @@ public class LibraryActivity extends AppCompatActivity {
             Map<String, Object> uinfo = new HashMap<>();
             uinfo.put("Song", mysong);
             ref4.child(UserDetails.fullname).updateChildren(uinfo);
-
-
         }
     }
 
@@ -431,7 +398,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void eraseFromFirebase() {
-        final SettingsActivity sa =  new SettingsActivity();
+        final SettingsActivity sa = new SettingsActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -444,7 +411,7 @@ public class LibraryActivity extends AppCompatActivity {
                             //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                               // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                 // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();
@@ -460,5 +427,44 @@ public class LibraryActivity extends AppCompatActivity {
 
                     }
                 });
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me){
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+
+
+                break;
+            case SimpleGestureFilter.SWIPE_UP :
+                Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 }
+
+
+
+

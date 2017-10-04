@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -276,6 +277,19 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         track_title = (TextView) findViewById(R.id.track_title);
 
+        CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+        CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+
+//        if(mediaPlayer.isPlaying()){
+//            paramsFab1.setMargins(0, 0, 43, 150);
+//            paramsFab.setMargins(53, 0, 0, 160);
+//            fab1.setLayoutParams(paramsFab1);
+//            fab.setLayoutParams(paramsFab);
+//            play_toolbar.setVisibility(View.VISIBLE);
+//
+//        } else {
+//            play_toolbar.setVisibility(View.GONE);
+//        }
 
         OneSignal.startInit(this)
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
@@ -286,13 +300,29 @@ public class SettingsActivity extends AppCompatActivity
             if (intent.hasExtra("ID")) {
                 String uniqid = intent.getStringExtra("ID");
                 if (uniqid.equals("FromLibAc")) {
-                    if(mediaPlayer.isPlaying()){
+                    if (mediaPlayer.isPlaying()) {
                         String songFromLib = intent.getStringExtra("Song");
                         play_toolbar.setVisibility(View.VISIBLE);
                         track_title.setText(songFromLib);
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
+                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        fab1.setLayoutParams(paramsFab1);
+                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        fab.setLayoutParams(paramsFab);
                     } else {
-
+                        play_toolbar.setVisibility(View.GONE);
+                    }
+                } else if (uniqid.equals("FromSearch")) {
+                    if (mediaPlayer.isPlaying()) {
+                        String songFromLib = intent.getStringExtra("Song");
+                        fab1.bringToFront();
+                        play_toolbar.setVisibility(View.VISIBLE);
+                        track_title.setText(songFromLib);
+                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        fab1.setLayoutParams(paramsFab1);
+                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        fab.setLayoutParams(paramsFab);
                     }
                 }
             }
@@ -2015,6 +2045,9 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, Users.class);
                 i.putExtra("Uniqid","FromSettings");
+                if(mediaPlayer.isPlaying()){
+                    i.putExtra("Song", track_title.getText().toString());
+                }
                 startActivity(i);
             }
         });
@@ -2023,6 +2056,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
+                i.putExtra("Uniqid","FromSettings");
+                if(mediaPlayer.isPlaying()){
+                    i.putExtra("Song", track_title.getText().toString());
+                }
                 startActivity(i);
             }
         });
@@ -2052,23 +2089,35 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewShown() {
+                if(mediaPlayer.isPlaying()) {
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
                 nowPlayingLayout.setVisibility(View.GONE);
                 searchLayout.setVisibility(View.VISIBLE);
                 //searchView.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 fab1.setVisibility(View.INVISIBLE);
-                play_toolbar.setVisibility(View.GONE);
+
+
             }
 
             @Override
             public void onSearchViewClosed() {
+                finish();
+                //overridePendingTransition( 0, 0);
+                Intent inte = getIntent();
+                inte.putExtra("ID", "FromSearch");
+                inte.putExtra("Song", song);
+                startActivity(inte);
+                overridePendingTransition( 0, 0);
                 searchLayout.setVisibility(View.GONE);
-               // searchView.setVisibility(View.VISIBLE);
 
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
-                play_toolbar.setVisibility(View.GONE);
-                nowPlayingLayout.setVisibility(View.VISIBLE);
+//                fab.setVisibility(View.VISIBLE);
+//                fab1.setVisibility(View.VISIBLE);
+//                if(!mediaPlayer.isPlaying()) {
+//                    play_toolbar.setVisibility(View.GONE);
+//                } else play_toolbar.setVisibility(View.VISIBLE);
+//                nowPlayingLayout.setVisibility(View.VISIBLE);
 
 
             }

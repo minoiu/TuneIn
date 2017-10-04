@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -31,6 +32,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private ImageButton btnPlaylist;
 	private ImageButton btnRepeat;
 	private ImageButton btnShuffle;
+	private ImageButton downarrow;
+
 	public static SeekBar songProgressBar;
 	private TextView songTitleLabel;
 	public static TextView songCurrentDurationLabel;
@@ -53,6 +56,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
 		setContentView(R.layout.player);
 
 		// All player buttons
@@ -68,6 +72,11 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		songTitleLabel = (TextView) findViewById(R.id.songTitle);
 		songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
+		downarrow = (ImageButton) findViewById(R.id.downarrow);
+
+		Intent i = getIntent();
+		String title = i.getStringExtra("Song");
+		songTitleLabel.setText(title);
 
 		// Mediaplayer
 //		mp = new MediaPlayer();
@@ -80,7 +89,23 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
         mediaPlayer.getCurrentPosition();
         songProgressBar.setProgress(mediaPlayer.getCurrentPosition());
         songProgressBar.setMax(100);
+
+
 //
+		downarrow.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				Intent intent_home=new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+				intent_home.putExtra("ID", "FromMP");
+				if(mediaPlayer.isPlaying()){
+					intent_home.putExtra("Song", songTitleLabel.getText().toString());
+				}
+				startActivity(intent_home);
+				overridePendingTransition(R.anim.no_change,R.anim.slide_down_info);
+			return false;
+			}
+		});
+
         // Updating progress bar
         updateProgressBar();
 
@@ -331,21 +356,23 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 */
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			long totalDuration = mediaPlayer.getDuration();
-			long currentDuration = mediaPlayer.getCurrentPosition();
+			if(mediaPlayer.isPlaying()) {
+				long totalDuration = mediaPlayer.getDuration();
+				long currentDuration = mediaPlayer.getCurrentPosition();
 
-			// Displaying Total Duration time
-			songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
-			// Displaying time completed playing
-			songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
+				// Displaying Total Duration time
+				songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
+				// Displaying time completed playing
+				songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
 
-			// Updating progress bar
-			int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
-			//Log.d("Progress", ""+progress);
-			songProgressBar.setProgress(progress);
+				// Updating progress bar
+				int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+				//Log.d("Progress", ""+progress);
+				songProgressBar.setProgress(progress);
 
-			// Running this thread after 100 milliseconds
-			mHandler.postDelayed(this, 100);
+				// Running this thread after 100 milliseconds
+				mHandler.postDelayed(this, 100);
+			}
 		}
 	};
 

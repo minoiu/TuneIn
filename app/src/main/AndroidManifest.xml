@@ -29,7 +29,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="Now playing"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".AudioPlayer" />
         <activity
             android:name=".Users"
