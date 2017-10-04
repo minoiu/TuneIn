@@ -16,6 +16,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:choiceMode="singleChoice"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 </RelativeLayout>

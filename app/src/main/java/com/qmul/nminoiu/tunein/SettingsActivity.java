@@ -299,7 +299,7 @@ public class SettingsActivity extends AppCompatActivity
         if (intent != null) {
             if (intent.hasExtra("ID")) {
                 String uniqid = intent.getStringExtra("ID");
-                if (uniqid.equals("FromLibAc")) {
+                if (uniqid.equals("FromLibrary")) {
                     if (mediaPlayer.isPlaying()) {
                         String songFromLib = intent.getStringExtra("Song");
                         play_toolbar.setVisibility(View.VISIBLE);
@@ -323,10 +323,27 @@ public class SettingsActivity extends AppCompatActivity
                         fab1.setLayoutParams(paramsFab1);
                         paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                         fab.setLayoutParams(paramsFab);
+                    } else {
+                        play_toolbar.setVisibility(View.GONE);
+                    }
+                } else if (uniqid.equals("FromPlayer")) {
+                        if (mediaPlayer.isPlaying()) {
+                            String songFromLib = intent.getStringExtra("Song");
+                            fab1.bringToFront();
+                            play_toolbar.setVisibility(View.VISIBLE);
+                            track_title.setText(songFromLib);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                            fab1.setLayoutParams(paramsFab1);
+                            paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                            fab.setLayoutParams(paramsFab);
+                        } else {
+                            play_toolbar.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
-        }
+
 
 //        mediaPlayer = new MediaPlayer();
 //        mediaPlayer.reset();
@@ -1976,8 +1993,13 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
-                startActivity(i);
+                Intent intent_info = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromSettings");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
             }
         });
 
@@ -1989,9 +2011,6 @@ public class SettingsActivity extends AppCompatActivity
 
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
-                play_toolbar.requestLayout();
-                play_toolbar.bringToFront();
-                track_title = (TextView) findViewById(R.id.track_title);
                 track_title.setText(song);
                 hideSoftKeyboard(SettingsActivity.this);
 
@@ -2003,18 +2022,9 @@ public class SettingsActivity extends AppCompatActivity
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
 
                         for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                            btn.setBackgroundResource(R.drawable.ic_media_pause);
-                            play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
-                            play_toolbar.bringToFront();
-                            play_toolbar.setVisibility(View.VISIBLE);
-                            play_toolbar.requestLayout();
-                            play_toolbar.invalidate();
                             url = String.valueOf(dsp.getValue());
                             startMusic(url, song);
-                            Toast.makeText(SettingsActivity.this, "Fullname is this: " + UserDetails.fullname, Toast.LENGTH_SHORT).show();
-
-                            nowPlaying(song);
-
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
                             getFollowers(UserDetails.fullname, song);
                         }
                     }
@@ -2164,44 +2174,6 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
-    private void getSongs(String id) {
-
-        mDatabase8 = FirebaseDatabase.getInstance().getReference().child("Homepage").child(id);
-
-        mDatabase8.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String value = snapshot.getKey();
-                    NowPlayingItem item = new NowPlayingItem(value);
-                    item.setSong(value);
-                    songText.setText(value);
-                    Toast.makeText(SettingsActivity.this, value + " is first friend name", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -2285,17 +2257,6 @@ public class SettingsActivity extends AppCompatActivity
 //            }
 //        });
 //       // Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + "  followers", Toast.LENGTH_LONG).show();
-
-
-    public void nowPlaying(String songName) {
-        //getFulname();
-
-        ID = firebaseAuth1.getCurrentUser().getUid();
-        Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/").child("NowListening").child(ID);
-        Map<String, Object> uinfo4 = new HashMap<String, Object>();
-        uinfo4.put("Song", songName);
-        ref4.updateChildren(uinfo4);
-    }
 
     //showing searching layout
     @Override
@@ -2442,9 +2403,6 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         mediaPlayer.getCurrentPosition();
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {
@@ -2588,70 +2546,6 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
     }
-
-    public boolean checkNowPlaying(String userId) {
-        getFulname();
-        mDatabase3 = FirebaseDatabase.getInstance().getReference().child("NowListening");
-        mDatabase3.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(UserDetails.fullname)) {
-                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
-                    UserDetails.nowPlaying = true;
-                } else {
-                    UserDetails.nowPlaying = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return false;
-    }
-
-    public void displayOnHomepage() {
-        Toast.makeText(SettingsActivity.this, "display called" + UserDetails.username, Toast.LENGTH_SHORT).show();
-
-        //nowPlayingLayout.setVisibility(View.VISIBLE);
-
-//            getFulname();
-//            checkFollowing();
-//            checkNowPlaying();
-
-        Toast.makeText(SettingsActivity.this, UserDetails.following + " " + UserDetails.nowPlaying, Toast.LENGTH_SHORT).show();
-
-
-        mDatabase4 = FirebaseDatabase.getInstance().getReference().child("NowListening").child(UserDetails.fullname).child("Song");
-
-        if (UserDetails.following && UserDetails.nowPlaying) {
-
-
-            mDatabase4.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Toast.makeText(SettingsActivity.this, "following and playing" + UserDetails.username, Toast.LENGTH_SHORT).show();
-
-                    //TextView tv = (TextView) findViewById(R.id.songName);
-                    songText.setText("song name here soon");
-
-
-                    //View test1View = findViewById(R.id.test1);
-                    //sName = (TextView) test1View.findViewById(R.id.songName);
-                    //String song = dataSnapshot.getValue().toString();
-                    // sName.setText("blah");
-                    //Toast.makeText(SettingsActivity.this, fullname, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-
-            //add song to text view
-        }
-    }
-
 
     private void addToFirebaseHome(String myvalue, final String mysong) {
 

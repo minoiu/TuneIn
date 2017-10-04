@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/activity_horizontal_margin"
-        tools:context="com.qmul.nminoiu.tunein.LibraryActivity"
-        tools:showIn="@layout/activity_library"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.qmul.nminoiu.tunein.LibraryActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp"
+    tools:showIn="@layout/activity_library">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="4dp">
 
             <ImageView
                 android:id="@+id/playlistico"
@@ -39,8 +39,8 @@
                 android:id="@+id/Playlist1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="19dp"
+                android:layout_marginStart="19dp"
                 android:layout_toEndOf="@id/playlistico"
                 android:layout_toLeftOf="@+id/next1"
                 android:layout_toRightOf="@id/playlistico"
@@ -64,12 +64,58 @@
         <include layout="@layout/item_divider" />
 
         <RelativeLayout
+            android:id="@+id/songs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="4dp">
+
+            <ImageView
+                android:id="@+id/songsi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_music_note_black_24dp" />
+
+            <TextView
+                android:id="@+id/songst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="19dp"
+                android:layout_marginStart="19dp"
+                android:layout_toEndOf="@id/songsi"
+                android:layout_toLeftOf="@+id/songsiv"
+                android:layout_toRightOf="@id/songsi"
+                android:layout_toStartOf="@+id/songsiv"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Songs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
+
+            <ImageView
+                android:id="@+id/songsiv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_nextblack" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <RelativeLayout
             android:id="@+id/downloads"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="4dp">
 
             <ImageView
                 android:id="@+id/playlistico1"
@@ -115,7 +161,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="4dp">
 
             <ImageView
                 android:id="@+id/playlistico2"
@@ -126,6 +172,7 @@
                 android:layout_alignParentTop="false"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/like"
                 android:tint="#000000" />
 

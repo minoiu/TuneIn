@@ -78,17 +78,31 @@ public class Chat extends AppCompatActivity {
         btn = (Button) findViewById(R.id.button);
         firebaseAuth1 = FirebaseAuth.getInstance();
         ID = firebaseAuth1.getCurrentUser().getUid();
-
-
-
+        track_title = (TextView) findViewById(R.id.track_title);
 
         Intent i = getIntent();
+
+        if (i.hasExtra("Uniqid")) {
+            String uniqid = i.getStringExtra("Uniqid");
+            if (uniqid.equals("FromUsers")) {
+                String song = i.getStringExtra("Song");
+                track_title.setText(song);
+
+                String text = "Here is a song for you:\n" + song;
+
+                messageArea.setText(text);
+            }
+        }
+
+
         if(i.hasExtra("Song")){
             String song = i.getStringExtra("Song");
-            String text = "Here is a song for you:\n"+song;
-
-            messageArea.setText(text);
+            track_title.setText(song);
         }
+
+        if(mediaPlayer.isPlaying()){
+            play_toolbar.setVisibility(View.VISIBLE);
+        } else play_toolbar.setVisibility(View.GONE);
 
         DatabaseReference mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
@@ -130,8 +144,13 @@ public class Chat extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Chat.this, AndroidBuildingMusicPlayerActivity.class);
-                startActivity(i);
+                Intent intent_info = new Intent(Chat.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromChat");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
             }
         });
 

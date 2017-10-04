@@ -163,9 +163,7 @@ public class LibraryActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
-                play_toolbar.bringToFront();
                 track_title.setText(song);
-                hideSoftKeyboard(LibraryActivity.this);
 
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -180,32 +178,6 @@ public class LibraryActivity extends AppCompatActivity{
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                //
-
-//                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-//                Firebase songRef = ref.child("URL").child(song);
-//
-//                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-//
-//                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-//                            url = String.valueOf(dsp.getValue());
-//                            startMusic(url, song);
-//                            btn.setBackgroundResource(R.drawable.ic_media_pause);
-////                            play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
-////                            play_toolbar.bringToFront();
-////                            play_toolbar.requestLayout();
-////                            play_toolbar.invalidate();
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(FirebaseError firebaseError) {
-//
-//                    }
-//                });
             }
         });
 
@@ -213,10 +185,12 @@ public class LibraryActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
-                intent_info.putExtra("Song", track_title.getText().toString());
+                intent_info.putExtra("Uniqid", "FromLibrary");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
-
             }
         });
 
@@ -231,7 +205,7 @@ public class LibraryActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         Intent backMainTest = new Intent(this, SettingsActivity.class);
-        backMainTest.putExtra("ID", "FromLibAc");
+        backMainTest.putExtra("ID", "FromLibrary");
         backMainTest.putExtra("Song", track_title.getText().toString());
         startActivity(backMainTest);
         finish();
@@ -428,6 +402,7 @@ public class LibraryActivity extends AppCompatActivity{
                 });
 
     }
+
 }
 
 

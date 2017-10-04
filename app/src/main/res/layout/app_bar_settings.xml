@@ -172,12 +172,14 @@
             android:layout_marginBottom="1dip"
             android:divider="#806326"
             android:dividerHeight="1dp"
+            android:focusable="true"
             android:isScrollContainer="false"
             android:maxHeight="210dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:scrollbars="none"
             android:theme="@style/AppTheme"
-            android:visibility="visible"
-            android:focusable="true">
+            android:visibility="visible">
 
 
         </ListView>
@@ -207,6 +209,8 @@
             android:dividerHeight="1dp"
             android:isScrollContainer="false"
             android:maxHeight="210dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:scrollbars="none"
             android:visibility="visible" />
 

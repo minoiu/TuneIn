@@ -181,6 +181,7 @@ public class Users extends AppCompatActivity {
 
                     } else {
                         Intent intent = new Intent(Users.this, Chat.class);
+                        intent.putExtra("Uniqid", "FromUsers");
                         intent.putExtra("Name", user);
                         startActivity(intent);
                     }

@@ -11,10 +11,13 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -53,6 +56,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
 	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
+    private String songTitle;
+    private String activity;
+    private Intent i;
 
 
 	@Override
@@ -78,9 +84,13 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		downarrow = (ImageButton) playerHeader.findViewById(R.id.downarrow);
 		downarrow.bringToFront();
 
-		Intent i = getIntent();
-		String title = i.getStringExtra("Song");
-		songTitleLabel.setText(title);
+//        Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
+//                R.anim.slide_down_info);
+
+
+        i = getIntent();
+		final String songTitle = i.getStringExtra("Song");
+		songTitleLabel.setText(songTitle);
 
 		// Mediaplayer
 //		mp = new MediaPlayer();
@@ -97,28 +107,92 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		playerHeader.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent_home = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
-				intent_home.putExtra("ID", "FromMP");
-				if (mediaPlayer.isPlaying()) {
-					intent_home.putExtra("Song", songTitleLabel.getText().toString());
-				}
-				startActivity(intent_home);
-                overridePendingTransition(R.anim.no_change, R.anim.slide_down_info);
+
+                if (i != null) {
+                    if (i.hasExtra("Uniqid")) {
+                        String uniqid = i.getStringExtra("Uniqid");
+                        if (uniqid.equals("FromSettings")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            finish();
+                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+                        } else if (uniqid.equals("FromLibrary")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            finish();
+                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+                            //overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
+                            //startActivity(intent);
+                        } else if (uniqid.equals("FromSearch")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                                intent.putExtra("ID", "FromPlayer");
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromSongs")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromPlaylistSongs")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, PlaylistSongs.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromDownloaded")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromChat")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, Chat.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromFavourites")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromSearch")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                        intent.putExtra("ID", "FromMP");
+                        if (mediaPlayer.isPlaying()) {
+                            intent.putExtra("Song", songTitleLabel.getText().toString());
+                        }
+                        startActivity(intent);
+                    }
+                    overridePendingTransition(R.anim.no_change, R.anim.slide_down_info);
+                }
             }
 		});
 
-
-		downarrow.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent_home = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
-				intent_home.putExtra("ID", "FromMP");
-				if (mediaPlayer.isPlaying()) {
-					intent_home.putExtra("Song", songTitleLabel.getText().toString());
-				}
-				startActivity(intent_home);
-			}
-		});
 
         // Updating progress bar
         updateProgressBar();
@@ -156,6 +230,95 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 
 			}
 		});
+
+        downarrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (i != null) {
+                    if (i.hasExtra("Uniqid")) {
+                        String uniqid = i.getStringExtra("Uniqid");
+                        if (uniqid.equals("FromSettings")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            finish();
+                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+                        } else if (uniqid.equals("FromLibrary")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            finish();
+                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+                            //overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
+                            //startActivity(intent);
+                        } else if (uniqid.equals("FromSearch")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                                intent.putExtra("ID", "FromPlayer");
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromSongs")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromPlaylistSongs")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, PlaylistSongs.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromDownloaded")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromChat")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, Chat.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            finish();
+                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+                        } else if (uniqid.equals("FromFavourites")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        } else if (uniqid.equals("FromSearch")) {
+                            Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                            intent.putExtra("ID", "FromPlayer");
+                            if (mediaPlayer.isPlaying()) {
+                                intent.putExtra("Song", songTitleLabel.getText().toString());
+                            }
+                            startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(AndroidBuildingMusicPlayerActivity.this, SettingsActivity.class);
+                        intent.putExtra("ID", "FromMP");
+                        if (mediaPlayer.isPlaying()) {
+                            intent.putExtra("Song", songTitleLabel.getText().toString());
+                        }
+                        startActivity(intent);
+                    }
+                   // overridePendingTransition(R.anim.no_change, R.anim.slide_down_info);
+                }
+            }
+        });
 //
 		/**
 		 * Forward button click event
@@ -456,5 +619,14 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	public void showSong(){
 
 	}
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+//        finish();
+//        overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
+       // overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
+    }
 }
 
