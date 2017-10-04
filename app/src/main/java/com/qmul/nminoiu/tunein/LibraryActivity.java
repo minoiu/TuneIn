@@ -44,7 +44,7 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
-public class LibraryActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener{
+public class LibraryActivity extends AppCompatActivity{
 
     private ListView recentSongs;
     private ArrayList<String> recents = new ArrayList<>();
@@ -77,7 +77,6 @@ public class LibraryActivity extends AppCompatActivity implements SimpleGestureF
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        detector = new SimpleGestureFilter(this,this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -427,40 +426,6 @@ public class LibraryActivity extends AppCompatActivity implements SimpleGestureF
 
                     }
                 });
-
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
-        // Call onTouchEvent of SimpleGestureFilter class
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
-                break;
-            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
-                break;
-            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
-
-
-                break;
-            case SimpleGestureFilter.SWIPE_UP :
-                Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
-                startActivity(intent_info);
-                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
-                break;
-
-        }
-    }
-
-    @Override
-    public void onDoubleTap() {
 
     }
 }

@@ -12,38 +12,50 @@
         android:background="@layout/bg_player_header"
         android:layout_alignParentTop="true"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:paddingRight="5dp"
+        android:weightSum="1">
 
-        <ImageButton
-            android:id="@+id/downarrow"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/downarrow"
-            android:layout_gravity="center_vertical"
-            android:background="@null"/>
+        <LinearLayout
+            android:id="@+id/downlayout"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.16"
+            android:clickable="true"
+            android:contextClickable="true">
+
+            <ImageButton
+                android:id="@+id/downarrow"
+                android:layout_width="14dp"
+                android:layout_height="12dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:clickable="true"
+                android:src="@mipmap/downarrow" />
+        </LinearLayout>
         
         <!-- Song Title -->
-        <TextView 
+        <TextView
             android:id="@+id/songTitle"
-            android:layout_width="wrap_content"
-            android:textAlignment="center"
+            android:layout_width="169dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:text="The Good, The Bad And The Ugly"
+            android:textAlignment="center"
             android:textColor="#04b3d2"
             android:textSize="16dp"
-            android:paddingLeft="10dp"
             android:textStyle="bold"
-            android:text="The Good, The Bad And The Ugly"
-            android:layout_marginTop="10dp"/>"
+            android:layout_weight="0.71" />"
         
         <!-- Playlist button -->
-        <ImageButton 
+        <ImageButton
             android:id="@+id/btnPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:src="@drawable/btn_playlist"
-            android:background="@null"/>
+            android:background="@null"
+            android:src="@drawable/btn_playlist" />
     </LinearLayout>
     
     <!-- Song Thumbnail Image -->

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private ImageButton btnRepeat;
 	private ImageButton btnShuffle;
 	private ImageButton downarrow;
+	private LinearLayout playerHeader;
 
 	public static SeekBar songProgressBar;
 	private TextView songTitleLabel;
@@ -56,7 +58,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+		//overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
 		setContentView(R.layout.player);
 
 		// All player buttons
@@ -72,7 +74,9 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		songTitleLabel = (TextView) findViewById(R.id.songTitle);
 		songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
-		downarrow = (ImageButton) findViewById(R.id.downarrow);
+		playerHeader = (LinearLayout) findViewById(R.id.downlayout);
+		downarrow = (ImageButton) playerHeader.findViewById(R.id.downarrow);
+		downarrow.bringToFront();
 
 		Intent i = getIntent();
 		String title = i.getStringExtra("Song");
@@ -90,19 +94,29 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
         songProgressBar.setProgress(mediaPlayer.getCurrentPosition());
         songProgressBar.setMax(100);
 
-
-//
-		downarrow.setOnTouchListener(new View.OnTouchListener() {
+		playerHeader.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				Intent intent_home=new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+			public void onClick(View v) {
+				Intent intent_home = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
 				intent_home.putExtra("ID", "FromMP");
-				if(mediaPlayer.isPlaying()){
+				if (mediaPlayer.isPlaying()) {
 					intent_home.putExtra("Song", songTitleLabel.getText().toString());
 				}
 				startActivity(intent_home);
-				overridePendingTransition(R.anim.no_change,R.anim.slide_down_info);
-			return false;
+                overridePendingTransition(R.anim.no_change, R.anim.slide_down_info);
+            }
+		});
+
+
+		downarrow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent_home = new Intent(AndroidBuildingMusicPlayerActivity.this, LibraryActivity.class);
+				intent_home.putExtra("ID", "FromMP");
+				if (mediaPlayer.isPlaying()) {
+					intent_home.putExtra("Song", songTitleLabel.getText().toString());
+				}
+				startActivity(intent_home);
 			}
 		});
 
@@ -356,7 +370,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 */
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			if(mediaPlayer.isPlaying()) {
+
 				long totalDuration = mediaPlayer.getDuration();
 				long currentDuration = mediaPlayer.getCurrentPosition();
 
@@ -373,7 +387,6 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				// Running this thread after 100 milliseconds
 				mHandler.postDelayed(this, 100);
 			}
-		}
 	};
 
 
@@ -407,11 +420,11 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		}
 	}
 
-	@Override
-	 public void onDestroy(){
-	 super.onDestroy();
-		mediaPlayer.release();
-}
+//	@Override
+//	 public void onDestroy(){
+//	 super.onDestroy();
+//		mediaPlayer.release();
+//}
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
