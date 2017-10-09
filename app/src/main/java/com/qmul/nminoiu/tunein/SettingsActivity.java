@@ -3037,7 +3037,11 @@ public class SettingsActivity extends AppCompatActivity
                 Log.i("OneSignalExample", "Button pressed with id: " + result.action.actionID);
                 if (result.action.actionID.equals("id1")) {
                     activityToLaunch = Chat.class;
-                } else {
+                } else if (result.action.actionID.equals("id1")){
+                    activityToLaunch = PlaylistSongs.class;
+
+                }
+                else {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
                 }
 

@@ -86,11 +86,9 @@ public class Chat extends AppCompatActivity {
             String uniqid = i.getStringExtra("Uniqid");
             if (uniqid.equals("FromUsers")) {
                 String song = i.getStringExtra("Song");
-                track_title.setText(song);
-
                 String text = "Here is a song for you:\n" + song;
-
                 messageArea.setText(text);
+                track_title.setText(song);
             }
         }
 

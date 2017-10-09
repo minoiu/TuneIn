@@ -199,7 +199,7 @@ public class SongsAdapter extends BaseAdapter {
                                         case R.id.share:
 
                                             Intent i = new Intent(mContext, Users.class);
-                                            i.putExtra("Uniqid","FromSongAdapter");
+                                            i.putExtra("Uniqid","FromSongsAdapter");
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 

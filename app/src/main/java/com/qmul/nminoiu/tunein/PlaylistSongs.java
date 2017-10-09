@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 import android.view.View;
 
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FileDownloadTask;
 
 
@@ -54,31 +57,32 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class PlaylistSongs extends AppCompatActivity {
 
     private DatabaseReference db;
     private ListView ulistView;
     private ArrayAdapter<String> uadapter;
-
-
+    private DatabaseReference receiverRef;
+    private DatabaseReference mDatabase1;
     MaterialSearchView searchView;
     LinearLayout searchLayout;
     LinearLayout songsLayout;
     LinearLayout shareOwnership;
     LinearLayout deletePlaylist;
-
-
-
     private ListView songs;
     private TextView name;
-
+    private String sender;
     public List<String> songsList;
     private ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> songssadapter;
@@ -86,7 +90,6 @@ public class PlaylistSongs extends AppCompatActivity {
     private DatabaseReference shareRef;
     private DatabaseReference dwnRef;
     private String ID;
-    private FirebaseAuth firebaseAuth;
     private List<RowItem> rowItems;
     private SongsAdapter adapter;
     private ImageView img;
@@ -96,8 +99,7 @@ public class PlaylistSongs extends AppCompatActivity {
     private Button share;
     private Button delete;
     private Button cancelDelete;
-
-
+    private FirebaseAuth firebaseAuth;
     private Button rename;
     private EditText playlistName;
     private DatabaseReference playlistRef;
@@ -120,18 +122,6 @@ public class PlaylistSongs extends AppCompatActivity {
     private DatabaseReference delPriPlRef;
     private DatabaseReference delSharedPlRef;
     private DatabaseReference delDwnPlRef;
-
-
-
-
-
-
-
-
-
-
-
-
     private String playlist;
     private FloatingActionButton fab;
     private Toolbar toolbar;
@@ -155,10 +145,11 @@ public class PlaylistSongs extends AppCompatActivity {
         });
 
         mStorage = FirebaseStorage.getInstance();
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentuser = firebaseAuth.getCurrentUser();
+        String curUser = currentuser.getUid().toString();
         db = FirebaseDatabase.getInstance().getReference().child("Users");
-
-
+        sender = firebaseAuth.getCurrentUser().getEmail();
         songs = (ListView) findViewById(R.id.songsList);
         songs.bringToFront();
         img = (ImageView) findViewById(R.id.icon);
@@ -168,22 +159,16 @@ public class PlaylistSongs extends AppCompatActivity {
         deletePlaylist = (LinearLayout) findViewById(R.id.deletePlaylist);
         delete = (Button) findViewById(R.id.delete);
         cancelDelete = (Button) findViewById(R.id.cancelDelete);
-
         cancel = (Button) findViewById(R.id.cancel);
         rename = (Button) findViewById(R.id.rename);
         cancelShare = (Button) findViewById(R.id.cancelShare);
         share = (Button) findViewById(R.id.share);
         newName = (EditText) findViewById(R.id.editText);
-
-
-
         playlistName = (EditText) findViewById(R.id.editText);
         renameLayout.bringToFront();
-
         ulistView = (ListView) findViewById(R.id.friendsList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         ulistView.setAdapter(uadapter);
-
 
         Intent intent = getIntent();
         playlist = intent.getExtras().getString("Name");
@@ -330,14 +315,70 @@ public class PlaylistSongs extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String friend = ((TextView) view).getText().toString();
-                shareOwnership.setVisibility(View.VISIBLE);
-                shareOwnership.bringToFront();
-                name.setText(friend + "?");
+                final String friend = ((TextView) view).getText().toString();
 
+                DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.myname = dataSnapshot.getValue().toString();
+//                        Toast.makeText(PlaylistSongs.this, "my name " + UserDetails.myname , Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
+
+                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.fullname = dataSnapshot.getValue().toString();
+//                        Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+
+
+                        DatabaseReference checkInvitesRef = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
+                        checkInvitesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(UserDetails.fullname)) {
+
+//                                    Toast.makeText(PlaylistSongs.this, "first if " , Toast.LENGTH_SHORT).show();
+
+                                    if (dataSnapshot.child(UserDetails.fullname).hasChild(UserDetails.myname)) {
+                                        Toast.makeText(PlaylistSongs.this, "Already shared the playlist '" + playlist + "' with " + friend + ".", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        shareOwnership.setVisibility(View.VISIBLE);
+                                        shareOwnership.bringToFront();
+                                        name.setText(friend + "?");
+                                    }
+                                } else {
+                                    shareOwnership.setVisibility(View.VISIBLE);
+                                    shareOwnership.bringToFront();
+                                    name.setText(friend + "?");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
-        });
-
+                                         });
 
         shareRef = FirebaseDatabase.getInstance().getReference().child("PrivatePlaylists").child(ID);
         shareRef.addChildEventListener(new ChildEventListener() {
@@ -457,8 +498,8 @@ public class PlaylistSongs extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String friend = name.getText().toString();
-                String friendName = friend.substring(0, friend.length() - 1);
+                final String friend = name.getText().toString();
+                final String friendName = friend.substring(0, friend.length() - 1);
 
                 DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
@@ -466,7 +507,21 @@ public class PlaylistSongs extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.myname = dataSnapshot.getValue().toString();
+                        getReceiver(friendName,playlistName.getText().toString().trim());
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                receiverRef = FirebaseDatabase.getInstance().getReference().child("Emails").child(friendName).child("Email");
+                receiverRef.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.receiver = dataSnapshot.getValue().toString();
+                        Toast.makeText(PlaylistSongs.this, UserDetails.receiver, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -482,12 +537,13 @@ public class PlaylistSongs extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
-
+                       // Toast.makeText(PlaylistSongs.this, "my id or friend id " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         Firebase shareRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("PlaylistsInvites").child(UserDetails.fullname).child(UserDetails.myname);
                         shareRef.push().setValue(getSupportActionBar().getTitle().toString());
 
                         Firebase splaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedPlaylists").child(ID);
                         splaylists.push().setValue(getSupportActionBar().getTitle().toString());
+                        splaylists.push().setValue(friend);
 
                     }
 
@@ -498,9 +554,12 @@ public class PlaylistSongs extends AppCompatActivity {
                 });
 
                 shareOwnership.setVisibility(View.GONE);
+
+                Intent i = new Intent(PlaylistSongs.this,PlaylistSongs.class);
+                i.putExtra("Name", playlist);
+                startActivity(i);
+
                 Toast.makeText(PlaylistSongs.this, friendName + " can now add songs to your playlist", Toast.LENGTH_SHORT).show();
-
-
             }
         });
 
@@ -557,6 +616,107 @@ public class PlaylistSongs extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+    private void sendNotification(String user, String playlist) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
+
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    String send_email;
+
+                    //This is a Simple Logic to Send Notification different Device Programmatically....
+                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                        send_email = UserDetails.receiver;
+                        //Toast.makeText(PlaylistSongs.this, sender+ " the sender", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(PlaylistSongs.this, UserDetails.receiver+" the receiver", Toast.LENGTH_SHORT).show();
+
+
+                    } else {
+                        send_email = sender;
+                    }
+
+                    try {
+                        String jsonResponse;
+
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                        con.setUseCaches(false);
+                        con.setDoOutput(true);
+                        con.setDoInput(true);
+
+                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
+                        con.setRequestMethod("POST");
+
+//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
+//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
+                        //"'headings': {'en': 'Notification Title'}, " +
+                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+
+                        String strJsonBody = "{"
+                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
+
+                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
+
+                                + "\"data\": {\"foo\": \"bar\"},"
+                                + "\"contents\": {\"en\": \"" + UserDetails.myname + " shared a playlist with you. \"},"
+                                + "\"buttons\":[{\"id\": \"id2\", \"text\": \"View\"}]"
+                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
+                                + "}";
+
+                        System.out.println("strJsonBody:\n" + strJsonBody);
+
+                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                        con.setFixedLengthStreamingMode(sendBytes.length);
+
+                        OutputStream outputStream = con.getOutputStream();
+                        outputStream.write(sendBytes);
+
+                        int httpResponse = con.getResponseCode();
+                        System.out.println("httpResponse: " + httpResponse);
+
+                        if (httpResponse >= HttpURLConnection.HTTP_OK
+                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+
+                            scanner.close();
+                        } else {
+                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+
+                        System.out.println("jsonResponse:\n" + jsonResponse);
+
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void getReceiver(final String user, final String playlist) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                sendNotification(user, playlist);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void rename(View view){
         newname = playlistName.getText().toString().trim();

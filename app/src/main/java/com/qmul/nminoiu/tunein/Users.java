@@ -167,18 +167,16 @@ public class Users extends AppCompatActivity {
 
                             String song = i.getStringExtra("Song");
                             Intent intent = new Intent(Users.this, Chat.class);
+                            intent.putExtra("Uniqid", "FromUsers");
                             intent.putExtra("Name", user);
                             intent.putExtra("Song", song);
                             startActivity(intent);
                         } else if (uniqid.equals("FSAdapter")) {
                             String songToJoin = i.getStringExtra("Song");
                             String playlist = i.getStringExtra("Name");
-
                             getReceiver(songToJoin, user, playlist);
                             Toast.makeText(Users.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
-
                         }
-
                     } else {
                         Intent intent = new Intent(Users.this, Chat.class);
                         intent.putExtra("Uniqid", "FromUsers");

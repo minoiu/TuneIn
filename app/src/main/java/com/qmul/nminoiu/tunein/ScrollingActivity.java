@@ -162,7 +162,6 @@ public class ScrollingActivity extends AppCompatActivity {
                     if (SettingsActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
-
                     } else {
                         send_email = sender;
                     }
