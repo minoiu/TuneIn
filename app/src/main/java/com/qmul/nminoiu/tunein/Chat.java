@@ -101,6 +101,7 @@ public class Chat extends AppCompatActivity {
                 String song = i.getStringExtra("Song");
                 String text = "Here is a song for you:\n" + song;
                 String friend = i.getStringExtra("FriendName");
+                UserDetails.chatWith=friend;
                 getSupportActionBar().setTitle(friend);
                 messageArea.setText(text);
                 track_title.setText(song);
@@ -110,6 +111,7 @@ public class Chat extends AppCompatActivity {
             } if(uniqid.equals("FromFollowersListeWith")){
                 String song = i.getStringExtra("Song");
                 String friend = i.getStringExtra("FriendName");
+                UserDetails.chatWith=friend;
                 if(mediaPlayer.isPlaying()){
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
@@ -118,6 +120,8 @@ public class Chat extends AppCompatActivity {
                 addToFbListenWith(song,friend);
             } if(uniqid.equals("NotificationListenWith")){
                 String friend = i.getStringExtra("Friend");
+                getFullname();
+                UserDetails.chatWith=friend;
                 String song = i.getStringExtra("Song");
                 getSupportActionBar().setTitle(friend);
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
@@ -130,19 +134,35 @@ public class Chat extends AppCompatActivity {
             String song = i.getStringExtra("Song");
             track_title.setText(song);
         }
-        
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
 
-        db = FirebaseDatabase.getInstance().getReference().child("Users");
-        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
 
+        db = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                UserDetails.username = dataSnapshot.getValue().toString();
+                UserDetails.fullname = dataSnapshot.getValue().toString();
 
-        db1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference mDatabase3 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+
+        mDatabase3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 value = dataSnapshot.getValue(String.class);
@@ -155,21 +175,22 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-        DatabaseReference mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
-        mDatabase5.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
-                //getFollowers(UserDetails.fullname);
-                //Toast.makeText(SettingsActivity.this, myFollowers.size() + " followers", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+//        DatabaseReference mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+//
+//        mDatabase5.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+//            @Override
+//            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+//                UserDetails.fullname = dataSnapshot.getValue().toString();
+//                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+//                //getFollowers(UserDetails.fullname);
+//                //Toast.makeText(SettingsActivity.this, myFollowers.size() + " followers", Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
 
 
         Firebase.setAndroidContext(this);
@@ -589,6 +610,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
+                UserDetails.username = dataSnapshot.getValue().toString();
                 //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 

@@ -2772,7 +2772,7 @@ public class SettingsActivity extends AppCompatActivity
         try {
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time+2000);
+            mediaPlayer.seekTo(time+1300);
             mediaPlayer.start();
         } catch (
                 IllegalArgumentException e)
@@ -3053,6 +3053,7 @@ public class SettingsActivity extends AppCompatActivity
                         @Override
                         public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                             UserDetails.fullname = dataSnapshot.getValue().toString();
+                            UserDetails.username = dataSnapshot.getValue().toString();
 
                             reference3 = FirebaseDatabase.getInstance().getReference().child("ListenWith").child(UserDetails.fullname);
                             reference3.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -3065,6 +3066,7 @@ public class SettingsActivity extends AppCompatActivity
                                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("openURL", openURL);
                                     intent.putExtra("Uniqid", "NotificationListenWith");
+                                    UserDetails.chatWith = friend;
                                     intent.putExtra("Friend", friend);
                                     intent.putExtra("Song", song);
                                     sendTimeRequest(friend,song);
