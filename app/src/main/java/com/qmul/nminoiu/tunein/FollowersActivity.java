@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+import static com.qmul.nminoiu.tunein.R.layout.playlist;
 
 /**
  * Created by nicoleta on 11/10/2017.
@@ -270,7 +271,7 @@ public class FollowersActivity extends AppCompatActivity {
                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
                                     String song = i.getStringExtra("Song");
                                     Intent intent = new Intent(FollowersActivity.this, Chat.class);
-                                    intent.putExtra("Uniqid", "FromUsers");
+                                    intent.putExtra("Uniqid", "FromFollowersShare");
                                     intent.putExtra("Name", user);
                                     intent.putExtra("Song", song);
                                     startActivity(intent);
@@ -286,8 +287,6 @@ public class FollowersActivity extends AppCompatActivity {
                     }
                 });
             }
-
-
 
 
     @Override
@@ -330,6 +329,7 @@ public class FollowersActivity extends AppCompatActivity {
                     Intent intent = new Intent(FollowersActivity.this, PlaylistSongs.class);
                     intent.putExtra("Uniqid", "FromFollowers");
                     intent.putExtra("Name", playlist);
+                    startActivity(intent);
 
                 }
             }
@@ -496,7 +496,6 @@ public class FollowersActivity extends AppCompatActivity {
                 }
             });
     }
-
 
 }
 

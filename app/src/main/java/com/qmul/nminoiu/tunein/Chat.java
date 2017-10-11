@@ -89,8 +89,10 @@ public class Chat extends AppCompatActivity {
 
         if (i.hasExtra("Uniqid")) {
             String uniqid = i.getStringExtra("Uniqid");
-            if (uniqid.equals("FromUsers")) {
+            if (uniqid.equals("FromFollowersShare")) {
                 String song = i.getStringExtra("Song");
+                String friend = i.getStringExtra("Name");
+                getSupportActionBar().setTitle(friend);
                 String text = "Here is a song for you:\n" + song;
                 messageArea.setText(text);
                 track_title.setText(song);
@@ -209,10 +211,8 @@ public class Chat extends AppCompatActivity {
 
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
-                    if(!active){
-                        sendNotification(UserDetails.username, messageText);
-                    }
 
+                    getReceiver(UserDetails.chatWith, UserDetails.username, messageText);
                     messageArea.getText().clear();
                 }
             }
@@ -316,6 +316,22 @@ public class Chat extends AppCompatActivity {
             reference3.updateChildren(map);
     }
 
+    private void getReceiver(final String friendName,final String myName, final String message) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(friendName).child("Email");
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                sendNotification(UserDetails.receiver, myName, message);
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void getURL(final String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -354,8 +370,8 @@ public class Chat extends AppCompatActivity {
             final String song = message.split(": ")[1];
             String part2 = message.split(": ")[0];
             String firstPart = part2+": ";
-            Toast.makeText(Chat.this, "song is" + song, Toast.LENGTH_SHORT).show();
-            Toast.makeText(Chat.this, "part is" + part2, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Chat.this, "song is" + song, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Chat.this, "part is" + part2, Toast.LENGTH_SHORT).show();
             String colouredSong = "<font color=#ff6f00>" + song + "</font>";
 
             textView.setText(Html.fromHtml(firstPart+colouredSong));
@@ -440,7 +456,7 @@ public class Chat extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(final String username, final String message) {
+    private void sendNotification(final String username, final String sender, final String message) {
 
             AsyncTask.execute(new Runnable() {
                 @Override
@@ -455,11 +471,11 @@ public class Chat extends AppCompatActivity {
                         String send_email;
 
                         //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (SettingsActivity.loggedEmail.equals(sender)) {
+                        if (SettingsActivity.loggedEmail.equals(username)) {
                             send_email = UserDetails.receiver;
 
                         } else {
-                            send_email = sender;
+                            send_email = username;
                         }
 
                         try {
@@ -486,7 +502,7 @@ public class Chat extends AppCompatActivity {
                                     + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                     + "\"data\": {\"foo\": \"bar\"},"
-                                    + "\"contents\": {\"en\": \"" + username + " said: '" + message + "'.\"},"
+                                    + "\"contents\": {\"en\": \"" + sender + " said: '" + message + "'.\"},"
                                     + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Reply\"}]"
                                     //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                     + "}";
