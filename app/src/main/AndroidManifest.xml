@@ -82,15 +82,15 @@
             android:name=".ShareActivity"
             android:label="Share With..."
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="FF6F00" />
+        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="ff6f00" />
         <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
-        <service
-            android:name=".NotificationData"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
+        <!--<service-->
+            <!--android:name=".NotificationData"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.onesignal.NotificationExtender" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
     </application>
 

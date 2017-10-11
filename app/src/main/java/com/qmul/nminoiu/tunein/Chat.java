@@ -99,6 +99,8 @@ public class Chat extends AppCompatActivity {
                 if(mediaPlayer.isPlaying()){
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
+                addToFbShareWith(song,friend);
+
             } if (uniqid.equals("FromFollowers")){
                 String song = i.getStringExtra("Song");
                 String text = "Here is a song for you:\n" + song;
@@ -130,6 +132,16 @@ public class Chat extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 play_toolbar.bringToFront();
                 track_title.setText(song);
+            } if(uniqid.equals("NotificationShareWith")) {
+                String friend = i.getStringExtra("Friend");
+                getFullname();
+                UserDetails.chatWith = friend;
+                String song = i.getStringExtra("Song");
+                getSupportActionBar().setTitle(friend);
+                btn.setBackgroundResource(R.drawable.ic_media_pause);
+                play_toolbar.setVisibility(View.VISIBLE);
+                play_toolbar.bringToFront();
+                track_title.setText(song);
             }
         }
         if(i.hasExtra("Song")){
@@ -152,8 +164,6 @@ public class Chat extends AppCompatActivity {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.username = dataSnapshot.getValue().toString();
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-
-
             }
 
             @Override
@@ -284,6 +294,36 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addToFbShareWith(String song,String friend) {
+        FirebaseAuth fb;
+        fb = FirebaseAuth.getInstance();
+
+        String ID;
+        ID = fb.getCurrentUser().getUid();
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        reference3 = new Firebase("https://tunein-633e5.firebaseio.com/ShareWith/" + friend);
+        Map<String, Object> map = new HashMap<>();
+        map.put("Name", UserDetails.fullname);
+        map.put("Song", song);
+        reference3.updateChildren(map);
     }
 
     private void addToFbListenWith(String song,String friend) {
@@ -503,7 +543,7 @@ public class Chat extends AppCompatActivity {
 
                                     + "\"data\": {\"foo\": \"bar\"},"
                                     + "\"contents\": {\"en\": \"" + sender + " said: '" + message + "'.\"},"
-                                    + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Reply\"}]"
+                                    + "\"buttons\":[{\"id\": \"shareSong\", \"text\": \"Reply\"}]"
                                     //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                     + "}";
 
