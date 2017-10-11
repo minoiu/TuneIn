@@ -71,7 +71,7 @@ import java.util.List;
                 public void onClick(View view) {
 
                     Intent intent = new Intent(mContext, PlaylistSongs.class);
-                    intent.putExtra("Name", rowItem.getTitle());
+                    intent.putExtra("Name", rowItem.getTitle().toString());
                     mContext.startActivity(intent);
 
                 }

@@ -37,9 +37,13 @@ public class ScrollingActivity extends AppCompatActivity {
     public static String fullname;
     private DatabaseReference mDatabase;
     private DatabaseReference followersdb;
+    private DatabaseReference followersdbN;
+
     private DatabaseReference mDatabase1;
     private String sender;
     private FirebaseAuth firebaseAuth;
+    private String ID;
+
 
 
 
@@ -63,6 +67,9 @@ public class ScrollingActivity extends AppCompatActivity {
         final String user = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
         final String username = getIntent().getExtras().getString("User");
+        firebaseAuth = FirebaseAuth.getInstance();
+        ID = firebaseAuth.getCurrentUser().getUid();
+
 
         //user.setFullname(UserDetails.chatWith);
 
@@ -77,6 +84,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(username).child("Email");
                 followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(username);
+                followersdbN = FirebaseDatabase.getInstance().getReference().child("FollowersNames");
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
 
                 mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -106,6 +114,53 @@ public class ScrollingActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+
+                followersdbN.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(username).child("Id");
+
+                        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                UserDetails.fullname = dataSnapshot.getValue().toString();
+                                Toast.makeText(ScrollingActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+
+                        });
+
+                        DatabaseReference mfullname = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                        mfullname.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String myFullname = dataSnapshot.getValue().toString();
+                                followersdbN.child(UserDetails.fullname).push().setValue(myFullname);
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
 
 
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {

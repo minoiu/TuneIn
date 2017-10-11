@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,16 +29,21 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import static android.os.Build.ID;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
@@ -51,10 +58,20 @@ public class Chat extends AppCompatActivity {
     private LinearLayout play_toolbar;
     public TextView track_title;
     private Button btn;
-    public String ID;
     private FirebaseAuth firebaseAuth1;
     private Handler mHandler;
     private String url;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference db;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase1;
+
+
+    private DatabaseReference db1;
+    private String value;
+    private String sender;
+    private String ID;
+
 
 
 
@@ -89,6 +106,11 @@ public class Chat extends AppCompatActivity {
                 String text = "Here is a song for you:\n" + song;
                 messageArea.setText(text);
                 track_title.setText(song);
+            } if (uniqid.equals("FromFollowers")){
+                String song = i.getStringExtra("Song");
+                String text = "Here is a song for you:\n" + song;
+                messageArea.setText(text);
+                track_title.setText(song);
             }
         }
 
@@ -101,6 +123,31 @@ public class Chat extends AppCompatActivity {
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
         } else play_toolbar.setVisibility(View.GONE);
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentuser = firebaseAuth.getCurrentUser();
+        String curUser = currentuser.getUid().toString();
+
+        db = FirebaseDatabase.getInstance().getReference().child("Users");
+        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+        ID = firebaseAuth.getCurrentUser().getUid();
+        sender = firebaseAuth.getCurrentUser().getEmail();
+
+
+        db1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                value = dataSnapshot.getValue(String.class);
+                UserDetails.username = value;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         DatabaseReference mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
@@ -132,8 +179,11 @@ public class Chat extends AppCompatActivity {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
+
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
+                    sendNotification(UserDetails.username, messageText);
+
                     messageArea.getText().clear();
                 }
             }
@@ -291,6 +341,7 @@ public class Chat extends AppCompatActivity {
             }
 
             layout.addView(textView);
+            String text = textView.getText().toString();
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -298,6 +349,90 @@ public class Chat extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendNotification(final String username, final String message) {
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                    if (SDK_INT > 8) {
+                        //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
+
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                .permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        String send_email;
+
+                        //This is a Simple Logic to Send Notification different Device Programmatically....
+                        if (SettingsActivity.loggedEmail.equals(sender)) {
+                            send_email = UserDetails.receiver;
+
+                        } else {
+                            send_email = sender;
+                        }
+
+                        try {
+                            String jsonResponse;
+
+                            URL url = new URL("https://onesignal.com/api/v1/notifications");
+                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                            con.setUseCaches(false);
+                            con.setDoOutput(true);
+                            con.setDoInput(true);
+
+                            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                            con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
+                            con.setRequestMethod("POST");
+
+//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
+//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
+                            //"'headings': {'en': 'Notification Title'}, " +
+                            //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+
+                            String strJsonBody = "{"
+                                    + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
+
+                                    + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
+
+                                    + "\"data\": {\"foo\": \"bar\"},"
+                                    + "\"contents\": {\"en\": \"" + username + " said: '" + message + "'.\"},"
+                                    + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Reply\"}]"
+                                    //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
+                                    + "}";
+
+                            System.out.println("strJsonBody:\n" + strJsonBody);
+
+                            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                            con.setFixedLengthStreamingMode(sendBytes.length);
+
+                            OutputStream outputStream = con.getOutputStream();
+                            outputStream.write(sendBytes);
+
+                            int httpResponse = con.getResponseCode();
+                            System.out.println("httpResponse: " + httpResponse);
+
+                            if (httpResponse >= HttpURLConnection.HTTP_OK
+                                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+
+                                scanner.close();
+                            } else {
+                                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                                scanner.close();
+                            }
+
+                            System.out.println("jsonResponse:\n" + jsonResponse);
+
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
+                    }
+                }
+            });
     }
 
     public static void hideSoftKeyboard(Activity activity) {

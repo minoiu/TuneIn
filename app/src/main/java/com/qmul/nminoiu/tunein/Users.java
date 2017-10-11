@@ -162,7 +162,7 @@ public class Users extends AppCompatActivity {
                             Intent intent = new Intent(Users.this, Chat.class);
                             intent.putExtra("Name", user);
                             startActivity(intent);
-                        } else if (uniqid.equals("FromSongsAdapter")) {
+                        } else if (uniqid.equals("FromSongAdapter")) {
                             Toast.makeText(Users.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
 
                             String song = i.getStringExtra("Song");
@@ -174,7 +174,7 @@ public class Users extends AppCompatActivity {
                         } else if (uniqid.equals("FSAdapter")) {
                             String songToJoin = i.getStringExtra("Song");
                             String playlist = i.getStringExtra("Name");
-                            getReceiver(songToJoin, user, playlist);
+                            //getReceiver(songToJoin, user, playlist);
                             Toast.makeText(Users.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -188,110 +188,110 @@ public class Users extends AppCompatActivity {
         });
     }
 
-    private void getReceiver(final String song, final String user, final String playlist) {
-        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
-        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserDetails.receiver = dataSnapshot.getValue().toString();
-                sendNotification(song, user);
-                Intent goBack = new Intent(Users.this, PlaylistSongs.class);
-                goBack.putExtra("FriendName", user);
-                goBack.putExtra("Name", playlist);
-                startActivity(goBack);
-
-                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void sendNotification(final String songToJoin, String user) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                if (SDK_INT > 8) {
-                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
-
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                            .permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    String send_email;
-
-                    //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
-                        send_email = UserDetails.receiver;
-
-                    } else {
-                        send_email = sender;
-                    }
-
-                    try {
-                        String jsonResponse;
-
-                        URL url = new URL("https://onesignal.com/api/v1/notifications");
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setUseCaches(false);
-                        con.setDoOutput(true);
-                        con.setDoInput(true);
-
-                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
-                        con.setRequestMethod("POST");
-
-//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
-//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
-                        //"'headings': {'en': 'Notification Title'}, " +
-                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
-
-                        String strJsonBody = "{"
-                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
-
-                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
-
-                                + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
-                                + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
-                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
-                                + "}";
-
-                        System.out.println("strJsonBody:\n" + strJsonBody);
-
-                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                        con.setFixedLengthStreamingMode(sendBytes.length);
-
-                        OutputStream outputStream = con.getOutputStream();
-                        outputStream.write(sendBytes);
-
-                        int httpResponse = con.getResponseCode();
-                        System.out.println("httpResponse: " + httpResponse);
-
-                        if (httpResponse >= HttpURLConnection.HTTP_OK
-                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-
-                            scanner.close();
-                        } else {
-                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        }
-
-                        System.out.println("jsonResponse:\n" + jsonResponse);
-
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+//    private void getReceiver(final String song, final String user, final String playlist) {
+//        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+//        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                UserDetails.receiver = dataSnapshot.getValue().toString();
+//                sendNotification(song, user);
+//                Intent goBack = new Intent(Users.this, PlaylistSongs.class);
+//                goBack.putExtra("FriendName", user);
+//                goBack.putExtra("Name", playlist);
+//                startActivity(goBack);
+//
+//                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+//
+//    private void sendNotification(final String songToJoin, String user) {
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+//                if (SDK_INT > 8) {
+//                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
+//
+//                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+//                            .permitAll().build();
+//                    StrictMode.setThreadPolicy(policy);
+//                    String send_email;
+//
+//                    //This is a Simple Logic to Send Notification different Device Programmatically....
+//                    if (SettingsActivity.loggedEmail.equals(sender)) {
+//                        send_email = UserDetails.receiver;
+//
+//                    } else {
+//                        send_email = sender;
+//                    }
+//
+//                    try {
+//                        String jsonResponse;
+//
+//                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+//                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//                        con.setUseCaches(false);
+//                        con.setDoOutput(true);
+//                        con.setDoInput(true);
+//
+//                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+//                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
+//                        con.setRequestMethod("POST");
+//
+////                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
+////                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
+//                        //"'headings': {'en': 'Notification Title'}, " +
+//                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+//
+//                        String strJsonBody = "{"
+//                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
+//
+//                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
+//
+//                                + "\"data\": {\"foo\": \"bar\"},"
+//                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
+//                                + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
+//                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
+//                                + "}";
+//
+//                        System.out.println("strJsonBody:\n" + strJsonBody);
+//
+//                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+//                        con.setFixedLengthStreamingMode(sendBytes.length);
+//
+//                        OutputStream outputStream = con.getOutputStream();
+//                        outputStream.write(sendBytes);
+//
+//                        int httpResponse = con.getResponseCode();
+//                        System.out.println("httpResponse: " + httpResponse);
+//
+//                        if (httpResponse >= HttpURLConnection.HTTP_OK
+//                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+//                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+//                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+//
+//                            scanner.close();
+//                        } else {
+//                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+//                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+//                            scanner.close();
+//                        }
+//
+//                        System.out.println("jsonResponse:\n" + jsonResponse);
+//
+//                    } catch (Throwable t) {
+//                        t.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//    }
 
 
 

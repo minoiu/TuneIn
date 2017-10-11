@@ -68,6 +68,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import static com.qmul.nminoiu.tunein.UserDetails.myFollowers;
+
 public class PlaylistSongs extends AppCompatActivity {
 
     private DatabaseReference db;
@@ -169,11 +171,32 @@ public class PlaylistSongs extends AppCompatActivity {
         ulistView = (ListView) findViewById(R.id.friendsList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         ulistView.setAdapter(uadapter);
+        UserDetails.privatePlaylist = false;
+        UserDetails.dwnPlaylist = false;
+        UserDetails.lovedPlaylist = false;
 
-        Intent intent = getIntent();
-        playlist = intent.getExtras().getString("Name");
+        Intent i = getIntent();
 
-        getSupportActionBar().setTitle(playlist);
+        if (i != null) {
+            if (i.hasExtra("Uniqid")) {
+                String uniqid = i.getStringExtra("Uniqid");
+                if (uniqid.equals("FromPlaylistsActivity")) {
+                    playlist = i.getStringExtra("Name");
+                    getSupportActionBar().setTitle(playlist);
+
+                } else {
+                    playlist = i.getExtras().getString("Name");
+                    getSupportActionBar().setTitle(playlist);
+                }
+            }
+            else {
+                playlist = i.getExtras().getString("Name");
+                getSupportActionBar().setTitle(playlist);
+            }
+
+        }
+
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -181,7 +204,7 @@ public class PlaylistSongs extends AppCompatActivity {
         songsList = new ArrayList<>();
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songsList);
 
-        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(intent.getExtras().getString("Name"));
+        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(i.getStringExtra("Name"));
         songsRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -252,27 +275,46 @@ public class PlaylistSongs extends AppCompatActivity {
             }
         });
 
-        db.addChildEventListener(new ChildEventListener() {
+        DatabaseReference mDb = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        mDb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String value = dataSnapshot.getValue(String.class);
-                users.add(value);
-                uadapter.notifyDataSetChanged();
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.myname = dataSnapshot.getValue().toString();
+                DatabaseReference fdb = FirebaseDatabase.getInstance().getReference().child("FollowersNames").child(ID);
+                fdb.addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                            users.add(value);
+                            uadapter.notifyDataSetChanged();
+                    }
 
-            }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+//                        Toast.makeText(PlaylistSongs.this, "my name " + UserDetails.myname , Toast.LENGTH_SHORT).show(
             }
 
             @Override
@@ -280,6 +322,8 @@ public class PlaylistSongs extends AppCompatActivity {
 
             }
         });
+
+
 
         //search method
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -317,60 +361,18 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 final String friend = ((TextView) view).getText().toString();
 
-                DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
-                mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        UserDetails.myname = dataSnapshot.getValue().toString();
-//                        Toast.makeText(PlaylistSongs.this, "my name " + UserDetails.myname , Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
 
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        UserDetails.fullname = dataSnapshot.getValue().toString();
-//                        Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        final String friendID = dataSnapshot.getValue().toString();
+                        checkIfInInvites(friendID, UserDetails.myname, friend);
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
 
 
-                        DatabaseReference checkInvitesRef = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
-                        checkInvitesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.hasChild(UserDetails.fullname)) {
-
-//                                    Toast.makeText(PlaylistSongs.this, "first if " , Toast.LENGTH_SHORT).show();
-
-                                    if (dataSnapshot.child(UserDetails.fullname).hasChild(UserDetails.myname)) {
-                                        Toast.makeText(PlaylistSongs.this, "Already shared the playlist '" + playlist + "' with " + friend + ".", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        shareOwnership.setVisibility(View.VISIBLE);
-                                        shareOwnership.bringToFront();
-                                        name.setText(friend + "?");
-                                    }
-                                } else {
-                                    shareOwnership.setVisibility(View.VISIBLE);
-                                    shareOwnership.bringToFront();
-                                    name.setText(friend + "?");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
                     }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -378,36 +380,26 @@ public class PlaylistSongs extends AppCompatActivity {
                     }
                 });
             }
-                                         });
+        });
 
+       // Toast.makeText(PlaylistSongs.this, "does it run? ", Toast.LENGTH_SHORT).show();
         shareRef = FirebaseDatabase.getInstance().getReference().child("PrivatePlaylists").child(ID);
-        shareRef.addChildEventListener(new ChildEventListener() {
+        shareRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    String key = data.getKey().toString();
+                    //Toast.makeText(PlaylistSongs.this, "keys are " + key, Toast.LENGTH_SHORT).show();
 
-                String playlistName = dataSnapshot.getValue(String.class);
+                    if (dataSnapshot.child(key).getValue().toString().equals(getSupportActionBar().getTitle().toString())) {
+                        UserDetails.privatePlaylist = true;
+                       // Toast.makeText(PlaylistSongs.this, "title is  " + getSupportActionBar().getTitle().toString(), Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(PlaylistSongs.this, "title is  " + dataSnapshot.child(key).getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                   // Toast.makeText(PlaylistSongs.this, "playlist is in private " + UserDetails.privatePlaylist, Toast.LENGTH_SHORT).show();
 
-                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
-                    UserDetails.privatePlaylist = true;
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String playlistName = dataSnapshot.getValue(String.class);
-
-                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
-                    UserDetails.privatePlaylist = false;
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                 //Toast.makeText(PlaylistSongs.this, "playlist is in private " + UserDetails.privatePlaylist, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -415,7 +407,42 @@ public class PlaylistSongs extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        } );
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                String playlistName = dataSnapshot.getValue(String.class);
+//
+//                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
+//                    UserDetails.privatePlaylist = true;
+//                    Toast.makeText(PlaylistSongs.this, "playlist is in private " + UserDetails.privatePlaylist, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                String playlistName = dataSnapshot.getValue(String.class);
+//
+//                if (playlistName.equals(getSupportActionBar().getTitle().toString())) {
+//                    UserDetails.privatePlaylist = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         dwnRef = FirebaseDatabase.getInstance().getReference().child("DownloadedPlaylists").child(ID);
         dwnRef.addChildEventListener(new ChildEventListener() {
@@ -543,8 +570,6 @@ public class PlaylistSongs extends AppCompatActivity {
 
                         Firebase splaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedPlaylists").child(ID);
                         splaylists.push().setValue(getSupportActionBar().getTitle().toString());
-                        splaylists.push().setValue(friend);
-
                     }
 
                     @Override
@@ -616,7 +641,45 @@ public class PlaylistSongs extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    private void sendNotification(String user, String playlist) {
+    private void checkIfInInvites(final String friendID, final String myname, final String friend) {
+        UserDetails.notIn = false;
+        DatabaseReference checkInvitesRef = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
+        checkInvitesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String sharedWithFriend;
+                if (dataSnapshot.hasChild(friendID) && dataSnapshot.child(friendID).hasChild(myname)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(friendID).child(UserDetails.myname).getChildren()) {
+                        sharedWithFriend = snapshot.getKey();
+//                        if (dataSnapshot.child(friendID).child(UserDetails.myname).child(sharedWithFriend).getChildren().iterator()..getValue().equals(playlist)) {
+
+                        if (dataSnapshot.child(friendID).child(UserDetails.myname).child(sharedWithFriend).getValue().equals(playlist)) {
+                            Toast.makeText(PlaylistSongs.this, "Already shared the playlist '" + playlist + "' with " + friend + ".", Toast.LENGTH_SHORT).show();
+                            UserDetails.notIn = false;
+                        } else UserDetails.notIn = true;
+                    }
+                    if(UserDetails.notIn){
+                        shareOwnership.setVisibility(View.VISIBLE);
+                        shareOwnership.bringToFront();
+                        name.setText(friend + "?");
+                    }
+                } else {
+                    shareOwnership.setVisibility(View.VISIBLE);
+                    shareOwnership.bringToFront();
+                    name.setText(friend + "?");
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+            private void sendNotification(String user, String playlist) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -1100,6 +1163,8 @@ public class PlaylistSongs extends AppCompatActivity {
             download();
             Toast.makeText(PlaylistSongs.this, "Downloading... ", Toast.LENGTH_SHORT).show();
 
+            UserDetails.dwnPlaylist = true;
+
         } else if (id == R.id.menu_remdwn) {
 
             //Toast.makeText(PlaylistSongs.this, "Already downloaded ", Toast.LENGTH_SHORT).show();
@@ -1124,6 +1189,7 @@ public class PlaylistSongs extends AppCompatActivity {
                 }
             });
             Toast.makeText(PlaylistSongs.this, "Removing... ", Toast.LENGTH_SHORT).show();
+            UserDetails.dwnPlaylist = false;
 
 
         } else if (id == R.id.menu_rename) {
@@ -1136,12 +1202,30 @@ public class PlaylistSongs extends AppCompatActivity {
 //            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         } else if (id == R.id.menu_share) {
 
+            DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+            mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserDetails.myname = dataSnapshot.getValue().toString();
+//                        Toast.makeText(PlaylistSongs.this, "my name " + UserDetails.myname , Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             searchLayout.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.menu_private) {
 
             Toast.makeText(PlaylistSongs.this, "Your playlist is now private", Toast.LENGTH_SHORT).show();
             addToPrivate();
+            deleteFromShared(playlist);
+            deleteFromInvites(playlist);
+
 
         } else if (id == R.id.menu_public) {
 
@@ -1166,9 +1250,9 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 }
             });
+            UserDetails.privatePlaylist = false;
 
         } else if (id == R.id.menu_like) {
-
             addToLikedPlaylists();
 
         } else if (id == R.id.menu_dislike) {
@@ -1234,7 +1318,7 @@ public class PlaylistSongs extends AppCompatActivity {
                     String key = snapshot.getKey();
                     if (dataSnapshot.child(key).getValue().equals(oldPlaylist)) {
                         dataSnapshot.child(key).getRef().removeValue();
-                        Toast.makeText(PlaylistSongs.this, "Your playlist was deleted", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PlaylistSongs.this, "Your playlist was deleted", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -1534,6 +1618,8 @@ public class PlaylistSongs extends AppCompatActivity {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase playRef = ref.child("PrivatePlaylists").child(ID);
         playRef.push().setValue(getSupportActionBar().getTitle().toString());
+        UserDetails.privatePlaylist = true;
+
     }
 
     private void addToLikedPlaylists() {
@@ -1559,12 +1645,12 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    public void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+                this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override

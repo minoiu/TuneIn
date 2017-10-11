@@ -123,6 +123,8 @@ public class SongsAdapter extends BaseAdapter {
         holder.imageView.setImageResource(rowItem.getImageId());
 
         MyPlaylists mp = new MyPlaylists();
+        UserDetails.dwn = false;
+        UserDetails.liked = false;
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
         final String playlist = ((PlaylistSongs) mContext).getBarTitle();
@@ -156,7 +158,7 @@ public class SongsAdapter extends BaseAdapter {
                                     switch (item.getItemId()) {
                                         case R.id.listenwith:
 
-                                            Intent intent = new Intent(mContext, Users.class);
+                                            Intent intent = new Intent(mContext, FollowersActivity.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
                                             intent.putExtra("Name", playlist);
@@ -173,13 +175,13 @@ public class SongsAdapter extends BaseAdapter {
                                             String song = rowItem.getTitle();
                                             checkDownloaded(song);
 
-                                            if(UserDetails.dwn){
-                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                addToDownloads(song);
-                                                download(song);
-                                                Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                                            }
+//                                            if(UserDetails.dwn){
+//                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
+//                                            } else {
+//                                                addToDownloads(song);
+//                                                download(song);
+//                                                Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
+//                                            }
 
                                             break;
 
@@ -188,27 +190,25 @@ public class SongsAdapter extends BaseAdapter {
                                             String songName = rowItem.getTitle();
                                             checkLiked(songName);
 
-                                            if(UserDetails.liked){
-                                                Toast.makeText(mContext.getApplicationContext(), songName + " is already in your favourites", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                addToFavourites(songName);
-                                            }
-
                                             break;
 
                                         case R.id.share:
 
-                                            Intent i = new Intent(mContext, Users.class);
-                                            i.putExtra("Uniqid","FromSongsAdapter");
+                                            Intent i = new Intent(mContext, FollowersActivity.class);
+                                            i.putExtra("Uniqid","FromSongAdapter");
+                                            i.putExtra("Name", playlist);
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
                                             break;
 
                                         case R.id.addto:
+                                            String playlistName = ((PlaylistSongs) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
                                             Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
+                                            newIntent.putExtra("Uniqid","FSAdapter");
                                             newIntent.putExtra("Song", songToAdd);
+                                            newIntent.putExtra("Name", playlistName);
                                             mContext.startActivity(newIntent);
                                             break;
 
@@ -282,35 +282,23 @@ public class SongsAdapter extends BaseAdapter {
     }
 
     private void checkLiked(final String songName) {
-        lovedSongsRef = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
-        lovedSongsRef.addChildEventListener(new ChildEventListener() {
+        lovedSongsRef = FirebaseDatabase.getInstance().getReference().child("LovedSongs");
+        lovedSongsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                String lovedsong = dataSnapshot.getValue(String.class);
-
-                if (lovedsong.equals(songName)) {
-                    UserDetails.liked = true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
+                        Toast.makeText(mContext.getApplicationContext(), song + " is already in your favourites.", Toast.LENGTH_SHORT).show();
+                        UserDetails.liked = true;
+                    } else {
+                        UserDetails.dwn = false;
+                    }
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String lovedSong = dataSnapshot.getValue(String.class);
-
-                if (lovedSong.equals(songName)) {
-                    UserDetails.liked = false;
+                if (!UserDetails.liked) {
+                    addToFavourites(songName);
+                    Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -318,39 +306,34 @@ public class SongsAdapter extends BaseAdapter {
 
             }
         });
-
     }
 
     private void checkDownloaded(final String song) {
-        dwnSongRef = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
-        dwnSongRef.addChildEventListener(new ChildEventListener() {
+        dwnSongRef = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs");
+        dwnSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                String dwnsong = dataSnapshot.getValue(String.class);
-
-                if (dwnsong.equals(song)) {
-                    UserDetails.dwn = true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(ID)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                        String key = snapshot.getKey().toString();
+                        if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
+                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
+                            UserDetails.dwn = true;
+                        } else {
+                            UserDetails.dwn = false;
+                        }
+                    }
+                    if (!UserDetails.dwn) {
+                        addToDownloads(song);
+                        download(song);
+                        Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    addToDownloads(song);
+                    download(song);
+                    Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String dwnsong = dataSnapshot.getValue(String.class);
-
-                if (dwnsong.equals(song)) {
-                    UserDetails.dwn = false;
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override

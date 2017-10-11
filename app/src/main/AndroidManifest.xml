@@ -63,6 +63,10 @@
             android:label="@string/title_activity_library"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".FollowersActivity"
+            android:label="Your Followers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".PlaylistsActivity"
             android:label="@string/title_activity_playlists"
             android:theme="@style/AppTheme.NoActionBar" />
