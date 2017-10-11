@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,7 +61,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +93,11 @@ public class SettingsActivity extends AppCompatActivity
     private ImageButton[] redHeartArray;
     private TextView[] namesArray;
     private TextView[] titlesArray;
+    Firebase reference1;
+    Firebase reference2;
+    DatabaseReference reference3;
+    private String openURL;
+
 
     private DatabaseReference db;
     private DatabaseReference db1;
@@ -3019,7 +3022,7 @@ public class SettingsActivity extends AppCompatActivity
             String launchUrl = result.notification.payload.launchURL; // update docs launchUrl
 
             String customKey;
-            String openURL = null;
+            openURL = null;
             Object activityToLaunch = SettingsActivity.class;
 
             if (data != null) {
@@ -3035,10 +3038,64 @@ public class SettingsActivity extends AppCompatActivity
 
             if (actionType == OSNotificationAction.ActionType.ActionTaken) {
                 Log.i("OneSignalExample", "Button pressed with id: " + result.action.actionID);
-                if (result.action.actionID.equals("id1")) {
-                    activityToLaunch = Chat.class;
+                if (result.action.actionID.equals("listenwith")) {
+                    //getting invitation details from firebase
+
+                    FirebaseAuth fb;
+                    fb = FirebaseAuth.getInstance();
+
+                    String ID;
+                    ID = fb.getCurrentUser().getUid();
+
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                    mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                            UserDetails.fullname = dataSnapshot.getValue().toString();
+
+                            reference3 = FirebaseDatabase.getInstance().getReference().child("ListenWith").child(UserDetails.fullname);
+                            reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String friend = dataSnapshot.child("Name").getValue().toString();
+                                    String song = dataSnapshot.child("Song").getValue().toString();
+
+                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("openURL", openURL);
+                                    intent.putExtra("Uniqid", "NotificationListenWith");
+                                    intent.putExtra("Friend", friend);
+                                    intent.putExtra("Song", song);
+                                    sendTimeRequest(friend,song);
+                                    startActivity(intent);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
+
                 } else if (result.action.actionID.equals("id1")){
                     activityToLaunch = PlaylistSongs.class;
+                    Intent intent = new Intent(getApplicationContext(), (Class<?>) activityToLaunch);
+                    // intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("openURL", openURL);
+                    Log.i("OneSignalExample", "openURL = " + openURL);
+                    // startActivity(intent);
+                    startActivity(intent);
 
                 }
                 else {
@@ -3049,13 +3106,7 @@ public class SettingsActivity extends AppCompatActivity
             // The following can be used to open an Activity of your choice.
             // Replace - getApplicationContext() - with any Android Context.
             // Intent intent = new Intent(getApplicationContext(), YourActivity.class);
-            Intent intent = new Intent(getApplicationContext(), (Class<?>) activityToLaunch);
-            // intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("openURL", openURL);
-            Log.i("OneSignalExample", "openURL = " + openURL);
-            // startActivity(intent);
-            startActivity(intent);
+
 
             // Add the following to your AndroidManifest.xml to prevent the launching of your main Activity
             //   if you are calling startActivity above.

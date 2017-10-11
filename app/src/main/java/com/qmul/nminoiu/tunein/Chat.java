@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -34,7 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -43,8 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
-
 import static android.os.Build.ID;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
@@ -54,7 +52,7 @@ public class Chat extends AppCompatActivity {
     ImageView sendButton;
     EditText messageArea;
     ScrollView scrollView;
-    Firebase reference1, reference2;
+    Firebase reference1, reference2, reference3;
     private LinearLayout play_toolbar;
     public TextView track_title;
     private Button btn;
@@ -65,20 +63,11 @@ public class Chat extends AppCompatActivity {
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
-
-
     private DatabaseReference db1;
     private String value;
     private String sender;
     private String ID;
-
-
-
-
-
-
-
-
+    static boolean active = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +78,6 @@ public class Chat extends AppCompatActivity {
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
-        getSupportActionBar().setTitle(UserDetails.chatWith);
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
@@ -106,25 +94,43 @@ public class Chat extends AppCompatActivity {
                 String text = "Here is a song for you:\n" + song;
                 messageArea.setText(text);
                 track_title.setText(song);
+                if(mediaPlayer.isPlaying()){
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
             } if (uniqid.equals("FromFollowers")){
                 String song = i.getStringExtra("Song");
                 String text = "Here is a song for you:\n" + song;
+                String friend = i.getStringExtra("FriendName");
+                getSupportActionBar().setTitle(friend);
                 messageArea.setText(text);
+                track_title.setText(song);
+                if(mediaPlayer.isPlaying()){
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
+            } if(uniqid.equals("FromFollowersListeWith")){
+                String song = i.getStringExtra("Song");
+                String friend = i.getStringExtra("FriendName");
+                if(mediaPlayer.isPlaying()){
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
+                getSupportActionBar().setTitle(friend);
+                getURL(song);
+                addToFbListenWith(song,friend);
+            } if(uniqid.equals("NotificationListenWith")){
+                String friend = i.getStringExtra("Friend");
+                String song = i.getStringExtra("Song");
+                getSupportActionBar().setTitle(friend);
+                btn.setBackgroundResource(R.drawable.ic_media_pause);
+                play_toolbar.setVisibility(View.VISIBLE);
+                play_toolbar.bringToFront();
                 track_title.setText(song);
             }
         }
-
-
         if(i.hasExtra("Song")){
             String song = i.getStringExtra("Song");
             track_title.setText(song);
         }
-
-        if(mediaPlayer.isPlaying()){
-            play_toolbar.setVisibility(View.VISIBLE);
-        } else play_toolbar.setVisibility(View.GONE);
-
-
+        
         firebaseAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
@@ -182,7 +188,9 @@ public class Chat extends AppCompatActivity {
 
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
-                    sendNotification(UserDetails.username, messageText);
+                    if(!active){
+                        sendNotification(UserDetails.username, messageText);
+                    }
 
                     messageArea.getText().clear();
                 }
@@ -255,6 +263,66 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addToFbListenWith(String song,String friend) {
+        FirebaseAuth fb;
+        fb = FirebaseAuth.getInstance();
+
+        String ID;
+        ID = fb.getCurrentUser().getUid();
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        reference3 = new Firebase("https://tunein-633e5.firebaseio.com/ListenWith/" + friend);
+            Map<String, Object> map = new HashMap<>();
+            map.put("Name", UserDetails.fullname);
+            map.put("Song", song);
+            reference3.updateChildren(map);
+    }
+
+
+    private void getURL(final String song) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("URL").child(song);
+
+        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+                    play_toolbar.bringToFront();
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    play_toolbar.requestLayout();
+                    play_toolbar.invalidate();
+                    url = String.valueOf(dsp.getValue());
+                    startMusic(url, song);
+                    getFollowers(UserDetails.fullname, song);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     public void addMessageBox(String message, int type){
@@ -648,6 +716,15 @@ public class Chat extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
 }

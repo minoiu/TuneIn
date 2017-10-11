@@ -396,8 +396,10 @@ public class FollowersActivity extends AppCompatActivity {
                 sendListenWithNotification(song, user);
                 Toast.makeText(FollowersActivity.this, "The invitation to " + user + " was sent.", Toast.LENGTH_SHORT).show();
 
-                Intent goBack = new Intent(FollowersActivity.this, PlaylistSongs.class);
+                Intent goBack = new Intent(FollowersActivity.this, Chat.class);
+                goBack.putExtra("Uniqid", "FromFollowersListeWith");
                 goBack.putExtra("FriendName", user);
+                goBack.putExtra("Song", song);
                 goBack.putExtra("Name", playlist);
                 startActivity(goBack);
 
@@ -458,7 +460,7 @@ public class FollowersActivity extends AppCompatActivity {
 
                                     + "\"data\": {\"foo\": \"bar\"},"
                                     + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
-                                    + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
+                                    + "\"buttons\":[{\"id\": \"listenwith\", \"text\": \"Join\"}]"
                                     //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                     + "}";
 
