@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.qmul.nminoiu.tunein.MyPlaylists">
+    tools:context="com.qmul.nminoiu.tunein.MyPlaylists"
+    tools:layout_editor_absoluteY="0dp"
+    tools:layout_editor_absoluteX="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    >
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,6 +27,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
+        android:id="@+id/laypl"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:layout_height="match_parent"
@@ -30,10 +35,15 @@
 
         <ListView
             android:id="@+id/playlistsList"
+            android:choiceMode="singleChoice"
+            android:clickable="true"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" />
+            android:paddingRight="12dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp"/>
     </LinearLayout>
 
 

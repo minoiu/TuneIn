@@ -80,7 +80,6 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="1dip"
             android:layout_weight="0.92"
-            android:divider="#806326"
             android:dividerHeight="1dp"
             android:focusable="true"
             android:isScrollContainer="false"

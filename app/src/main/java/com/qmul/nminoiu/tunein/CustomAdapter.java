@@ -16,6 +16,8 @@ import com.firebase.client.Firebase;
 
 import java.util.List;
 
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 /**
  * Created by nminoiu on 15/08/2017.
  */
@@ -51,7 +53,7 @@ import java.util.List;
                 convertView.setTag(holder);
             }
             else {
-                holder = (ViewHolder) convertView.getTag();
+                holder = (CustomAdapter.ViewHolder) convertView.getTag();
             }
 
             final RowItem rowItem = (RowItem) getItem(position);
@@ -72,6 +74,9 @@ import java.util.List;
 
                     Intent intent = new Intent(mContext, PlaylistSongs.class);
                     intent.putExtra("Name", rowItem.getTitle().toString());
+                    if(mediaPlayer.isPlaying()) {
+                        intent.putExtra("Song", UserDetails.songname);
+                    }
                     mContext.startActivity(intent);
 
                 }

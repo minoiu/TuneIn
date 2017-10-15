@@ -29,7 +29,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="Now playing"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
         <activity
             android:name=".Users"
@@ -38,7 +38,7 @@
             android:name=".AndroidBuildingMusicPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/MPTheme"/>
+            android:theme="@style/MPTheme" />
         <activity android:name=".PlayListActivity" />
         <activity
             android:name=".Chat"
@@ -81,17 +81,38 @@
         <activity
             android:name=".ShareActivity"
             android:label="Share With..."
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="ff6f00" />
-        <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
-        <!--<service-->
-            <!--android:name=".NotificationData"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.onesignal.NotificationExtender" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="ff6f00" />
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
+        <!-- <service -->
+        <!-- android:name=".NotificationData" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.onesignal.NotificationExtender" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+
+        <activity
+            android:name=".Songs"
+            android:label="@string/title_activity_songs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Downloads"
+            android:label="@string/title_activity_downloads"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Favourites"
+            android:label="@string/title_activity_favourites"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FavouritePlaylists"
+            android:label="@string/title_activity_favourite_playlists"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

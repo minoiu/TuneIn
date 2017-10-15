@@ -61,6 +61,8 @@ public class FollowersActivity extends AppCompatActivity {
     private DatabaseReference mDatabase1;
     private DatabaseReference mDatabase2;
     private DatabaseReference mDatabase3;
+    private LinearLayout play_toolbar;
+
 
 
 

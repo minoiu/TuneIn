@@ -1234,7 +1234,8 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                String song = title1.getText().toString();
+                final String song = title1.getText().toString();
+                i.putExtra("Uniqid", "FromNowPlayling");
                 i.putExtra("Song", song);
                 startActivity(i);
             }
@@ -1244,7 +1245,29 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                String song = title2.getText().toString();
+                final String song = title2.getText().toString();
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(ID)){
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 i.putExtra("Song", song);
                 startActivity(i);
             }
@@ -1254,7 +1277,30 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                String song = title3.getText().toString();
+                final String song = title3.getText().toString();
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(ID)){
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 i.putExtra("Song", song);
                 startActivity(i);
             }
@@ -1264,7 +1310,29 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                String song = title4.getText().toString();
+                final String song = title4.getText().toString();
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(ID)){
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 i.putExtra("Song", song);
                 startActivity(i);
             }
@@ -1274,7 +1342,30 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                String song = title5.getText().toString();
+                final String song = title5.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(ID)){
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 i.putExtra("Song", song);
                 startActivity(i);
             }

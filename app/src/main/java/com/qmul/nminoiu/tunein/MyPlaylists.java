@@ -3,6 +3,7 @@ package com.qmul.nminoiu.tunein;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,10 +34,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -56,6 +62,13 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private ImageView icon;
     public RelativeLayout buttons;
     private FloatingActionButton fab;
+    private TextView track_title;
+    private LinearLayout play_toolbar;
+    private LinearLayout laypl;
+    private Button btn;
+    private String me;
+    private String url;
+
 
 
     public static final String[] titles = new String[] { "Strawberry",
@@ -76,8 +89,12 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("Playlists");
-
-
+        laypl = (LinearLayout) findViewById((R.id.laypl));
+        playlists = (ListView) laypl.findViewById(R.id.playlistsList);
+        play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+        play_toolbar.setClickable(true);
+        btn = (Button) findViewById(R.id.button);
+        track_title = (TextView) findViewById(R.id.track_title);
         rowItems = new ArrayList<RowItem>();
         adapter = new CustomAdapter(this, rowItems);
         buttons = (RelativeLayout) findViewById(R.id.buttons);
@@ -93,6 +110,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
 
 
+
+
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
 
@@ -105,8 +124,26 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
-        playlists = (ListView) findViewById(R.id.playlistsList);
+        final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+
+        Intent i = getIntent();
+        if(i.hasExtra("Song")){
+            String title = i.getStringExtra("Song");
+            UserDetails.songname = title;
+            track_title.setText(title);
+        }
+        if(mediaPlayer.isPlaying()){
+            play_toolbar.setVisibility(View.VISIBLE);
+            paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+            fab.setLayoutParams(paramsFab);
+        } else play_toolbar.setVisibility(View.GONE);
+
+
+
+
         playlistsList = new ArrayList<>();
+        playlists.setClickable(true);
+        playlists.bringToFront();
         playlistsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playlistsList);
 
         playlistsRef = FirebaseDatabase.getInstance().getReference().child("Playlists").child(ID);
@@ -151,7 +188,13 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
-                String item = rowItem.getTitle();
+                final String playlist = rowItem.getTitle();
+                Intent intent = new Intent(MyPlaylists.this, PlaylistSongs.class);
+                intent.putExtra("Name", playlist);
+                if(mediaPlayer.isPlaying()) {
+                    intent.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(intent);
             }
         });
 
@@ -263,7 +306,10 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void onBackPressed() {
-        Intent backMainTest = new Intent(this, SettingsActivity.class);
+        Intent backMainTest = new Intent(this, LibraryActivity.class);
+        if(mediaPlayer.isPlaying()) {
+            backMainTest.putExtra("Song", track_title.getText().toString());
+        }
         startActivity(backMainTest);
         finish();
     }
@@ -313,6 +359,138 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void playFromPause(Integer time) {
+
+        mediaPlayer.seekTo(time);
+        mediaPlayer.start();
+        TextView title = (TextView) findViewById(R.id.track_title);
+        String songtitle = title.getText().toString();
+        //song = ((TextView) view).getText().toString();
+        getFollowers(UserDetails.fullname, songtitle);
+
+        Button btn = (Button) this.findViewById(R.id.button);
+        btn.setBackgroundResource(R.drawable.ic_media_pause);
+    }
+
+    public void getFollowers(String fullname, final String mysong) {
+
+        final ArrayAdapter<String> fadapter;
+        final List<String> myFollowers = new ArrayList<>();
+
+        fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
+        DatabaseReference fdb;
+        fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
+        fdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //myFollowers.clear();
+                    String value = snapshot.getKey();
+                    myFollowers.add(value);
+                    UserDetails.myFollowers.add(value);
+                    //addToFirebaseHome(value, mysong);
+                    fadapter.notifyDataSetChanged();
+                }
+
+                addToHome(UserDetails.myFollowers, mysong);
+                //Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void addToHome(List<String> myvalue, final String mysong) {
+
+        String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+        mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.myname = dataSnapshot.getValue().toString();
+                me = dataSnapshot.getValue().toString();
+                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+            Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
+            Map<String, Object> uinfo = new HashMap<>();
+            uinfo.put("Song", mysong);
+            ref4.child(UserDetails.fullname).updateChildren(uinfo);
+        }
+    }
+
+    public void playPauseMusic(View v) {
+
+        Integer length = mediaPlayer.getCurrentPosition();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_play);
+            eraseFromFirebase();
+
+        } else {
+
+            //mediaPlayer.seekTo(length);
+            playFromPause(length);
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_pause);
+        }
+
+        mediaPlayer.getCurrentPosition();
+
+        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
+        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
+//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+    }
+
+    public void eraseFromFirebase() {
+        final SettingsActivity sa = new SettingsActivity();
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
+        mDatabase1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String v;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            v = snapshot.getKey();
+                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //getFulname();
+                            if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
+                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+
+                                // dataSnapshot.child(v).getRef().removeValue();
+                                dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();
+
+                                //names.remove(getMyFullname(ID));
+                                // title.remove()
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
 

@@ -165,6 +165,10 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String oldPlaylist = i.getStringExtra("Name");
                             playlist = ((TextView) view).getText().toString();
                             checkHasSong(song, playlist, oldPlaylist);
+                        } else if(uniqid.equals("FromNowPlayling")){
+                            String song = i.getStringExtra("Song");
+                            playlist = ((TextView) view).getText().toString();
+                            checkSongIn(song, playlist);
                         }
                     }
                 }
@@ -182,16 +186,114 @@ public class PlaylistsActivity extends AppCompatActivity {
         });
     }
 
-    private void addToPlaylist(String playlist, String song, String oldPlaylist) {
+    private void checkSongIn(final String song, final String playlist) {
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(ID) && dataSnapshot.child(ID).hasChild(playlist)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).child(playlist).getChildren()) {
+                        String key = snapshot.getKey().toString();
+                        if (dataSnapshot.child(ID).child(playlist).child(key).getValue().toString().equals(song)) {
+                            Toast.makeText(PlaylistsActivity.this, song + " is already in this playlist", Toast.LENGTH_SHORT).show();
+                            UserDetails.hasSong = true;
+                        } else {
+                            UserDetails.hasSong = false;
+                        }
+                    }
+                    if (!UserDetails.hasSong) {
+                        addSong(playlist, song);
+
+                    }
+                } else addSong(playlist,song);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void addToPlaylist(String playlist, final String song, String oldPlaylist) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase songRef = ref.child("PlaylistSongs").child(ID).child(playlist);
         songRef.push().setValue(song);
+
+        DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+        songref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(ID)){
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                        String key = snapshot.getKey();
+
+                        if (!dataSnapshot.child(ID).child(key).getValue().equals(song)) {
+                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                            Firebase playRef = ref.child("MySongs").child(ID);
+                            playRef.push().setValue(song);
+                        }
+                    }
+                } else{
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase playRef = ref.child("MySongs").child(ID);
+                    playRef.push().setValue(song);                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
         intent.putExtra("Uniqid", "FromPlaylistsActivity");
         intent.putExtra("Name", oldPlaylist);
         startActivity(intent);
     }
+
+    private void addSong(String playlist, final String song) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("PlaylistSongs").child(ID).child(playlist);
+        songRef.push().setValue(song);
+
+        DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+        songref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(ID)){
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                        String key = snapshot.getKey();
+
+                        if (!dataSnapshot.child(ID).child(key).getValue().equals(song)) {
+                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                            Firebase playRef = ref.child("MySongs").child(ID);
+                            playRef.push().setValue(song);
+                        }
+                    }
+                } else{
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase playRef = ref.child("MySongs").child(ID);
+                    playRef.push().setValue(song);                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(PlaylistsActivity.this, SettingsActivity.class);
+        intent.putExtra("Uniqid", "FromPlaylistsActivity");
+        startActivity(intent);
+    }
+
 
 
     private void checkHasSong(final String song, final String playlist, final String oldPlaylist) {

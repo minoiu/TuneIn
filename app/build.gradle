@@ -40,9 +40,22 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
-
-
+    //    def gmsVersion = '10.2.6'
+//    compile("com.google.android.gms:play-services-gcm:${gmsVersion}") {
+//        force = true
+//    }
+//    compile("com.google.android.gms:play-services-location:${gmsVersion}") {
+//        force = true
+//    }
+//
+//// Must use 26.0.0 or newer if you have targetSdkVersion 26
+//    def androidSupportVersion = '25.3.1'
+//    compile("com.android.support:support-v4:${androidSupportVersion}")  {
+//        force = true
+//    }
+//    compile("com.android.support:customtabs:${androidSupportVersion}")  {
+//        force = true
+//    }
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.android.support:appcompat-v7:25.3.1'
@@ -64,22 +77,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     testCompile 'junit:junit:4.12'
-//    def gmsVersion = '10.2.6'
-//    compile("com.google.android.gms:play-services-gcm:${gmsVersion}") {
-//        force = true
-//    }
-//    compile("com.google.android.gms:play-services-location:${gmsVersion}") {
-//        force = true
-//    }
-//
-//// Must use 26.0.0 or newer if you have targetSdkVersion 26
-//    def androidSupportVersion = '25.3.1'
-//    compile("com.android.support:support-v4:${androidSupportVersion}")  {
-//        force = true
-//    }
-//    compile("com.android.support:customtabs:${androidSupportVersion}")  {
-//        force = true
-//    }
 }
 
 
