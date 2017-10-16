@@ -9,6 +9,8 @@ public class UserDetails {
     static String password = "";
     static String chatWith = "";
     static String receiver = "";
+    static String friend = "";
+
     static String fullname = "";
     static Boolean nowPlaying = false;
     static Boolean following = false;

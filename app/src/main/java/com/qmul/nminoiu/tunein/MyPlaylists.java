@@ -48,7 +48,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
     private String playlistname;
     private ListView playlists;
-    private ListView sharedplaylists;
+    private ListView sharedPlListview;
 
     private List<String> playlistsList;
     private ArrayAdapter<String> playlistsadapter;
@@ -63,7 +63,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private Button create;
     private Button cancel;
     private CustomAdapter adapter;
-    private CustomAdapter adapter1;
+    private CustomSharedAdapter adapter1;
 
     private ImageView icon;
     public RelativeLayout buttons;
@@ -100,7 +100,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         getSupportActionBar().setTitle("Playlists");
         laypl = (LinearLayout) findViewById((R.id.myplaylistsLayout));
         playlists = (ListView) laypl.findViewById(R.id.playlistsList);
-        sharedplaylists = (ListView) laypl.findViewById(R.id.listSharedWithMe);
+        sharedPlListview = (ListView) laypl.findViewById(R.id.listSharedWithMe);
 
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
@@ -110,11 +110,10 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         rowItems1 = new ArrayList<RowItem>();
 
         adapter = new CustomAdapter(this, rowItems);
-        adapter1 = new CustomAdapter(this, rowItems1);
+        adapter1 = new CustomSharedAdapter(this, rowItems1);
 
         buttons = (RelativeLayout) findViewById(R.id.buttons);
         sharedWithMeLayout = (RelativeLayout) findViewById(R.id.sharedWithMeLayout);
-
 
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         newPlaylist.bringToFront();
@@ -124,10 +123,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         buttons = (RelativeLayout) findViewById(R.id.buttons);
         icon = (ImageView)  findViewById(R.id.icon);
         create.setEnabled(true);
-
-
-
-
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -180,7 +175,9 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
                         for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
                             String key = snap.getKey();
+
                             String playlist = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
+
                             sharedPlaylists.add(playlist);
                             UserDetails.myPlaylists.add(playlist);
                             RowItem item = new RowItem(R.drawable.ic_nextblack, playlist);
@@ -266,6 +263,70 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
+        sharedPlListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
+                final String playlist = rowItem.getTitle();
+
+                Intent intent = new Intent(MyPlaylists.this, SharedPlaylistSongs.class);
+                intent.putExtra("Name", playlist);
+                intent.putExtra("Friend", UserDetails.friend);
+                if(mediaPlayer.isPlaying()) {
+                    intent.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(intent);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(ID);
+                ref.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String friend = snapshot.getKey();
+
+                            for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
+                                String key = snap.getKey();
+                                if(dataSnapshot.child(friend).child(key).getValue().toString().equals(playlist)){
+                                    UserDetails.friend = friend;
+                                    Toast.makeText(MyPlaylists.this, "friend who shared is " + UserDetails.friend, Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(MyPlaylists.this, SharedPlaylistSongs.class);
+                                    intent.putExtra("Name", playlist);
+                                    intent.putExtra("Friend", UserDetails.friend);
+                                    if(mediaPlayer.isPlaying()) {
+                                        intent.putExtra("Song", track_title.getText().toString());
+                                    }
+                                    startActivity(intent);
+
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+
+
         playlists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -347,15 +408,58 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
-        sharedplaylists.setClickable(true);
-        sharedplaylists.setAdapter(adapter1);
-        sharedplaylists.setOnItemClickListener(this);
+        sharedPlListview.setClickable(true);
+        sharedPlListview.setAdapter(adapter1);
+        sharedPlListview.setOnItemClickListener(this);
 
         playlists.setClickable(true);
         playlists.setAdapter(adapter);
         playlists.setOnItemClickListener(this);
     }
 
+    private void getSharingFriend(final String playlist) {
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(ID);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String friend = snapshot.getKey();
+
+                        for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
+                            String key = snap.getKey();
+                            if(dataSnapshot.child(ID).child(friend).child(key).getValue().toString().equals(playlist)){
+                                UserDetails.friend = friend;
+                                Toast.makeText(MyPlaylists.this, "friend who shared is " + UserDetails.friend, Toast.LENGTH_LONG).show();
+
+
+                            }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
 
