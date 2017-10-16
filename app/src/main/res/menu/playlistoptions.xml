@@ -13,17 +13,17 @@
         android:icon="@drawable/download_new"
         android:title="Rename" />
 
-    <item
-        android:id="@+id/menu_dwn"
-        android:icon="@drawable/download_new"
-        android:title="Download"
-        android:visible="false"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_dwn"-->
+        <!--android:icon="@drawable/download_new"-->
+        <!--android:title="Download"-->
+        <!--android:visible="false"/>-->
 
-    <item
-        android:id="@+id/menu_remdwn"
-        android:icon="@drawable/download_new"
-        android:title="Remove download"
-        android:visible="false"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_remdwn"-->
+        <!--android:icon="@drawable/download_new"-->
+        <!--android:title="Remove download"-->
+        <!--android:visible="false"/>-->
 
     <item
         android:id="@+id/menu_share"

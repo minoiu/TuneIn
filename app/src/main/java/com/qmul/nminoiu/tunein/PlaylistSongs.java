@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
@@ -76,7 +77,15 @@ import static com.qmul.nminoiu.tunein.UserDetails.myFollowers;
 public class PlaylistSongs extends AppCompatActivity {
 
     private DatabaseReference db;
+    private RelativeLayout sharedOwnership;
+    private RelativeLayout sharedList;
+
     private ListView ulistView;
+    private ListView sharedWithListView;
+    private AdapterShared adapterShared;
+    private ImageView showSharedImg;
+
+
     private ArrayAdapter<String> uadapter;
     private DatabaseReference receiverRef;
     private DatabaseReference mDatabase1;
@@ -84,6 +93,7 @@ public class PlaylistSongs extends AppCompatActivity {
     LinearLayout searchLayout;
     LinearLayout songsLayout;
     LinearLayout shareOwnership;
+    ArrayList<String> sharedFriends = new ArrayList<>();
     LinearLayout deletePlaylist;
     private ListView songs;
     private TextView name;
@@ -96,6 +106,8 @@ public class PlaylistSongs extends AppCompatActivity {
     private DatabaseReference dwnRef;
     private String ID;
     private List<RowItem> rowItems;
+    private List<RowItem> rowItems1;
+
     private SongsAdapter adapter;
     private ImageView img;
     private LinearLayout renameLayout;
@@ -136,6 +148,8 @@ public class PlaylistSongs extends AppCompatActivity {
     private Button btn;
     private String me;
     private String url;
+    private View bar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +174,8 @@ public class PlaylistSongs extends AppCompatActivity {
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
         track_title = (TextView) findViewById(R.id.track_title);
+        showSharedImg = (ImageView) findViewById(R.id.showShared);
+
         mStorage = FirebaseStorage.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
@@ -167,10 +183,17 @@ public class PlaylistSongs extends AppCompatActivity {
         db = FirebaseDatabase.getInstance().getReference().child("Users");
         sender = firebaseAuth.getCurrentUser().getEmail();
         songs = (ListView) findViewById(R.id.songsList);
+        sharedList = (RelativeLayout) findViewById(R.id.sharedList);
+
         songs.bringToFront();
+        bar = (View) findViewById(R.id.bar);
         img = (ImageView) findViewById(R.id.icon);
         rowItems = new ArrayList<RowItem>();
+        rowItems1 = new ArrayList<RowItem>();
+
         adapter = new SongsAdapter(this, rowItems);
+        adapterShared = new AdapterShared(this, rowItems1);
+
         renameLayout = (LinearLayout) findViewById(R.id.renamePlaylist);
         deletePlaylist = (LinearLayout) findViewById(R.id.deletePlaylist);
         delete = (Button) findViewById(R.id.delete);
@@ -183,8 +206,11 @@ public class PlaylistSongs extends AppCompatActivity {
         playlistName = (EditText) findViewById(R.id.editText);
         renameLayout.bringToFront();
         ulistView = (ListView) findViewById(R.id.friendsList);
+        sharedWithListView = (ListView) findViewById(R.id.sharedFriends);
+        sharedWithListView.setAdapter(adapterShared);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         ulistView.setAdapter(uadapter);
+        sharedOwnership = (RelativeLayout) findViewById(R.id.collaborators);
         UserDetails.privatePlaylist = false;
         UserDetails.dwnPlaylist = false;
         UserDetails.lovedPlaylist = false;
@@ -534,6 +560,63 @@ public class PlaylistSongs extends AppCompatActivity {
             }
         });
 
+        DatabaseReference shared = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID);
+
+        shared.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // if(dataSnapshot.hasChildren())
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String friend = snapshot.getKey();
+                    sharedFriends.add(friend);
+                    RowItem item = new RowItem(R.drawable.xclose, friend);
+
+                    rowItems1.add(item);
+                    adapterShared.notifyDataSetChanged();
+
+
+                    for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
+                        Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
+                        String key = snap.getKey();
+                        if (dataSnapshot.child(friend).child(key).getValue().equals(toolbar.getTitle().toString())) {
+                            Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
+
+                            sharedOwnership.setVisibility(View.VISIBLE);
+                            showSharedImg.setBackgroundResource(R.drawable.blackdown);
+                            bar.setVisibility(View.VISIBLE);
+
+
+                        }
+
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        sharedWithListView.setAdapter(adapterShared);
+
+        sharedOwnership.setClickable(true);
+        sharedOwnership.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sharedList.getVisibility() == View.GONE) {
+                    sharedList.setVisibility(View.VISIBLE);
+                    showSharedImg.setBackgroundResource(R.drawable.uparrowshared);
+                } else if (sharedList.getVisibility() == View.VISIBLE) {
+                    sharedList.setVisibility(View.GONE);
+                    showSharedImg.setBackgroundResource(R.drawable.blackdown);
+                }
+            }
+
+        });
+
         lovedPlaylistRef = FirebaseDatabase.getInstance().getReference().child("LovedPlaylists").child(ID);
         lovedPlaylistRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -621,8 +704,10 @@ public class PlaylistSongs extends AppCompatActivity {
                         Firebase shareRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("PlaylistsInvites").child(UserDetails.fullname).child(UserDetails.myname);
                         shareRef.push().setValue(getSupportActionBar().getTitle().toString());
 
-                        Firebase splaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedPlaylists").child(ID);
+                        Firebase splaylists = new Firebase("https://tunein-633e5.firebaseio.com/").child("SharedPlaylists").child(ID).child(friendName);
                         splaylists.push().setValue(getSupportActionBar().getTitle().toString());
+                        finish();
+                        startActivity(getIntent().putExtra("Name", playlist));
                     }
 
                     @Override
@@ -633,9 +718,8 @@ public class PlaylistSongs extends AppCompatActivity {
 
                 shareOwnership.setVisibility(View.GONE);
 
-                Intent i = new Intent(PlaylistSongs.this,PlaylistSongs.class);
-                i.putExtra("Name", playlist);
-                startActivity(i);
+//                Intent i = new Intent(PlaylistSongs.this,PlaylistSongs.class);
+//                startActivity(i);
 
                 Toast.makeText(PlaylistSongs.this, friendName + " can now add songs to your playlist", Toast.LENGTH_SHORT).show();
             }
@@ -1210,42 +1294,41 @@ public class PlaylistSongs extends AppCompatActivity {
         final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_dwn) {
+//        if (id == R.id.menu_dwn) {
+//
+//            addToDownloads();
+//            download();
+//            Toast.makeText(PlaylistSongs.this, "Downloading... ", Toast.LENGTH_SHORT).show();
+//
+//            UserDetails.dwnPlaylist = true;
+//             if (id == R.id.menu_remdwn) {
+//
+//            //Toast.makeText(PlaylistSongs.this, "Already downloaded ", Toast.LENGTH_SHORT).show();
+//
+//
+//            playlistRef = FirebaseDatabase.getInstance().getReference().child("DownloadedPlaylists").child(ID);
+//            playlistRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        String key = snapshot.getKey();
+//
+//                        if (dataSnapshot.child(key).getValue().equals(getSupportActionBar().getTitle().toString())) {
+//                            dataSnapshot.child(key).getRef().removeValue();
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
+//            Toast.makeText(PlaylistSongs.this, "Removing... ", Toast.LENGTH_SHORT).show();
+//            UserDetails.dwnPlaylist = false;
 
-            addToDownloads();
-            download();
-            Toast.makeText(PlaylistSongs.this, "Downloading... ", Toast.LENGTH_SHORT).show();
 
-            UserDetails.dwnPlaylist = true;
-
-        } else if (id == R.id.menu_remdwn) {
-
-            //Toast.makeText(PlaylistSongs.this, "Already downloaded ", Toast.LENGTH_SHORT).show();
-
-
-            playlistRef = FirebaseDatabase.getInstance().getReference().child("DownloadedPlaylists").child(ID);
-            playlistRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String key = snapshot.getKey();
-
-                        if (dataSnapshot.child(key).getValue().equals(getSupportActionBar().getTitle().toString())) {
-                            dataSnapshot.child(key).getRef().removeValue();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            Toast.makeText(PlaylistSongs.this, "Removing... ", Toast.LENGTH_SHORT).show();
-            UserDetails.dwnPlaylist = false;
-
-
-        } else if (id == R.id.menu_rename) {
+             if (id == R.id.menu_rename) {
             renameLayout.setVisibility(View.VISIBLE);
             newName.setText("");
             fab.setVisibility(View.GONE);
@@ -1714,8 +1797,8 @@ public class PlaylistSongs extends AppCompatActivity {
 
         MenuItem privateOption = menu.findItem(R.id.menu_private);
         MenuItem publicOption = menu.findItem(R.id.menu_public);
-        MenuItem dwnOption = menu.findItem(R.id.menu_dwn);
-        MenuItem remDwnOption = menu.findItem(R.id.menu_remdwn);
+        //MenuItem dwnOption = menu.findItem(R.id.menu_dwn);
+        //MenuItem remDwnOption = menu.findItem(R.id.menu_remdwn);
 
         if (UserDetails.privatePlaylist) {
             privateOption.setVisible(false);
@@ -1724,13 +1807,13 @@ public class PlaylistSongs extends AppCompatActivity {
             privateOption.setVisible(true);
             publicOption.setVisible(false);
         }
-        if (UserDetails.dwnPlaylist) {
-            dwnOption.setVisible(false);
-            remDwnOption.setVisible(true);
-        } else {
-            dwnOption.setVisible(true);
-            remDwnOption.setVisible(false);
-        }
+//        if (UserDetails.dwnPlaylist) {
+//            dwnOption.setVisible(false);
+//            remDwnOption.setVisible(true);
+//        } else {
+//            dwnOption.setVisible(true);
+//            remDwnOption.setVisible(false);
+//        }
 
         return super.onPrepareOptionsMenu(menu);
     }

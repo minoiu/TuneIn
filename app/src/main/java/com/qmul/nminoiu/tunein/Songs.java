@@ -157,48 +157,48 @@ public class Songs extends AppCompatActivity {
         });
 
 
-        searchView = (MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-
-            @Override
-            public void onSearchViewShown() {
-                //searchLayout.setVisibility(View.VISIBLE);
-                //searchView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                songsList.setAdapter(adapter);
-            }
-        });
-
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
-                    List<String> slistFound = new ArrayList<String>();
-                    for (String songToFind : songs) {
-                        if (songToFind.toLowerCase().contains(newText.toLowerCase()))
-                            slistFound.add(songToFind);
-                    }
-                    ArrayAdapter sadapter = new ArrayAdapter(Songs.this, android.R.layout.simple_list_item_1, slistFound);
-                    songsList.setAdapter(sadapter);
-                }
+//        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 //
-                 else {
-                    ArrayAdapter sadapter = new ArrayAdapter(Songs.this, android.R.layout.simple_list_item_1, songs);
-                    songsList.setAdapter(sadapter);
-                }
-                return true;
-            }
-        });
+//            @Override
+//            public void onSearchViewShown() {
+//                //searchLayout.setVisibility(View.VISIBLE);
+//                //searchView.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onSearchViewClosed() {
+//                songsList.setAdapter(adapter);
+//            }
+//        });
+
+//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
+//                    List<String> slistFound = new ArrayList<String>();
+//                    for (String songToFind : songs) {
+//                        if (songToFind.toLowerCase().contains(newText.toLowerCase()))
+//                            slistFound.add(songToFind);
+//                    }
+//                    ArrayAdapter sadapter = new ArrayAdapter(Songs.this, android.R.layout.simple_list_item_1, slistFound);
+//                    songsList.setAdapter(sadapter);
+//                }
+////
+//                 else {
+//                    ArrayAdapter sadapter = new ArrayAdapter(Songs.this, android.R.layout.simple_list_item_1, songs);
+//                    songsList.setAdapter(sadapter);
+//                }
+//                return true;
+//            }
+//        });
 
 
 
@@ -285,13 +285,13 @@ public class Songs extends AppCompatActivity {
         likedRef.push().setValue(song);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_item, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_item, menu);
+//        MenuItem item = menu.findItem(R.id.action_search);
+//        searchView.setMenuItem(item);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
