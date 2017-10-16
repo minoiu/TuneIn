@@ -48,8 +48,12 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
     private String playlistname;
     private ListView playlists;
+    private ListView sharedplaylists;
+
     private List<String> playlistsList;
     private ArrayAdapter<String> playlistsadapter;
+    private ArrayList<String> sharedPlaylists = new ArrayList<>();
+
     private String ID;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference playlistsRef;
@@ -59,6 +63,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private Button create;
     private Button cancel;
     private CustomAdapter adapter;
+    private CustomAdapter adapter1;
+
     private ImageView icon;
     public RelativeLayout buttons;
     private FloatingActionButton fab;
@@ -68,6 +74,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private Button btn;
     private String me;
     private String url;
+    private RelativeLayout sharedWithMeLayout;
 
 
 
@@ -79,6 +86,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
     ListView listView;
     List<RowItem> rowItems;
+    List<RowItem> rowItems1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +98,23 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("Playlists");
-        laypl = (LinearLayout) findViewById((R.id.laypl));
+        laypl = (LinearLayout) findViewById((R.id.myplaylistsLayout));
         playlists = (ListView) laypl.findViewById(R.id.playlistsList);
+        sharedplaylists = (ListView) laypl.findViewById(R.id.listSharedWithMe);
+
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
         track_title = (TextView) findViewById(R.id.track_title);
         rowItems = new ArrayList<RowItem>();
+        rowItems1 = new ArrayList<RowItem>();
+
         adapter = new CustomAdapter(this, rowItems);
+        adapter1 = new CustomAdapter(this, rowItems1);
+
         buttons = (RelativeLayout) findViewById(R.id.buttons);
+        sharedWithMeLayout = (RelativeLayout) findViewById(R.id.sharedWithMeLayout);
+
 
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         newPlaylist.bringToFront();
@@ -145,6 +162,71 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         playlists.setClickable(true);
         playlists.bringToFront();
         playlistsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playlistsList);
+
+        DatabaseReference sharedWithMe = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
+
+        sharedWithMe.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    Toast.makeText(MyPlaylists.this, "i'm in", Toast.LENGTH_SHORT).show();
+
+                    //set visible
+                    sharedWithMeLayout.setVisibility(View.VISIBLE);
+
+                    for(DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()){
+                        String friend = snapshot.getKey();
+
+                        for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
+                            String key = snap.getKey();
+                            String playlist = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
+                            sharedPlaylists.add(playlist);
+                            UserDetails.myPlaylists.add(playlist);
+                            RowItem item = new RowItem(R.drawable.ic_nextblack, playlist);
+
+                            rowItems1.add(item);
+                            adapter1.notifyDataSetChanged();
+
+                        }
+                    }
+                }
+                // if(dataSnapshot.hasChildren())
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    String friend = snapshot.getKey();
+//                    sharedFriends.add(friend);
+//                    RowItem item = new RowItem(R.drawable.xclose, friend);
+//
+//                    rowItems1.add(item);
+//                    adapterShared.notifyDataSetChanged();
+
+
+//                    for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
+//                        Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
+//                        String key = snap.getKey();
+//                        if (dataSnapshot.child(friend).child(key).getValue().equals(toolbar.getTitle().toString())) {
+//                            Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
+//
+//                            sharedOwnership.setVisibility(View.VISIBLE);
+//                            showSharedImg.setBackgroundResource(R.drawable.blackdown);
+//                            bar.setVisibility(View.VISIBLE);
+//
+
+//                        }
+//
+//
+//                    }
+//
+//                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         playlistsRef = FirebaseDatabase.getInstance().getReference().child("Playlists").child(ID);
         playlistsRef.addChildEventListener(new ChildEventListener() {
@@ -264,6 +346,10 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 hideSoftKeyboard(MyPlaylists.this);
             }
         });
+
+        sharedplaylists.setClickable(true);
+        sharedplaylists.setAdapter(adapter1);
+        sharedplaylists.setOnItemClickListener(this);
 
         playlists.setClickable(true);
         playlists.setAdapter(adapter);
