@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/listenwith"
+        android:title="Listen with..." />
+
+    <item
+        android:id="@+id/down"
+        android:title="Download"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/like"
+        android:title="Add to favourites"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/share"
+        android:title="Share..." />
+
+    <item
+        android:id="@+id/addto"
+        android:title="Add to playlist..." />
+
+    <item
+        android:id="@+id/delete"
+        android:title="Delete" />
+</menu>

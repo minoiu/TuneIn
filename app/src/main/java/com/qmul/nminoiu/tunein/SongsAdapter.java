@@ -289,7 +289,7 @@ public class SongsAdapter extends BaseAdapter {
                 for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                     String key = snapshot.getKey().toString();
                     if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
-                        Toast.makeText(mContext.getApplicationContext(), song + " is already in your favourites.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(), songName + " is already in your favourites", Toast.LENGTH_SHORT).show();
                         UserDetails.liked = true;
                     } else {
                         UserDetails.dwn = false;
@@ -318,12 +318,12 @@ public class SongsAdapter extends BaseAdapter {
                     for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                         String key = snapshot.getKey().toString();
                         if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
-                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
                             UserDetails.dwn = true;
+                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_SHORT).show();
                         } else {
-                            UserDetails.dwn = false;
+                            UserDetails.dwn = true;
+                            }
                         }
-                    }
                     if (!UserDetails.dwn) {
                         addToDownloads(song);
                         download(song);

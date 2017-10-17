@@ -95,15 +95,27 @@
 
         <TextView
             android:id="@+id/deletePlId"
-            android:layout_width="128dp"
+            android:layout_width="151dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="7dp"
-            android:text="Delete Playlist"
+            android:layout_weight="0.32"
+            android:text="Remove Playlist"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.32"
+            android:text="Delete this playlist from your music library?"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView7"
@@ -112,7 +124,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
             android:layout_weight="0.18"
-            android:text="Are you sure you want to delete this playlist?"
+            android:text="(This will not affect your friend)"
             android:textAlignment="center"
             android:textColor="@color/black" />
 

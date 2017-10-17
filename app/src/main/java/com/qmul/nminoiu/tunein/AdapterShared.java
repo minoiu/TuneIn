@@ -127,9 +127,82 @@ public class AdapterShared extends BaseAdapter {
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final String playlist = ((PlaylistSongs) mContext).getBarTitle();
+
+                            FirebaseAuth fb;
+                            fb = FirebaseAuth.getInstance();
+
+                            String ID;
+                            ID = fb.getCurrentUser().getUid();
+
+                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                            mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    UserDetails.fullname = dataSnapshot.getValue().toString();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+
+                            });
+
 
                         final String friend = rowItem.getTitle();
-                        final String playlist = ((PlaylistSongs) mContext).getBarTitle();
+                        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
+
+                        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                            @Override
+                            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                                // UserDetails.fullname = dataSnapshot.getValue().toString();
+                                UserDetails.username = dataSnapshot.getValue().toString();
+                                //Toast.makeText(mContext, "friend id is " + UserDetails.username, Toast.LENGTH_SHORT).show();
+                                DatabaseReference delSharedPlRef = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(UserDetails.username);
+                                delSharedPlRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            String key = snapshot.getKey();
+
+                                            if(key.equals(UserDetails.fullname)){
+                                                for(DataSnapshot s : dataSnapshot.child(UserDetails.fullname).getChildren()){
+                                                    String play = s.getValue().toString();
+                                                    if(play.equals(playlist)){
+                                                        String key1 = s.getKey().toString();
+                                                        Toast.makeText(mContext, "last key is "+ key1, Toast.LENGTH_SHORT).show();
+
+                                                        dataSnapshot.child(UserDetails.fullname).child(key1).getRef().removeValue();
+                                                    }
+                                                }
+
+                                            }
+//
+// String playlistSh = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
+//                        if (playlistSh.equals(oldPlaylist)) {
+//                            dataSnapshot.child(ID).child(friend).child(key).getRef().removeValue();
+//
+//                        }
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                //
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                         DatabaseReference shared = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID).child(friend);
 
                         shared.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -153,8 +226,6 @@ public class AdapterShared extends BaseAdapter {
                             }
                         });
 
-
-
                     }
                 });
 
@@ -169,7 +240,25 @@ public class AdapterShared extends BaseAdapter {
             return convertView;
         }
 
-        private void addToFavourites(String songName) {
+    private void getID(String friend) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+               // UserDetails.fullname = dataSnapshot.getValue().toString();
+                UserDetails.username = dataSnapshot.getValue().toString();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+            private void addToFavourites(String songName) {
             Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
             Firebase playRef = ref.child("LovedSongs").child(ID);
             playRef.push().setValue(songName);

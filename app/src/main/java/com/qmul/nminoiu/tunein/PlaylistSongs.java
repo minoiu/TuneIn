@@ -576,10 +576,10 @@ public class PlaylistSongs extends AppCompatActivity {
 
 
                     for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
-                        Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
                         String key = snap.getKey();
                         if (dataSnapshot.child(friend).child(key).getValue().equals(toolbar.getTitle().toString())) {
-                            Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
 
                             sharedOwnership.setVisibility(View.VISIBLE);
                             showSharedImg.setBackgroundResource(R.drawable.blackdown);
@@ -962,31 +962,27 @@ public class PlaylistSongs extends AppCompatActivity {
     }
 
     private void changeInShared(final String oldname) {
-        sharedref = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID);
-        sharedref.addChildEventListener(new ChildEventListener() {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(ID).exists()) {
 
-                String playlistName2 = dataSnapshot.getValue(String.class);
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                        String friend = snapshot.getKey();
 
-                if (playlistName2.equals(oldname)) {
-                    sharedref.child(dataSnapshot.getKey().toString()).setValue(newname);
+                        for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
+                            String key = snap.getKey();
+
+                            String playlistSh = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
+                            if (playlistSh.equals(oldname)) {
+
+                                dataSnapshot.child(ID).child(friend).child(key).getRef().setValue(newname);
+                            }
+                        }
+
+                    }
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
