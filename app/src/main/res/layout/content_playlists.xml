@@ -8,16 +8,76 @@
     tools:context="com.qmul.nminoiu.tunein.PlaylistsActivity"
     tools:showIn="@layout/activity_playlists">
 
-    <ListView
-        android:id="@+id/playlistsList"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/myplaylistsLayout"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:choiceMode="singleChoice"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:layout_gravity="bottom"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:weightSum="1">
+
+
+        <RelativeLayout
+            android:id="@+id/sharedWithMeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:visibility="gone">
+
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Shared with me"
+                android:textColor="#212121"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/listSharedWithMe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/playlistsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="My playlists"
+                android:textColor="#212121"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <ListView
+                android:id="@+id/playlistsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="35dp"
+                android:choiceMode="singleChoice"
+                android:clickable="true"
+                android:visibility="visible"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

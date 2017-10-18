@@ -135,7 +135,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                         case R.id.icon:
 
                             PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
-                            popup.getMenuInflater().inflate(R.menu.songoptions,
+                            popup.getMenuInflater().inflate(R.menu.sharedplaylistsongs,
                                     popup.getMenu());
 
                             final Menu popupMenu = popup.getMenu();
@@ -163,7 +163,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
 
                                             ID = firebaseAuth.getCurrentUser().getUid();
                                             String song = rowItem.getTitle();
-                                            checkDownloaded(song);
+                                            checkDownloaded(rowItem.getTitle().toString());
 
 //                                            if(UserDetails.dwn){
 //                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
@@ -178,7 +178,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                         case R.id.like:
 
                                             String songName = rowItem.getTitle();
-                                            checkLiked(songName);
+                                            checkLiked(rowItem.getTitle());
 
                                             break;
 
@@ -193,7 +193,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                             break;
 
                                         case R.id.addto:
-                                            String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+                                            String playlistName = ((SharedPlaylistSongs) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
                                             Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
                                             newIntent.putExtra("Uniqid","FSAdapter");
@@ -279,7 +279,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                 for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                     String key = snapshot.getKey().toString();
                     if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
-                        Toast.makeText(mContext.getApplicationContext(), song + " is already in your favourites.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(), songName + " is already in your favourites.", Toast.LENGTH_SHORT).show();
                         UserDetails.liked = true;
                     } else {
                         UserDetails.dwn = false;

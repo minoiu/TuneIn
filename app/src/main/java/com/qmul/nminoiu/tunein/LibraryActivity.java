@@ -52,6 +52,7 @@ public class LibraryActivity extends AppCompatActivity{
     public String ID;
     private FirebaseAuth firebaseAuth;
     private ArrayAdapter<String> recentsadapter;
+    private AdapterRecentlyplayed adapterRecentlyplayed;
     private String song;
     private TextView track_title;
     private LinearLayout play_toolbar;
@@ -69,6 +70,8 @@ public class LibraryActivity extends AppCompatActivity{
     View.OnTouchListener gestureListener;
     private SimpleGestureFilter detector;
     private DatabaseReference mDatabase;
+    private List<RowItem> rowItems;
+
 
 
     @Override
@@ -90,6 +93,9 @@ public class LibraryActivity extends AppCompatActivity{
         songs = (RelativeLayout) findViewById(R.id.songs);
         track_title = (TextView) findViewById(R.id.track_title);
         myFollowers = new ArrayList<>();
+        rowItems = new ArrayList<RowItem>();
+
+        adapterRecentlyplayed = new AdapterRecentlyplayed(this, rowItems);
 
         Intent i = getIntent();
         if(i.hasExtra("Song")){
@@ -109,7 +115,12 @@ public class LibraryActivity extends AppCompatActivity{
                 //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
 
                 recents.add(recentSongs);
-                recentsadapter.notifyDataSetChanged();
+
+
+                RowItem item = new RowItem(R.drawable.options, recentSongs);
+
+                rowItems.add(item);
+                adapterRecentlyplayed.notifyDataSetChanged();
             }
 
             @Override
@@ -135,7 +146,7 @@ public class LibraryActivity extends AppCompatActivity{
 
         recentSongs = (ListView) findViewById(R.id.recentSongs);
         recentsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recents);
-        recentSongs.setAdapter(recentsadapter);
+        recentSongs.setAdapter(adapterRecentlyplayed);
         recentSongs.setClickable(true);
 
         playlists.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +197,8 @@ public class LibraryActivity extends AppCompatActivity{
         recentSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                song = ((TextView) view).getText().toString();
+                RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
+                final String song = rowItem.getTitle();
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
 
@@ -427,6 +439,11 @@ public class LibraryActivity extends AppCompatActivity{
                 });
 
     }
+
+    public String getBarTitle(){
+        return getSupportActionBar().getTitle().toString();
+    }
+
 
 }
 

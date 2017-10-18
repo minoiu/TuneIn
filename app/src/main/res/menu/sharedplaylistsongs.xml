@@ -23,7 +23,4 @@
         android:id="@+id/addto"
         android:title="Add to playlist..." />
 
-    <item
-        android:id="@+id/delete"
-        android:title="Delete" />
 </menu>

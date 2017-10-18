@@ -214,6 +214,7 @@ public class PlaylistSongs extends AppCompatActivity {
         UserDetails.privatePlaylist = false;
         UserDetails.dwnPlaylist = false;
         UserDetails.lovedPlaylist = false;
+        UserDetails.notIn = false;
 
         Intent i = getIntent();
 

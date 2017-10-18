@@ -39,13 +39,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.qmul.nminoiu.tunein.UserDetails.song;
-
 /**
- * Created by nicoleta on 13/10/2017.
+ * Created by nicoleta on 18/10/2017.
  */
 
-public class AdapterAllSongs extends BaseAdapter {
+public class AdapterRecentlyplayed extends BaseAdapter {
 
     private Context mContext;
     List<RowItem> rowItems;
@@ -64,7 +62,7 @@ public class AdapterAllSongs extends BaseAdapter {
     private LinearLayout searchLayout;
 
 
-    public AdapterAllSongs(Context context, List<RowItem> items) {
+    public AdapterRecentlyplayed(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
@@ -92,18 +90,18 @@ public class AdapterAllSongs extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        AdapterAllSongs.ViewHolder holder = null;
+        AdapterRecentlyplayed.ViewHolder holder = null;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.row, null);
-            holder = new AdapterAllSongs.ViewHolder();
+            holder = new AdapterRecentlyplayed.ViewHolder();
             holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
 
             convertView.setTag(holder);
         } else {
-            holder = (AdapterAllSongs.ViewHolder) convertView.getTag();
+            holder = (AdapterRecentlyplayed.ViewHolder) convertView.getTag();
         }
 
         final RowItem rowItem = (RowItem) getItem(position);
@@ -116,7 +114,7 @@ public class AdapterAllSongs extends BaseAdapter {
         UserDetails.liked = false;
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
-        //final String playlist = ((Songs) mContext).getBarTitle();
+        final String playlist = ((LibraryActivity) mContext).getBarTitle();
 
 
 
@@ -148,9 +146,9 @@ public class AdapterAllSongs extends BaseAdapter {
                                         case R.id.listenwith:
 
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
-                                            intent.putExtra("Uniqid","AdapterAllSongs");
+                                            intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
-                                          //  intent.putExtra("Name", playlist);
+                                            intent.putExtra("Name", playlist);
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
@@ -185,32 +183,32 @@ public class AdapterAllSongs extends BaseAdapter {
 
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
-                                            //i.putExtra("Name", playlist);
+                                            i.putExtra("Name", playlist);
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
                                             break;
 
                                         case R.id.addto:
-                                           // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+                                            //String playlistName = ((PlaylistsActivity) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
                                             Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
-                                            newIntent.putExtra("Uniqid","FSAdapter");
+                                            newIntent.putExtra("Uniqid","FromRecents");
                                             newIntent.putExtra("Song", songToAdd);
-                                           // newIntent.putExtra("Name", playlistName);
+                                            //newIntent.putExtra("Name", playlistName);
                                             mContext.startActivity(newIntent);
                                             break;
 
                                         case R.id.delete:
 
                                             final String songToDelete = rowItem.getTitle();
-                                           // PlaylistSongs ps = new PlaylistSongs();
+                                            PlaylistSongs ps = new PlaylistSongs();
 
-                                           // String playlist = ((PlaylistSongs) mContext).getBarTitle();
-                                            //Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
+                                            String playlist = ((PlaylistSongs) mContext).getBarTitle();
+                                            Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
 
 
-                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID);
+                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
                                             delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -278,7 +276,7 @@ public class AdapterAllSongs extends BaseAdapter {
                 for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                     String key = snapshot.getKey().toString();
                     if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
-                        Toast.makeText(mContext.getApplicationContext(), song + " is already in your favourites.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(), songName + " is already in your favourites", Toast.LENGTH_SHORT).show();
                         UserDetails.liked = true;
                     } else {
                         UserDetails.dwn = false;
@@ -307,8 +305,8 @@ public class AdapterAllSongs extends BaseAdapter {
                     for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                         String key = snapshot.getKey().toString();
                         if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
-                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_SHORT).show();
                             UserDetails.dwn = true;
+                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_SHORT).show();
                         } else {
                             UserDetails.dwn = false;
                         }
@@ -453,18 +451,6 @@ public class AdapterAllSongs extends BaseAdapter {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean areAllItemsEnabled()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled(int arg0)
-    {
-        return true;
     }
 
 

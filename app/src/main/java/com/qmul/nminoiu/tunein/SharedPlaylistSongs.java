@@ -220,6 +220,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
         if(i.hasExtra("Friend")){
             String friend = i.getStringExtra("Friend");
+            UserDetails.friend = friend;
             byTextView.setText("Shared by "+friend);
         }
 
@@ -286,23 +287,29 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
 
 
-        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(i.getStringExtra("Name"));
-        songsRef.addChildEventListener(new ChildEventListener() {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(UserDetails.friend).child("Id");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                UserDetails.username = dataSnapshot.getValue().toString();
+                songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(UserDetails.username).child(toolbar.getTitle().toString());
+                songsRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                String song = dataSnapshot.getValue(String.class);
+                        String song = dataSnapshot.getValue(String.class);
 
-                songsList.add(song);
-                RowItem item = new RowItem(R.drawable.options, song);
+                        songsList.add(song);
+                        RowItem item = new RowItem(R.drawable.options, song);
 
-                rowItems.add(item);
-                adapter.notifyDataSetChanged();
+                        rowItems.add(item);
+                        adapter.notifyDataSetChanged();
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 //                String song = dataSnapshot.getValue(String.class);
 //                for(int i = 0; i<=songsList.size()-2;i++){
 //                    if(songsList.get(i).equals(song))
@@ -310,18 +317,29 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 //                songsList.remove(song);
 //                rowItems.remove(new RowItem(R.drawable.options,song));
 //                adapter.notifyDataSetChanged();
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String song = dataSnapshot.getValue(String.class);
-                songsList.remove(song);
-                rowItems.remove(new RowItem(R.drawable.options,song));
-                adapter.notifyDataSetChanged();
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        String song = dataSnapshot.getValue(String.class);
+                        songsList.remove(song);
+                        rowItems.remove(new RowItem(R.drawable.options,song));
+                        adapter.notifyDataSetChanged();
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                songs.setAdapter(adapter);
+
 
             }
 
@@ -330,8 +348,6 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
             }
         });
-
-        songs.setAdapter(adapter);
 
         name = (TextView) findViewById(R.id.textName);
 
