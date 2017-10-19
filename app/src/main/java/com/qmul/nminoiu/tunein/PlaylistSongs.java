@@ -679,7 +679,7 @@ public class PlaylistSongs extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.receiver = dataSnapshot.getValue().toString();
-                        Toast.makeText(PlaylistSongs.this, UserDetails.receiver, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PlaylistSongs.this, UserDetails.receiver, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -919,7 +919,7 @@ public class PlaylistSongs extends AppCompatActivity {
 
 
         if (newname.equals("")) {
-            Toast.makeText(PlaylistSongs.this, "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(PlaylistSongs.this, "Please enter a name", Toast.LENGTH_SHORT).show();
         } else {
 
             changeInPlaylist(oldPlaylist);

@@ -256,7 +256,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                         String key = snap.getKey();
                         if(dataSnapshot.child(ID).child(friend).child(key).getValue().toString().equals(playlist)){
                             UserDetails.friend = friend;
-                            Toast.makeText(SharedPlaylistSongs.this, "friend who shared is " + UserDetails.friend, Toast.LENGTH_LONG).show();
+                           // Toast.makeText(SharedPlaylistSongs.this, "friend who shared is " + UserDetails.friend, Toast.LENGTH_LONG).show();
                             byTextView.setText("Shared by "+friend);
 
 
@@ -1093,7 +1093,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     private void deleteFromInvitations(final String oldPlaylist) {
         Intent i = getIntent();
         final String friend = i.getStringExtra("Friend");
-        Toast.makeText(SharedPlaylistSongs.this, "friendd is "+ friend, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(SharedPlaylistSongs.this, "friendd is "+ friend, Toast.LENGTH_SHORT).show();
 
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
@@ -1141,7 +1141,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                         if(key.equals(UserDetails.fullname)){
                             for(DataSnapshot s : dataSnapshot.child(friend).child(key).getChildren()){
                                 String playlist = s.getValue().toString();
-                                Toast.makeText(SharedPlaylistSongs.this, "playlistt is "+ playlist, Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(SharedPlaylistSongs.this, "playlistt is "+ playlist, Toast.LENGTH_SHORT).show();
                                 if(playlist.equals(oldPlaylist)){
                                     dataSnapshot.child(friend).child(key).child(s.getKey()).getRef().removeValue();
                                 }

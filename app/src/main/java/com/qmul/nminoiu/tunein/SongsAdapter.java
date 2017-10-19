@@ -173,7 +173,7 @@ public class SongsAdapter extends BaseAdapter {
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -218,7 +218,7 @@ public class SongsAdapter extends BaseAdapter {
                                             PlaylistSongs ps = new PlaylistSongs();
 
                                             String playlist = ((PlaylistSongs) mContext).getBarTitle();
-                                            Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
 
 
                                             delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);

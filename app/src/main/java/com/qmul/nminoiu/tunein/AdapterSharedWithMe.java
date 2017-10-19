@@ -162,7 +162,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+                                          //  Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -215,7 +215,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                             PlaylistSongs ps = new PlaylistSongs();
 
                                             String playlist = ((PlaylistSongs) mContext).getBarTitle();
-                                            Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
+                                           // Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
 
 
                                             delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
@@ -383,7 +383,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                     for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                         String key = snapshot.getKey().toString();
                         if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
-                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_SHORT).show();
                             UserDetails.dwn = true;
                         } else {
                             UserDetails.dwn = false;
