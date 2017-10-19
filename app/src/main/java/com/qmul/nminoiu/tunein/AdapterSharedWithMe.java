@@ -36,10 +36,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 
 /**
  * Created by nicoleta on 16/10/2017.
@@ -59,6 +62,8 @@ public class AdapterSharedWithMe extends BaseAdapter {
     private DatabaseReference delSongRef;
     private String sender;
     private String ID = firebaseAuth.getCurrentUser().getUid();
+    private ArrayList<String> dwnList;
+    private ArrayList<String> likedList;
 
 
 
@@ -115,6 +120,8 @@ public class AdapterSharedWithMe extends BaseAdapter {
         MyPlaylists mp = new MyPlaylists();
         UserDetails.dwn = false;
         UserDetails.liked = false;
+        dwnList = new ArrayList<String>();
+        likedList = new ArrayList<String>();
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
         final String playlist = ((SharedPlaylistSongs) mContext).getBarTitle();
@@ -163,7 +170,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
 
                                             ID = firebaseAuth.getCurrentUser().getUid();
                                             String song = rowItem.getTitle();
-                                            checkDownloaded(rowItem.getTitle().toString());
+                                            addDwnToList(song);
 
 //                                            if(UserDetails.dwn){
 //                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
@@ -178,7 +185,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                         case R.id.like:
 
                                             String songName = rowItem.getTitle();
-                                            checkLiked(rowItem.getTitle());
+                                            addToLikedList(songName);
 
                                             break;
 
@@ -264,6 +271,40 @@ public class AdapterSharedWithMe extends BaseAdapter {
         return convertView;
     }
 
+        private void addToLikedList(final String songName) {
+            likedList.clear();
+            final DatabaseReference dwnSongRef2 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+            dwnSongRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey().toString();
+                        String likedsong = dataSnapshot.child(key).getValue().toString();
+                        likedList.add(likedsong);
+                    }
+                    checkSongInLiked(songName);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+    private void checkSongInLiked(String song) {
+        if(likedList.contains(song)){
+            Toast.makeText(mContext, song + " is already in you favourites", Toast.LENGTH_SHORT).show();
+        } else {
+            addToFavourites(song);
+        }
+    }
+
+
+
+
     private void addToFavourites(String songName) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase playRef = ref.child("LovedSongs").child(ID);
@@ -297,6 +338,40 @@ public class AdapterSharedWithMe extends BaseAdapter {
             }
         });
     }
+
+    private void addDwnToList(final String song) {
+        dwnList.clear();
+        final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
+        dwnSongRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String dwnsong = dataSnapshot.child(key).getValue().toString();
+                    dwnList.add(dwnsong);
+                }
+                checkSongInDwn(song);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void checkSongInDwn(String song) {
+        if(dwnList.contains(song)){
+            Toast.makeText(mContext, song + " is already downloaded", Toast.LENGTH_SHORT).show();
+        } else {
+            addToDownloads(song);
+            download(song);
+        }
+    }
+
+
 
     private void checkDownloaded(final String song) {
         dwnSongRef = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs");

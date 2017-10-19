@@ -150,96 +150,96 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             fab.setLayoutParams(paramsFab);
         } else play_toolbar.setVisibility(View.GONE);
 
-        if(i.hasExtra("Uniqid")){
-            String uniqid = i.getStringExtra("Uniqid");
-            if(uniqid.equals("FromPlaylistDelete")){
-                playlistsList = new ArrayList<>();
-                playlistsList.clear();
-                playlists.setClickable(true);
-                playlists.bringToFront();
-                playlistsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playlistsList);
-                rowItems1 = new ArrayList<RowItem>();
-                adapter1 = new CustomSharedAdapter(this, rowItems1);
-
-
-                final ArrayList<String> sharedPlaylists = new ArrayList<>();
-                DatabaseReference sharedWithMe = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
-
-                sharedWithMe.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.child(ID).exists()){
-                            //Toast.makeText(MyPlaylists.this, "i'm in", Toast.LENGTH_SHORT).show();
-
-                            //set visible
-                            sharedWithMeLayout.setVisibility(View.VISIBLE);
-
-                            for(DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()){
-                                String friend = snapshot.getKey();
-
-                                for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
-                                    String key = snap.getKey();
-
-                                    String playlist = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
-
-                                    sharedPlaylists.add(playlist);
-                                    UserDetails.myPlaylists.add(playlist);
-                                    RowItem item = new RowItem(R.drawable.ic_nextblack, playlist);
-
-                                    rowItems1.add(item);
-                                    adapter1.notifyDataSetChanged();
-
-                                }
-                            }
-                        }
-                        adapter1.notifyDataSetChanged();
-
-                        // if(dataSnapshot.hasChildren())
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String friend = snapshot.getKey();
-//                    sharedFriends.add(friend);
-//                    RowItem item = new RowItem(R.drawable.xclose, friend);
+//        if(i.hasExtra("Uniqid")){
+//            String uniqid = i.getStringExtra("Uniqid");
+//            if(uniqid.equals("FromPlaylistDelete")){
+//                playlistsList = new ArrayList<>();
+//                playlistsList.clear();
+//                playlists.setClickable(true);
+//                playlists.bringToFront();
+//                playlistsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playlistsList);
+//                rowItems1 = new ArrayList<RowItem>();
+//                adapter1 = new CustomSharedAdapter(this, rowItems1);
 //
-//                    rowItems1.add(item);
-//                    adapterShared.notifyDataSetChanged();
-
-
-//                    for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
-//                        Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
-//                        String key = snap.getKey();
-//                        if (dataSnapshot.child(friend).child(key).getValue().equals(toolbar.getTitle().toString())) {
-//                            Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
 //
-//                            sharedOwnership.setVisibility(View.VISIBLE);
-//                            showSharedImg.setBackgroundResource(R.drawable.blackdown);
-//                            bar.setVisibility(View.VISIBLE);
+//                final ArrayList<String> sharedPlaylists = new ArrayList<>();
+//                DatabaseReference sharedWithMe = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
 //
-
+//                sharedWithMe.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                        if(dataSnapshot.child(ID).exists()){
+//                            //Toast.makeText(MyPlaylists.this, "i'm in", Toast.LENGTH_SHORT).show();
+//
+//                            //set visible
+//                            sharedWithMeLayout.setVisibility(View.VISIBLE);
+//
+//                            for(DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()){
+//                                String friend = snapshot.getKey();
+//
+//                                for (DataSnapshot snap : dataSnapshot.child(ID).child(friend).getChildren()) {
+//                                    String key = snap.getKey();
+//
+//                                    String playlist = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
+//
+//                                    sharedPlaylists.add(playlist);
+//                                    UserDetails.myPlaylists.add(playlist);
+//                                    RowItem item = new RowItem(R.drawable.ic_nextblack, playlist);
+//
+//                                    rowItems1.add(item);
+//                                    adapter1.notifyDataSetChanged();
+//
+//                                }
+//                            }
 //                        }
+//                        adapter1.notifyDataSetChanged();
+//
+//                        // if(dataSnapshot.hasChildren())
+////                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+////                    String friend = snapshot.getKey();
+////                    sharedFriends.add(friend);
+////                    RowItem item = new RowItem(R.drawable.xclose, friend);
+////
+////                    rowItems1.add(item);
+////                    adapterShared.notifyDataSetChanged();
 //
 //
+////                    for (DataSnapshot snap : dataSnapshot.child(friend).getChildren()) {
+////                        Toast.makeText(PlaylistSongs.this, "friend is " + friend, Toast.LENGTH_SHORT).show();
+////                        String key = snap.getKey();
+////                        if (dataSnapshot.child(friend).child(key).getValue().equals(toolbar.getTitle().toString())) {
+////                            Toast.makeText(PlaylistSongs.this, "test", Toast.LENGTH_SHORT).show();
+////
+////                            sharedOwnership.setVisibility(View.VISIBLE);
+////                            showSharedImg.setBackgroundResource(R.drawable.blackdown);
+////                            bar.setVisibility(View.VISIBLE);
+////
+//
+////                        }
+////
+////
+////                    }
+////
+////                }
 //                    }
 //
-//                }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-            }
-        }
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//
+//
+//            }
+//        }
 
 
         //sharedPlaylists.clear();
         //adapter.notifyDataSetChanged();
         adapter1.notifyDataSetChanged();
 
-
+        sharedPlaylists.clear();
 
         playlistsList = new ArrayList<>();
         playlists.setClickable(true);
@@ -254,6 +254,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         sharedWithMe.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                sharedPlaylists.clear();
 
                 if(dataSnapshot.child(ID).exists()){
                     //Toast.makeText(MyPlaylists.this, "i'm in", Toast.LENGTH_SHORT).show();

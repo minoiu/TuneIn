@@ -1085,15 +1085,9 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         Toast.makeText(SharedPlaylistSongs.this, "Deleting playlist...", Toast.LENGTH_SHORT).show();
         String oldPlaylist = getSupportActionBar().getTitle().toString();
         deleteFromInvitations(oldPlaylist);
-        deleteFromPlaylist(oldPlaylist);
-        deleteFromLovedPlaylists(oldPlaylist);
-        deleteFPrivate(oldPlaylist);
-        deleteFromDownloaded(oldPlaylist);
-        deleteFromPlaylistSongs(oldPlaylist);
-        deleteFromInvites(oldPlaylist);
-        deleteFromShared(oldPlaylist);
         deleteFromHisShared(getSupportActionBar().getTitle().toString());
         deletePlaylist.setVisibility(View.GONE);
+
     }
 
     private void deleteFromInvitations(final String oldPlaylist) {

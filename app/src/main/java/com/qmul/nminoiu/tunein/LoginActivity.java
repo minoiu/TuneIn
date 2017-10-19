@@ -195,6 +195,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signin(View v) {
+
         final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
 
         (firebaseAuth.signInWithEmailAndPassword(mEmailView.getText().toString(), mPasswordView.getText().toString())).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

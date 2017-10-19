@@ -173,7 +173,7 @@ public class AdapterShared extends BaseAdapter {
                                                     String play = s.getValue().toString();
                                                     if(play.equals(playlist)){
                                                         String key1 = s.getKey().toString();
-                                                        Toast.makeText(mContext, "last key is "+ key1, Toast.LENGTH_SHORT).show();
+                                                        //Toast.makeText(mContext, "last key is "+ key1, Toast.LENGTH_SHORT).show();
 
                                                         dataSnapshot.child(UserDetails.fullname).child(key1).getRef().removeValue();
                                                     }
