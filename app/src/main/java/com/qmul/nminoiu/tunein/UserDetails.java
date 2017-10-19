@@ -33,4 +33,5 @@ public class UserDetails {
 
 
     public static String playlist = "";
+    public static String friendID = "";
 }

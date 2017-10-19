@@ -1870,7 +1870,7 @@ public class PlaylistSongs extends AppCompatActivity {
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
-                this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override

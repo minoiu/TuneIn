@@ -175,7 +175,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String key = snap.getKey();
                             String playlist = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
         //
-                            Toast.makeText(PlaylistsActivity.this, "playlists " + playlist, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PlaylistsActivity.this, "playlists " + playlist, Toast.LENGTH_SHORT).show();
                             sharedPlaylistsList.add(playlist);
                             sharedPlaylistsadapter.notifyDataSetChanged();
                                                                             }
@@ -283,15 +283,13 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             String oldPlaylist = i.getStringExtra("Name");
                             UserDetails.playlist = oldPlaylist;
-                            playlist = ((TextView) view).getText().toString();
                             addSharedSongsToList(song, playlistClicked, oldPlaylist);
                         } else if(uniqid.equals("FromNowPlayling")){
                             String song = i.getStringExtra("Song");
-                            playlist = ((TextView) view).getText().toString();
-                            addSongstoList(song, playlistClicked);
+                            addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("FromRecents")){
                             String song = i.getStringExtra("Song");
-                            addSongstoList(song, playlistClicked);
+                            addSharedSongsToList(song, playlistClicked, "");
                         }
                     }
                 }
@@ -310,18 +308,14 @@ public class PlaylistsActivity extends AppCompatActivity {
                         if (uniqid.equals("FSAdapter")) {
                             String song = i.getStringExtra("Song");
                             String oldPlaylist = i.getStringExtra("Name");
-                            playlist = ((TextView) view).getText().toString();
-                           // addSongsToSharedList(song,playlistClicked,oldPlaylist);
-                            checkSharedHasSong(song, playlist, oldPlaylist);
+                            addSongsToSharedList(song,playlistClicked,oldPlaylist);
                         } else if(uniqid.equals("FromNowPlayling")){
                             String song = i.getStringExtra("Song");
-                            playlist = ((TextView) view).getText().toString();
-                            checkSharedSongIn(song,playlist);
-                            addSongstoList(song, playlistClicked);
+                            addSongsToSharedList(song,playlistClicked,"");
                         } else if(uniqid.equals("FromRecents")){
                             String song = i.getStringExtra("Song");
-                            checkSharedSongIn(song,playlist);
-                            addSongstoList(song, playlistClicked);
+                            addSongsToSharedList(song,playlistClicked,"");
+
                         }
                     }
                 }
@@ -341,16 +335,38 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     private void addSongsToSharedList(final String song, final String playlist, final String oldPlaylist) {
         sharedlist.clear();
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snap : dataSnapshot.child(ID).child(playlist).getChildren()){
-                    String key = snap.getKey().toString();
-                    sharedlist.add(dataSnapshot.child(ID).child(playlist).child(key).getValue().toString());
+
+                for (int i = 0; i <= friendsIDs.size() - 1; i++) {
+                    if (dataSnapshot.hasChild(friendsIDs.get(i)) && dataSnapshot.child(friendsIDs.get(i)).hasChild(playlist)) {
+                        for (DataSnapshot snapshot : dataSnapshot.child(friendsIDs.get(i)).child(playlist).getChildren()) {
+                            String key = snapshot.getKey().toString();
+                            String song = dataSnapshot.child(friendsIDs.get(i)).child(playlist).child(key).getValue().toString();
+                            sharedlist.add(song);
+                            UserDetails.friendID = friendsIDs.get(i);
+
+                            //from here
+//                            if (dataSnapshot.child(friendsIDs.get(i)).child(playlist).child(key).getValue().toString().equals(song)) {
+//                                Toast.makeText(PlaylistsActivity.this, song + " is already in this playlist", Toast.LENGTH_SHORT).show();
+//                                UserDetails.hasSharedSong = true;
+//                            } else {
+//                                UserDetails.hasSharedSong = false;
+//                            }
+//                        }
+//                        if (!UserDetails.hasSharedSong) {
+//                            addSongToShared(playlist, song, friendsIDs.get(i), oldPlaylist);
+//
+//                        }
+//                    } else addSongToShared(playlist, song, friendsIDs.get(i), oldPlaylist);
+                        }
+                    }
                 }
-                checkexistence(song, playlist, oldPlaylist);
+                checkexistence(song, playlist, UserDetails.friendID, oldPlaylist);
             }
 
             @Override
@@ -358,13 +374,98 @@ public class PlaylistsActivity extends AppCompatActivity {
 
             }
         });
+        ////
+//        sharedlist.clear();
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs");
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot snap : dataSnapshot.child(ID).child(playlist).getChildren()){
+//                    String key = snap.getKey().toString();
+//                    sharedlist.add(dataSnapshot.child(ID).child(playlist).child(key).getValue().toString());
+//                }
+//                checkexistence(song, playlist, oldPlaylist);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
-    private void checkexistence(String song, String playlist, String oldPlaylist) {
+    private void checkexistence(String song, String playlist, String friendID, String oldPlaylist) {
         if(sharedlist.contains(song)){
             Toast.makeText(PlaylistsActivity.this, song + " is already in this playlist", Toast.LENGTH_SHORT).show();
-        } else addToPlaylist(playlist, song, oldPlaylist);
+        } else addSongToFriendPlaylist(playlist, song, friendID, oldPlaylist);
     }
+
+    private void addSongToFriendPlaylist(String playlist, String song, String friendID, String oldPlaylist) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("PlaylistSongs").child(friendID).child(playlist);
+        songRef.push().setValue(song);
+        addMySongsToList(song, playlist, oldPlaylist);
+        Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_SHORT).show();
+    }
+
+    private void addMySongsToList(final String song, final String playlist, final String oldPlaylist) {
+        mysongs1.clear();
+        DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+        songref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(ID)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                        String key = snapshot.getKey();
+                        String songInMySongs = dataSnapshot.child(ID).child(key).getValue().toString();
+                        mysongs1.add(songInMySongs);
+                    }
+                }
+                checkSongInMySongs1(song, playlist, oldPlaylist);
+            }
+
+
+//                        if (!dataSnapshot.child(ID).child(key).getValue().equals(song)) {
+//                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+//                            Firebase playRef = ref.child("MySongs").child(ID);
+//                            playRef.push().setValue(song);
+//                        }
+//                    }
+//                } else{
+//                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+//                    Firebase playRef = ref.child("MySongs").child(ID);
+//                    playRef.push().setValue(song);                }
+//            }
+//
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        }
+
+    private void checkSongInMySongs1(String song, String playlist, String oldPlaylist) {
+        if(!mysongs1.contains(song)){
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase playRef = ref.child("MySongs").child(ID);
+            playRef.push().setValue(song);
+            Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
+            intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            if(!oldPlaylist.isEmpty()){
+                intent.putExtra("Name", oldPlaylist);
+            }
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
+            intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            if(!oldPlaylist.isEmpty()){
+                intent.putExtra("Name", oldPlaylist);
+            }
+            startActivity(intent);
+        }
+    }
+
 
     private void addSharedSongsToList(final String song, final String playlistClicked, final String oldPlaylist) {
         sharedsongsInPlaylist.clear();
@@ -390,7 +491,7 @@ public class PlaylistsActivity extends AppCompatActivity {
     private void chckifharedsongisin(String song, String playlistClicked, String oldPlaylist) {
         if(sharedsongsInPlaylist.contains(song)){
             Toast.makeText(PlaylistsActivity.this, song + " is already in this playlist", Toast.LENGTH_SHORT).show();
-        } else addToPlaylist(playlist, song, oldPlaylist);
+        } else addToPlaylist(playlistClicked, song, oldPlaylist);
     }
 
     private void addSongstoList(final String song, final String playlistClicked) {
@@ -662,12 +763,21 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     private void checkSongInMySongs(String playlist, String song, String oldPlaylist) {
         if(!mysongs.contains(song)){
-            addToMySongs(playlist, song,oldPlaylist);
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase playRef = ref.child("MySongs").child(ID);
+            playRef.push().setValue(song);
+            Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
+            intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            if(!oldPlaylist.isEmpty()){
+                intent.putExtra("Name", oldPlaylist);
+            }
+            startActivity(intent);
         } else {
             Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
             intent.putExtra("Uniqid", "FromPlaylistsActivity");
-            intent.putExtra("Name", oldPlaylist);
-            startActivity(intent);
+            if(!oldPlaylist.isEmpty()){
+                intent.putExtra("Name", oldPlaylist);
+            }            startActivity(intent);
         }
 
     }
