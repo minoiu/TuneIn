@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -59,6 +60,9 @@ public class AdapterAllSongs extends BaseAdapter {
     private DatabaseReference lovedSongsRef;
     private DatabaseReference delSongRef;
     private String sender;
+    private ArrayList<String> dwnList;
+    private ArrayList<String> likedList;
+
 
 
     private LinearLayout searchLayout;
@@ -114,6 +118,8 @@ public class AdapterAllSongs extends BaseAdapter {
         MyPlaylists mp = new MyPlaylists();
         UserDetails.dwn = false;
         UserDetails.liked = false;
+        dwnList = new ArrayList<String>();
+        likedList = new ArrayList<String>();
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
         //final String playlist = ((Songs) mContext).getBarTitle();
@@ -148,9 +154,10 @@ public class AdapterAllSongs extends BaseAdapter {
                                         case R.id.listenwith:
 
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
-                                            intent.putExtra("Uniqid","AdapterAllSongs");
+                                            intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
-                                          //  intent.putExtra("Name", playlist);
+                                            UserDetails.oldIntent="MySongs";
+                                            intent.putExtra("Playlist", "");
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
@@ -162,8 +169,7 @@ public class AdapterAllSongs extends BaseAdapter {
 
                                             ID = firebaseAuth.getCurrentUser().getUid();
                                             String song = rowItem.getTitle();
-                                            checkDownloaded(song);
-
+                                            addDwnToList(song);
 //                                            if(UserDetails.dwn){
 //                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
 //                                            } else {
@@ -177,7 +183,7 @@ public class AdapterAllSongs extends BaseAdapter {
                                         case R.id.like:
 
                                             String songName = rowItem.getTitle();
-                                            checkLiked(songName);
+                                            addToLikedList(songName);
 
                                             break;
 
@@ -185,19 +191,27 @@ public class AdapterAllSongs extends BaseAdapter {
 
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
-                                            //i.putExtra("Name", playlist);
+                                            i.putExtra("Name", "");
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
                                             break;
 
                                         case R.id.addto:
-                                           // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+
+                                            //String playlistName = ((PlaylistSongs) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
-                                            Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
-                                            newIntent.putExtra("Uniqid","FSAdapter");
+                                            Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
+                                            newIntent.putExtra("Uniqid","AdapterAllSongs");
                                             newIntent.putExtra("Song", songToAdd);
-                                           // newIntent.putExtra("Name", playlistName);
+                                            newIntent.putExtra("Name", "");
+                                            mContext.startActivity(newIntent);
+                                           // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+//                                            String songToAdd = rowItem.getTitle();
+//                                            Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
+//                                            newIntent.putExtra("Uniqid","FSAdapter");
+//                                            newIntent.putExtra("Song", songToAdd);
+//                                           // newIntent.putExtra("Name", playlistName);
                                             mContext.startActivity(newIntent);
                                             break;
 
@@ -210,7 +224,7 @@ public class AdapterAllSongs extends BaseAdapter {
                                             //Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
 
 
-                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID);
+                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("MySongs").child(ID);
                                             delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -269,6 +283,72 @@ public class AdapterAllSongs extends BaseAdapter {
         playRef.push().setValue(songName);
         Toast.makeText(mContext.getApplicationContext(), songName + " was added to your favourites", Toast.LENGTH_SHORT).show();
     }
+
+    private void addToLikedList(final String songName) {
+        likedList.clear();
+        final DatabaseReference dwnSongRef2 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+        dwnSongRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String likedsong = dataSnapshot.child(key).getValue().toString();
+                    likedList.add(likedsong);
+                }
+                checkSongInLiked(songName);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+    private void checkSongInLiked(String song) {
+        if(likedList.contains(song)){
+            Toast.makeText(mContext, song + " is already in you favourites", Toast.LENGTH_SHORT).show();
+        } else {
+            addToFavourites(song);
+        }
+    }
+
+
+    private void addDwnToList(final String song) {
+        dwnList.clear();
+        final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
+        dwnSongRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String dwnsong = dataSnapshot.child(key).getValue().toString();
+                    dwnList.add(dwnsong);
+                }
+                checkSongInDwn(song);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void checkSongInDwn(String song) {
+        if(dwnList.contains(song)){
+            Toast.makeText(mContext, song + " is already downloaded", Toast.LENGTH_SHORT).show();
+        } else {
+            addToDownloads(song);
+            download(song);
+        }
+    }
+
 
     private void checkLiked(final String songName) {
         lovedSongsRef = FirebaseDatabase.getInstance().getReference().child("LovedSongs");

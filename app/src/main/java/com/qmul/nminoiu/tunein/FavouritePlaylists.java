@@ -59,7 +59,7 @@ public class FavouritePlaylists extends AppCompatActivity {
     private String sender;
     private String ID;
     private FirebaseAuth firebaseAuth;
-    private CustomAdapter adapter;
+    private FavouritesCustomAdapter adapter;
     private AdapterFavourites searchadapter;
     private String song;
     private TextView track_title;
@@ -101,7 +101,7 @@ public class FavouritePlaylists extends AppCompatActivity {
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
         track_title = (TextView) findViewById(R.id.track_title);
-        adapter = new CustomAdapter(this, rowItems);
+        adapter = new FavouritesCustomAdapter(this, rowItems);
         img = (ImageView) findViewById(R.id.icon);
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
@@ -227,7 +227,7 @@ public class FavouritePlaylists extends AppCompatActivity {
         @Override
         public void onBackPressed() {
 
-            Intent intent = new Intent(this, LibraryActivity.class);
+            Intent intent = new Intent(this, Favourites.class);
             if(mediaPlayer.isPlaying()) {
                 intent.putExtra("Song", track_title.getText().toString());
             }

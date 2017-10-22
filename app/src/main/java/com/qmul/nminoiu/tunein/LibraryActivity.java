@@ -274,8 +274,10 @@ public class LibraryActivity extends AppCompatActivity{
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
     public void updateProgressBar() {

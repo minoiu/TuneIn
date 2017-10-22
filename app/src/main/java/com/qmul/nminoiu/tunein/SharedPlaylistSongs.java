@@ -69,6 +69,8 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     private ListView sharedWithListView;
     private AdapterSharedWithMe adapterShared;
     private ImageView showSharedImg;
+    private ArrayList<String> recents;
+
 
 
     private ArrayAdapter<String> uadapter;
@@ -181,6 +183,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
         adapter = new AdapterSharedWithMe(this, rowItems);
         adapterShared = new AdapterSharedWithMe(this, rowItems1);
+        recents = new ArrayList<>();
 
         renameLayout = (LinearLayout) findViewById(R.id.renamePlaylist);
         deletePlaylist = (LinearLayout) findViewById(R.id.deletePlaylist);
@@ -1195,6 +1198,25 @@ public class SharedPlaylistSongs extends AppCompatActivity {
             }
         });
 
+        final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String recentsong = dataSnapshot.child(key).getValue().toString();
+                    recents.add(recentsong);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         //
 
         delSharedPlRef = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID);
@@ -1618,8 +1640,10 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
     public void getFollowers(String fullname, final String mysong) {

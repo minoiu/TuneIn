@@ -50,6 +50,8 @@ public class Downloads extends AppCompatActivity {
     private ArrayAdapter<String> sadapter;
     private ArrayAdapter<String> songssadapter;
     private String me;
+    private ArrayList<String> recents;
+
 
 
     private DatabaseReference db;
@@ -110,6 +112,7 @@ public class Downloads extends AppCompatActivity {
         songsList.setVisibility(View.VISIBLE);
         songsList.setClickable(true);
         songsList.setAdapter(adapter);
+        recents = new ArrayList<>();
 
 
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -157,6 +160,24 @@ public class Downloads extends AppCompatActivity {
                 });
             }
 
+        });
+
+        final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String recentsong = dataSnapshot.child(key).getValue().toString();
+                    recents.add(recentsong);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
 
 
@@ -238,8 +259,10 @@ public class Downloads extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
     @Override

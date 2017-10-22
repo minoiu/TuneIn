@@ -363,13 +363,17 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 final String playlist = rowItem.getTitle();
 
-                Intent intent = new Intent(MyPlaylists.this, SharedPlaylistSongs.class);
-                intent.putExtra("Name", playlist);
-                intent.putExtra("Friend", UserDetails.friend);
-                if(mediaPlayer.isPlaying()) {
-                    intent.putExtra("Song", track_title.getText().toString());
+                if(UserDetails.oldIntent.equals("PLSongs")) {
+
+                    Intent intent = new Intent(MyPlaylists.this, SharedPlaylistSongs.class);
+                    intent.putExtra("Name", UserDetails.oldPlaylist);
+                    intent.putExtra("Friend", UserDetails.friend);
+                    if (mediaPlayer.isPlaying()) {
+                        intent.putExtra("Song", track_title.getText().toString());
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
+
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(ID);
                 ref.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -384,7 +388,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                                     UserDetails.friend = friend;
                                     Toast.makeText(MyPlaylists.this, "friend who shared is " + UserDetails.friend, Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(MyPlaylists.this, SharedPlaylistSongs.class);
-                                    intent.putExtra("Name", playlist);
+                                    intent.putExtra("Name", UserDetails.oldPlaylist);
                                     intent.putExtra("Friend", UserDetails.friend);
                                     if(mediaPlayer.isPlaying()) {
                                         intent.putExtra("Song", track_title.getText().toString());
@@ -426,12 +430,21 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 final String playlist = rowItem.getTitle();
-                Intent intent = new Intent(MyPlaylists.this, PlaylistSongs.class);
-                intent.putExtra("Name", playlist);
-                if(mediaPlayer.isPlaying()) {
-                    intent.putExtra("Song", track_title.getText().toString());
+                if(UserDetails.oldIntent.equals("PLSongs")) {
+                    Intent intent = new Intent(MyPlaylists.this, PlaylistSongs.class);
+                    intent.putExtra("Name", playlist);
+                    if (mediaPlayer.isPlaying()) {
+                        intent.putExtra("Song", track_title.getText().toString());
+                    }
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MyPlaylists.this, PlaylistSongs.class);
+                    intent.putExtra("Name", playlist);
+                    if (mediaPlayer.isPlaying()) {
+                        intent.putExtra("Song", track_title.getText().toString());
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         });
 

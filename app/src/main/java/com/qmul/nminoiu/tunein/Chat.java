@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -68,6 +69,8 @@ public class Chat extends AppCompatActivity {
     private String sender;
     private String ID;
     static boolean active = false;
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,10 @@ public class Chat extends AppCompatActivity {
         firebaseAuth1 = FirebaseAuth.getInstance();
         ID = firebaseAuth1.getCurrentUser().getUid();
         track_title = (TextView) findViewById(R.id.track_title);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Intent i = getIntent();
 
@@ -805,4 +812,29 @@ public class Chat extends AppCompatActivity {
         super.onStop();
         active = false;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle actifon bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(UserDetails.oldIntent.equals("Followers"));{
+            Intent backMainTest = new Intent(this, PlaylistSongs.class);
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", track_title.getText().toString());
+            }
+            backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+            startActivity(backMainTest);
+            finish();
+        }
+    }
+
 }

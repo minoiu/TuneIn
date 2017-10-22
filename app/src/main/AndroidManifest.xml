@@ -42,7 +42,9 @@
         <activity android:name=".PlayListActivity" />
         <activity
             android:name=".Chat"
-            android:label="Chat" />
+            android:label="Chat"
+            android:theme="@style/AppTheme.NoActionBar" />
+        />
         <activity
             android:name=".ScrollingActivity"
             android:label="" />

@@ -130,6 +130,8 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
     private DatabaseReference timeref;
+    private ArrayList<String> recents;
+
     public User myuser;
     public File storagePath;
     public LinearLayout np1;
@@ -262,6 +264,7 @@ public class SettingsActivity extends AppCompatActivity
         btn = (Button) findViewById(R.id.button);
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         track_title = (TextView) findViewById(R.id.track_title);
+        recents = new ArrayList<>();
 
         CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
         CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -1175,6 +1178,25 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String recentsong = dataSnapshot.child(key).getValue().toString();
+                    recents.add(recentsong);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         //listeners for like buttons - NowPlaying Layout
         bheart1.setOnClickListener(new View.OnClickListener() {
 
@@ -1989,8 +2011,10 @@ public class SettingsActivity extends AppCompatActivity
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
     //stopmusic

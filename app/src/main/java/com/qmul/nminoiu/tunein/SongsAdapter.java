@@ -169,6 +169,8 @@ public class SongsAdapter extends BaseAdapter {
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
+                                            UserDetails.oldIntent="Followers";
+                                            UserDetails.oldPlaylist = playlist;
                                             intent.putExtra("Name", playlist);
                                             mContext.startActivity(intent);
 
@@ -197,6 +199,8 @@ public class SongsAdapter extends BaseAdapter {
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", playlist);
+                                            UserDetails.oldIntent="Followers";
+                                            UserDetails.oldPlaylist = playlist;
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
@@ -208,7 +212,9 @@ public class SongsAdapter extends BaseAdapter {
                                             Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
                                             newIntent.putExtra("Uniqid","FSAdapter");
                                             newIntent.putExtra("Song", songToAdd);
-                                            newIntent.putExtra("Name", playlistName);
+                                            UserDetails.oldPlaylist = playlist;
+                                            UserDetails.oldIntent="PLSongs";
+                                            newIntent.putExtra("OldPlaylist", playlistName);
                                             mContext.startActivity(newIntent);
                                             break;
 

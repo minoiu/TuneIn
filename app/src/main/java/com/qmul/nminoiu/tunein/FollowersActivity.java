@@ -282,6 +282,10 @@ public class FollowersActivity extends AppCompatActivity {
                                     String playlist = i.getStringExtra("Name");
                                     getReceiver(songToJoin, user, playlist);
                                     //Toast.makeText(FollowersActivity.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
+                                } else if (uniqid.equals("AdapterAllSongs")) {
+                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+                                    String songToJoin = i.getStringExtra("Song");
+                                    getReceiver(songToJoin, user, "");
                                 }
                             }
                         }
@@ -321,7 +325,6 @@ public class FollowersActivity extends AppCompatActivity {
                     String song = i.getStringExtra("Song");
                     String playlist = i.getStringExtra("Name");
                     Intent intent = new Intent(FollowersActivity.this, Chat.class);
-                    intent.putExtra("Uniqid", "FromFollowers");
                     intent.putExtra("Song", song);
                     intent.putExtra("Name", playlist);
                     startActivity(intent);
@@ -329,10 +332,8 @@ public class FollowersActivity extends AppCompatActivity {
                     String songToJoin = i.getStringExtra("Song");
                     String playlist = i.getStringExtra("Name");
                     Intent intent = new Intent(FollowersActivity.this, PlaylistSongs.class);
-                    intent.putExtra("Uniqid", "FromFollowers");
                     intent.putExtra("Name", playlist);
                     startActivity(intent);
-
                 }
             }
     }
@@ -414,6 +415,32 @@ public class FollowersActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getReceiver1(final String song, final String user) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                sendListenWithNotification(song, user);
+                Toast.makeText(FollowersActivity.this, "The invitation to " + user + " was sent.", Toast.LENGTH_SHORT).show();
+
+                Intent goBack = new Intent(FollowersActivity.this, Chat.class);
+                goBack.putExtra("Uniqid", "FromFollowersListeWith");
+                goBack.putExtra("FriendName", user);
+                goBack.putExtra("Song", song);
+                startActivity(goBack);
+
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void sendListenWithNotification(final String songToJoin, String user) {
 

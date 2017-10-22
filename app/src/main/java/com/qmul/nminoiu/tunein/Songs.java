@@ -48,6 +48,8 @@ public class Songs extends AppCompatActivity {
     private ArrayAdapter<String> sadapter;
     private ArrayAdapter<String> songssadapter;
     private String me;
+    private ArrayList<String> recents;
+
 
 
     private DatabaseReference db;
@@ -94,6 +96,7 @@ public class Songs extends AppCompatActivity {
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
         track_title = (TextView) findViewById(R.id.track_title);
+        recents = new ArrayList<>();
 
         adapter = new AdapterAllSongs(this, rowItems);
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
@@ -128,6 +131,25 @@ public class Songs extends AppCompatActivity {
         getSupportActionBar().setTitle("Songs");
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
+
+        final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String recentsong = dataSnapshot.child(key).getValue().toString();
+                    recents.add(recentsong);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         songsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -281,8 +303,10 @@ public class Songs extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
 //    @Override

@@ -86,6 +86,7 @@ public class PlaylistSongs extends AppCompatActivity {
     private ImageView showSharedImg;
 
 
+
     private ArrayAdapter<String> uadapter;
     private DatabaseReference receiverRef;
     private DatabaseReference mDatabase1;
@@ -100,6 +101,8 @@ public class PlaylistSongs extends AppCompatActivity {
     private String sender;
     public List<String> songsList;
     private ArrayList<String> users = new ArrayList<>();
+    private ArrayList<String> recents = new ArrayList<>();
+
     private ArrayAdapter<String> songssadapter;
     private DatabaseReference songsRef;
     private DatabaseReference shareRef;
@@ -235,7 +238,10 @@ public class PlaylistSongs extends AppCompatActivity {
                 getSupportActionBar().setTitle(playlist);
             }
 
+
         }
+
+
 
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
@@ -257,23 +263,23 @@ public class PlaylistSongs extends AppCompatActivity {
         songsList = new ArrayList<>();
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songsList);
 
-        songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(i.getStringExtra("Name"));
-        songsRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            songsRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(i.getStringExtra("Name"));
+            songsRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                String song = dataSnapshot.getValue(String.class);
+                    String song = dataSnapshot.getValue(String.class);
 
-                songsList.add(song);
-                RowItem item = new RowItem(R.drawable.options, song);
+                    songsList.add(song);
+                    RowItem item = new RowItem(R.drawable.options, song);
 
-                rowItems.add(item);
-                adapter.notifyDataSetChanged();
+                    rowItems.add(item);
+                    adapter.notifyDataSetChanged();
 
-            }
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 //                String song = dataSnapshot.getValue(String.class);
 //                for(int i = 0; i<=songsList.size()-2;i++){
 //                    if(songsList.get(i).equals(song))
@@ -281,26 +287,27 @@ public class PlaylistSongs extends AppCompatActivity {
 //                songsList.remove(song);
 //                rowItems.remove(new RowItem(R.drawable.options,song));
 //                adapter.notifyDataSetChanged();
-            }
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String song = dataSnapshot.getValue(String.class);
-                songsList.remove(song);
-                rowItems.remove(new RowItem(R.drawable.options,song));
-                adapter.notifyDataSetChanged();
-            }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String song = dataSnapshot.getValue(String.class);
+                    songsList.remove(song);
+                    rowItems.remove(new RowItem(R.drawable.options, song));
+                    adapter.notifyDataSetChanged();
+                }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+
 
         invalidateOptionsMenu();
         songs.setAdapter(adapter);
@@ -326,6 +333,24 @@ public class PlaylistSongs extends AppCompatActivity {
             public void onSearchViewClosed() {
                 searchLayout.setVisibility(View.GONE);
                 songsLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String recentsong = dataSnapshot.child(key).getValue().toString();
+                    recents.add(recentsong);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
@@ -1839,6 +1864,14 @@ public class PlaylistSongs extends AppCompatActivity {
 
     }
 
+    private void addToRecents(String song) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase playRef = ref.child("RecentlyPlayed").child(ID);
+        playRef.push().setValue(song);
+
+    }
+
+
     private void addToLikedPlaylists() {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase playRef = ref.child("LovedPlaylists").child(ID);
@@ -1955,8 +1988,10 @@ public class PlaylistSongs extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-        likedRef.push().setValue(song);
+        if (!recents.contains(song)) {
+            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+            likedRef.push().setValue(song);
+        }
     }
 
     public void getFollowers(String fullname, final String mysong) {

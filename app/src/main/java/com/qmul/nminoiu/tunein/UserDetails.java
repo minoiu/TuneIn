@@ -30,6 +30,10 @@ public class UserDetails {
     static Boolean hasSong = false;
     static Boolean hasSharedSong = false;
     static Boolean notIn = false;
+    static String oldPlaylist = "";
+    static String oldIntent = "";
+
+
 
 
     public static String playlist = "";

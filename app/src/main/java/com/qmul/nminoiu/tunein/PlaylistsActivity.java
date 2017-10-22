@@ -35,6 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 public class PlaylistsActivity extends AppCompatActivity {
 
     private String song;
@@ -46,6 +48,9 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     private List<String> sharedlist;
     private List<String> sharedlist1;
+    private LinearLayout play_toolbar;
+    public TextView track_title;
+    private Button btn;
 
 
     private ArrayAdapter<String> playlistsadapter;
@@ -75,6 +80,9 @@ public class PlaylistsActivity extends AppCompatActivity {
         newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         sharedWithMeLayout = (RelativeLayout) findViewById(R.id.sharedWithMeLayout);
 
+        play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+        play_toolbar.setClickable(true);
+        btn = (Button) findViewById(R.id.button);
         newPlaylist.bringToFront();
         playlistName = (EditText) findViewById(R.id.editText);
         create = (Button) findViewById(R.id.create);
@@ -88,6 +96,12 @@ public class PlaylistsActivity extends AppCompatActivity {
         ID = firebaseAuth.getCurrentUser().getUid();
         UserDetails.hasSong = false;
         UserDetails.hasSharedSong = false;
+
+        if(mediaPlayer.isPlaying()){
+            btn.setBackgroundResource(R.drawable.ic_media_pause);
+            play_toolbar.setVisibility(View.VISIBLE);
+            play_toolbar.bringToFront();
+        } else play_toolbar.setVisibility(View.GONE);
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -281,13 +295,16 @@ public class PlaylistsActivity extends AppCompatActivity {
                         String uniqid = i.getStringExtra("Uniqid");
                         if (uniqid.equals("FSAdapter")) {
                             String song = i.getStringExtra("Song");
-                            String oldPlaylist = i.getStringExtra("Name");
+                            String oldPlaylist = i.getStringExtra("OldPlaylist");
                             UserDetails.playlist = oldPlaylist;
                             addSharedSongsToList(song, playlistClicked, oldPlaylist);
                         } else if(uniqid.equals("FromNowPlayling")){
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("FromRecents")){
+                            String song = i.getStringExtra("Song");
+                            addSharedSongsToList(song, playlistClicked, "");
+                        } else if(uniqid.equals("AdapterAllSongs")) {
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         }
@@ -307,7 +324,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                         String uniqid = i.getStringExtra("Uniqid");
                         if (uniqid.equals("FSAdapter")) {
                             String song = i.getStringExtra("Song");
-                            String oldPlaylist = i.getStringExtra("Name");
+                            String oldPlaylist = i.getStringExtra("OldPlaylist");
                             addSongsToSharedList(song,playlistClicked,oldPlaylist);
                         } else if(uniqid.equals("FromNowPlayling")){
                             String song = i.getStringExtra("Song");
@@ -315,7 +332,9 @@ public class PlaylistsActivity extends AppCompatActivity {
                         } else if(uniqid.equals("FromRecents")){
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song,playlistClicked,"");
-
+                        } else if(uniqid.equals("AdapterAllSongs")) {
+                            String song = i.getStringExtra("Song");
+                            addSongsToSharedList(song, playlistClicked, "");
                         }
                     }
                 }
@@ -452,6 +471,7 @@ public class PlaylistsActivity extends AppCompatActivity {
             playRef.push().setValue(song);
             Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
             intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            intent.putExtra("Name", UserDetails.oldPlaylist);
             if(!oldPlaylist.isEmpty()){
                 intent.putExtra("Name", oldPlaylist);
             }
@@ -459,6 +479,7 @@ public class PlaylistsActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
             intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            intent.putExtra("Name", UserDetails.oldPlaylist);
             if(!oldPlaylist.isEmpty()){
                 intent.putExtra("Name", oldPlaylist);
             }
@@ -768,16 +789,19 @@ public class PlaylistsActivity extends AppCompatActivity {
             playRef.push().setValue(song);
             Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
             intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            intent.putExtra("Name", UserDetails.oldPlaylist);
             if(!oldPlaylist.isEmpty()){
-                intent.putExtra("Name", oldPlaylist);
+                intent.putExtra("OldPlaylist", oldPlaylist);
             }
             startActivity(intent);
         } else {
             Intent intent = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
             intent.putExtra("Uniqid", "FromPlaylistsActivity");
+            intent.putExtra("Name", UserDetails.oldPlaylist);
             if(!oldPlaylist.isEmpty()){
-                intent.putExtra("Name", oldPlaylist);
-            }            startActivity(intent);
+                intent.putExtra("OldPlaylist", oldPlaylist);
+            }
+            startActivity(intent);
         }
 
     }
@@ -899,9 +923,15 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent backMainTest = new Intent(this, SettingsActivity.class);
-        startActivity(backMainTest);
-        finish();
+        if (UserDetails.oldIntent.equals("PLSongs")) {
+            Intent backMainTest = new Intent(this, PlaylistSongs.class);
+            if (mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", track_title.getText().toString());
+            }
+            backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+            startActivity(backMainTest);
+            finish();
+        }
     }
 
     public static void hideSoftKeyboard(Activity activity) {
