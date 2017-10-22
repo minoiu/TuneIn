@@ -146,6 +146,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
         } else play_toolbar.setVisibility(View.GONE);
@@ -248,6 +249,20 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         playlistsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, playlistsList);
         rowItems1 = new ArrayList<RowItem>();
         adapter1 = new CustomSharedAdapter(this, rowItems1);
+
+        play_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_info = new Intent(MyPlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromMyPlaylists");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+            }
+        });
 
         DatabaseReference sharedWithMe = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
 
@@ -838,5 +853,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             }
         });
     }
+
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(MyPlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
+    }
+
 
 }

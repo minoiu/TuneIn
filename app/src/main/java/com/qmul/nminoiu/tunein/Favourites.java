@@ -128,6 +128,7 @@ public class Favourites extends AppCompatActivity {
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
         } else play_toolbar.setVisibility(View.GONE);
@@ -163,7 +164,7 @@ public class Favourites extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 if (dataSnapshot.exists()) {
-                    Toast.makeText(Favourites.this, "has child " + dataSnapshot.hasChild(ID), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Favourites.this, "has child " + dataSnapshot.hasChild(ID), Toast.LENGTH_SHORT).show();
 
                     UserDetails.lovedPlaylist = true;
                     favPlaylistsLayout.setVisibility(View.VISIBLE);
@@ -206,6 +207,7 @@ public class Favourites extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                UserDetails.playingSongName = song;
                 track_title.setText(song);
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
@@ -232,6 +234,7 @@ public class Favourites extends AppCompatActivity {
                 Intent intent = new Intent(Favourites.this, FavouritePlaylists.class);
                 if(mediaPlayer.isPlaying()) {
                     intent.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent);            }
         });
@@ -286,9 +289,10 @@ public class Favourites extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent_info = new Intent(Favourites.this, AndroidBuildingMusicPlayerActivity.class);
-                intent_info.putExtra("Uniqid", "FromLibrary");
+                intent_info.putExtra("Uniqid", "FromFavourites");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -337,6 +341,7 @@ public class Favourites extends AppCompatActivity {
         Intent intent = new Intent(this, LibraryActivity.class);
         if(mediaPlayer.isPlaying()) {
             intent.putExtra("Song", track_title.getText().toString());
+            UserDetails.playingSongName = track_title.getText().toString();
         }
         startActivity(intent);
 //
@@ -422,6 +427,12 @@ public class Favourites extends AppCompatActivity {
             }
         });
     }
+
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(Favourites.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
+    }
+
 
     public void getFullname() {
 

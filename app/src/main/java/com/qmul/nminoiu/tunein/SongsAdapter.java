@@ -174,6 +174,7 @@ public class SongsAdapter extends BaseAdapter {
                                             intent.putExtra("Name", playlist);
                                             mContext.startActivity(intent);
 
+
                                             //Or Some other code you want to put here.. This is just an example.
                                             //Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
@@ -213,7 +214,7 @@ public class SongsAdapter extends BaseAdapter {
                                             newIntent.putExtra("Uniqid","FSAdapter");
                                             newIntent.putExtra("Song", songToAdd);
                                             UserDetails.oldPlaylist = playlist;
-                                            UserDetails.oldIntent="PLSongs";
+                                            UserDetails.oldIntent="Followers";
                                             newIntent.putExtra("OldPlaylist", playlistName);
                                             mContext.startActivity(newIntent);
                                             break;

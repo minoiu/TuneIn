@@ -112,7 +112,7 @@ public class Songs extends AppCompatActivity {
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
         songsList.setAdapter(adapter);
 
-        Toast.makeText(Songs.this, "id is " + ID , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Songs.this, "id is " + ID , Toast.LENGTH_SHORT).show();
 
 
         Intent i = getIntent();
@@ -122,6 +122,7 @@ public class Songs extends AppCompatActivity {
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
         } else play_toolbar.setVisibility(View.GONE);
@@ -160,6 +161,7 @@ public class Songs extends AppCompatActivity {
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
                 track_title.setText(song);
+                UserDetails.playingSongName = song;
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -229,11 +231,11 @@ public class Songs extends AppCompatActivity {
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Toast.makeText(Songs.this, "in on child id is " + ID, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Songs.this, "in on child id is " + ID, Toast.LENGTH_SHORT).show();
 
 //                if (dataSnapshot.hasChild(ID)) {
                     String song = dataSnapshot.getValue(String.class);
-                    Toast.makeText(Songs.this, "song is " + song , Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(Songs.this, "song is " + song , Toast.LENGTH_SHORT).show();
 
                     songs.add(song);
 
@@ -275,9 +277,10 @@ public class Songs extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent_info = new Intent(Songs.this, AndroidBuildingMusicPlayerActivity.class);
-                intent_info.putExtra("Uniqid", "FromLibrary");
+                intent_info.putExtra("Uniqid", "FromSongs");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -333,6 +336,7 @@ public class Songs extends AppCompatActivity {
         Intent intent = new Intent(this, LibraryActivity.class);
         if(mediaPlayer.isPlaying()) {
             intent.putExtra("Song", track_title.getText().toString());
+            UserDetails.playingSongName = track_title.getText().toString();
         }
         startActivity(intent);
 //
@@ -485,6 +489,12 @@ public class Songs extends AppCompatActivity {
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
+
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(Songs.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
+    }
+
 
     public void playPauseMusic(View v) {
 

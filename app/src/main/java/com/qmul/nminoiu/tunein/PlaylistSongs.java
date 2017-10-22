@@ -221,6 +221,9 @@ public class PlaylistSongs extends AppCompatActivity {
 
         Intent i = getIntent();
 
+        track_title.setText(UserDetails.playingSongName);
+
+
         if (i != null) {
             if (i.hasExtra("Uniqid")) {
                 String uniqid = i.getStringExtra("Uniqid");
@@ -241,21 +244,36 @@ public class PlaylistSongs extends AppCompatActivity {
 
         }
 
-
-
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
-            track_title.setText(title);
+            track_title.setText(UserDetails.playingSongName);
+//            UserDetails.playingSongName = i.getStringExtra("Song");
+
         }
+
+        play_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_info = new Intent(PlaylistSongs.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromPlaylistSongs");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+            }
+        });
+
+
         if (mediaPlayer.isPlaying()) {
+            track_title.setText(UserDetails.playingSongName);
             play_toolbar.setVisibility(View.VISIBLE);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
-            track_title.setText(i.getStringExtra("Song"));
+//            UserDetails.playingSongName = i.getStringExtra("Song");
 
         } else play_toolbar.setVisibility(View.GONE);
-
-
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -407,9 +425,12 @@ public class PlaylistSongs extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 final String song = rowItem.getTitle();
+                UserDetails.playingSongName = song;
+
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                UserDetails.playingSongName = song;
                 track_title.setText(song);
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
@@ -1884,9 +1905,15 @@ public class PlaylistSongs extends AppCompatActivity {
         Intent backMainTest = new Intent(this, MyPlaylists.class);
         if(mediaPlayer.isPlaying()) {
             backMainTest.putExtra("Song", track_title.getText().toString());
+            UserDetails.playingSongName = track_title.getText().toString();
         }
         startActivity(backMainTest);
         finish();
+    }
+
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(PlaylistSongs.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
     }
 
     public void showMenu(ImageView img) {

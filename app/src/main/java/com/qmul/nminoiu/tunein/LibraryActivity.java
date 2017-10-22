@@ -100,10 +100,11 @@ public class LibraryActivity extends AppCompatActivity{
         Intent i = getIntent();
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
-            track_title.setText(title);
+            track_title.setText(UserDetails.playingSongName);
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
         } else play_toolbar.setVisibility(View.GONE);
 
         recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
@@ -155,6 +156,7 @@ public class LibraryActivity extends AppCompatActivity{
                 Intent i = new Intent(LibraryActivity.this, MyPlaylists.class);
                 if(mediaPlayer.isPlaying()) {
                     i.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(i);
             }
@@ -166,7 +168,8 @@ public class LibraryActivity extends AppCompatActivity{
                 Intent i = new Intent(LibraryActivity.this, Songs.class);
                 if(mediaPlayer.isPlaying()){
                    String song = track_title.getText().toString();
-                    i.putExtra("Song", song);
+                    //i.putExtra("Song", song);
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(i);
             }
@@ -178,6 +181,7 @@ public class LibraryActivity extends AppCompatActivity{
                 Intent i = new Intent(LibraryActivity.this, Favourites.class);
                 if(mediaPlayer.isPlaying()) {
                    i.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(i);
             }
@@ -189,6 +193,8 @@ public class LibraryActivity extends AppCompatActivity{
                 Intent i = new Intent(LibraryActivity.this, Downloads.class);
                 if(mediaPlayer.isPlaying()) {
                     i.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
+
                 }
                 startActivity(i);
             }
@@ -208,6 +214,7 @@ public class LibraryActivity extends AppCompatActivity{
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         url = dataSnapshot.getValue().toString();
                         startMusic(url, song);
+                        UserDetails.playingSongName = song;
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
                     }
 
@@ -317,6 +324,12 @@ public class LibraryActivity extends AppCompatActivity{
             }
         });
     }
+
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
+    }
+
 
     public void getFullname() {
 

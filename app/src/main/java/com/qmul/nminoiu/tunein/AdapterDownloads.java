@@ -155,11 +155,13 @@ public class AdapterDownloads extends BaseAdapter {
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
+                                            UserDetails.oldIntent="Downloads";
+
                                             intent.putExtra("Playlist", "");
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+                                           // Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -175,6 +177,7 @@ public class AdapterDownloads extends BaseAdapter {
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", "");
+                                            UserDetails.oldIntent="Downloads";
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
@@ -187,6 +190,7 @@ public class AdapterDownloads extends BaseAdapter {
                                             Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
                                             newIntent.putExtra("Uniqid","AdapterAllSongs");
                                             newIntent.putExtra("Song", songToAdd);
+                                            UserDetails.oldIntent="Downloads";
                                             newIntent.putExtra("Name", "");
                                             mContext.startActivity(newIntent);
                                             // String playlistName = ((PlaylistSongs) mContext).getBarTitle();

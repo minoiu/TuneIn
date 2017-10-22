@@ -155,11 +155,13 @@ public class AdapterFavourites extends BaseAdapter {
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
+                                            UserDetails.oldIntent="Favourites";
+
                                             intent.putExtra("Playlist", "");
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+//                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -183,6 +185,8 @@ public class AdapterFavourites extends BaseAdapter {
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", "");
+                                            UserDetails.oldIntent="Favourites";
+
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
@@ -196,6 +200,7 @@ public class AdapterFavourites extends BaseAdapter {
                                             newIntent.putExtra("Uniqid","AdapterAllSongs");
                                             newIntent.putExtra("Song", songToAdd);
                                             newIntent.putExtra("Name", "");
+                                            UserDetails.oldIntent="Favourites";
                                             mContext.startActivity(newIntent);
                                             // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
 //                                            String songToAdd = rowItem.getTitle();

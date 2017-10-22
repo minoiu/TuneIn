@@ -155,10 +155,12 @@ public class AdapterRecentlyplayed extends BaseAdapter {
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
                                             intent.putExtra("Playlist", "");
+                                            UserDetails.oldIntent="Recents";
+
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+//                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -189,6 +191,8 @@ public class AdapterRecentlyplayed extends BaseAdapter {
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", "");
+                                            UserDetails.oldIntent="Recents";
+
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
@@ -202,6 +206,8 @@ public class AdapterRecentlyplayed extends BaseAdapter {
                                             newIntent.putExtra("Uniqid","AdapterAllSongs");
                                             newIntent.putExtra("Song", songToAdd);
                                             newIntent.putExtra("Name", "");
+                                            UserDetails.oldIntent="Recents";
+
                                             mContext.startActivity(newIntent);
                                             // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
 //                                            String songToAdd = rowItem.getTitle();

@@ -154,6 +154,8 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
 
 
@@ -235,7 +237,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
             play_toolbar.setVisibility(View.VISIBLE);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
-            track_title.setText(i.getStringExtra("Song"));
+            track_title.setText(UserDetails.playingSongName);
 
         } else play_toolbar.setVisibility(View.GONE);
 
@@ -246,6 +248,21 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
         songsList = new ArrayList<>();
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songsList);
+
+        play_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_info = new Intent(SharedPlaylistSongs.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromSharedPlSongs");
+                if (mediaPlayer.isPlaying()) {
+                    intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
+            }
+        });
+
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(ID);
         ref.addChildEventListener(new ChildEventListener() {
@@ -362,6 +379,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                UserDetails.playingSongName = song;
                 track_title.setText(song);
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
@@ -1542,6 +1560,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     public void onBackPressed() {
         Intent backMainTest = new Intent(this, MyPlaylists.class);
         if(mediaPlayer.isPlaying()) {
+            UserDetails.playingSongName = track_title.getText().toString();
             backMainTest.putExtra("Song", track_title.getText().toString());
         }
         startActivity(backMainTest);

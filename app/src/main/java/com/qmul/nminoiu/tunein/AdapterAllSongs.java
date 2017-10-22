@@ -161,7 +161,7 @@ public class AdapterAllSongs extends BaseAdapter {
                                             mContext.startActivity(intent);
 
                                             //Or Some other code you want to put here.. This is just an example.
-                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+                                          //  Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 
@@ -192,6 +192,7 @@ public class AdapterAllSongs extends BaseAdapter {
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", "");
+                                            UserDetails.oldIntent="MySongs";
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
 
@@ -204,6 +205,7 @@ public class AdapterAllSongs extends BaseAdapter {
                                             Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
                                             newIntent.putExtra("Uniqid","AdapterAllSongs");
                                             newIntent.putExtra("Song", songToAdd);
+                                            UserDetails.oldIntent="MySongs";
                                             newIntent.putExtra("Name", "");
                                             mContext.startActivity(newIntent);
                                            // String playlistName = ((PlaylistSongs) mContext).getBarTitle();

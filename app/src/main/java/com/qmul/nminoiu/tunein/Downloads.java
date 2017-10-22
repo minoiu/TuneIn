@@ -124,6 +124,7 @@ public class Downloads extends AppCompatActivity {
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
         } else play_toolbar.setVisibility(View.GONE);
@@ -143,6 +144,7 @@ public class Downloads extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                UserDetails.playingSongName = song;
                 track_title.setText(song);
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
@@ -186,10 +188,10 @@ public class Downloads extends AppCompatActivity {
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Toast.makeText(Downloads.this, "has child is " + dataSnapshot.hasChild(ID), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Downloads.this, "has child is " + dataSnapshot.hasChild(ID), Toast.LENGTH_SHORT).show();
 
                     String song = dataSnapshot.getValue(String.class);
-                    Toast.makeText(Downloads.this, "in on song is " + song, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Downloads.this, "in on song is " + song, Toast.LENGTH_SHORT).show();
 
                     songs.add(song);
 
@@ -230,9 +232,10 @@ public class Downloads extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent_info = new Intent(Downloads.this, AndroidBuildingMusicPlayerActivity.class);
-                intent_info.putExtra("Uniqid", "FromLibrary");
+                intent_info.putExtra("Uniqid", "FromDownloads");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
+                    UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -275,12 +278,19 @@ public class Downloads extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void openPlayerPage(View v) {
+        Intent i = new Intent(Downloads.this, AndroidBuildingMusicPlayerActivity.class);
+        startActivity(i);
+    }
+
+
     @Override
     public void onBackPressed() {
 
         Intent intent = new Intent(this, LibraryActivity.class);
         if(mediaPlayer.isPlaying()) {
             intent.putExtra("Song", track_title.getText().toString());
+            UserDetails.playingSongName = track_title.getText().toString();
         }
         startActivity(intent);
 //
