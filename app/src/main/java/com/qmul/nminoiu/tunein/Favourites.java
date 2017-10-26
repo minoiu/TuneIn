@@ -92,10 +92,26 @@ public class Favourites extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(Favourites.this, Users.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(i);
             }
         });
+
+        final FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Favourites.this, SettingsActivity.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(i);
+            }
+        });
+
 
         favPlaylistsLayout = (RelativeLayout) findViewById(R.id.playlists);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -120,6 +136,8 @@ public class Favourites extends AppCompatActivity {
 
 
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        final CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+
 
         Intent i = getIntent();
         if(i.hasExtra("Song")){
@@ -131,6 +149,8 @@ public class Favourites extends AppCompatActivity {
             track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
+            paramsFab1.setMargins(0, 0, 53, 160);
+            fab1.setLayoutParams(paramsFab1);
         } else play_toolbar.setVisibility(View.GONE);
 
 
@@ -207,6 +227,8 @@ public class Favourites extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                paramsFab1.setMargins(0, 0, 53, 160);
+                fab1.setLayoutParams(paramsFab1);
                 UserDetails.playingSongName = song;
                 track_title.setText(song);
 

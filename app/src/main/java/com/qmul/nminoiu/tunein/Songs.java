@@ -85,9 +85,26 @@ public class Songs extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Songs.this, Users.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+
                 startActivity(i);
             }
         });
+
+        final FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Songs.this, SettingsActivity.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(i);
+            }
+        });
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -108,6 +125,8 @@ public class Songs extends AppCompatActivity {
         songsList.setClickable(true);
 
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        final CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+
 
         songssadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
         songsList.setAdapter(adapter);
@@ -125,6 +144,8 @@ public class Songs extends AppCompatActivity {
             track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
+            paramsFab1.setMargins(0, 0, 53, 160);
+            fab1.setLayoutParams(paramsFab1);
         } else play_toolbar.setVisibility(View.GONE);
 
 
@@ -160,6 +181,8 @@ public class Songs extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                paramsFab1.setMargins(0, 0, 53, 160);
+                fab1.setLayoutParams(paramsFab1);
                 track_title.setText(song);
                 UserDetails.playingSongName = song;
 

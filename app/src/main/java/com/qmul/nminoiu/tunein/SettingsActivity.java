@@ -1,18 +1,26 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.UploadTask;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,16 +31,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.provider.MediaStore;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.tubesock.Base64;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,23 +62,34 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
+import com.squareup.picasso.Picasso;
+
 import android.view.View.OnClickListener;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.net.Uri;
+
+
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+import static com.qmul.nminoiu.tunein.R.drawable.options;
 
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
+
 
     private MaterialSearchView searchView;
     private LinearLayout searchLayout;
@@ -113,6 +136,7 @@ public class SettingsActivity extends AppCompatActivity
     private boolean play;
     private boolean pause;
     public static String url;
+    private RelativeLayout picLayout;
     private Handler mResultHandler;
     public static String song;
     private Handler mHandler;
@@ -130,6 +154,8 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
     private DatabaseReference timeref;
+    private Button uploadImg;
+    private ImageView profilePic;
     private ArrayList<String> recents;
 
     public User myuser;
@@ -217,9 +243,18 @@ public class SettingsActivity extends AppCompatActivity
     public String me;
     public String text;
     public String addr;
+    public String pictureUrl;
+
     private String time;
     private Boolean isTunned = false;
     private int i;
+    int PICK_IMAGE_REQUEST;
+    private Uri filePath;
+    private ProgressDialog pd;
+    private StorageReference picRef;
+    private CoordinatorLayout.LayoutParams paramsFab1;
+    private CoordinatorLayout.LayoutParams paramsFab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,12 +281,36 @@ public class SettingsActivity extends AppCompatActivity
         np3 = (LinearLayout) findViewById(R.id.np3);
         np4 = (LinearLayout) findViewById(R.id.np4);
         np5 = (LinearLayout) findViewById(R.id.np5);
+        //picLayout = (RelativeLayout) findViewById(R.id.picLayout);
+        uploadImg = (Button) findViewById(R.id.uploadImg);
+       // profilePic = (ImageView) findViewById(R.id.profilePic);
+       // profilePic.setClickable(true);
+        pd = new ProgressDialog(this);
+        pd.setMessage("Uploading....");
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        picRef = storage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/ProfilePictures");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Now Playing");
+        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View hView = navigationView.getHeaderView(0);
+        profilePic = (ImageView) hView.findViewById(R.id.profilePic);
+        TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
+        toolbar.setTitle("Now Playing");
+
+
         ll = new LinearLayout[5];
         ll[0] = np1;
         ll[1] = np2;
         ll[2] = np3;
         ll[3] = np4;
         ll[4] = np5;
+        PICK_IMAGE_REQUEST = 111;
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
         blackHeart = (ImageButton) findViewById(R.id.blackHeart);
         redHeart = (ImageButton) findViewById(R.id.redHeart);
@@ -266,8 +325,8 @@ public class SettingsActivity extends AppCompatActivity
         track_title = (TextView) findViewById(R.id.track_title);
         recents = new ArrayList<>();
 
-        CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
-        CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+        paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
 
         //initialising OneSignal for notifications
         OneSignal.startInit(this)
@@ -307,22 +366,22 @@ public class SettingsActivity extends AppCompatActivity
                         play_toolbar.setVisibility(View.GONE);
                     }
                 } else if (uniqid.equals("FromPlayer")) {
-                        if (mediaPlayer.isPlaying()) {
-                            String songFromLib = intent.getStringExtra("Song");
-                            fab1.bringToFront();
-                            play_toolbar.setVisibility(View.VISIBLE);
-                            track_title.setText(songFromLib);
-                            btn.setBackgroundResource(R.drawable.ic_media_pause);
-                            paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
-                            fab1.setLayoutParams(paramsFab1);
-                            paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
-                            fab.setLayoutParams(paramsFab);
-                        } else {
-                            play_toolbar.setVisibility(View.GONE);
-                        }
+                    if (mediaPlayer.isPlaying()) {
+                        String songFromLib = intent.getStringExtra("Song");
+                        fab1.bringToFront();
+                        play_toolbar.setVisibility(View.VISIBLE);
+                        track_title.setText(songFromLib);
+                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        fab1.setLayoutParams(paramsFab1);
+                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        fab.setLayoutParams(paramsFab);
+                    } else {
+                        play_toolbar.setVisibility(View.GONE);
                     }
                 }
             }
+        }
 
         //now playing layout - initialising youtube button
         View v1 = findViewById(R.id.np1);
@@ -338,111 +397,111 @@ public class SettingsActivity extends AppCompatActivity
 
         //now playing layout - initialising download button
         View a1 = findViewById(R.id.np1);
-         download1 = (ImageButton) a1.findViewById(R.id.download);
+        download1 = (ImageButton) a1.findViewById(R.id.download);
         View a2 = findViewById(R.id.np2);
-         download2 = (ImageButton) a2.findViewById(R.id.download);
+        download2 = (ImageButton) a2.findViewById(R.id.download);
         View a3 = findViewById(R.id.np3);
-         download3 = (ImageButton) a3.findViewById(R.id.download);
+        download3 = (ImageButton) a3.findViewById(R.id.download);
         View a4 = findViewById(R.id.np4);
-         download4 = (ImageButton) a4.findViewById(R.id.download);
+        download4 = (ImageButton) a4.findViewById(R.id.download);
         View a5 = findViewById(R.id.np5);
-         download5 = (ImageButton) a5.findViewById(R.id.download);
+        download5 = (ImageButton) a5.findViewById(R.id.download);
 
         //now playing layout - initialising comment button
         View c1 = findViewById(R.id.np1);
-         comment1 = (ImageButton) c1.findViewById(R.id.comment);
+        comment1 = (ImageButton) c1.findViewById(R.id.comment);
         View c2 = findViewById(R.id.np2);
-         comment2 = (ImageButton) c2.findViewById(R.id.comment);
+        comment2 = (ImageButton) c2.findViewById(R.id.comment);
         View c3 = findViewById(R.id.np3);
-         comment3 = (ImageButton) c3.findViewById(R.id.comment);
+        comment3 = (ImageButton) c3.findViewById(R.id.comment);
         View c4 = findViewById(R.id.np4);
-         comment4 = (ImageButton) c4.findViewById(R.id.comment);
+        comment4 = (ImageButton) c4.findViewById(R.id.comment);
         View c5 = findViewById(R.id.np5);
-         comment5 = (ImageButton) c5.findViewById(R.id.comment);
+        comment5 = (ImageButton) c5.findViewById(R.id.comment);
 
         //now playing layout - initialising add to playlist button
         View ad1 = findViewById(R.id.np1);
-         add1 = (ImageButton) ad1.findViewById(R.id.add);
+        add1 = (ImageButton) ad1.findViewById(R.id.add);
         View ad2 = findViewById(R.id.np2);
-         add2 = (ImageButton) ad2.findViewById(R.id.add);
+        add2 = (ImageButton) ad2.findViewById(R.id.add);
         View ad3 = findViewById(R.id.np3);
-         add3 = (ImageButton) ad3.findViewById(R.id.add);
+        add3 = (ImageButton) ad3.findViewById(R.id.add);
         View ad4 = findViewById(R.id.np4);
-         add4 = (ImageButton) ad4.findViewById(R.id.add);
+        add4 = (ImageButton) ad4.findViewById(R.id.add);
         View ad5 = findViewById(R.id.np5);
-         add5 = (ImageButton) ad5.findViewById(R.id.add);
+        add5 = (ImageButton) ad5.findViewById(R.id.add);
 
         //now playing layout - initialising like button
         View b1 = findViewById(R.id.np1);
-         bheart1 = (ImageButton) b1.findViewById(R.id.blackHeart);
+        bheart1 = (ImageButton) b1.findViewById(R.id.blackHeart);
         View b2 = findViewById(R.id.np2);
-         bheart2 = (ImageButton) b2.findViewById(R.id.blackHeart);
+        bheart2 = (ImageButton) b2.findViewById(R.id.blackHeart);
         View b3 = findViewById(R.id.np3);
-         bheart3 = (ImageButton) b3.findViewById(R.id.blackHeart);
+        bheart3 = (ImageButton) b3.findViewById(R.id.blackHeart);
         View b4 = findViewById(R.id.np4);
-         bheart4 = (ImageButton) b4.findViewById(R.id.blackHeart);
+        bheart4 = (ImageButton) b4.findViewById(R.id.blackHeart);
         View b5 = findViewById(R.id.np5);
-         bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
+        bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
 
         //now playing layout - initialising dislike button
         View r1 = findViewById(R.id.np1);
-         rheart1 = (ImageButton) r1.findViewById(R.id.redHeart);
+        rheart1 = (ImageButton) r1.findViewById(R.id.redHeart);
         View r2 = findViewById(R.id.np2);
-         rheart2 = (ImageButton) r2.findViewById(R.id.redHeart);
+        rheart2 = (ImageButton) r2.findViewById(R.id.redHeart);
         View r3 = findViewById(R.id.np3);
-         rheart3 = (ImageButton) r3.findViewById(R.id.redHeart);
+        rheart3 = (ImageButton) r3.findViewById(R.id.redHeart);
         View r4 = findViewById(R.id.np4);
-         rheart4 = (ImageButton) r4.findViewById(R.id.redHeart);
+        rheart4 = (ImageButton) r4.findViewById(R.id.redHeart);
         View r5 = findViewById(R.id.np5);
-         rheart5 = (ImageButton) r5.findViewById(R.id.redHeart);
+        rheart5 = (ImageButton) r5.findViewById(R.id.redHeart);
 
         //now playing layout - initialising synchronisation button
         View ti1 = findViewById(R.id.np1);
-         tunein1 = (ImageButton) ti1.findViewById(R.id.syncButton);
+        tunein1 = (ImageButton) ti1.findViewById(R.id.syncButton);
         View ti2 = findViewById(R.id.np2);
-         tunein2 = (ImageButton) ti2.findViewById(R.id.syncButton);
+        tunein2 = (ImageButton) ti2.findViewById(R.id.syncButton);
         View ti3 = findViewById(R.id.np3);
-         tunein3 = (ImageButton) ti3.findViewById(R.id.syncButton);
+        tunein3 = (ImageButton) ti3.findViewById(R.id.syncButton);
         View ti4 = findViewById(R.id.np4);
-         tunein4 = (ImageButton) ti4.findViewById(R.id.syncButton);
+        tunein4 = (ImageButton) ti4.findViewById(R.id.syncButton);
         View ti5 = findViewById(R.id.np5);
-         tunein5 = (ImageButton) ti5.findViewById(R.id.syncButton);
+        tunein5 = (ImageButton) ti5.findViewById(R.id.syncButton);
 
         //now playing layout - initialising tune out button
         View to1 = findViewById(R.id.np1);
-         tuneout1 = (ImageButton) to1.findViewById(R.id.tuneout_btn);
+        tuneout1 = (ImageButton) to1.findViewById(R.id.tuneout_btn);
         View to2 = findViewById(R.id.np2);
-         tuneout2 = (ImageButton) to2.findViewById(R.id.tuneout_btn);
+        tuneout2 = (ImageButton) to2.findViewById(R.id.tuneout_btn);
         View to3 = findViewById(R.id.np3);
-         tuneout3 = (ImageButton) to3.findViewById(R.id.tuneout_btn);
+        tuneout3 = (ImageButton) to3.findViewById(R.id.tuneout_btn);
         View to4 = findViewById(R.id.np4);
-         tuneout4 = (ImageButton) to4.findViewById(R.id.tuneout_btn);
+        tuneout4 = (ImageButton) to4.findViewById(R.id.tuneout_btn);
         View to5 = findViewById(R.id.np5);
-         tuneout5 = (ImageButton) to5.findViewById(R.id.tuneout_btn);
+        tuneout5 = (ImageButton) to5.findViewById(R.id.tuneout_btn);
 
         //now playing layout - initialising textView for friend name
         View n1 = findViewById(R.id.np1);
-         name1 = (TextView) n1.findViewById(R.id.name);
+        name1 = (TextView) n1.findViewById(R.id.name);
         View n2 = findViewById(R.id.np2);
-         name2 = (TextView) n2.findViewById(R.id.name);
+        name2 = (TextView) n2.findViewById(R.id.name);
         View n3 = findViewById(R.id.np3);
-         name3 = (TextView) n3.findViewById(R.id.name);
+        name3 = (TextView) n3.findViewById(R.id.name);
         View n4 = findViewById(R.id.np4);
-         name4 = (TextView) n4.findViewById(R.id.name);
+        name4 = (TextView) n4.findViewById(R.id.name);
         View n5 = findViewById(R.id.np5);
-         name5 = (TextView) n5.findViewById(R.id.name);
+        name5 = (TextView) n5.findViewById(R.id.name);
 
         //now playing layout - initialising textView for song name
         View t1 = findViewById(R.id.np1);
-         title1 = (TextView) t1.findViewById(R.id.songName);
+        title1 = (TextView) t1.findViewById(R.id.songName);
         View t2 = findViewById(R.id.np2);
-         title2 = (TextView) t2.findViewById(R.id.songName);
+        title2 = (TextView) t2.findViewById(R.id.songName);
         View t3 = findViewById(R.id.np3);
-         title3 = (TextView) t3.findViewById(R.id.songName);
+        title3 = (TextView) t3.findViewById(R.id.songName);
         View t4 = findViewById(R.id.np4);
-         title4 = (TextView) t4.findViewById(R.id.songName);
+        title4 = (TextView) t4.findViewById(R.id.songName);
         View t5 = findViewById(R.id.np5);
-         title5 = (TextView) t5.findViewById(R.id.songName);
+        title5 = (TextView) t5.findViewById(R.id.songName);
 
         //storing buttons in ButtonArrays
         tuneoutButtonArray = new ImageButton[5];
@@ -484,7 +543,7 @@ public class SettingsActivity extends AppCompatActivity
         tunein1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendTimeRequest(name1.getText().toString(),title1.getText().toString() );
+                sendTimeRequest(name1.getText().toString(), title1.getText().toString());
                 tunein1.setVisibility(View.GONE);
                 tuneout1.setVisibility(View.VISIBLE);
                 tuneout2.setVisibility(View.GONE);
@@ -519,7 +578,7 @@ public class SettingsActivity extends AppCompatActivity
         tunein3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendTimeRequest(name3.getText().toString(),title3.getText().toString());
+                sendTimeRequest(name3.getText().toString(), title3.getText().toString());
                 tunein3.setVisibility(View.GONE);
                 tuneout3.setVisibility(View.VISIBLE);
                 tuneout1.setVisibility(View.GONE);
@@ -566,6 +625,43 @@ public class SettingsActivity extends AppCompatActivity
                 tunein4.setVisibility(View.VISIBLE);
             }
         });
+
+//        Glide.with(this /* context */)
+//                .load("https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2FiFisFj7zKLeuzqsg1vBMxf6gWst2.jpg?alt=media&token=4b473216-6251-4d2b-af36-13f9e495d21d")
+//                .into(profilePic);
+
+        Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase picture1 = picture.child("ProfilePictures").child(ID).child("Url");
+
+        picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                String link = dataSnapshot.getValue().toString();
+                UserDetails.picturelink = link;
+
+                Picasso.with(SettingsActivity.this)
+                        .load(link)
+//                .resize(350, 240)
+//                .centerInside()
+
+                        .fit()
+                        //.centerCrop()
+                        .into(profilePic);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+//        Picasso.with(this)
+//                .load(UserDetails.picturelink)//                .resize(350, 240)
+////                .centerInside()
+//
+//                .fit()
+//                //.centerCrop()
+//                .into(profilePic);
 
         //tune out buttons for Now Playing layout
         tuneout1.setOnClickListener(new View.OnClickListener() {
@@ -741,6 +837,49 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+
+//        uploadImg.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (filePath != null) {
+//                    pd.show();
+//
+//                    StorageReference childRef = picRef.child(ID + "_image.jpg");
+//
+//                    //uploading the image
+//                    UploadTask uploadTask = childRef.putFile(filePath);
+//
+//                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            pd.dismiss();
+//                            Toast.makeText(SettingsActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+//                            picLayout.setVisibility(View.GONE);
+//                            if (mediaPlayer.isPlaying()) {
+//                                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+//                                fab1.setLayoutParams(paramsFab1);
+//                                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+//                                fab.setLayoutParams(paramsFab);
+//                                fab1.setVisibility(View.VISIBLE);
+//                                fab.setVisibility(View.VISIBLE);
+//                            } else {
+//                                fab1.setVisibility(View.VISIBLE);
+//                                fab.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            pd.dismiss();
+//                            Toast.makeText(SettingsActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                } else {
+//                    Toast.makeText(SettingsActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
         youtube3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -842,10 +981,10 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
-                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                            Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                            playRef.push().setValue(songToDown);
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
 
                         UserDetails.song = finalLocalFile.getAbsolutePath();
 
@@ -880,7 +1019,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
                         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase playRef = ref.child("DownloadedSongs").child(ID);
                         playRef.push().setValue(songToDown);
@@ -916,7 +1055,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
                         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase playRef = ref.child("DownloadedSongs").child(ID);
                         playRef.push().setValue(songToDown);
@@ -952,7 +1091,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
                         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase playRef = ref.child("DownloadedSongs").child(ID);
                         playRef.push().setValue(songToDown);
@@ -988,7 +1127,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
                         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase playRef = ref.child("DownloadedSongs").child(ID);
                         playRef.push().setValue(songToDown);
@@ -1057,7 +1196,7 @@ public class SettingsActivity extends AppCompatActivity
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(ID)){
+                        if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
@@ -1089,7 +1228,7 @@ public class SettingsActivity extends AppCompatActivity
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(ID)){
+                        if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
@@ -1122,7 +1261,7 @@ public class SettingsActivity extends AppCompatActivity
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(ID)){
+                        if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
@@ -1155,7 +1294,7 @@ public class SettingsActivity extends AppCompatActivity
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(ID)){
+                        if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
@@ -1488,14 +1627,14 @@ public class SettingsActivity extends AppCompatActivity
                     String mysong = dataSnapshot.child("Song").getValue().toString();
                     title.add(mysong);
                 }
-                    for (int i = 0; i <= names.size() - 1; i++) {
-                        ll[i].setVisibility(View.VISIBLE);
-                        TextView name = (TextView) ll[i].findViewById(R.id.name);
-                        name.setText(names.get(i));
-                        TextView song = (TextView) ll[i].findViewById(R.id.songName);
-                        song.setText(title.get(i));
-                    }
+                for (int i = 0; i <= names.size() - 1; i++) {
+                    ll[i].setVisibility(View.VISIBLE);
+                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+                    name.setText(names.get(i));
+                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                    song.setText(title.get(i));
                 }
+            }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -1504,8 +1643,8 @@ public class SettingsActivity extends AppCompatActivity
                     text = dataSnapshot.getKey();
                     String mysong = dataSnapshot.child("Song").getValue().toString();
 
-                    for(int i = 0; i <= names.size()-1; i++){
-                        if(text.equals(names.get(i))){
+                    for (int i = 0; i <= names.size() - 1; i++) {
+                        if (text.equals(names.get(i))) {
                             names.set(i, text);
                             title.set(i, mysong);
                             TextView name = (TextView) ll[i].findViewById(R.id.name);
@@ -1515,7 +1654,7 @@ public class SettingsActivity extends AppCompatActivity
                         }
                     }
                 }
-                for(int i=0; i <= names.size()-1; i++){
+                for (int i = 0; i <= names.size() - 1; i++) {
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
                     name.setText(names.get(i));
@@ -1534,7 +1673,7 @@ public class SettingsActivity extends AppCompatActivity
                             names.remove(text);
                             title.remove(mysong);
                             ll[j].setVisibility(View.GONE);
-                            if(mediaPlayer.isPlaying()){
+                            if (mediaPlayer.isPlaying()) {
                                 play_toolbar.setVisibility(View.VISIBLE);
                                 track_title = (TextView) findViewById(R.id.track_title);
                                 track_title.setText(mysong);
@@ -1562,30 +1701,30 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.child("IDReq").getValue().toString().equals(ID)) {
-                            String time = dataSnapshot.child("Time").getValue().toString();
-                            String song = dataSnapshot.child("Song").getValue().toString();
-                            newtime = Integer.parseInt(time);
-                            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                            Firebase songRef = ref.child("URL").child(song);
+                if (dataSnapshot.child("IDReq").getValue().toString().equals(ID)) {
+                    String time = dataSnapshot.child("Time").getValue().toString();
+                    String song = dataSnapshot.child("Song").getValue().toString();
+                    newtime = Integer.parseInt(time);
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase songRef = ref.child("URL").child(song);
 
-                            songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                                @Override
-                                public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                                    for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                        url = String.valueOf(dsp.getValue());
-                                        UserDetails.song = url;
-                                        playMusic(newtime);
-                                    }
-                                }
+                    songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                            for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                url = String.valueOf(dsp.getValue());
+                                UserDetails.song = url;
+                                playMusic(newtime);
+                            }
+                        }
 
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
 
-                                }
-                            });
-                    }
+                        }
+                    });
                 }
+            }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -1694,10 +1833,6 @@ public class SettingsActivity extends AppCompatActivity
         });
 
         //setting title for homepage toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Now Playing");
-        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
         //loading users in plistView
         ulistView = (ListView) findViewById(R.id.plistView);
@@ -1782,8 +1917,8 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, Users.class);
-                i.putExtra("Uniqid","FromSettings");
-                if(mediaPlayer.isPlaying()){
+                i.putExtra("Uniqid", "FromSettings");
+                if (mediaPlayer.isPlaying()) {
                     i.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(i);
@@ -1795,8 +1930,8 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
-                i.putExtra("Uniqid","FromSettings");
-                if(mediaPlayer.isPlaying()){
+                i.putExtra("Uniqid", "FromSettings");
+                if (mediaPlayer.isPlaying()) {
                     i.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(i);
@@ -1811,11 +1946,6 @@ public class SettingsActivity extends AppCompatActivity
         toggle.syncState();
 
         //showing user's email on sliding drawer
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View hView = navigationView.getHeaderView(0);
-        TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
-        toolbar.setTitle("Now Playing");
 
         //search layout and functions
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
@@ -1824,7 +1954,7 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewShown() {
-                if(mediaPlayer.isPlaying()) {
+                if (mediaPlayer.isPlaying()) {
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 nowPlayingLayout.setVisibility(View.GONE);
@@ -1841,7 +1971,7 @@ public class SettingsActivity extends AppCompatActivity
                 inte.putExtra("ID", "FromSearch");
                 inte.putExtra("Song", song);
                 startActivity(inte);
-                overridePendingTransition( 0, 0);
+                overridePendingTransition(0, 0);
                 searchLayout.setVisibility(View.GONE);
             }
         });
@@ -1906,6 +2036,7 @@ public class SettingsActivity extends AppCompatActivity
                 }
                 addToHome(UserDetails.myFollowers, mysong);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -1951,6 +2082,22 @@ public class SettingsActivity extends AppCompatActivity
         } else if (id == R.id.nav_Playlists) {
             Intent nextActivity = new Intent(this, AudioPlayer.class);
             startActivity(nextActivity);
+        } else if (id == R.id.profile_pic) {
+            {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+                Intent chooserIntent = Intent.createChooser(intent, "Pick an image.");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+//                intent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
+               // picLayout.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+            }
+
         } else if (id == R.id.nav_delete) {
             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             AuthCredential credential = EmailAuthProvider
@@ -2006,7 +2153,7 @@ public class SettingsActivity extends AppCompatActivity
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
-         //   updateProgressBar();
+            //   updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
@@ -2056,11 +2203,11 @@ public class SettingsActivity extends AppCompatActivity
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
 
-                               // dataSnapshot.child(v).getRef().removeValue();
+                                // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
 
                                 //names.remove(getMyFullname(ID));
-                               // title.remove()
+                                // title.remove()
                             }
                         }
                     }
@@ -2406,7 +2553,7 @@ public class SettingsActivity extends AppCompatActivity
         try {
             mediaPlayer.setDataSource(UserDetails.song);
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time+1300);
+            mediaPlayer.seekTo(time + 1300);
             mediaPlayer.start();
         } catch (
                 IllegalArgumentException e)
@@ -2498,7 +2645,7 @@ public class SettingsActivity extends AppCompatActivity
 //        });
 //    }
 
-    public void addToPlaylist(View v){
+    public void addToPlaylist(View v) {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -2644,7 +2791,6 @@ public class SettingsActivity extends AppCompatActivity
 //    }
 
 
-
     private class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
         // This fires when a notification is opened by tapping on it.
 
@@ -2703,7 +2849,7 @@ public class SettingsActivity extends AppCompatActivity
                                     UserDetails.chatWith = friend;
                                     intent.putExtra("Friend", friend);
                                     intent.putExtra("Song", song);
-                                    sendTimeRequest(friend,song);
+                                    sendTimeRequest(friend, song);
                                     startActivity(intent);
 
                                 }
@@ -2723,7 +2869,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     });
 
-                } else if (result.action.actionID.equals("shareSong")){
+                } else if (result.action.actionID.equals("shareSong")) {
                     FirebaseAuth fb;
                     fb = FirebaseAuth.getInstance();
 
@@ -2772,7 +2918,6 @@ public class SettingsActivity extends AppCompatActivity
                     });
 
 
-
                     ///
                     Intent intent = new Intent(getApplicationContext(), Chat.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -2780,8 +2925,7 @@ public class SettingsActivity extends AppCompatActivity
                     intent.putExtra("Uniqid", "NotificationShareWith");
                     startActivity(intent);
 
-                }
-                else {
+                } else {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
                 }
 
@@ -2802,7 +2946,98 @@ public class SettingsActivity extends AppCompatActivity
 
         }
     }
-}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            String[] filepathColumm = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(filePath, filepathColumm, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filepathColumm[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(filePath));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+//            Picasso.with(this)
+//                    .load("gs://tunein-633e5.appspot.com/ProfilePictures/iFisFj7zKLeuzqsg1vBMxf6gWst2_image.jpg")
+//                    .into(profilePic);
+
+
+            if (filePath != null) {
+                pd.show();
+
+                final StorageReference childRef = picRef.child(ID + ".jpg");
+
+                //uploading the image
+                UploadTask uploadTask = childRef.putFile(filePath);
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        pd.dismiss();
+                        Toast.makeText(SettingsActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+
+                        @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        UserDetails.picturelink = downloadUrl.toString();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase picRef = ref.child("ProfilePictures").child(ID);
+                        Map<String,Object> info = new HashMap<String, Object>();
+                        info.put("Url", downloadUrl.toString());
+                        picRef.updateChildren(info);
+
+                        Picasso.with(SettingsActivity.this)
+                                .load(downloadUrl.toString())
+//                .resize(350, 240)
+//                .centerInside()
+
+                                .fit()
+                                //.centerCrop()
+                                .into(profilePic);
+
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(SettingsActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(SettingsActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
+            }
+        }
+//          //  profilePic.setImageBitmap(bitmap);
+            //pictureFlag = 1;
+//
+//
+//
+//            try {
+//                //getting image from gallery
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+//               // Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//
+//                Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);//this bitmap2 you can use only for display
+//
+//                //Setting image to ImageView
+//                profilePic.setImageBitmap(bitmap2);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
+
+
 
 
 

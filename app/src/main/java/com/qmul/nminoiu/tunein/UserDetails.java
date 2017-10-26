@@ -20,6 +20,8 @@ public class UserDetails {
     static String song = "";
     static String songname = "";
     static String playingSongName = "";
+    static String picturelink = "";
+
 
     static String title = "";
     static ArrayList<ImageView> menuIcons = new ArrayList<>();

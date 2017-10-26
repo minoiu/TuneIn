@@ -68,6 +68,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private ImageView icon;
     public RelativeLayout buttons;
     private FloatingActionButton fab;
+    private FloatingActionButton fab1;
+
     private TextView track_title;
     private LinearLayout play_toolbar;
     private LinearLayout laypl;
@@ -132,11 +134,29 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MyPlaylists.this, Users.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
                 startActivity(i);
             }
         });
 
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MyPlaylists.this, SettingsActivity.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(i);
+            }
+        });
+
+
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+
 
         Intent i = getIntent();
         if(i.hasExtra("Song")){
@@ -147,8 +167,10 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
             track_title.setText(UserDetails.playingSongName);
-            paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+            paramsFab.setMargins(53, 0, 0, 160);
             fab.setLayoutParams(paramsFab);
+            paramsFab1.setMargins(0, 0, 53, 160);
+            fab1.setLayoutParams(paramsFab1);
         } else play_toolbar.setVisibility(View.GONE);
 
 //        if(i.hasExtra("Uniqid")){

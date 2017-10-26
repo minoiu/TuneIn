@@ -144,6 +144,8 @@ public class PlaylistSongs extends AppCompatActivity {
     private DatabaseReference delDwnPlRef;
     private String playlist;
     private FloatingActionButton fab;
+    private FloatingActionButton fab1;
+
     private Toolbar toolbar;
     private Menu menu;
     private TextView track_title;
@@ -167,10 +169,28 @@ public class PlaylistSongs extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(PlaylistSongs.this, Users.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
                 startActivity(i);
             }
         });
         final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+
+
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PlaylistSongs.this, SettingsActivity.class);
+                if(mediaPlayer.isPlaying()){
+                    UserDetails.playingSongName = track_title.getText().toString();
+                }
+                startActivity(i);
+            }
+        });
+        final CoordinatorLayout.LayoutParams paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
+
 
 
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
@@ -271,6 +291,8 @@ public class PlaylistSongs extends AppCompatActivity {
             play_toolbar.setVisibility(View.VISIBLE);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
+            paramsFab1.setMargins(0, 0, 53, 160);
+            fab1.setLayoutParams(paramsFab1);
 //            UserDetails.playingSongName = i.getStringExtra("Song");
 
         } else play_toolbar.setVisibility(View.GONE);
@@ -430,6 +452,8 @@ public class PlaylistSongs extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
+                paramsFab1.setMargins(0, 0, 53, 160);
+                fab1.setLayoutParams(paramsFab1);
                 UserDetails.playingSongName = song;
                 track_title.setText(song);
 
@@ -1406,6 +1430,7 @@ public class PlaylistSongs extends AppCompatActivity {
             renameLayout.setVisibility(View.VISIBLE);
             newName.setText("");
             fab.setVisibility(View.GONE);
+                 fab1.setVisibility(View.GONE);
             rename.setClickable(true);
             newName.requestFocus();
 //            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1496,6 +1521,7 @@ public class PlaylistSongs extends AppCompatActivity {
             deletePlaylist.setVisibility(View.VISIBLE);
             deletePlaylist.bringToFront();
             fab.setVisibility(View.GONE);
+                 fab1.setVisibility(View.GONE);
 
         } else onBackPressed();
 
