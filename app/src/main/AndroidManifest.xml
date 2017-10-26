@@ -47,6 +47,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         />
         <activity
+            android:name=".FollowingActivity"
+            android:label="Following"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ScrollingActivity"
             android:label="" />
         <activity

@@ -95,7 +95,6 @@ public class FollowersActivity extends AppCompatActivity {
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
 
-
         Intent i = getIntent();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

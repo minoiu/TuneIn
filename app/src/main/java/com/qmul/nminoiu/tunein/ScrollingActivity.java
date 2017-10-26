@@ -104,9 +104,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        final Map<String, Object> map = new HashMap<String, Object>();
-                        map.put("Date", getDate());
-                        followersdb.child(me).updateChildren(map);
+//                        final Map<String, Object> map = new HashMap<String, Object>();
+//                        map.put("Date", getDate());
+                        followersdb.push().setValue(me);
                         Toast.makeText(ScrollingActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
                     }
 
@@ -172,7 +172,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         else{
                             final Map<String, Object> map = new HashMap<String, Object>();
                             map.put("Date", getDate());
-                            mDatabase.child(username).updateChildren(map);
+                            mDatabase.push().setValue(username);
                             Toast.makeText(ScrollingActivity.this, "You are now following " + username, Toast.LENGTH_SHORT).show();
                             sendNotification();
                         }

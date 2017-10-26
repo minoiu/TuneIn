@@ -298,6 +298,8 @@ public class SettingsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
         View hView = navigationView.getHeaderView(0);
         profilePic = (ImageView) hView.findViewById(R.id.profilePic);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
@@ -631,22 +633,26 @@ public class SettingsActivity extends AppCompatActivity
 //                .into(profilePic);
 
         Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
-        Firebase picture1 = picture.child("ProfilePictures").child(ID).child("Url");
+        Firebase picture1 = picture.child("ProfilePictures");
 
         picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
             @Override
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                String link = dataSnapshot.getValue().toString();
-                UserDetails.picturelink = link;
 
-                Picasso.with(SettingsActivity.this)
-                        .load(link)
+                if(dataSnapshot.hasChild(ID)){
+                    String link = dataSnapshot.child(ID).child("Url").getValue().toString();
+                    UserDetails.picturelink = link;
+
+                        Picasso.with(SettingsActivity.this)
+                                .load(link)
 //                .resize(350, 240)
 //                .centerInside()
 
-                        .fit()
-                        //.centerCrop()
-                        .into(profilePic);
+                                .fit()
+                                //.centerCrop()
+                                .into(profilePic);
+
+            }
             }
 
             @Override
@@ -2078,10 +2084,16 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_friends) {
-        } else if (id == R.id.nav_Playlists) {
-            Intent nextActivity = new Intent(this, AudioPlayer.class);
-            startActivity(nextActivity);
+        if (id == R.id.nav_followers) {
+            Intent i = new Intent(SettingsActivity.this, FollowersActivity.class);
+            i.putExtra("Uniqid", "FromSettingsMenu");
+            startActivity(i);
+
+        } else if (id == R.id.nav_following) {
+            Intent i = new Intent(SettingsActivity.this, FollowingActivity.class);
+            i.putExtra("Uniqid", "FromSettingsMenu");
+            startActivity(i);
+
         } else if (id == R.id.profile_pic) {
             {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -2124,7 +2136,9 @@ public class SettingsActivity extends AppCompatActivity
             FirebaseAuth.getInstance().signOut();
             Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
-        } else if (id == R.id.nav_Visibility) {
+        } else if (id == R.id.nav_private) {
+            item.setChecked(true);
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
