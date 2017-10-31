@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -55,19 +54,20 @@ public class FollowersActivity extends AppCompatActivity {
     // ProgressDialog pd;
     ListView usersList;
     ArrayList<String> users = new ArrayList<>();
-    private ArrayAdapter<String> uadapter;
+    private AdapterFollowers uadapter;
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
     private DatabaseReference mDatabase2;
     private DatabaseReference mDatabase3;
     private LinearLayout play_toolbar;
+    private List<RowItem> rowItems;
+
 
 
 
 
     private LinearLayout searchLayout;
-    MaterialSearchView searchView;
 
 
 
@@ -89,6 +89,7 @@ public class FollowersActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
+        rowItems = new ArrayList<RowItem>();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -117,6 +118,9 @@ public class FollowersActivity extends AppCompatActivity {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String value = dataSnapshot.getValue(String.class);
                         users.add(value);
+                        RowItem item = new RowItem(R.drawable.options, value);
+
+                        rowItems.add(item);
                         uadapter.notifyDataSetChanged();
                     }
 
@@ -128,7 +132,8 @@ public class FollowersActivity extends AppCompatActivity {
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                        users.remove(dataSnapshot.getValue().toString());
+                        uadapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -181,7 +186,7 @@ public class FollowersActivity extends AppCompatActivity {
         });
 
                 usersList = (ListView) findViewById(R.id.ulistView);
-                uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
+                uadapter = new AdapterFollowers(this, rowItems);
                 usersList.setAdapter(uadapter);
 
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
@@ -201,62 +206,7 @@ public class FollowersActivity extends AppCompatActivity {
                 });
 
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
-        searchView = (MaterialSearchView) findViewById(R.id.search_view);
         //searchView.bringToFront();//
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-
-            @Override
-            public void onSearchViewShown() {
-                //searchLayout.setVisibility(View.VISIBLE);
-                //searchView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-               // searchLayout.setVisibility(View.GONE);
-
-//                fab.setVisibility(View.VISIBLE);
-//                fab1.setVisibility(View.VISIBLE);
-//                if(!mediaPlayer.isPlaying()) {
-//                    play_toolbar.setVisibility(View.GONE);
-//                } else play_toolbar.setVisibility(View.VISIBLE);
-//                nowPlayingLayout.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
-                    List<String> ulistFound = new ArrayList<String>();
-                    for (String item : users) {
-                        if (item.toLowerCase().contains(newText.toLowerCase()))
-                            ulistFound.add(item);
-                    }
-
-                    ArrayAdapter uadapter = new ArrayAdapter(FollowersActivity.this, android.R.layout.simple_list_item_1, ulistFound);
-                    usersList.setAdapter(uadapter);
-
-                } else {
-                    //if search text is null
-                    ArrayAdapter uadapter = new ArrayAdapter(FollowersActivity.this, android.R.layout.simple_list_item_1, users);
-                    usersList.setAdapter(uadapter);
-                }
-                return true;
-            }
-        });
-
-
-
 
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -292,15 +242,6 @@ public class FollowersActivity extends AppCompatActivity {
                     }
                 });
             }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_item, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -355,7 +296,16 @@ public class FollowersActivity extends AppCompatActivity {
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
+            } else if (UserDetails.oldIntent.equals("FromSettingsMenu")) {
+                Intent backMainTest = new Intent(this, SettingsActivity.class);
+                if (mediaPlayer.isPlaying()) {
+                    // backMainTest.putExtra("Song", track_title.getText().toString());
+                }
+                backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                startActivity(backMainTest);
+                finish();
             }
+
 
         }
     }

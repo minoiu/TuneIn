@@ -35,6 +35,8 @@ import android.provider.MediaStore;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -125,6 +127,8 @@ public class SettingsActivity extends AppCompatActivity
     private ListView slistView;
     private ListView ulistView;
     private LinearLayout play_toolbar;
+    private LinearLayout makePublic;
+    private LinearLayout makePrivate;
     public TextView track_title;
     public TextView sName;
     private StorageReference storage;
@@ -133,6 +137,10 @@ public class SettingsActivity extends AppCompatActivity
     private Button btn;
     private Button playOnToolbar;
     private Button pauseOnToolbar;
+    private Button yesPublic;
+    private Button cancelPublic;
+    private Button yesPrivate;
+    private Button cancelPrivate;
     private boolean play;
     private boolean pause;
     public static String url;
@@ -281,9 +289,18 @@ public class SettingsActivity extends AppCompatActivity
         np3 = (LinearLayout) findViewById(R.id.np3);
         np4 = (LinearLayout) findViewById(R.id.np4);
         np5 = (LinearLayout) findViewById(R.id.np5);
+
+        makePrivate = (LinearLayout) findViewById(R.id.makePrivate);
+        makePublic = (LinearLayout) findViewById(R.id.makePublic);
+
         //picLayout = (RelativeLayout) findViewById(R.id.picLayout);
         uploadImg = (Button) findViewById(R.id.uploadImg);
-       // profilePic = (ImageView) findViewById(R.id.profilePic);
+        yesPublic = (Button) findViewById(R.id.yesPublic);
+        cancelPublic = (Button) findViewById(R.id.cancelPublic);
+        yesPrivate = (Button) findViewById(R.id.yesPrivate);
+        cancelPrivate = (Button) findViewById(R.id.cancelPrivate);
+
+        // profilePic = (ImageView) findViewById(R.id.profilePic);
        // profilePic.setClickable(true);
         pd = new ProgressDialog(this);
         pd.setMessage("Uploading....");
@@ -296,13 +313,31 @@ public class SettingsActivity extends AppCompatActivity
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        Menu nav_Menu = navigationView.getMenu();
+        //
+        final CheckBox checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        makeAccountPrivate();
+                    } else {
+                        makeAccountPublic();
+                    }
+             }
+
+        });
+
 
         View hView = navigationView.getHeaderView(0);
+
         profilePic = (ImageView) hView.findViewById(R.id.profilePic);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
+        //email = (TextView) findViewById(R.id.emailProfile);
+        nav_user.setText(getIntent().getExtras().getString("Email"));
         toolbar.setTitle("Now Playing");
 
 
@@ -540,6 +575,138 @@ public class SettingsActivity extends AppCompatActivity
         namesArray[2] = name3;
         namesArray[3] = name4;
         namesArray[4] = name5;
+
+
+        //sliding menu settings
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        DatabaseReference profileref = FirebaseDatabase.getInstance().getReference().child("PublicProfiles");
+        profileref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(ID)) {
+                        UserDetails.publicProfie = true;
+
+                    Menu nav_Menu = navigationView.getMenu();
+                    nav_Menu.findItem(R.id.nav_private).setChecked(false);
+                    checkBox.setChecked(false);
+                } else{
+                    UserDetails.publicProfie = false;
+                    Menu nav_Menu = navigationView.getMenu();
+                    nav_Menu.findItem(R.id.nav_private).setChecked(true);
+                    checkBox.setChecked(true);
+
+                }
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        cancelPublic.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makePublic.setVisibility(View.GONE);
+            }
+        });
+
+        cancelPrivate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makePrivate.setVisibility(View.GONE);
+            }
+        });
+
+        yesPublic.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.fullname = dataSnapshot.getValue().toString();
+                        String myname = dataSnapshot.getValue().toString();
+
+                        Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase userRef1 = ref1.child("PublicProfiles");
+                        Map<String,Object> uinfo1 = new HashMap<String, Object>();
+                        uinfo1.put(ID,myname);
+                        userRef1.updateChildren(uinfo1);
+
+                        Menu nav_Menu = navigationView.getMenu();
+
+                        nav_Menu.findItem(R.id.nav_private).setVisible(false);
+                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+                makePublic.setVisibility(View.GONE);
+            }
+        });
+
+        yesPrivate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.fullname = dataSnapshot.getValue().toString();
+                        String myname = dataSnapshot.getValue().toString();
+
+                        Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase userRef1 = ref1.child("PrivateProfiles");
+                        Map<String,Object> uinfo1 = new HashMap<String, Object>();
+                        uinfo1.put(ID,myname);
+                        userRef1.updateChildren(uinfo1);
+                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+                DatabaseReference profileref = FirebaseDatabase.getInstance().getReference().child("PublicProfiles");
+                profileref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            dataSnapshot.child(ID).getRef().removeValue();
+                            UserDetails.publicProfie = false;
+
+                            Menu nav_Menu = navigationView.getMenu();
+                            nav_Menu.findItem(R.id.nav_private).setVisible(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                makePrivate.setVisibility(View.GONE);
+            }
+        });
+
 
         //synchronisation buttons for Now Playing layout
         tunein1.setOnClickListener(new View.OnClickListener() {
@@ -1556,7 +1723,7 @@ public class SettingsActivity extends AppCompatActivity
 
         //Firebase references to retrieve data
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
-        db = FirebaseDatabase.getInstance().getReference().child("Users");
+        db = FirebaseDatabase.getInstance().getReference().child("PublicProfiles");
         db1 = FirebaseDatabase.getInstance().getReference().child("Songs");
         db2 = FirebaseDatabase.getInstance().getReference().child("Test");
 
@@ -1944,12 +2111,8 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        //sliding menu settings
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+
+
 
         //showing user's email on sliding drawer
 
@@ -2056,8 +2219,50 @@ public class SettingsActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        Menu nav_Menu = navigationView.getMenu();
+
+//        final CheckBox checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
+//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(isChecked){
+//                    makeAccountPublic();
+//                    checkBox.setChecked(false);
+//                } else {
+//                    makeAccountPrivate();
+//                    checkBox.setChecked(true);
+//                }
+//            }
+//
+//        });
+
         return true;
     }
+
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            MenuItem privateProfile = menu.findItem(R.id.nav_private);
+//            //MenuItem dwnOption = menu.findItem(R.id.menu_dwn);
+//            //MenuItem remDwnOption = menu.findItem(R.id.menu_remdwn);
+//
+//            if (UserDetails.publicProfie) {
+//                checkBox.
+//                privateProfile.setVisible(false);
+//            } else {
+//                privateProfile.setVisible(true);
+//            }
+//
+//        }
+//        return super.onPrepareOptionsMenu(menu);
+//
+//    }
+//
+//
 
     //back button - from search layout
     @Override
@@ -2076,22 +2281,34 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        Menu nav_Menu = navigationView.getMenu();
+//        nav_Menu.findItem(R.id.nav_private).setVisible(true);
+//        if(UserDetails.publicProfie) {
+//            nav_Menu.findItem(R.id.nav_private).setChecked(false);
+//        } else nav_Menu.findItem(R.id.nav_private).setChecked(true);
+//
+
+
+
         return super.onOptionsItemSelected(item);
     }
 
     //sliding menu options
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_followers) {
             Intent i = new Intent(SettingsActivity.this, FollowersActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
+            UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
 
         } else if (id == R.id.nav_following) {
             Intent i = new Intent(SettingsActivity.this, FollowingActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
+            UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
 
         } else if (id == R.id.profile_pic) {
@@ -2137,12 +2354,136 @@ public class SettingsActivity extends AppCompatActivity
             Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
         } else if (id == R.id.nav_private) {
-            item.setChecked(true);
+
+            final CheckBox checkBox= (CheckBox) item.getActionView();
+
+//            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    if (isChecked) {
+//                        // perform logic
+//                        makeAccountPublic();
+//                        item.setChecked(false);
+//                        checkBox.setChecked(false);
+//                    } else {
+//                        makeAccountPrivate();
+//                        item.setChecked(true);
+//                        checkBox.setChecked(true);
+//                    }
+//                }
+//            });
+
+            if(item.isChecked()){
+                makeAccountPublic();
+                item.setChecked(false);
+                checkBox.setChecked(false);
+            } else {
+                makeAccountPrivate();
+                item.setChecked(true);
+                checkBox.setChecked(true);
+            }
+
+
 
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void makeAccountPublic() {
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                String myname = dataSnapshot.getValue().toString();
+
+                Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase userRef1 = ref1.child("PublicProfiles");
+                Map<String,Object> uinfo1 = new HashMap<String, Object>();
+                uinfo1.put(ID,myname);
+                userRef1.updateChildren(uinfo1);
+
+                final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                Menu nav_Menu = navigationView.getMenu();
+                nav_Menu.findItem(R.id.nav_private).setChecked(false);
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        DatabaseReference profileref = FirebaseDatabase.getInstance().getReference().child("PrivateProfiles");
+        profileref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(ID)) {
+                    dataSnapshot.child(ID).getRef().removeValue();
+                    UserDetails.publicProfie = true;
+
+                    final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    Menu nav_Menu = navigationView.getMenu();
+                    nav_Menu.findItem(R.id.nav_private).setChecked(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void makeAccountPrivate() {
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                String myname = dataSnapshot.getValue().toString();
+
+                Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase userRef1 = ref1.child("PrivateProfiles");
+                Map<String,Object> uinfo1 = new HashMap<String, Object>();
+                uinfo1.put(ID,myname);
+                userRef1.updateChildren(uinfo1);
+                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        DatabaseReference profileref = FirebaseDatabase.getInstance().getReference().child("PublicProfiles");
+        profileref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(ID)) {
+                    dataSnapshot.child(ID).getRef().removeValue();
+                    UserDetails.publicProfie = false;
+
+                    final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    Menu nav_Menu = navigationView.getMenu();
+                    nav_Menu.findItem(R.id.nav_private).setChecked(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //hide keyboard method

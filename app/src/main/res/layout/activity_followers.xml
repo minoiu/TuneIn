@@ -29,35 +29,6 @@
         app:popupTheme="@style/AppTheme.PopupOverlay">
     </android.support.v7.widget.Toolbar>
 
-    <com.miguelcatalan.materialsearchview.MaterialSearchView
-
-        android:id="@+id/search_view"
-
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-
-        android:dividerHeight="5dp"
-
-        android:textColor="#FFFFFF"
-
-        android:textColorHint="#FFFFFF"
-
-        app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
-
-        app:searchBackground="@color/colorPrimary"
-
-        app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
-
-        app:searchSuggestionBackground="@color/colorPrimary"
-
-        app:searchSuggestionIcon="@drawable/ic_suggestion"
-
-        app:showAsAction="always"
-
-        />
-
-
     <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"

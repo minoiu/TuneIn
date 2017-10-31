@@ -142,8 +142,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Map<String,Object> uinfo = new HashMap<String, Object>();
                     uinfo.put(user.getUid(),fullname);
 
+                    Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase userRef1 = ref1.child("PublicProfiles");
+                    Map<String,Object> uinfo1 = new HashMap<String, Object>();
+                    uinfo1.put(user.getUid(),fullname);
+
                    // User newUser = new User(email, fullname);
                     userRef.updateChildren(uinfo);
+                    userRef1.updateChildren(uinfo1);
+
 
                     String email = user.getEmail();
 
