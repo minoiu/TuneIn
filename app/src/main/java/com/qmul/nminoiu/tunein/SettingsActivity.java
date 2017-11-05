@@ -337,7 +337,10 @@ public class SettingsActivity extends AppCompatActivity
         profilePic = (ImageView) hView.findViewById(R.id.profilePic);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
         //email = (TextView) findViewById(R.id.emailProfile);
-        nav_user.setText(getIntent().getExtras().getString("Email"));
+        Intent i = getIntent();
+        if(i.hasExtra("Email")){
+            nav_user.setText(getIntent().getExtras().getString("Email"));
+        }
         toolbar.setTitle("Now Playing");
 
 
@@ -842,8 +845,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 tuneout1.setVisibility(View.GONE);
                 tunein1.setVisibility(View.VISIBLE);
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.pause();
+               // mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -858,6 +861,26 @@ public class SettingsActivity extends AppCompatActivity
                                 Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
                             }
                         });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -866,8 +889,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 tuneout2.setVisibility(View.GONE);
                 tunein2.setVisibility(View.VISIBLE);
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.pause();
+                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -875,6 +898,24 @@ public class SettingsActivity extends AppCompatActivity
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
                             }
 
                             @Override
@@ -890,8 +931,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 tuneout3.setVisibility(View.GONE);
                 tunein3.setVisibility(View.VISIBLE);
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.pause();
+                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -899,6 +940,24 @@ public class SettingsActivity extends AppCompatActivity
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
                             }
 
                             @Override
@@ -914,8 +973,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 tuneout4.setVisibility(View.GONE);
                 tunein4.setVisibility(View.VISIBLE);
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.pause();
+                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -923,6 +982,24 @@ public class SettingsActivity extends AppCompatActivity
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
                             }
 
                             @Override
@@ -938,8 +1015,8 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.pause();
+                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -947,6 +1024,24 @@ public class SettingsActivity extends AppCompatActivity
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
                             }
 
                             @Override
@@ -1770,7 +1865,14 @@ public class SettingsActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                String otherUser;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    otherUser = dataSnapshot.getKey();
+                    if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
+                        String song = dataSnapshot.child("Song").getValue().toString();
+                        addTimeToFirebase(otherUser, song);
+                    }
+                }
             }
 
             @Override
@@ -2347,12 +2449,14 @@ public class SettingsActivity extends AppCompatActivity
                                     });
                         }
                     });
-            Intent nextActivity = new Intent(this, RegisterActivity.class);
+            Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
+            eraseFromFirebase();
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
             Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
+            eraseFromFirebase();
         } else if (id == R.id.nav_private) {
 
             final CheckBox checkBox= (CheckBox) item.getActionView();
@@ -2904,28 +3008,26 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void playMusic(int time) {
-
+        mediaPlayer.reset();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(UserDetails.song);
-            mediaPlayer.prepare();
-            mediaPlayer.seekTo(time + 1300);
-            mediaPlayer.start();
-        } catch (
-                IllegalArgumentException e)
-
-        {
-            e.printStackTrace();
-        } catch (
-                IllegalStateException e)
-
-        {
-            e.printStackTrace();
-        } catch (
-                IOException e)
-
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            mediaPlayer.prepare();
+            mediaPlayer.seekTo(time + 1300);
+        } catch (IOException e) {
+            e.printStackTrace();
+            //   updateProgressBar();
+        }
+        Button btn = (Button) this.findViewById(R.id.button);
+        btn.setBackgroundResource(R.drawable.ic_media_pause);
+        mediaPlayer.start();
+
+        ////
+
     }
 
 //    public void viewOnYoutube(View v) {

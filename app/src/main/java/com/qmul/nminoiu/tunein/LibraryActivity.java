@@ -208,18 +208,22 @@ public class LibraryActivity extends AppCompatActivity{
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
 
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
-                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        url = dataSnapshot.getValue().toString();
-                        startMusic(url, song);
-                        UserDetails.playingSongName = song;
-                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(FirebaseError firebaseError) {
+
                     }
                 });
             }

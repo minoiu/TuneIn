@@ -1168,6 +1168,11 @@ public class PlaylistsActivity extends AppCompatActivity {
             startActivity(backMainTest);
             finish();
         }
+        else {
+            Intent backMainTest = new Intent(this, SettingsActivity.class);
+            startActivity(backMainTest);
+            finish();
+        }
 
 
     }
