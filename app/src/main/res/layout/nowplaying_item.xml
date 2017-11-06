@@ -56,7 +56,7 @@
             app:cardCornerRadius="40dp">
 
             <ImageView
-                android:id="@+id/profilePic"
+                android:id="@+id/friendPic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"

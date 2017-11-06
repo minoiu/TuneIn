@@ -385,6 +385,7 @@ public class LibraryActivity extends AppCompatActivity{
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
             uinfo.put("Song", mysong);
+            uinfo.put("Picture", UserDetails.picturelink);
             ref4.child(UserDetails.fullname).updateChildren(uinfo);
         }
     }

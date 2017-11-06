@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,6 +104,8 @@ public class SettingsActivity extends AppCompatActivity
     private ArrayList<String> users = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> title = new ArrayList<>();
+    private ArrayList<String> pictures = new ArrayList<>();
+
     private LinearLayout[] ll;
     private ImageButton[] syncButtonArray;
     private ImageButton[] tuneoutButtonArray;
@@ -164,6 +167,12 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference timeref;
     private Button uploadImg;
     private ImageView profilePic;
+    private ImageView friendPic1;
+    private ImageView friendPic2;
+    private ImageView friendPic3;
+    private ImageView friendPic4;
+    private ImageView friendPic5;
+
     private ArrayList<String> recents;
 
     public User myuser;
@@ -542,6 +551,17 @@ public class SettingsActivity extends AppCompatActivity
         title4 = (TextView) t4.findViewById(R.id.songName);
         View t5 = findViewById(R.id.np5);
         title5 = (TextView) t5.findViewById(R.id.songName);
+
+        View i1 = findViewById(R.id.np1);
+        friendPic1 = (ImageView) i1.findViewById(R.id.friendPic);
+        View i2 = findViewById(R.id.np2);
+        friendPic2 = (ImageView) i2.findViewById(R.id.friendPic);
+        View i3 = findViewById(R.id.np3);
+        friendPic3 = (ImageView) i3.findViewById(R.id.friendPic);
+        View i4 = findViewById(R.id.np4);
+        friendPic4 = (ImageView) i4.findViewById(R.id.friendPic);
+        View i5 = findViewById(R.id.np5);
+        friendPic5 = (ImageView) i5.findViewById(R.id.friendPic);
 
         //storing buttons in ButtonArrays
         tuneoutButtonArray = new ImageButton[5];
@@ -1896,57 +1916,94 @@ public class SettingsActivity extends AppCompatActivity
         mDatabase8.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+               // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     text = dataSnapshot.getKey();
                     names.add(text);
                     String mysong = dataSnapshot.child("Song").getValue().toString();
                     title.add(mysong);
-                }
+                    String picture = dataSnapshot.child("Picture").getValue().toString();
+                    pictures.add(picture);
+               // }
                 for (int i = 0; i <= names.size() - 1; i++) {
+                    Toast.makeText(SettingsActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
+
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
                     name.setText(names.get(i));
                     TextView song = (TextView) ll[i].findViewById(R.id.songName);
                     song.setText(title.get(i));
+                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
+                    Picasso.with(SettingsActivity.this)
+                            .load(pictures.get(i).toString())
+//                .resize(350, 240)
+//                .centerInside()
+
+                            .fit()
+                            //.centerCrop()
+                            .into(pic);
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+             //   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     text = dataSnapshot.getKey();
                     String mysong = dataSnapshot.child("Song").getValue().toString();
+                    String fpic = dataSnapshot.child("Picture").getValue().toString();
+
 
                     for (int i = 0; i <= names.size() - 1; i++) {
                         if (text.equals(names.get(i))) {
                             names.set(i, text);
                             title.set(i, mysong);
+                            pictures.set(i,fpic);
                             TextView name = (TextView) ll[i].findViewById(R.id.name);
                             name.setText(text);
                             TextView song = (TextView) ll[i].findViewById(R.id.songName);
                             song.setText(mysong);
+                            ImageView pict = (ImageView) ll[i].findViewById(R.id.friendPic);
+                            Picasso.with(SettingsActivity.this)
+                                    .load(fpic)
+//                .resize(350, 240)
+//                .centerInside()
+
+                                    .fit()
+                                    //.centerCrop()
+                                    .into(pict);
                         }
                     }
-                }
+               // }
                 for (int i = 0; i <= names.size() - 1; i++) {
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
                     name.setText(names.get(i));
                     TextView song = (TextView) ll[i].findViewById(R.id.songName);
                     song.setText(title.get(i));
+                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
+                    Picasso.with(SettingsActivity.this)
+                            .load(pictures.get(i).toString())
+//                .resize(350, 240)
+//                .centerInside()
+
+                            .fit()
+                            //.centerCrop()
+                            .into(pic);
                 }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+               // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     text = dataSnapshot.getKey();
                     String mysong = dataSnapshot.child("Song").getValue().toString();
+                    String picture = dataSnapshot.child("Picture").getValue().toString();
+
                     for (int j = 0; j <= names.size() - 1; j++) {
                         if (text.equals(names.get(j))) {
                             names.remove(text);
                             title.remove(mysong);
+                            pictures.remove(picture);
                             ll[j].setVisibility(View.GONE);
                             if (mediaPlayer.isPlaying()) {
                                 play_toolbar.setVisibility(View.VISIBLE);
@@ -1956,7 +2013,7 @@ public class SettingsActivity extends AppCompatActivity
                         }
                     }
                 }
-            }
+           // }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -2869,6 +2926,7 @@ public class SettingsActivity extends AppCompatActivity
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
             uinfo.put("Song", mysong);
+            uinfo.put("Picture", UserDetails.picturelink);
             ref4.child(UserDetails.fullname).updateChildren(uinfo);
 
 
