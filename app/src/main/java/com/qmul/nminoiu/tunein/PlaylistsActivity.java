@@ -1177,12 +1177,12 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    public void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+                new View(this).getWindowToken(), 0);
     }
 
     public String getBarTitle(){

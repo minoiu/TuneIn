@@ -64,7 +64,7 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:elevation="11dp"
-            app:border_color="#FF000000"
+            app:border_color="#696969"
             app:border_width="2dp" />
 
             <!--<ImageView-->

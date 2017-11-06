@@ -271,6 +271,7 @@ public class SettingsActivity extends AppCompatActivity
     private StorageReference picRef;
     private CoordinatorLayout.LayoutParams paramsFab1;
     private CoordinatorLayout.LayoutParams paramsFab;
+    private CheckBox checkBox;
 
 
     @Override
@@ -327,7 +328,7 @@ public class SettingsActivity extends AppCompatActivity
         navigationView.setItemIconTintList(null);
         Menu nav_Menu = navigationView.getMenu();
         //
-        final CheckBox checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
+        checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -2429,7 +2430,7 @@ public class SettingsActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             email = (TextView) findViewById(R.id.emailProfile);
-            email.setText(getIntent().getExtras().getString("Email"));
+            email.setText(loggedEmail);
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -2925,11 +2926,16 @@ public class SettingsActivity extends AppCompatActivity
 
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
-            uinfo.put("Song", mysong);
-            uinfo.put("Picture", UserDetails.picturelink);
-            ref4.child(UserDetails.fullname).updateChildren(uinfo);
+            if(!checkBox.isChecked()) {
+                uinfo.put("Song", mysong);
+                if (!UserDetails.picturelink.equals("")) {
+                    uinfo.put("Picture", UserDetails.picturelink);
+                } else {
+                    uinfo.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+                }
+                ref4.child(UserDetails.fullname).updateChildren(uinfo);
 
-
+            }
         }
     }
 

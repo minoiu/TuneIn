@@ -1957,6 +1957,7 @@ public class PlaylistSongs extends AppCompatActivity {
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
+
     }
 
     @Override
