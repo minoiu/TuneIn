@@ -1939,7 +1939,7 @@ public class SettingsActivity extends AppCompatActivity
 //                .centerInside()
 
                             .fit()
-                            //.centerCrop()
+                            .centerCrop()
                             .into(pic);
                 }
             }
@@ -1969,7 +1969,7 @@ public class SettingsActivity extends AppCompatActivity
 //                .centerInside()
 
                                     .fit()
-                                    //.centerCrop()
+                                    .centerCrop()
                                     .into(pict);
                         }
                     }
