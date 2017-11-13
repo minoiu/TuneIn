@@ -90,12 +90,15 @@ public class FollowingActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                    String value = dataSnapshot.getValue(String.class);
+                for(DataSnapshot snap : dataSnapshot.getChildren()){
+                    String value = dataSnapshot.getKey().toString();
                     users.add(value);
                     RowItem item = new RowItem(R.drawable.options, value);
 
                     rowItems.add(item);
                     uadapter.notifyDataSetChanged();
+                }
+
             }
 
 

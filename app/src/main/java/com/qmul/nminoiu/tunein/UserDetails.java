@@ -38,6 +38,9 @@ public class UserDetails {
     static Boolean notIn = false;
     static String oldPlaylist = "";
     static String oldIntent = "";
+    static String commentOn = "";
+    static String commentTo = "";
+
 
 
 

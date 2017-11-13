@@ -2,18 +2,19 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.qmul.nminoiu.tunein.SettingsActivity"
-    tools:layout_editor_absoluteY="0dp"
     tools:layout_editor_absoluteX="0dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    tools:layout_editor_absoluteY="0dp">
 
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/cardview_shadow_end_color"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <include
@@ -27,9 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
-    </android.support.v7.widget.Toolbar>
-
+        app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
 
 
     <ScrollView
@@ -90,6 +89,50 @@
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
+
+    <LinearLayout
+        android:id="@+id/commentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/commentArea"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.94"
+            android:hint="Leave your thoughts here..."
+            android:maxHeight="80dp"
+            android:textColor="@color/cardview_light_background"
+            android:textColorHint="#CFD8DC" />
+
+        <ImageView
+            android:id="@+id/commentButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_send" />
+
+        <!--<Button-->
+        <!--android:id="@+id/commentButton"-->
+        <!--android:layout_width="68dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:text="Post"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textColor="@color/colorPrimaryDark"-->
+        <!--android:textSize="16sp"-->
+        <!--android:textStyle="bold" />-->
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/fab1"

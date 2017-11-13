@@ -83,8 +83,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(username).child("Email");
-                followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(username);
-                followersdbN = FirebaseDatabase.getInstance().getReference().child("FollowersNames");
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
 
                 mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -100,69 +98,6 @@ public class ScrollingActivity extends AppCompatActivity {
                     }
                 });
 
-                followersdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                        final Map<String, Object> map = new HashMap<String, Object>();
-//                        map.put("Date", getDate());
-                        followersdb.push().setValue(me);
-                        Toast.makeText(ScrollingActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
-                followersdbN.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(username).child("Id");
-
-                        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserDetails.fullname = dataSnapshot.getValue().toString();
-                                Toast.makeText(ScrollingActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-
-                        });
-
-                        DatabaseReference mfullname = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
-                        mfullname.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String myFullname = dataSnapshot.getValue().toString();
-                                followersdbN.child(UserDetails.fullname).push().setValue(myFullname);
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
-
-
-
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,9 +107,10 @@ public class ScrollingActivity extends AppCompatActivity {
                         else{
                             final Map<String, Object> map = new HashMap<String, Object>();
                             map.put("Date", getDate());
-                            mDatabase.push().setValue(username);
+                            mDatabase.child(username).updateChildren(map);
                             Toast.makeText(ScrollingActivity.this, "You are now following " + username, Toast.LENGTH_SHORT).show();
                             sendNotification();
+                            addToFollowers(username);
                         }
                     }
 
@@ -186,6 +122,72 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void addToFollowers(final String username) {
+
+        followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(username);
+        followersdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                final Map<String, Object> map = new HashMap<String, Object>();
+                map.put("Date", getDate());
+                followersdb.child(me).updateChildren(map);
+                Toast.makeText(ScrollingActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        followersdbN = FirebaseDatabase.getInstance().getReference().child("FollowersNames");
+        followersdbN.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(username).child("Id");
+
+                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.fullname = dataSnapshot.getValue().toString();
+                        Toast.makeText(ScrollingActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+                DatabaseReference mfullname = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                mfullname.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String myFullname = dataSnapshot.getValue().toString();
+                        followersdbN.child(UserDetails.fullname).push().setValue(myFullname);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     @Override
@@ -240,7 +242,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"You have a new friend request!\"}"
+                                + "\"contents\": {\"en\": \"" + UserDetails.fullname +" is now following you\"}"
                                 + "}";
 
 

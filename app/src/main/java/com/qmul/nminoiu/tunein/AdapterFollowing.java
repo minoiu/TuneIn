@@ -159,9 +159,10 @@ public class AdapterFollowing extends BaseAdapter {
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                         String key = snapshot.getKey();
+                                                        if (key.equals(friendToUnfollow)) {
+                                                            Toast.makeText(mContext.getApplicationContext(), " following " + " : " + key, Toast.LENGTH_LONG).show();
 
-                                                        if (dataSnapshot.child(key).getValue().equals(friendToUnfollow)) {
-                                                            unfollowRef.child(key).getRef().setValue(null);
+                                                            unfollowRef.child(key).removeValue();
                                                             notifyDataSetChanged();
                                                             rowItems.remove(rowItem);
                                                         }
@@ -176,7 +177,6 @@ public class AdapterFollowing extends BaseAdapter {
                                                 });
 
                                                 //Or Some other code you want to put here.. This is just an example.
-//                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
 
                                             break;
 

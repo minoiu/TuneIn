@@ -35,8 +35,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
@@ -156,10 +160,13 @@ public class AdapterFollowers extends BaseAdapter {
                                             followRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                        String key = snapshot.getKey();
-                                                        followersList.add(dataSnapshot.child(key).getValue().toString());
-                                                                    }
+                                                    for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                                        String value = snap.getKey().toString();
+                                                       // Toast.makeText(mContext.getApplicationContext(), " follow: " + value, Toast.LENGTH_LONG).show();
+
+                                                        followersList.add(value);
+
+                                                    }
                                                     checkIfFollowing(friendTofollow);
 
                                                 }
@@ -216,10 +223,22 @@ public class AdapterFollowers extends BaseAdapter {
         } else{
             Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
             Firebase playRef = ref.child("Following").child(ID);
-            playRef.push().setValue(friendTofollow);
+            final Map<String, Object> map = new HashMap<String, Object>();
+            map.put("Date", getDate());
+            playRef.child(friendTofollow).updateChildren(map);
+            //playRef.push().setValue(friendTofollow);
             Toast.makeText(mContext.getApplicationContext(), "You are now following " + friendTofollow, Toast.LENGTH_SHORT).show();
         }
     }
+
+    public String getDate(){
+        Date date = new Date();
+        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String stringdate = dt.format(newDate);
+        return stringdate;
+    }
+
 
     private void addToFavourites(String songName) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
