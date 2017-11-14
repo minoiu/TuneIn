@@ -37,10 +37,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
+import static com.qmul.nminoiu.tunein.UserDetails.username;
 
 /**
  * Created by nicoleta on 26/10/2017.
@@ -165,6 +168,7 @@ public class AdapterFollowing extends BaseAdapter {
                                                             unfollowRef.child(key).removeValue();
                                                             notifyDataSetChanged();
                                                             rowItems.remove(rowItem);
+                                                            removeFromAllFollowing(friendToUnfollow);
                                                         }
                                                     }
                                                 }
@@ -209,6 +213,85 @@ public class AdapterFollowing extends BaseAdapter {
 
 
         return convertView;
+    }
+
+    private void removeFromAllFollowing(final String friendToUnfollow) {
+
+        final DatabaseReference followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(friendToUnfollow);
+
+        followersdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                followersdb.child(me).removeValue();
+                Toast.makeText(mContext.getApplicationContext(), "You are no longer following " + friendToUnfollow, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        getFriendID(friendToUnfollow);
+    }
+
+    private void getFriendID(String friendName) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(friendName).child("Id");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                String FrID = dataSnapshot.getValue().toString();
+                Toast.makeText(mContext.getApplicationContext(), "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                getMyFullname(FrID);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+    }
+
+    private void getMyFullname(final String frID) {
+        DatabaseReference mfullname = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        mfullname.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String myFullname = dataSnapshot.getValue().toString();
+                deleteFromFNames(frID,myFullname);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void deleteFromFNames(String frID, final String myFullname) {
+        final DatabaseReference followersdbN = FirebaseDatabase.getInstance().getReference().child("FollowersNames").child(frID);
+
+        followersdbN.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String key = snapshot.getKey();
+                    if(dataSnapshot.child(key).getValue().toString().equals(myFullname)){
+                        dataSnapshot.child(key).getRef().removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void addToFavourites(String songName) {
@@ -361,6 +444,7 @@ public class AdapterFollowing extends BaseAdapter {
 
     private void sendNotification()
     {
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

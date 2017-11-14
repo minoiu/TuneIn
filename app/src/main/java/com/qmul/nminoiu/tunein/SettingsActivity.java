@@ -2155,22 +2155,22 @@ public class SettingsActivity extends AppCompatActivity
                         }
                     }
                // }
-                for (int i = 0; i <= names.size() - 1; i++) {
-                    ll[i].setVisibility(View.VISIBLE);
-                    TextView name = (TextView) ll[i].findViewById(R.id.name);
-                    name.setText(names.get(i));
-                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
-                    song.setText(title.get(i));
-                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-                    Picasso.with(SettingsActivity.this)
-                            .load(pictures.get(i).toString())
-//                .resize(350, 240)
-//                .centerInside()
-
-                            .fit()
-                            //.centerCrop()
-                            .into(pic);
-                }
+//                for (int i = 0; i <= names.size() - 1; i++) {
+//                    ll[i].setVisibility(View.VISIBLE);
+//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+//                    name.setText(names.get(i));
+//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+//                    song.setText(title.get(i));
+//                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
+//                    Picasso.with(SettingsActivity.this)
+//                            .load(pictures.get(i).toString())
+////                .resize(350, 240)jūlo
+////                .centerInside()
+//
+//                            .fit()
+//                            //.centerCrop()
+//                            .into(pic);
+//                }
             }
 
             @Override
@@ -2178,22 +2178,31 @@ public class SettingsActivity extends AppCompatActivity
                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     text = dataSnapshot.getKey();
                     String mysong = dataSnapshot.child("Song").getValue().toString();
-                    String picture = dataSnapshot.child("Picture").getValue().toString();
 
-                    for (int j = 0; j <= names.size() - 1; j++) {
-                        if (text.equals(names.get(j))) {
-                            names.remove(text);
-                            title.remove(mysong);
-                            pictures.remove(picture);
+                    String picture = dataSnapshot.child("Picture").getValue().toString();
+                    names.remove(text);
+                    title.remove(mysong);
+                    pictures.remove(picture);
+
+                    for (int j = 0; j <= ll.length - 1; j++) {
+                       // Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                        TextView name = (TextView) ll[j].findViewById(R.id.name);
+                        TextView song = (TextView) ll[j].findViewById(R.id.songName);
+                        ImageView pict = (ImageView) ll[j].findViewById(R.id.friendPic);
+
+                        if (name.getText().equals(text)) {
+                            Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                             ll[j].setVisibility(View.GONE);
-                            if (mediaPlayer.isPlaying()) {
-                                play_toolbar.setVisibility(View.VISIBLE);
-                                track_title = (TextView) findViewById(R.id.track_title);
-                                track_title.setText(mysong);
-                            }
                         }
+
                     }
+                if (mediaPlayer.isPlaying()) {
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    track_title = (TextView) findViewById(R.id.track_title);
+                    track_title.setText(mysong);
                 }
+
+            }
            // }
 
             @Override
@@ -2992,8 +3001,6 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
     }
-
-
 
     //erase from homepage when song stops
     public void eraseFromFirebase() {

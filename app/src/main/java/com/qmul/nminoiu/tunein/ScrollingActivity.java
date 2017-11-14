@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static com.qmul.nminoiu.tunein.UserDetails.username;
+
 /**
  * Created by nicoledumitrascu on 30/06/2017.
  */
@@ -60,13 +62,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        final String username = getIntent().getExtras().getString("User");
 
-        TextView name = (TextView) findViewById(R.id.name);
-        name.setText(UserDetails.username);
+        final TextView name = (TextView) findViewById(R.id.name);
+        name.setText(username);
         firebaseAuth = FirebaseAuth.getInstance();
         final String user = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
-        final String username = getIntent().getExtras().getString("User");
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
 
@@ -82,7 +84,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 Toast.makeText(ScrollingActivity.this, "fullname: " + fullname, Toast.LENGTH_SHORT).show();
 
 
-                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(username).child("Email");
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(name.getText().toString()).child("Email");
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
 
                 mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -109,7 +111,6 @@ public class ScrollingActivity extends AppCompatActivity {
                             map.put("Date", getDate());
                             mDatabase.child(username).updateChildren(map);
                             Toast.makeText(ScrollingActivity.this, "You are now following " + username, Toast.LENGTH_SHORT).show();
-                            sendNotification();
                             addToFollowers(username);
                         }
                     }
@@ -169,6 +170,8 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String myFullname = dataSnapshot.getValue().toString();
+                        UserDetails.myname = myFullname;
+                        sendNotification(myFullname);
                         followersdbN.child(UserDetails.fullname).push().setValue(myFullname);
 
                     }
@@ -203,8 +206,25 @@ public class ScrollingActivity extends AppCompatActivity {
         finish();
     }
 
-    private void sendNotification()
+    private void sendNotification(final String myname)
     {
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(username).child("Email");
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
+
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -242,7 +262,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"" + UserDetails.fullname +" is now following you\"}"
+                                + "\"contents\": {\"en\": \"" + myname +" is now following you\"}"
                                 + "}";
 
 

@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
+import static com.qmul.nminoiu.tunein.UserDetails.username;
 
 /**
  * Created by nicoleta on 26/10/2017.
@@ -117,6 +118,7 @@ public class AdapterFollowers extends BaseAdapter {
         holder.txtTitle.setText(rowItem.getTitle());
         holder.imageView.setImageResource(rowItem.getImageId());
 
+
         followersList = new ArrayList<String>();
         UserDetails.dwn = false;
         UserDetails.liked = false;
@@ -156,28 +158,44 @@ public class AdapterFollowers extends BaseAdapter {
                                             final String friendTofollow = rowItem.getTitle();
 
 
-                                            final DatabaseReference followRef = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
-                                            followRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(friendTofollow).child("Email");
+                                            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
+
+                                            mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for(DataSnapshot snap : dataSnapshot.getChildren()){
-                                                        String value = snap.getKey().toString();
-                                                       // Toast.makeText(mContext.getApplicationContext(), " follow: " + value, Toast.LENGTH_LONG).show();
-
-                                                        followersList.add(value);
-
-                                                    }
-                                                    checkIfFollowing(friendTofollow);
-
+                                                    UserDetails.receiver = dataSnapshot.getValue().toString();
+                                                    //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
                                                 }
 
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                                                @Override
-                                                                public void onCancelled(DatabaseError databaseError) {
+                                                }
+                                            });
 
-                                                                }
+                                            mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if(dataSnapshot.hasChild(friendTofollow)){
+                                                        Toast.makeText(mContext.getApplicationContext(), "Already following " + friendTofollow, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else{
+                                                        final Map<String, Object> map = new HashMap<String, Object>();
+                                                        map.put("Date", getDate());
+                                                        mDatabase.child(friendTofollow).updateChildren(map);
+                                                        Toast.makeText(mContext.getApplicationContext(), "You are now following " + friendTofollow, Toast.LENGTH_SHORT).show();
+                                                        addToFollowers(friendTofollow);
+                                                    }
+                                                }
 
-                                                            });
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                }
+                                            });
+
+
+
 
 
                                             //Or Some other code you want to put here.. This is just an example.
@@ -228,7 +246,78 @@ public class AdapterFollowers extends BaseAdapter {
             playRef.child(friendTofollow).updateChildren(map);
             //playRef.push().setValue(friendTofollow);
             Toast.makeText(mContext.getApplicationContext(), "You are now following " + friendTofollow, Toast.LENGTH_SHORT).show();
+            //sendNotification();
         }
+    }
+
+    private void addToFollowers(final String username) {
+
+        final DatabaseReference followersdbN = FirebaseDatabase.getInstance().getReference().child("FollowersNames");
+        final DatabaseReference followersdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(username);
+
+        followersdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                final Map<String, Object> map = new HashMap<String, Object>();
+                map.put("Date", getDate());
+                followersdb.child(me).updateChildren(map);
+                Toast.makeText(mContext.getApplicationContext(), "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        followersdbN.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(username).child("Id");
+
+                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserDetails.fullname = dataSnapshot.getValue().toString();
+
+                        Toast.makeText(mContext.getApplicationContext(), "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+                DatabaseReference mfullname = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                mfullname.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String myFullname = dataSnapshot.getValue().toString();
+                        sendNotification(myFullname);
+
+                        followersdbN.child(UserDetails.fullname).push().setValue(myFullname);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     public String getDate(){
@@ -388,8 +477,26 @@ public class AdapterFollowers extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
-    private void sendNotification()
+    private void sendNotification(final String myname)
     {
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(username).child("Email");
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
+
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -403,7 +510,6 @@ public class AdapterFollowers extends BaseAdapter {
                     //This is a Simple Logic to Send Notification different Device Programmatically....
                     if (SettingsActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
-
 
                     } else {
                         send_email = sender;
@@ -428,9 +534,7 @@ public class AdapterFollowers extends BaseAdapter {
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"You have a new friend request!\"}"
-                                + "\"button1\": {\"Accept\": \"Decline\"},"
-
+                                + "\"contents\": {\"en\": \"" + myname +" is now following you\"}"
                                 + "}";
 
 
@@ -464,7 +568,6 @@ public class AdapterFollowers extends BaseAdapter {
             }
         });
     }
-
     @Override
     public boolean areAllItemsEnabled()
     {
