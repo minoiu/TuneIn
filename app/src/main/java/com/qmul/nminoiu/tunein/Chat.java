@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -431,8 +432,11 @@ public class Chat extends AppCompatActivity {
 
             if (type == 1) {
                 textView.setBackgroundResource(R.drawable.rounded_corner1);
+                textView.setTextColor(Color.parseColor("#FFFFFF"));
             } else {
                 textView.setBackgroundResource(R.drawable.rounded_corner2);
+                textView.setTextColor(Color.parseColor("#000000"));
+
             }
 
             layout.addView(textView);
@@ -478,22 +482,35 @@ public class Chat extends AppCompatActivity {
 
                         }
                     });
-
                 }
             });
         }
             else {
 
             textView.setText(message);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 0, 0, 10);
-            textView.setLayoutParams(lp);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             if (type == 1) {
                 textView.setBackgroundResource(R.drawable.rounded_corner1);
+                textView.setTextColor(Color.parseColor("#FFFFFF"));
+                textView.setGravity(Gravity.START);
+                lp.gravity = Gravity.RIGHT;
+                lp.setMargins(50, 10, 20, 20);
+                textView.setLayoutParams(lp);
+
+
             } else {
                 textView.setBackgroundResource(R.drawable.rounded_corner2);
+                textView.setTextColor(Color.parseColor("#000000"));
+                textView.setGravity(Gravity.START);
+                lp.gravity = Gravity.LEFT;
+                lp.setMargins(20, 10, 50, 20);
+                textView.setLayoutParams(lp);
+
             }
+
+
+
 
             layout.addView(textView);
             String text = textView.getText().toString();
