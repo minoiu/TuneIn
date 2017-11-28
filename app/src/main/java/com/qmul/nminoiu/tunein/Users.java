@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +48,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
+import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
 public class Users extends AppCompatActivity {
     TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
@@ -62,6 +66,8 @@ public class Users extends AppCompatActivity {
     private DatabaseReference db1;
     private String value;
     private String sender;
+    private Toolbar toolbar;
+
     private String ID;
 
 
@@ -83,10 +89,13 @@ public class Users extends AppCompatActivity {
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
 
-
         usersList = (ListView) findViewById(R.id.usersList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         usersList.setAdapter(uadapter);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         db.addChildEventListener(new ChildEventListener() {
             @Override
@@ -158,6 +167,7 @@ public class Users extends AppCompatActivity {
                     if (i.hasExtra("Uniqid")) {
                         String uniqid = i.getStringExtra("Uniqid");
                         if (uniqid.equals("FromSettings")) {
+                            UserDetails.oldIntent = "FromUsers";
                             Toast.makeText(Users.this, "from settings ", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Users.this, Chat.class);
                             intent.putExtra("Name", user);
@@ -180,12 +190,30 @@ public class Users extends AppCompatActivity {
                     } else {
                         Intent intent = new Intent(Users.this, Chat.class);
                         intent.putExtra("Uniqid", "FromUsers");
+                        UserDetails.oldIntent = "FromUsers";
                         intent.putExtra("Name", user);
                         startActivity(intent);
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle actifon bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(Users.this, SettingsActivity.class);
+        startActivity(i);
+        finish();
     }
 
 //    private void getReceiver(final String song, final String user, final String playlist) {

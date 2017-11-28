@@ -33,7 +33,9 @@
         <activity android:name=".AudioPlayer" />
         <activity
             android:name=".Users"
-            android:label="Messages" />
+            android:label="Messages"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".AndroidBuildingMusicPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -50,8 +52,10 @@
             android:label="Following"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ScrollingActivity"
-            android:label="" />
+            android:name=".ProfileActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".SyncActivity"
             android:theme="@android:style/Theme.NoDisplay" />

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.storage.UploadTask;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,7 +32,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.provider.MediaStore;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,7 +48,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.tubesock.Base64;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -69,7 +65,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
@@ -79,7 +74,6 @@ import com.squareup.picasso.Picasso;
 import android.view.View.OnClickListener;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -92,12 +86,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import android.net.Uri;
-
-
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
-import static com.qmul.nminoiu.tunein.R.drawable.options;
 
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
@@ -1560,24 +1550,48 @@ public class SettingsActivity extends AppCompatActivity
         comment2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name2.getText().toString();
+                UserDetails.commentOn = title2.getText().toString();
             }
         });
 
         comment3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name3.getText().toString();
+                UserDetails.commentOn = title3.getText().toString();
             }
         });
 
         comment4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name4.getText().toString();
+                UserDetails.commentOn = title4.getText().toString();
             }
         });
 
         comment5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name5.getText().toString();
+                UserDetails.commentOn = title5.getText().toString();
             }
         });
 
@@ -2369,15 +2383,34 @@ public class SettingsActivity extends AppCompatActivity
         ulistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String user = ((TextView) view).getText().toString();
+                final String user = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.GONE);
                 //nowPlayingLayout.setVisibility(View.GONE);
                 play_toolbar.requestLayout();
                 hideSoftKeyboard(SettingsActivity.this);
                 UserDetails.username = user;
-                Intent i = new Intent(SettingsActivity.this, ScrollingActivity.class);
-                i.putExtra("User", user);
-                startActivity(i);
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+
+                        Intent i = new Intent(SettingsActivity.this, ProfileActivity.class);
+                        i.putExtra("FriendId", friendID);
+                        i.putExtra("FriendName", user);
+                        startActivity(i);
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
         });
 
@@ -2919,6 +2952,20 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void sendCommentNotification(final String songToJoin, String user, final String comment) {
+
+        DatabaseReference dbC = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+        dbC.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         AsyncTask.execute(new Runnable() {
             @Override

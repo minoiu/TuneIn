@@ -5,36 +5,49 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import static com.qmul.nminoiu.tunein.UserDetails.friend;
 import static com.qmul.nminoiu.tunein.UserDetails.username;
 
 /**
  * Created by nicoledumitrascu on 30/06/2017.
  */
 
-public class ScrollingActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     public static String fullname;
     private DatabaseReference mDatabase;
@@ -45,8 +58,16 @@ public class ScrollingActivity extends AppCompatActivity {
     private String sender;
     private FirebaseAuth firebaseAuth;
     private String ID;
+    private ImageView friendPic;
+    private Toolbar toolbar;
+    private TextView followersNo;
+    private TextView followingNo;
+    private TextView publicTitle;
 
-
+    private ListView publicPlaylists;
+    private List<RowItem> rowItems;
+    private AdapterProfile adapterProfile;
+    private ArrayList<String> publicPList = new ArrayList<>();
 
 
 
@@ -55,36 +76,177 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        setContentView(R.layout.activity_profile);
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-        final String username = getIntent().getExtras().getString("User");
+        final String username = getIntent().getExtras().getString("FriendName");
+        publicPlaylists = (ListView) findViewById(R.id.publicPlaylists);
 
-        final TextView name = (TextView) findViewById(R.id.name);
-        name.setText(username);
         firebaseAuth = FirebaseAuth.getInstance();
         final String user = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
+        followersNo = (TextView) findViewById(R.id.nofollowers);
+        followingNo = (TextView) findViewById(R.id.nofollowing);
+        publicTitle = (TextView) findViewById(R.id.tvNumber2);
+
+        rowItems = new ArrayList<RowItem>();
+        adapterProfile = new AdapterProfile(this, rowItems);
+
 
 
         //user.setFullname(UserDetails.chatWith);
 
         fullname = UserDetails.chatWith;
+        friendPic = (ImageView) findViewById(R.id.friendPicture);
+        final String friendID = getIntent().getStringExtra("FriendId");
+        final String friendName = getIntent().getStringExtra("FriendName");
+        UserDetails.friend = friendName;
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("FriendName"));
+
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase picture1 = picture.child("ProfilePictures");
+
+        picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.hasChild(friendID)){
+                    String link = dataSnapshot.child(friendID).child("Url").getValue().toString();
+
+                    Picasso.with(ProfileActivity.this)
+                            .load(link)
+//                            .resize(220, 360)
+//                        .centerInside()
+                          .fit()
+//                          .centerCrop()
+                            .noFade()
+                            .into(friendPic);
+                }
+                else {
+                    String link = "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fno-profile-photo1-300x200.jpg?alt=media&token=9ea688b0-e1b8-4935-afa1-8f0b3b41a83a";
+                    Picasso.with(ProfileActivity.this)
+                            .load(link)
+//                            .resize(100, 100)
+//                            .centerInside()
+                            .fit()
+//                            .centerCrop()
+                            .noFade()
+                            .into(friendPic);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        DatabaseReference pp = FirebaseDatabase.getInstance().getReference().child("PublicPlaylists").child(friendID);
+        pp.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String publicP = dataSnapshot.getValue(String.class);
+                    //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+                    publicTitle.setText("Public Playlists");
+
+                    publicPList.add(publicP);
+
+                    RowItem item = new RowItem(R.drawable.playlist, publicP);
+
+                    rowItems.add(item);
+                    adapterProfile.notifyDataSetChanged();
+                }
+
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        publicPlaylists.setAdapter(adapterProfile);
+        publicPlaylists.setClickable(true);
+        publicPlaylists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
+                final String playlist = rowItem.getTitle();
+                Intent i = new Intent(ProfileActivity.this, SharedPlaylistSongs.class);
+                i.putExtra("Uniqid", "FromProfile");
+                i.putExtra("Playlist", playlist);
+                i.putExtra("FriendId", friendID);
+                i.putExtra("FriendName", friendName);
+                UserDetails.friend = friendName;
+                startActivity(i);
+            }
+        });
+
+        DatabaseReference followersdb = FirebaseDatabase.getInstance().getReference().child("FollowersNames").child(friendID);
+        followersdb.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // get total available quest
+                        long size = dataSnapshot.getChildrenCount();
+                        String fno = Long.toString(size);
+                        followersNo.setText(fno);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+        DatabaseReference followingdb = FirebaseDatabase.getInstance().getReference().child("Following").child(friendID);
+        followingdb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // get total available quest
+                long size = dataSnapshot.getChildrenCount()/2;
+                String fno = Long.toString(size);
+                followingNo.setText(fno);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         FloatingActionButton follow = (FloatingActionButton) findViewById(R.id.fab);
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ScrollingActivity.this, "fullname: " + fullname, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "fullname: " + fullname, Toast.LENGTH_SHORT).show();
 
 
-                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(name.getText().toString()).child("Email");
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(toolbar.getTitle().toString()).child("Email");
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
 
                 mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -104,13 +266,13 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.hasChild(username)){
-                            Toast.makeText(ScrollingActivity.this, "Already following " + username, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivity.this, "Already following " + username, Toast.LENGTH_SHORT).show();
                         }
                         else{
                             final Map<String, Object> map = new HashMap<String, Object>();
                             map.put("Date", getDate());
                             mDatabase.child(username).updateChildren(map);
-                            Toast.makeText(ScrollingActivity.this, "You are now following " + username, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivity.this, "You are now following " + username, Toast.LENGTH_SHORT).show();
                             addToFollowers(username);
                         }
                     }
@@ -135,7 +297,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 final Map<String, Object> map = new HashMap<String, Object>();
                 map.put("Date", getDate());
                 followersdb.child(me).updateChildren(map);
-                Toast.makeText(ScrollingActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -154,7 +316,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
-                        Toast.makeText(ScrollingActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -305,5 +467,34 @@ public class ScrollingActivity extends AppCompatActivity {
         return stringdate;
     }
 
+
+    public void getPicture(final String friendID) {
+        Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase picture1 = picture.child("ProfilePictures");
+
+        picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.hasChild(friendID)){
+                    String link = dataSnapshot.child(friendID).child("Url").getValue().toString();
+
+                    Picasso.with(ProfileActivity.this)
+                            .load(link)
+                            .resize(400, 400)
+//                        //.centerInside()
+//                          .fit()
+                          //.centerCrop()
+                            .noFade()
+                            .into(friendPic);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
 
 }

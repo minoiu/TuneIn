@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true"
+    android:scrollbars="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.qmul.nminoiu.tunein.ProfileActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <!--<android.support.design.widget.AppBarLayout-->
+    <!--android:id="@+id/app_bar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="230dp"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+
+    <!--<android.support.design.widget.CollapsingToolbarLayout-->
+    <!--android:id="@+id/toolbar_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:fitsSystemWindows="true">-->
+
+
+    <ImageView
+        android:id="@+id/friendPicture"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="50dp"
+        android:cropToPadding="false" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_person_add_black_24dp"
+        app:fabSize="mini"
+        app:layout_anchor="@id/friendPicture"
+        app:layout_anchorGravity="bottom|end" />
+
+
+    <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+    <!--</android.support.design.widget.AppBarLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="293dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="-20dp"
+        android:isScrollContainer="false"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/followers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="5dp"
+                android:text="Followers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+            <TextView
+                android:id="@+id/nofollowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/followers"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="3dp"
+                android:text="123"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#212121" />
+
+            <TextView
+                android:id="@+id/following"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="230dp"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:text="Following"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+            <TextView
+                android:id="@+id/nofollowing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/following"
+                android:layout_marginLeft="254dp"
+                android:layout_marginTop="3dp"
+                android:text="24"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#212121" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingBottom="8dp"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/tvNumber2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="No Public Playlists"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+        </RelativeLayout>
+
+        <include
+            layout="@layout/item_divider"
+            android:layout_width="match_parent" />
+
+        <ListView
+            android:id="@+id/publicPlaylists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.71"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:minHeight="30dp" />
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

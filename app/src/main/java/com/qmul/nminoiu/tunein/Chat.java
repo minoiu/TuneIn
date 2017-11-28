@@ -885,6 +885,18 @@ public class Chat extends AppCompatActivity {
             startActivity(backMainTest);
             finish();
         }
+        else if(UserDetails.oldIntent.equals("FromUsers")){
+            Intent backMainTest = new Intent(this, Users.class);
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", track_title.getText().toString());
+                UserDetails.playingSongName = track_title.getText().toString();
+
+            }
+            backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+            startActivity(backMainTest);
+            finish();
+        }
+
 
 
 

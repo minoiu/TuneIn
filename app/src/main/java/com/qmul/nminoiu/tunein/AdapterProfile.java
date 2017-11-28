@@ -41,13 +41,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Created by nicoleta on 18/10/2017.
+ * Created by nicoleta on 21/11/2017.
  */
 
-public class AdapterRecentlyplayed extends BaseAdapter {
-
+public class AdapterProfile extends BaseAdapter {
     private Context mContext;
-    List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseStorage mStorage;
     public File storagePath;
@@ -60,11 +58,15 @@ public class AdapterRecentlyplayed extends BaseAdapter {
     private String sender;
     private ArrayList<String> dwnList;
     private ArrayList<String> likedList;
+    private List<RowItem> rowItems;
+
+
+
 
     private LinearLayout searchLayout;
 
 
-    public AdapterRecentlyplayed(Context context, List<RowItem> items) {
+    public AdapterProfile(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
@@ -92,18 +94,18 @@ public class AdapterRecentlyplayed extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        AdapterRecentlyplayed.ViewHolder holder = null;
+        AdapterProfile.ViewHolder holder = null;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.row, null);
-            holder = new AdapterRecentlyplayed.ViewHolder();
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
+            convertView = inflater.inflate(R.layout.newrow, null);
+            holder = new AdapterProfile.ViewHolder();
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
+            holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
 
             convertView.setTag(holder);
         } else {
-            holder = (AdapterRecentlyplayed.ViewHolder) convertView.getTag();
+            holder = (AdapterProfile.ViewHolder) convertView.getTag();
         }
 
         final RowItem rowItem = (RowItem) getItem(position);
@@ -118,162 +120,162 @@ public class AdapterRecentlyplayed extends BaseAdapter {
         likedList = new ArrayList<String>();
         searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
         sender = firebaseAuth.getCurrentUser().getEmail();
-        final String playlist = ((LibraryActivity) mContext).getBarTitle();
+        //final String playlist = ((ProfileActivity) mContext).getBarTitle();
 
 
 
         // mp.showMenu(holder.imageView);
 
         //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
-        try {
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-
-                    switch (v.getId()) {
-                        case R.id.icon:
-
-                            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
-                            popup.getMenuInflater().inflate(R.menu.songoptions,
-                                    popup.getMenu());
-
-                            final Menu popupMenu = popup.getMenu();
+//        try {
+//            holder.imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
 //
-                            popup.show();
-                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-
-                                    switch (item.getItemId()) {
-                                        case R.id.listenwith:
-
-                                            Intent intent = new Intent(mContext, FollowersActivity.class);
-                                            intent.putExtra("Uniqid","FSAdapter");
-                                            intent.putExtra("Song", rowItem.getTitle());
-                                            intent.putExtra("Playlist", "");
-                                            UserDetails.oldIntent="Recents";
-
-                                            mContext.startActivity(intent);
-
-                                            //Or Some other code you want to put here.. This is just an example.
-//                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
-
-                                            break;
-
-                                        case R.id.down:
-
-                                            ID = firebaseAuth.getCurrentUser().getUid();
-                                            String song = rowItem.getTitle();
-                                            addDwnToList(song);
-//                                            if(UserDetails.dwn){
-//                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
-//                                            } else {
-//                                                addToDownloads(song);
-//                                                download(song);
-//                                                Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-//                                            }
-
-                                            break;
-
-                                        case R.id.like:
-
-                                            String songName = rowItem.getTitle();
-                                            addToLikedList(songName);
-
-                                            break;
-
-                                        case R.id.share:
-
-                                            Intent i = new Intent(mContext, FollowersActivity.class);
-                                            i.putExtra("Uniqid","FromSongAdapter");
-                                            i.putExtra("Name", "");
-                                            UserDetails.oldIntent="Recents";
-
-                                            i.putExtra("Song", rowItem.getTitle());
-                                            mContext.startActivity(i);
-
-                                            break;
-
-                                        case R.id.addto:
-
-                                            //String playlistName = ((PlaylistSongs) mContext).getBarTitle();
-                                            String songToAdd = rowItem.getTitle();
-                                            Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
-                                            newIntent.putExtra("Uniqid","AdapterAllSongs");
-                                            newIntent.putExtra("Song", songToAdd);
-                                            newIntent.putExtra("Name", "");
-                                            UserDetails.oldIntent="Recents";
-
-                                            mContext.startActivity(newIntent);
-                                            // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+//
+//
+//                    switch (v.getId()) {
+//                        case R.id.icon:
+//
+//                            PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
+//                            popup.getMenuInflater().inflate(R.menu.songoptions,
+//                                    popup.getMenu());
+//
+//                            final Menu popupMenu = popup.getMenu();
+////
+//                            popup.show();
+//                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                                @Override
+//                                public boolean onMenuItemClick(MenuItem item) {
+//
+//                                    switch (item.getItemId()) {
+//                                        case R.id.listenwith:
+//
+//                                            Intent intent = new Intent(mContext, FollowersActivity.class);
+//                                            intent.putExtra("Uniqid","FSAdapter");
+//                                            intent.putExtra("Song", rowItem.getTitle());
+//                                            intent.putExtra("Playlist", "");
+//                                            UserDetails.oldIntent="Recents";
+//
+//                                            mContext.startActivity(intent);
+//
+//                                            //Or Some other code you want to put here.. This is just an example.
+////                                            Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
+//
+//                                            break;
+//
+//                                        case R.id.down:
+//
+//                                            ID = firebaseAuth.getCurrentUser().getUid();
+//                                            String song = rowItem.getTitle();
+//                                            addDwnToList(song);
+////                                            if(UserDetails.dwn){
+////                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
+////                                            } else {
+////                                                addToDownloads(song);
+////                                                download(song);
+////                                                Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
+////                                            }
+//
+//                                            break;
+//
+//                                        case R.id.like:
+//
+//                                            String songName = rowItem.getTitle();
+//                                            addToLikedList(songName);
+//
+//                                            break;
+//
+//                                        case R.id.share:
+//
+//                                            Intent i = new Intent(mContext, FollowersActivity.class);
+//                                            i.putExtra("Uniqid","FromSongAdapter");
+//                                            i.putExtra("Name", "");
+//                                            UserDetails.oldIntent="Recents";
+//
+//                                            i.putExtra("Song", rowItem.getTitle());
+//                                            mContext.startActivity(i);
+//
+//                                            break;
+//
+//                                        case R.id.addto:
+//
+//                                            //String playlistName = ((PlaylistSongs) mContext).getBarTitle();
 //                                            String songToAdd = rowItem.getTitle();
-//                                            Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
-//                                            newIntent.putExtra("Uniqid","FSAdapter");
+//                                            Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
+//                                            newIntent.putExtra("Uniqid","AdapterAllSongs");
 //                                            newIntent.putExtra("Song", songToAdd);
-//                                           // newIntent.putExtra("Name", playlistName);
-                                            mContext.startActivity(newIntent);
-                                            break;
-
-                                        case R.id.delete:
-
-                                            final String songToDelete = rowItem.getTitle();
-                                            // PlaylistSongs ps = new PlaylistSongs();
-
-                                            // String playlist = ((PlaylistSongs) mContext).getBarTitle();
-                                            //Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
-
-
-                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
-                                            delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                        String key = snapshot.getKey();
-
-                                                        if (dataSnapshot.child(key).getValue().equals(songToDelete)) {
-                                                            delSongRef.child(key).getRef().setValue(null);
-                                                            notifyDataSetChanged();
-                                                            rowItems.remove(rowItem);
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-
-                                    return true;
-                                }
-
-                            });
-
-                            break;
-
-                        default:
-                            break;
-                    }
-
-
-                }
-            });
-
-        }catch(Exception e)
-
-        {
-
-            e.printStackTrace();
-        }
-
+//                                            newIntent.putExtra("Name", "");
+//                                            UserDetails.oldIntent="Recents";
+//
+//                                            mContext.startActivity(newIntent);
+//                                            // String playlistName = ((PlaylistSongs) mContext).getBarTitle();
+////                                            String songToAdd = rowItem.getTitle();
+////                                            Intent newIntent = new Intent(mContext.getApplicationContext(), PlaylistsActivity.class);
+////                                            newIntent.putExtra("Uniqid","FSAdapter");
+////                                            newIntent.putExtra("Song", songToAdd);
+////                                           // newIntent.putExtra("Name", playlistName);
+//                                            mContext.startActivity(newIntent);
+//                                            break;
+//
+//                                        case R.id.delete:
+//
+//                                            final String songToDelete = rowItem.getTitle();
+//                                            // PlaylistSongs ps = new PlaylistSongs();
+//
+//                                            // String playlist = ((PlaylistSongs) mContext).getBarTitle();
+//                                            //Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
+//
+//
+//                                            delSongRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+//                                            delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                @Override
+//                                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                                        String key = snapshot.getKey();
+//
+//                                                        if (dataSnapshot.child(key).getValue().equals(songToDelete)) {
+//                                                            delSongRef.child(key).getRef().setValue(null);
+//                                                            notifyDataSetChanged();
+//                                                            rowItems.remove(rowItem);
+//                                                        }
+//                                                    }
+//                                                }
+//
+//                                                @Override
+//                                                public void onCancelled(DatabaseError databaseError) {
+//
+//                                                }
+//                                            });
+//
+//                                            break;
+//
+//                                        default:
+//                                            break;
+//                                    }
+//
+//                                    return true;
+//                                }
+//
+//                            });
+//
+//                            break;
+//
+//                        default:
+//                            break;
+//                    }
+//
+//
+//                }
+//            });
+//
+//        }catch(Exception e)
+//
+//        {
+//
+//            e.printStackTrace();
+//        }
+//
 
         return convertView;
     }
@@ -534,6 +536,4 @@ public class AdapterRecentlyplayed extends BaseAdapter {
             }
         });
     }
-
-
 }
