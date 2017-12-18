@@ -58,6 +58,7 @@ public class FollowersActivity extends AppCompatActivity {
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
+
     private DatabaseReference mDatabase2;
     private DatabaseReference mDatabase3;
     private LinearLayout play_toolbar;
@@ -208,39 +209,42 @@ public class FollowersActivity extends AppCompatActivity {
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
         //searchView.bringToFront();//
 
-        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String user = ((TextView) view).getText().toString();
-                        UserDetails.chatWith = user;
-                        Intent i = getIntent();
-                        if (i != null) {
-                            if (i.hasExtra("Uniqid")) {
-                                String uniqid = i.getStringExtra("Uniqid");
-
-                                if (uniqid.equals("FromSongAdapter")) {
-                                   // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-                                    String song = i.getStringExtra("Song");
-                                    Intent intent = new Intent(FollowersActivity.this, Chat.class);
-                                    intent.putExtra("Uniqid", "FromFollowersShare");
-                                    intent.putExtra("Name", user);
-                                    intent.putExtra("Song", song);
-                                    startActivity(intent);
-                                } else if (uniqid.equals("FSAdapter")) {
-                                    String songToJoin = i.getStringExtra("Song");
-                                    String playlist = i.getStringExtra("Name");
-                                    getReceiver(songToJoin, user, playlist);
-                                    //Toast.makeText(FollowersActivity.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
-                                } else if (uniqid.equals("AdapterAllSongs")) {
-                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-                                    String songToJoin = i.getStringExtra("Song");
-                                    getReceiver(songToJoin, user, "");
-                                }
-                            }
-                        }
-
-                    }
-                });
+//        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        String user = ((TextView) view).getText().toString();
+//                        UserDetails.chatWith = user;
+//                        Intent i = getIntent();
+//                        if (i != null) {
+//                            if (i.hasExtra("Uniqid")) {
+//                                String uniqid = i.getStringExtra("Uniqid");
+//
+//                                if (uniqid.equals("FromSongAdapter")) {
+//                                   // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+//                                    String song = i.getStringExtra("Song");
+//                                    Intent intent = new Intent(FollowersActivity.this, Chat.class);
+//                                    intent.putExtra("Uniqid", "FromFollowersShare");
+//                                    intent.putExtra("Name", user);
+//                                    intent.putExtra("Song", song);
+//                                    startActivity(intent);
+//                                } else if (uniqid.equals("FSAdapter")) {
+//                                    String songToJoin = i.getStringExtra("Song");
+//                                    String playlist = i.getStringExtra("Name");
+//                                    getReceiver(songToJoin, user, playlist);
+//                                    //Toast.makeText(FollowersActivity.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
+//                                } else if (uniqid.equals("AdapterAllSongs")) {
+//                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+//                                    String songToJoin = i.getStringExtra("Song");
+//                                    getReceiver(songToJoin, user, "");
+//                                } else if (uniqid.equals("FromConversations")) {
+//                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+//                                    String myname = i.getStringExtra("Myname");
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                });
             }
 
     @Override

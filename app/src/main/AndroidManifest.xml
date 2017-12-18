@@ -35,7 +35,6 @@
             android:name=".Users"
             android:label="Messages"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".AndroidBuildingMusicPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -55,7 +54,6 @@
             android:name=".ProfileActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".SyncActivity"
             android:theme="@android:style/Theme.NoDisplay" />
@@ -127,7 +125,11 @@
             android:name=".SharedPlaylistSongs"
             android:label="@string/title_activity_shared_playlist_songs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".CommentActivity" />
+        <activity
+            android:name=".Conversations"
+            android:label="Messages"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -1,23 +1,17 @@
 package com.qmul.nminoiu.tunein;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.GestureDetector;
+import android.text.Html;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,11 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,56 +39,68 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
-public class LibraryActivity extends AppCompatActivity{
-
-    private ListView recentSongs;
-    private ArrayList<String> recents = new ArrayList<>();
-    private DatabaseReference recentsRef;
-    public String ID;
-    private FirebaseAuth firebaseAuth;
-    private ArrayAdapter<String> recentsadapter;
-    private AdapterRecentlyplayed adapterRecentlyplayed;
+public class Conversations extends AppCompatActivity {
+    TextView noUsersText;
+    ArrayList<String> al = new ArrayList<>();
+    int totalUsers = 0;
+    // ProgressDialog pd;
+    ListView convList;
+    ArrayList<String> conversationsArList = new ArrayList<>();
+    private ArrayAdapter<String> cadapter;
+    private DatabaseReference db;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase1;
+    Firebase recentsRef;
+    private ConversationsAdapter adapter;
+    private List<String> fromList;
+    private List<String> timeList;
     private String song;
     private TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
     private String url;
     private Handler mHandler;
-    private List myFollowers;
     private String me;
-    private FloatingActionButton fab;
-    private RelativeLayout playlists;
-    private RelativeLayout downloads;
-    private RelativeLayout favourites;
-    private RelativeLayout songs;
-    private GestureDetector gestureDetector;
-    View.OnTouchListener gestureListener;
-    private SimpleGestureFilter detector;
-    private DatabaseReference mDatabase;
-    private List<RowItem> rowItems;
+
+    private DatabaseReference db1;
+    private String value;
+    private String sender;
+    private Toolbar toolbar;
+    List<DoubleRow> drowItem;
+
+
+    private String ID;
+
+    private ArrayAdapter<String> convadapter;
+
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.activity_conversations);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        ID = firebaseAuth.getCurrentUser().getUid();
+        cadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, conversationsArList);
+        drowItem = new ArrayList<DoubleRow>();
+        adapter = new ConversationsAdapter(this, drowItem);
+        fromList = new ArrayList<>();
+        timeList = new ArrayList<>();
+
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
         btn = (Button) findViewById(R.id.button);
-        playlists = (RelativeLayout) findViewById(R.id.playlists);
-        favourites = (RelativeLayout) findViewById(R.id.favourites);
-        downloads = (RelativeLayout) findViewById(R.id.downloads);
-        songs = (RelativeLayout) findViewById(R.id.songs);
         track_title = (TextView) findViewById(R.id.track_title);
-        myFollowers = new ArrayList<>();
-        rowItems = new ArrayList<RowItem>();
+        FirebaseUser currentuser = firebaseAuth.getCurrentUser();
+        String curUser = currentuser.getUid().toString();
 
-        adapterRecentlyplayed = new AdapterRecentlyplayed(this, rowItems);
+        if(mediaPlayer.isPlaying()) {
+            UserDetails.playingSongName = track_title.getText().toString();
+        }
+        UserDetails.oldIntent="Conversations";
 
         Intent i = getIntent();
         if(i.hasExtra("Song")){
@@ -105,21 +112,36 @@ public class LibraryActivity extends AppCompatActivity{
             track_title.setText(UserDetails.playingSongName);
         } else play_toolbar.setVisibility(View.GONE);
 
-        recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        db = FirebaseDatabase.getInstance().getReference().child("Users");
+        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+        ID = firebaseAuth.getCurrentUser().getUid();
+        sender = firebaseAuth.getCurrentUser().getEmail();
+
+        convList = (ListView) findViewById(R.id.convList);
+        convList.setAdapter(adapter);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
+        Toast.makeText(Conversations.this, UserDetails.fullname, Toast.LENGTH_LONG).show();
+        UserDetails.username = UserDetails.fullname;
+
         recentsRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Map map = dataSnapshot.getValue(Map.class);
+                String message = map.get("message").toString();
+                String from = map.get("user").toString();
+                String time =map.get("time").toString();
+                //Toast.makeText(Conversations.this, "from "+ from, Toast.LENGTH_LONG).show();
 
-                String recentSongs = dataSnapshot.getValue(String.class);
-                //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-
-                recents.add(recentSongs);
-
-
-                RowItem item = new RowItem(R.drawable.options, recentSongs);
-
-                rowItems.add(item);
-                adapterRecentlyplayed.notifyDataSetChanged();
+                fromList.add(from);
+                timeList.add(time);
+                DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, time, message);
+                drowItem.add(item);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -138,100 +160,16 @@ public class LibraryActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(FirebaseError firebaseError) {
 
-            }
-        });
-
-        recentSongs = (ListView) findViewById(R.id.recentSongs);
-        recentsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recents);
-        recentSongs.setAdapter(adapterRecentlyplayed);
-        recentSongs.setClickable(true);
-
-        playlists.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LibraryActivity.this, MyPlaylists.class);
-                if(mediaPlayer.isPlaying()) {
-                    i.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
-                }
-                startActivity(i);
-            }
-        });
-
-        songs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LibraryActivity.this, Songs.class);
-                if(mediaPlayer.isPlaying()){
-                   String song = track_title.getText().toString();
-                    //i.putExtra("Song", song);
-                    UserDetails.playingSongName = track_title.getText().toString();
-                }
-                startActivity(i);
-            }
-        });
-
-        favourites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LibraryActivity.this, Favourites.class);
-                if(mediaPlayer.isPlaying()) {
-                   i.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
-                }
-                startActivity(i);
-            }
-        });
-
-        downloads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LibraryActivity.this, Downloads.class);
-                if(mediaPlayer.isPlaying()) {
-                    i.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
-
-                }
-                startActivity(i);
-            }
-        });
-
-        recentSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
-                final String song = rowItem.getTitle();
-                play_toolbar.setVisibility(View.VISIBLE);
-                track_title.setText(song);
-
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase songRef = ref.child("URL").child(song);
-                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                    @Override
-                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                            url = String.valueOf(dsp.getValue());
-                            startMusic(url, song);
-                            btn.setBackgroundResource(R.drawable.ic_media_pause);
-                            getFollowers(UserDetails.fullname, song);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
             }
         });
 
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
-                intent_info.putExtra("Uniqid", "FromLibrary");
+                Intent intent_info = new Intent(Conversations.this, AndroidBuildingMusicPlayerActivity.class);
+                intent_info.putExtra("Uniqid", "FromConversations");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
                 }
@@ -240,29 +178,41 @@ public class LibraryActivity extends AppCompatActivity{
             }
         });
 
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        onBackPressed();
-        return true;
     }
 
     @Override
     public void onBackPressed() {
-        Intent backMainTest = new Intent(this, SettingsActivity.class);
-        backMainTest.putExtra("ID", "FromLibrary");
-        backMainTest.putExtra("Song", track_title.getText().toString());
-        startActivity(backMainTest);
+        Intent i = new Intent(Conversations.this, SettingsActivity.class);
+
+        startActivity(i);
         finish();
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.new_message, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.newmessage) {
+            Intent i = new Intent(this, FollowersActivity.class);
+            i.putExtra("Uniqid", "FromConversations");
+            i.putExtra("Myname", UserDetails.username);
+            startActivity(i);
+        }
+        else onBackPressed();
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void startMusic(String link, String song) {
@@ -283,10 +233,10 @@ public class LibraryActivity extends AppCompatActivity{
         btn.setBackgroundResource(R.drawable.ic_media_pause);
         mediaPlayer.start();
 
-        if (!recents.contains(song)) {
-            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-            likedRef.push().setValue(song);
-        }
+//        if (!recents.contains(song)) {
+//            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+//            likedRef.push().setValue(song);
+//        }
     }
 
     public void updateProgressBar() {
@@ -304,8 +254,8 @@ public class LibraryActivity extends AppCompatActivity{
         fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
         fdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     //myFollowers.clear();
                     String value = snapshot.getKey();
                     myFollowers.add(value);
@@ -328,34 +278,8 @@ public class LibraryActivity extends AppCompatActivity{
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(Conversations.this, AndroidBuildingMusicPlayerActivity.class);
         startActivity(i);
-    }
-
-
-    public void getFullname() {
-
-        FirebaseAuth fb;
-        fb = FirebaseAuth.getInstance();
-
-        String ID;
-        ID = fb.getCurrentUser().getUid();
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
-        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
     }
 
     public void addToHome(List<String> myvalue, final String mysong) {
@@ -365,11 +289,10 @@ public class LibraryActivity extends AppCompatActivity{
 
         mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
                 //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -393,6 +316,8 @@ public class LibraryActivity extends AppCompatActivity{
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
+        UserDetails.playingSongName = track_title.getText().toString();
+
         String songtitle = title.getText().toString();
         //song = ((TextView) view).getText().toString();
         getFollowers(UserDetails.fullname, songtitle);
@@ -431,9 +356,9 @@ public class LibraryActivity extends AppCompatActivity{
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                         String v;
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
                             //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
                             //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
@@ -463,8 +388,5 @@ public class LibraryActivity extends AppCompatActivity{
     }
 
 
+
 }
-
-
-
-

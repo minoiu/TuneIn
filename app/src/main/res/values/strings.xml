@@ -32,5 +32,6 @@
     <string name="title_activity_favourites">Favourites</string>
     <string name="title_activity_favourite_playlists">FavouritePlaylists</string>
     <string name="title_activity_shared_playlist_songs">SharedPlaylistSongs</string>
+    <string name="title_activity_conversations">Conversations</string>
     <!--<string name="enter_email" translatable="false">Email</string>-->
 </resources>

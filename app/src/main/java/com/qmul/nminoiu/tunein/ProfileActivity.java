@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.friend;
+import static com.qmul.nminoiu.tunein.UserDetails.friendID;
 import static com.qmul.nminoiu.tunein.UserDetails.username;
 
 /**
@@ -101,7 +102,31 @@ public class ProfileActivity extends AppCompatActivity {
 
         fullname = UserDetails.chatWith;
         friendPic = (ImageView) findViewById(R.id.friendPicture);
-        final String friendID = getIntent().getStringExtra("FriendId");
+        Intent i = getIntent();
+        if (i.hasExtra("FriendId")){
+            final String friendID = getIntent().getStringExtra("FriendId");
+            UserDetails.friendID = friendID;
+        } else{
+            DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(username).child("Id");
+
+            dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String friendID = dataSnapshot.getValue().toString();
+                    UserDetails.friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                    friendID = friendID;
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
         final String friendName = getIntent().getStringExtra("FriendName");
         UserDetails.friend = friendName;
 
@@ -151,39 +176,48 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseReference pp = FirebaseDatabase.getInstance().getReference().child("PublicPlaylists").child(friendID);
-        pp.addChildEventListener(new ChildEventListener() {
+        DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(friendName).child("Id");
+
+        dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                friendID = friendID;
+
+            }
 
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    String publicP = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-                    publicTitle.setText("Public Playlists");
+            public void onCancelled(DatabaseError databaseError) {
 
-                    publicPList.add(publicP);
+            }
+        });
 
-                    RowItem item = new RowItem(R.drawable.playlist, publicP);
 
-                    rowItems.add(item);
-                    adapterProfile.notifyDataSetChanged();
+        DatabaseReference pp = FirebaseDatabase.getInstance().getReference().child("PublicPlaylists");
+        pp.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(ProfileActivity.this, "friend id " + UserDetails.friendID, Toast.LENGTH_SHORT).show();
+                if (dataSnapshot.hasChild(UserDetails.friendID)) {
+                    Toast.makeText(ProfileActivity.this, "has child " + UserDetails.friendID, Toast.LENGTH_SHORT).show();
+
+                    for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.child(UserDetails.friendID).getChildren()) {
+                        //myFollowers.clear();
+                        String publicP = snapshot.getValue().toString();
+                        publicTitle.setText("Public Playlists");
+                        publicPList.add(publicP);
+                        RowItem item = new RowItem(R.drawable.playlist, publicP);
+
+                        rowItems.add(item);
+                        adapterProfile.notifyDataSetChanged();
+                        //addToFirebaseHome(value, mysong);
+                    }
+
+                    }
                 }
 
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

@@ -2471,7 +2471,7 @@ public class SettingsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SettingsActivity.this, Users.class);
+                Intent i = new Intent(SettingsActivity.this, Conversations.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
                     i.putExtra("Song", track_title.getText().toString());

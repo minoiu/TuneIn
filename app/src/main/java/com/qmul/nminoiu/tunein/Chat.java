@@ -1,17 +1,24 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +42,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -47,6 +57,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import static android.os.Build.ID;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+import static com.qmul.nminoiu.tunein.UserDetails.friend;
 
 
 public class Chat extends AppCompatActivity {
@@ -54,7 +65,7 @@ public class Chat extends AppCompatActivity {
     ImageView sendButton;
     EditText messageArea;
     ScrollView scrollView;
-    Firebase reference1, reference2, reference3;
+    Firebase reference1, reference2, reference3, refFriend, refMe;
     private LinearLayout play_toolbar;
     public TextView track_title;
     private Button btn;
@@ -71,6 +82,7 @@ public class Chat extends AppCompatActivity {
     private String ID;
     static boolean active = false;
     private Toolbar toolbar;
+    private LinearLayout backgroundLayout;
 
 
     @Override
@@ -91,6 +103,13 @@ public class Chat extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //backgroundLayout = (LinearLayout)findViewById(R.id.backgroundLayout);
+        final Context context = this;
+
+        if(mediaPlayer.isPlaying()){
+            play_toolbar.setVisibility(View.VISIBLE);
+            track_title.setText(UserDetails.playingSongName);
+        } else play_toolbar.setVisibility(View.GONE);
 
 
         Intent i = getIntent();
@@ -152,6 +171,26 @@ public class Chat extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 play_toolbar.bringToFront();
                 track_title.setText(UserDetails.playingSongName);
+            } if(uniqid.equals("FromConversations")) {
+                String friend = i.getStringExtra("Friend");
+                String song = UserDetails.playingSongName;
+                getFullname();
+                UserDetails.chatWith = friend;
+                if(mediaPlayer.isPlaying()){
+                    track_title.setText(UserDetails.playingSongName);
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
+                getSupportActionBar().setTitle(friend);
+            } if(uniqid.equals("FromUsers")) {
+                String friend = i.getStringExtra("Friend");
+                String song = UserDetails.playingSongName;
+                getFullname();
+                UserDetails.chatWith = friend;
+                if(mediaPlayer.isPlaying()){
+                    track_title.setText(UserDetails.playingSongName);
+                    play_toolbar.setVisibility(View.VISIBLE);
+                } else play_toolbar.setVisibility(View.GONE);
+                getSupportActionBar().setTitle(friend);
             }
         }
         if(i.hasExtra("Song")){
@@ -197,6 +236,52 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+//        Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2FcrLOSAGbIAMk0urympRLWWEXftD3.jpg?alt=media&token=39fba14e-f780-4c0f-bc70-cc00c3b915cd").into(new Target(){
+//
+//            @Override
+//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                    layout.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+//                }
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(final Drawable errorDrawable) {
+//                Log.d("TAG", "FAILED");
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                Log.d("TAG", "Prepare Load");
+//            }
+//        });
+
+//        Picasso.with(this).load("https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2F3Plkwd7VsHhsKs7jDdLElpCyIpy1.jpg?alt=media&token=ee860cd6-f217-4fd0-a76c-b3620dc72354").into(new Target() {
+//            @Override
+//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                layout.setBackground(new BitmapDrawable(bitmap));
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(Drawable errorDrawable) {
+//
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//            }
+//        });
+//        Picasso.with(Chat.this)
+//                .load("\"https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2FcrLOSAGbIAMk0urympRLWWEXftD3.jpg?alt=media&token=39fba14e-f780-4c0f-bc70-cc00c3b915cd")
+////                .resize(350, 240)
+////                .centerInside()
+//
+//                .fit()
+//                //.centerCrop()
+//                .into((Target) layout);
+//
+//
 
 //        DatabaseReference mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 //
@@ -214,10 +299,17 @@ public class Chat extends AppCompatActivity {
 //            }
 //        });
 
+        Toast.makeText(Chat.this, "me "+ UserDetails.username, Toast.LENGTH_SHORT).show();
+        Toast.makeText(Chat.this, "friend "+ UserDetails.chatWith, Toast.LENGTH_SHORT).show();
+
 
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         reference2 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+        refFriend = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.chatWith +"/"+ UserDetails.chatWith + "_" + UserDetails.username);
+        refMe = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.username+"/"+ UserDetails.username + "_" + UserDetails.chatWith);
+
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,11 +318,72 @@ public class Chat extends AppCompatActivity {
 
                 if(!messageText.equals("")){
                     Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map1 = new HashMap<String, String>();
+
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
+                    map.put("time", String.valueOf(System.currentTimeMillis()));
+
+                    map1.put("message", messageText);
+                    map1.put("user", UserDetails.username);
+                    map1.put("time", String.valueOf(System.currentTimeMillis()));
+
+                    Map<String, Object> friendMap = new HashMap<>();
+                    friendMap.put("message", messageText);
+                    friendMap.put("user", UserDetails.username);
+                    friendMap.put("time", String.valueOf(System.currentTimeMillis()));
+
+                    Map<String, Object> myMap = new HashMap<>();
+                    myMap.put("message", messageText);
+                    myMap.put("user", UserDetails.chatWith);
+                    myMap.put("time", String.valueOf(System.currentTimeMillis()));
 
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
+
+//                    checkPreviousMessagesInFriend(UserDetails.chatWith, UserDetails.username);
+//                    checkPreviousMessages(UserDetails.chatWith, UserDetails.username);
+
+
+
+//                    refFriend.addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            Map map = dataSnapshot.getValue(Map.class);
+//                            String message = map.get("message").toString();
+//                            String userName = map.get("user").toString();
+//                            String time =map.get("time").toString();
+//
+//                            if (userName.contains(UserDetails.username)) {
+//                                dataSnapshot.child(dataSnapshot.getKey().toString()).getRef().removeValue();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(FirebaseError firebaseError) {
+//
+//                        }
+//                    });
+//
+                    refFriend.updateChildren(friendMap);
+
+//                    refFriend.push().setValue(map1);
+                    refMe.updateChildren(myMap);
 
                     getReceiver(UserDetails.chatWith, UserDetails.username, messageText);
                     messageArea.getText().clear();
@@ -259,6 +412,7 @@ public class Chat extends AppCompatActivity {
                 Map map = dataSnapshot.getValue(Map.class);
                 String message = map.get("message").toString();
                 String userName = map.get("user").toString();
+                //String time =map.get("time").toString();
                 ///
 
                 if (message.contains("Here is a song for you:")) {
@@ -305,6 +459,57 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void checkPreviousMessages(String chatWith, String username) {
+    }
+
+    private void checkPreviousMessagesInFriend(final String chatWith, String username) {
+
+        DatabaseReference reffriend = FirebaseDatabase.getInstance().getReference().child("RecentMessages");
+        reffriend.addChildEventListener(new com.google.firebase.database.ChildEventListener() {
+            @Override
+            public void onChildAdded(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+                for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(dataSnapshot.hasChild(chatWith)){
+                        Toast.makeText(Chat.this, "Has child "+ chatWith +" snap is "+snapshot, Toast.LENGTH_SHORT).show();
+
+//                        for (com.google.firebase.database.DataSnapshot snap : dataSnapshot.child(UserDetails.chatWith)) {
+//                            String key = snap.getKey();
+//                            if(dataSnapshot.child(ID).child(friend).child(key).getValue().toString().equals(playlist)){
+//                                friend = friend;
+//                                Toast.makeText(MyPlaylists.this, "friend who shared is " + friend, Toast.LENGTH_LONG).show();
+//
+//
+//                            }
+                        }
+                }
+            }
+
+            @Override
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
     private void addToFbShareWith(String song,String friend) {
@@ -903,7 +1108,7 @@ public class Chat extends AppCompatActivity {
             finish();
         }
         else if(UserDetails.oldIntent.equals("FromUsers")){
-            Intent backMainTest = new Intent(this, Users.class);
+            Intent backMainTest = new Intent(this, Conversations.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
                 UserDetails.playingSongName = track_title.getText().toString();
@@ -913,6 +1118,18 @@ public class Chat extends AppCompatActivity {
             startActivity(backMainTest);
             finish();
         }
+        else if(UserDetails.oldIntent.equals("Conversations")){
+            Intent backMainTest = new Intent(this, Conversations.class);
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", track_title.getText().toString());
+                UserDetails.playingSongName = track_title.getText().toString();
+
+            }
+//            backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+            startActivity(backMainTest);
+            finish();
+        }
+
 
 
 

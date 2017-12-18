@@ -1,6 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -66,6 +67,8 @@ public class AdapterFollowers extends BaseAdapter {
     private String sender;
     private ArrayList<String> dwnList;
     private ArrayList<String> followersList;
+    private DatabaseReference mDatabase1;
+
 
 
     private LinearLayout searchLayout;
@@ -231,8 +234,106 @@ public class AdapterFollowers extends BaseAdapter {
             e.printStackTrace();
         }
 
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String user = rowItem.getTitle().toString();
+                UserDetails.chatWith = user;
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                Intent i = ((FollowersActivity) mContext).getIntent();
+
+                if (i != null) {
+                    if (i.hasExtra("Uniqid")) {
+                        String uniqid = i.getStringExtra("Uniqid");
+
+                        if (uniqid.equals("FromSongAdapter")) {
+                            // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+                            String song = i.getStringExtra("Song");
+                            Intent intent = new Intent(mContext, Chat.class);
+                            intent.putExtra("Uniqid", "FromFollowersShare");
+                            intent.putExtra("Name", user);
+                            intent.putExtra("Song", song);
+                            mContext.startActivity(intent);
+                        } else if (uniqid.equals("FSAdapter")) {
+                            String songToJoin = i.getStringExtra("Song");
+                            String playlist = i.getStringExtra("Name");
+                            getReceiver(songToJoin, user, playlist);
+                            //Toast.makeText(FollowersActivity.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
+                        } else if (uniqid.equals("AdapterAllSongs")) {
+                            // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+                            String songToJoin = i.getStringExtra("Song");
+                            getReceiver(songToJoin, user, "");
+                        } else if (uniqid.equals("FromConversations")) {
+                            // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
+                            String myname = i.getStringExtra("Myname");
+                            Intent intent = new Intent(mContext, Chat.class);
+                            intent.putExtra("Name", user);
+                            intent.putExtra("Uniqid", "FromUsers");
+                            UserDetails.oldIntent = "FromUsers";
+                            intent.putExtra("Friend", user);
+                            mContext.startActivity(intent);
+
+                        } else if(uniqid.equals("FromSettingsMenu")){
+                            final Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.putExtra("FriendName", user);
+                            intent.putExtra("FriendId", UserDetails.friendID);
+                            mContext.startActivity(intent);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
 
         return convertView;
+    }
+
+    private void getReceiver(final String song, final String user, final String playlist) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
+        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.receiver = dataSnapshot.getValue().toString();
+                sendListenWithNotification(song, user);
+                Toast.makeText(mContext, "The invitation to " + user + " was sent.", Toast.LENGTH_SHORT).show();
+
+                Intent goBack = new Intent(mContext, Chat.class);
+                goBack.putExtra("Uniqid", "FromFollowersListeWith");
+                goBack.putExtra("FriendName", user);
+                goBack.putExtra("Song", song);
+                goBack.putExtra("Name", playlist);
+                mContext.startActivity(goBack);
+
+                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void checkIfFollowing(String friendTofollow) {
@@ -578,6 +679,90 @@ public class AdapterFollowers extends BaseAdapter {
     public boolean isEnabled(int arg0)
     {
         return true;
+    }
+
+    private void sendListenWithNotification(final String songToJoin, String user) {
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
+
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    String send_email;
+
+                    //This is a Simple Logic to Send Notification different Device Programmatically....
+                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                        send_email = UserDetails.receiver;
+
+                    } else {
+                        send_email = sender;
+                    }
+
+                    try {
+                        String jsonResponse;
+
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                        con.setUseCaches(false);
+                        con.setDoOutput(true);
+                        con.setDoInput(true);
+
+                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
+                        con.setRequestMethod("POST");
+
+//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
+//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
+                        //"'headings': {'en': 'Notification Title'}, " +
+                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
+
+                        String strJsonBody = "{"
+                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
+
+                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
+
+                                + "\"data\": {\"foo\": \"bar\"},"
+                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
+                                + "\"buttons\":[{\"id\": \"listenwith\", \"text\": \"Join\"}]"
+                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
+                                + "}";
+
+                        System.out.println("strJsonBody:\n" + strJsonBody);
+
+                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                        con.setFixedLengthStreamingMode(sendBytes.length);
+
+                        OutputStream outputStream = con.getOutputStream();
+                        outputStream.write(sendBytes);
+
+                        int httpResponse = con.getResponseCode();
+                        System.out.println("httpResponse: " + httpResponse);
+
+                        if (httpResponse >= HttpURLConnection.HTTP_OK
+                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+
+                            scanner.close();
+                        } else {
+                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+
+                        System.out.println("jsonResponse:\n" + jsonResponse);
+
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
 
