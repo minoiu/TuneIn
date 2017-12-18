@@ -3791,6 +3791,55 @@ public class SettingsActivity extends AppCompatActivity
                 } else if (result.action.actionID.equals("comment")) {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
                 }
+                else if (result.action.actionID.equals("reply")) {
+                    FirebaseAuth fb;
+                    fb = FirebaseAuth.getInstance();
+
+                    String ID;
+                    ID = fb.getCurrentUser().getUid();
+
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+                    mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                            UserDetails.fullname = dataSnapshot.getValue().toString();
+                            UserDetails.username = dataSnapshot.getValue().toString();
+
+                            reference3 = FirebaseDatabase.getInstance().getReference().child("ShareWith").child(UserDetails.fullname);
+                            reference3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String friend = dataSnapshot.child("Name").getValue().toString();
+                                    String song = dataSnapshot.child("Song").getValue().toString();
+
+                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("openURL", openURL);
+                                    intent.putExtra("Uniqid", "NotificationReply");
+                                    UserDetails.chatWith = friend;
+                                    intent.putExtra("Friend", friend);
+                                    //intent.putExtra("Song", song);
+                                    startActivity(intent);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
+
+                }
 
             }
             // The following can be used to open an Activity of your choice.

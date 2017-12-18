@@ -171,6 +171,11 @@ public class Chat extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 play_toolbar.bringToFront();
                 track_title.setText(UserDetails.playingSongName);
+            }if(uniqid.equals("NotificationReply")) {
+                String friend = i.getStringExtra("Friend");
+                getFullname();
+                UserDetails.chatWith = friend;
+                getSupportActionBar().setTitle(friend);
             } if(uniqid.equals("FromConversations")) {
                 String friend = i.getStringExtra("Friend");
                 String song = UserDetails.playingSongName;
@@ -775,7 +780,7 @@ public class Chat extends AppCompatActivity {
 
                                     + "\"data\": {\"foo\": \"bar\"},"
                                     + "\"contents\": {\"en\": \"" + sender + " said: '" + message + "'.\"},"
-                                    + "\"buttons\":[{\"id\": \"shareSong\", \"text\": \"Reply\"}]"
+                                    + "\"buttons\":[{\"id\": \"reply\", \"text\": \"Reply\"}]"
                                     //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                     + "}";
 

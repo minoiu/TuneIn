@@ -308,7 +308,12 @@ public class FollowersActivity extends AppCompatActivity {
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
+            } else if (UserDetails.oldIntent.equals("FromConversations")) {
+                Intent backMainTest = new Intent(this, Conversations.class);
+                startActivity(backMainTest);
+                finish();
             }
+
 
 
         }

@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,13 +31,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
@@ -50,10 +59,14 @@ public class Conversations extends AppCompatActivity {
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
+    private DatabaseReference ref;
+
     Firebase recentsRef;
     private ConversationsAdapter adapter;
     private List<String> fromList;
     private List<String> timeList;
+    private List<String> messageList;
+
     private String song;
     private TextView track_title;
     private LinearLayout play_toolbar;
@@ -89,6 +102,8 @@ public class Conversations extends AppCompatActivity {
         adapter = new ConversationsAdapter(this, drowItem);
         fromList = new ArrayList<>();
         timeList = new ArrayList<>();
+        messageList = new ArrayList<>();
+
 
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
@@ -125,45 +140,107 @@ public class Conversations extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
-        Toast.makeText(Conversations.this, UserDetails.fullname, Toast.LENGTH_LONG).show();
         UserDetails.username = UserDetails.fullname;
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        recentsRef.addChildEventListener(new ChildEventListener() {
+
+
+        ref = FirebaseDatabase.getInstance().getReference().child("RecentMessages").child(UserDetails.fullname);
+        ref.orderByChild("time").addChildEventListener(new com.google.firebase.database.ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map map = dataSnapshot.getValue(Map.class);
+            public void onChildAdded(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                 String message = map.get("message").toString();
                 String from = map.get("user").toString();
                 String time =map.get("time").toString();
-                //Toast.makeText(Conversations.this, "from "+ from, Toast.LENGTH_LONG).show();
-
+//                Toast.makeText(Conversations.this, from, Toast.LENGTH_SHORT).show();
                 fromList.add(from);
                 timeList.add(time);
-                DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, time, message);
-                drowItem.add(item);
+                messageList.add(message);
+                DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), message);
+                drowItem.add(0, item);
                 adapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+//        recentsRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                Map map = dataSnapshot.getValue(Map.class);
+//                String message = map.get("message").toString();
+//                String from = map.get("user").toString();
+//                String time =map.get("time").toString();
+////                //Toast.makeText(Conversations.this, "from "+ from, Toast.LENGTH_LONG).show();
+//
+//                if(timeList.size() == 1 && Long.valueOf(timeList.get(0)) >= Long.valueOf(time)) {
+//                    timeList.add(0, time);
+//                    fromList.add(0, from);
+//                    messageList.add(0, message);
+//                } else {
+//                    for(int i = 0; i < timeList.size()-1; i++) {
+//                        if(Long.valueOf(time) >= Long.valueOf(timeList.get(i)) && Long.valueOf(time) <= Long.valueOf(timeList.get(i+1))) {
+//                            timeList.add(i, time);
+//                            fromList.add(i, from);
+//                            messageList.add(i, message);
+//
+//                        }
+//                    }
+//                    // number is the largest seen; add it to the end.
+//                     timeList.add(time);
+//                     fromList.add(from);
+//                     messageList.add(message);
+//
+//                 }
+//                for(int i=0; i<=timeList.size()-1;i++){
+//                    DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, fromList.get(i), timeList.get(i), messageList.get(i));
+//                    drowItem.add(item);
+//                    adapter.notifyDataSetChanged();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
 
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +256,31 @@ public class Conversations extends AppCompatActivity {
         });
 
 
+    }
+
+    private String getTime(String time) {
+        Calendar calendar = Calendar.getInstance();
+        Long longTime = Long.valueOf(time);
+
+        Date today = new Date(System.currentTimeMillis());
+        Date otherDate = new Date(longTime);
+
+
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat hfor = new SimpleDateFormat("hh:mm aa");
+
+        String todayD = formatter.format(today);
+        String otherDateD = formatter.format(otherDate);
+
+
+
+        if(todayD.equals(otherDateD)){
+
+//            String hm = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toHours(longTime),
+//                    TimeUnit.MILLISECONDS.toMinutes(longTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(longTime)));
+
+            return hfor.format(longTime);
+        } else return otherDateD;
     }
 
     @Override
@@ -207,6 +309,7 @@ public class Conversations extends AppCompatActivity {
         if (id == R.id.newmessage) {
             Intent i = new Intent(this, FollowersActivity.class);
             i.putExtra("Uniqid", "FromConversations");
+            UserDetails.oldIntent="FromConversations";
             i.putExtra("Myname", UserDetails.username);
             startActivity(i);
         }
