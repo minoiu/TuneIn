@@ -192,24 +192,49 @@ public class AdapterFollowing extends BaseAdapter {
                                 }
 
                             });
-
-
                             break;
-
                         default:
                             break;
                     }
-
-
                 }
             });
 
         }catch(Exception e)
 
         {
-
             e.printStackTrace();
         }
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String user = rowItem.getTitle().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                mContext.startActivity(intent);
+            }
+
+        });
 
 
         return convertView;

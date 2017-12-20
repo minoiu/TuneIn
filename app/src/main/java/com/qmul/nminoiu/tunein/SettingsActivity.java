@@ -80,7 +80,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,20 +106,38 @@ public class SettingsActivity extends AppCompatActivity
     private ArrayList<String> songs = new ArrayList<>();
     private ArrayList<String> users = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> times1 = new ArrayList<>();
+
     private ArrayList<String> title = new ArrayList<>();
     private ArrayList<String> pictures = new ArrayList<>();
 
+    private ArrayList<String> names1 = new ArrayList<>();
+    private ArrayList<String> titles1 = new ArrayList<>();
+    private ArrayList<String> pictures1 = new ArrayList<>();
+
     private LinearLayout[] ll;
+    private LinearLayout[] ll1;
+
     private ImageButton[] syncButtonArray;
     private ImageButton[] tuneoutButtonArray;
     private ImageButton[] youtubeArray;
+    private ImageButton[] youtubeArray1;
+
     private ImageButton[] dwnArray;
+
     private ImageButton[] commentArray;
     private ImageButton[] addArray;
     private ImageButton[] blackHeartArray;
     private ImageButton[] redHeartArray;
     private TextView[] namesArray;
+    private TextView[] namesArray1;
+
+    private TextView[] timesArray;
+    private TextView[] timesArray1;
+
     private TextView[] titlesArray;
+    private TextView[] titlesArray1;
+
     private Firebase reference1;
     private Firebase reference2;
     private DatabaseReference reference3;
@@ -168,6 +190,8 @@ public class SettingsActivity extends AppCompatActivity
     private DatabaseReference mDatabase7;
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
+    private DatabaseReference factref;
+
     private DatabaseReference timeref;
     private Button uploadImg;
     private ImageView profilePic;
@@ -176,6 +200,12 @@ public class SettingsActivity extends AppCompatActivity
     private ImageView friendPic3;
     private ImageView friendPic4;
     private ImageView friendPic5;
+    private ImageView friendPic6;
+    private ImageView friendPic7;
+    private ImageView friendPic8;
+    private ImageView friendPic9;
+    private ImageView friendPic10;
+
 
     private ArrayList<String> recents;
     private ScrollView ScrollView01;
@@ -187,7 +217,14 @@ public class SettingsActivity extends AppCompatActivity
     public LinearLayout np3;
     public LinearLayout np4;
     public LinearLayout np5;
+    public LinearLayout np6;
+    public LinearLayout np7;
+    public LinearLayout np8;
+    public LinearLayout np9;
+    public LinearLayout np10;
     public LinearLayout nowPlayingLayout;
+    public LinearLayout recPlayedLayout;
+
     private FirebaseStorage mStorage;
     private ImageButton syncButton;
     private ImageButton tuneOutBtn;
@@ -199,11 +236,6 @@ public class SettingsActivity extends AppCompatActivity
     public TextView nameText;
     public FloatingActionButton fab;
     public ImageButton fab1;
-    public ImageButton youtube1;
-    public ImageButton youtube2;
-    public ImageButton youtube3;
-    public ImageButton youtube4;
-    public ImageButton youtube5;
     public ImageButton tunein1;
     public ImageButton tunein2;
     public ImageButton tunein3;
@@ -219,37 +251,94 @@ public class SettingsActivity extends AppCompatActivity
     public TextView title3;
     public TextView title4;
     public TextView title5;
+    public TextView title6;
+    public TextView title7;
+    public TextView title8;
+    public TextView title9;
+    public TextView title10;
     public ImageButton bheart1;
     public ImageButton bheart2;
     public ImageButton bheart3;
     public ImageButton bheart4;
     public ImageButton bheart5;
+    public ImageButton bheart6;
+    public ImageButton bheart7;
+    public ImageButton bheart8;
+    public ImageButton bheart9;
+    public ImageButton bheart10;
     public ImageButton rheart1;
     public ImageButton rheart2;
     public ImageButton rheart3;
     public ImageButton rheart4;
     public ImageButton rheart5;
+    public ImageButton rheart6;
+    public ImageButton rheart7;
+    public ImageButton rheart8;
+    public ImageButton rheart9;
+    public ImageButton rheart10;
     public ImageButton add1;
     public ImageButton add2;
     public ImageButton add3;
     public ImageButton add4;
     public ImageButton add5;
+    public ImageButton add6;
+    public ImageButton add7;
+    public ImageButton add8;
+    public ImageButton add9;
+    public ImageButton add10;
     public ImageButton comment1;
     public ImageButton comment2;
     public ImageButton comment3;
     public ImageButton comment4;
     public ImageButton comment5;
+    public ImageButton comment6;
+    public ImageButton comment7;
+    public ImageButton comment8;
+    public ImageButton comment9;
+    public ImageButton comment10;
     public ImageButton download1;
     public ImageButton download2;
     public ImageButton download3;
     public ImageButton download4;
     public ImageButton download5;
+    public ImageButton download6;
+    public ImageButton download7;
+    public ImageButton download8;
+    public ImageButton download9;
+    public ImageButton download10;
     private int newtime;
     public TextView name1;
     public TextView name2;
     public TextView name3;
     public TextView name4;
     public TextView name5;
+    public TextView name6;
+    public TextView name7;
+    public TextView name8;
+    public TextView name9;
+    public TextView name10;
+    public TextView time1;
+    public TextView time2;
+    public TextView time3;
+    public TextView time4;
+    public TextView time5;
+    public TextView time6;
+    public TextView time7;
+    public TextView time8;
+    public TextView time9;
+    public TextView time10;
+    public LinearLayout sl1;
+    public LinearLayout sl2;
+    public LinearLayout sl3;
+    public LinearLayout sl4;
+    public LinearLayout sl5;
+    public LinearLayout sl6;
+    public LinearLayout sl7;
+    public LinearLayout sl8;
+    public LinearLayout sl9;
+    public LinearLayout sl10;
+
+
     public ImageButton youtubecoloured;
     public ImageButton comment;
     public ImageButton commentblue;
@@ -305,11 +394,19 @@ public class SettingsActivity extends AppCompatActivity
         myFollowers = new ArrayList<>();
         myuser = new User();
         nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
+        //recPlayedLayout = (LinearLayout) findViewById(R.id.played);
         np1 = (LinearLayout) findViewById(R.id.np1);
         np2 = (LinearLayout) findViewById(R.id.np2);
         np3 = (LinearLayout) findViewById(R.id.np3);
         np4 = (LinearLayout) findViewById(R.id.np4);
         np5 = (LinearLayout) findViewById(R.id.np5);
+        np6 = (LinearLayout) findViewById(R.id.np6);
+        np7 = (LinearLayout) findViewById(R.id.np7);
+        np8 = (LinearLayout) findViewById(R.id.np8);
+        np9 = (LinearLayout) findViewById(R.id.np9);
+        np10 = (LinearLayout) findViewById(R.id.np10);
+
+
 
         makePrivate = (LinearLayout) findViewById(R.id.makePrivate);
         makePublic = (LinearLayout) findViewById(R.id.makePublic);
@@ -374,6 +471,12 @@ public class SettingsActivity extends AppCompatActivity
         ll[2] = np3;
         ll[3] = np4;
         ll[4] = np5;
+        ll1 = new LinearLayout[5];
+        ll1[0] = np6;
+        ll1[1] = np7;
+        ll1[2] = np8;
+        ll1[3] = np9;
+        ll1[4] = np10;
         PICK_IMAGE_REQUEST = 111;
         tuneOutBtn = (ImageButton) findViewById(R.id.tuneout_btn);
         blackHeart = (ImageButton) findViewById(R.id.blackHeart);
@@ -459,6 +562,39 @@ public class SettingsActivity extends AppCompatActivity
         ImageButton youtube4 = (ImageButton) v4.findViewById(R.id.youtube);
         View v5 = findViewById(R.id.np5);
         ImageButton youtube5 = (ImageButton) v5.findViewById(R.id.youtube);
+        View v6 = findViewById(R.id.np6);
+        ImageButton youtube6 = (ImageButton) v6.findViewById(R.id.youtube);
+        View v7 = findViewById(R.id.np7);
+        ImageButton youtube7 = (ImageButton) v7.findViewById(R.id.youtube);
+        View v8 = findViewById(R.id.np8);
+        ImageButton youtube8 = (ImageButton) v8.findViewById(R.id.youtube);
+        View v9 = findViewById(R.id.np9);
+        ImageButton youtube9 = (ImageButton) v9.findViewById(R.id.youtube);
+        View v10 = findViewById(R.id.np10);
+        ImageButton youtube10 = (ImageButton) v10.findViewById(R.id.youtube);
+
+
+        View sp1 = findViewById(R.id.np1);
+        sl1 = (LinearLayout) sp1.findViewById(R.id.nowPlaying3);
+        View sp2 = findViewById(R.id.np2);
+        sl2 = (LinearLayout) sp2.findViewById(R.id.nowPlaying3);
+        View sp3 = findViewById(R.id.np3);
+        sl3 = (LinearLayout) sp3.findViewById(R.id.nowPlaying3);
+        View sp4 = findViewById(R.id.np4);
+        sl4 = (LinearLayout) sp4.findViewById(R.id.nowPlaying3);
+        View sp5 = findViewById(R.id.np5);
+        sl5 = (LinearLayout) sp5.findViewById(R.id.nowPlaying3);
+        View sp6 = findViewById(R.id.np6);
+        sl6 = (LinearLayout) sp6.findViewById(R.id.nowPlaying3);
+        View sp7 = findViewById(R.id.np7);
+        sl7 = (LinearLayout) sp7.findViewById(R.id.nowPlaying3);
+        View sp8 = findViewById(R.id.np8);
+        sl8 = (LinearLayout) sp8.findViewById(R.id.nowPlaying3);
+        View sp9 = findViewById(R.id.np9);
+        sl9 = (LinearLayout) sp9.findViewById(R.id.nowPlaying3);
+        View sp10 = findViewById(R.id.np10);
+        sl10 = (LinearLayout) sp10.findViewById(R.id.nowPlaying3);
+
 
         //now playing layout - initialising download button
         View a1 = findViewById(R.id.np1);
@@ -471,6 +607,17 @@ public class SettingsActivity extends AppCompatActivity
         download4 = (ImageButton) a4.findViewById(R.id.download);
         View a5 = findViewById(R.id.np5);
         download5 = (ImageButton) a5.findViewById(R.id.download);
+        View a6 = findViewById(R.id.np6);
+        download6 = (ImageButton) a6.findViewById(R.id.download);
+        View a7 = findViewById(R.id.np7);
+        download7 = (ImageButton) a7.findViewById(R.id.download);
+        View a8 = findViewById(R.id.np8);
+        download8 = (ImageButton) a8.findViewById(R.id.download);
+        View a9 = findViewById(R.id.np9);
+        download9 = (ImageButton) a9.findViewById(R.id.download);
+        View a10 = findViewById(R.id.np10);
+        download10 = (ImageButton) a10.findViewById(R.id.download);
+
 
         //now playing layout - initialising comment button
         View c1 = findViewById(R.id.np1);
@@ -483,6 +630,16 @@ public class SettingsActivity extends AppCompatActivity
         comment4 = (ImageButton) c4.findViewById(R.id.comment);
         View c5 = findViewById(R.id.np5);
         comment5 = (ImageButton) c5.findViewById(R.id.comment);
+        View c6 = findViewById(R.id.np6);
+        comment6 = (ImageButton) c6.findViewById(R.id.comment);
+        View c7 = findViewById(R.id.np7);
+        comment7 = (ImageButton) c7.findViewById(R.id.comment);
+        View c8 = findViewById(R.id.np8);
+        comment8 = (ImageButton) c8.findViewById(R.id.comment);
+        View c9 = findViewById(R.id.np9);
+        comment9 = (ImageButton) c9.findViewById(R.id.comment);
+        View c10 = findViewById(R.id.np10);
+        comment10 = (ImageButton) c10.findViewById(R.id.comment);
 
         //now playing layout - initialising add to playlist button
         View ad1 = findViewById(R.id.np1);
@@ -495,6 +652,16 @@ public class SettingsActivity extends AppCompatActivity
         add4 = (ImageButton) ad4.findViewById(R.id.add);
         View ad5 = findViewById(R.id.np5);
         add5 = (ImageButton) ad5.findViewById(R.id.add);
+        View ad6 = findViewById(R.id.np6);
+        add6 = (ImageButton) ad6.findViewById(R.id.add);
+        View ad7 = findViewById(R.id.np7);
+        add7 = (ImageButton) ad7.findViewById(R.id.add);
+        View ad8 = findViewById(R.id.np8);
+        add8 = (ImageButton) ad8.findViewById(R.id.add);
+        View ad9 = findViewById(R.id.np9);
+        add9 = (ImageButton) ad9.findViewById(R.id.add);
+        View ad10 = findViewById(R.id.np10);
+        add10 = (ImageButton) ad10.findViewById(R.id.add);
 
         //now playing layout - initialising like button
         View b1 = findViewById(R.id.np1);
@@ -507,6 +674,17 @@ public class SettingsActivity extends AppCompatActivity
         bheart4 = (ImageButton) b4.findViewById(R.id.blackHeart);
         View b5 = findViewById(R.id.np5);
         bheart5 = (ImageButton) b5.findViewById(R.id.blackHeart);
+        View b6 = findViewById(R.id.np6);
+        bheart6 = (ImageButton) b6.findViewById(R.id.blackHeart);
+        View b7 = findViewById(R.id.np7);
+        bheart7 = (ImageButton) b7.findViewById(R.id.blackHeart);
+        View b8 = findViewById(R.id.np8);
+        bheart8 = (ImageButton) b8.findViewById(R.id.blackHeart);
+        View b9 = findViewById(R.id.np9);
+        bheart9 = (ImageButton) b9.findViewById(R.id.blackHeart);
+        View b10 = findViewById(R.id.np10);
+        bheart10= (ImageButton) b10.findViewById(R.id.blackHeart);
+
 
         //now playing layout - initialising dislike button
         View r1 = findViewById(R.id.np1);
@@ -519,6 +697,16 @@ public class SettingsActivity extends AppCompatActivity
         rheart4 = (ImageButton) r4.findViewById(R.id.redHeart);
         View r5 = findViewById(R.id.np5);
         rheart5 = (ImageButton) r5.findViewById(R.id.redHeart);
+        View r6 = findViewById(R.id.np6);
+        rheart6 = (ImageButton) r6.findViewById(R.id.redHeart);
+        View r7 = findViewById(R.id.np7);
+        rheart7 = (ImageButton) r7.findViewById(R.id.redHeart);
+        View r8 = findViewById(R.id.np8);
+        rheart8 = (ImageButton) r8.findViewById(R.id.redHeart);
+        View r9 = findViewById(R.id.np9);
+        rheart9 = (ImageButton) r9.findViewById(R.id.redHeart);
+        View r10 = findViewById(R.id.np10);
+        rheart10= (ImageButton) r10.findViewById(R.id.redHeart);
 
         //now playing layout - initialising synchronisation button
         View ti1 = findViewById(R.id.np1);
@@ -555,6 +743,40 @@ public class SettingsActivity extends AppCompatActivity
         name4 = (TextView) n4.findViewById(R.id.name);
         View n5 = findViewById(R.id.np5);
         name5 = (TextView) n5.findViewById(R.id.name);
+        View n6 = findViewById(R.id.np6);
+        name6 = (TextView) n6.findViewById(R.id.name);
+        View n7 = findViewById(R.id.np7);
+        name7 = (TextView) n7.findViewById(R.id.name);
+        View n8 = findViewById(R.id.np8);
+        name8 = (TextView) n8.findViewById(R.id.name);
+        View n9 = findViewById(R.id.np9);
+        name9 = (TextView) n9.findViewById(R.id.name);
+        View n10 = findViewById(R.id.np10);
+        name10 = (TextView) n10.findViewById(R.id.name);
+
+        View tim1 = findViewById(R.id.np1);
+        time1 = (TextView) tim1.findViewById(R.id.name);
+        View tim2 = findViewById(R.id.np2);
+        time2 = (TextView) tim2.findViewById(R.id.name);
+        View tim3 = findViewById(R.id.np3);
+        time3 = (TextView) tim3.findViewById(R.id.name);
+        View tim4 = findViewById(R.id.np4);
+        time4 = (TextView) tim4.findViewById(R.id.name);
+        View tim5 = findViewById(R.id.np5);
+        time5 = (TextView) tim5.findViewById(R.id.name);
+        View tim6 = findViewById(R.id.np6);
+        time6 = (TextView) tim6.findViewById(R.id.name);
+        View tim7 = findViewById(R.id.np7);
+        time7 = (TextView) tim7.findViewById(R.id.name);
+        View tim8 = findViewById(R.id.np8);
+        time8 = (TextView) tim8.findViewById(R.id.name);
+        View tim9 = findViewById(R.id.np9);
+        time9 = (TextView) tim9.findViewById(R.id.name);
+        View tim10 = findViewById(R.id.np10);
+        time10 = (TextView) tim10.findViewById(R.id.name);
+
+
+
 
         //now playing layout - initialising textView for song name
         View t1 = findViewById(R.id.np1);
@@ -567,6 +789,17 @@ public class SettingsActivity extends AppCompatActivity
         title4 = (TextView) t4.findViewById(R.id.songName);
         View t5 = findViewById(R.id.np5);
         title5 = (TextView) t5.findViewById(R.id.songName);
+        View t6 = findViewById(R.id.np6);
+        title6 = (TextView) t6.findViewById(R.id.songName);
+        View t7 = findViewById(R.id.np7);
+        title7 = (TextView) t7.findViewById(R.id.songName);
+        View t8 = findViewById(R.id.np8);
+        title8 = (TextView) t8.findViewById(R.id.songName);
+        View t9 = findViewById(R.id.np9);
+        title9 = (TextView) t9.findViewById(R.id.songName);
+        View t10 = findViewById(R.id.np10);
+        title10 = (TextView) t10.findViewById(R.id.songName);
+
 
         View i1 = findViewById(R.id.np1);
         friendPic1 = (ImageView) i1.findViewById(R.id.friendPic);
@@ -578,6 +811,17 @@ public class SettingsActivity extends AppCompatActivity
         friendPic4 = (ImageView) i4.findViewById(R.id.friendPic);
         View i5 = findViewById(R.id.np5);
         friendPic5 = (ImageView) i5.findViewById(R.id.friendPic);
+        View i6 = findViewById(R.id.np6);
+        friendPic6 = (ImageView) i6.findViewById(R.id.friendPic);
+        View i7 = findViewById(R.id.np7);
+        friendPic7 = (ImageView) i7.findViewById(R.id.friendPic);
+        View i8 = findViewById(R.id.np8);
+        friendPic8 = (ImageView) i8.findViewById(R.id.friendPic);
+        View i9 = findViewById(R.id.np9);
+        friendPic9 = (ImageView) i9.findViewById(R.id.friendPic);
+        View i10 = findViewById(R.id.np10);
+        friendPic10 = (ImageView) i10.findViewById(R.id.friendPic);
+
 
         //storing buttons in ButtonArrays
         tuneoutButtonArray = new ImageButton[5];
@@ -600,6 +844,12 @@ public class SettingsActivity extends AppCompatActivity
         youtubeArray[2] = youtube3;
         youtubeArray[3] = youtube4;
         youtubeArray[4] = youtube5;
+        youtubeArray1 = new ImageButton[5];
+        youtubeArray1[0] = youtube6;
+        youtubeArray1[1] = youtube7;
+        youtubeArray1[2] = youtube8;
+        youtubeArray1[3] = youtube9;
+        youtubeArray1[4] = youtube10;
 
         titlesArray = new TextView[5];
         titlesArray[0] = title1;
@@ -607,6 +857,12 @@ public class SettingsActivity extends AppCompatActivity
         titlesArray[2] = title3;
         titlesArray[3] = title4;
         titlesArray[4] = title5;
+        titlesArray1 = new TextView[5];
+        titlesArray1[0] = title6;
+        titlesArray1[1] = title7;
+        titlesArray1[2] = title8;
+        titlesArray1[3] = title9;
+        titlesArray1[4] = title10;
 
         namesArray = new TextView[5];
         namesArray[0] = name1;
@@ -614,6 +870,1194 @@ public class SettingsActivity extends AppCompatActivity
         namesArray[2] = name3;
         namesArray[3] = name4;
         namesArray[4] = name5;
+        namesArray1 = new TextView[5];
+        namesArray1[0] = name6;
+        namesArray1[1] = name7;
+        namesArray1[2] = name8;
+        namesArray1[3] = name9;
+        namesArray1[4] = name10;
+
+        timesArray = new TextView[5];
+        timesArray[0] = time1;
+        timesArray[1] = time2;
+        timesArray[2] = time3;
+        timesArray[3] = time4;
+        timesArray[4] = time5;
+        timesArray1 = new TextView[5];
+        timesArray[0] = time6;
+        timesArray[1] = time7;
+        timesArray[2] = time8;
+        timesArray[3] = time9;
+        timesArray[4] = time10;
+
+        title1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title1.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title2.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title3.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title4.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title5.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title5.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title6.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title6.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title7.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title7.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title8.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title8.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title9.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title9.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+        title10.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title10.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title1.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title2.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title3.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title4.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl5.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title5.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl6.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title6.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl7.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title7.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl8.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title8.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl9.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title9.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        sl10.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String song = title10.getText().toString();
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(song);
+                hideSoftKeyboard(SettingsActivity.this);
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        name1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name1.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name2.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name3.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name4.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name5.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name5.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name6.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name6.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name7.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name7.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name8.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name8.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name9.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name9.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        name10.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name10.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name1.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name2.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name3.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name4.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic5.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name5.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic6.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name6.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic7.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name7.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic8.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name8.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic9.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name9.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
+        friendPic10.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String user = name10.getText().toString();
+
+                DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
+                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String friendID = dataSnapshot.getValue().toString();
+//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
+                        UserDetails.friendID = friendID;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                intent.putExtra("FriendName", user);
+                intent.putExtra("FriendId", UserDetails.friendID);
+                startActivity(intent);
+            }
+        });
+
 
 
         //sliding menu settings
@@ -763,6 +2207,16 @@ public class SettingsActivity extends AppCompatActivity
                 fab1.setVisibility(View.VISIBLE);
             }
         });
+
+//        recPlayedLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                commentsLayout.setVisibility(View.GONE);
+//                fab.setVisibility(View.VISIBLE);
+//                fab1.setVisibility(View.VISIBLE);
+//            }
+//        });
+
 
         mainL.setOnClickListener(new OnClickListener() {
             @Override
@@ -1334,6 +2788,153 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        youtube6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title6.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title7.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title8.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title9.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+        youtube10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String songToView = title10.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        String link = dataSnapshot.getValue().toString();
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse(link));
+                        startActivity(viewIntent);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+        });
+
+
+
         //listeners for download buttons - NowPlaying Layout
         download1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1532,6 +3133,201 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        download6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title6.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title7.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title8.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title9.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
+        download10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String songToDown = title10.getText().toString();
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+
+                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                storagePath = new File(view.getContext().getFilesDir(), "My_music");
+                File localFile = new File(storagePath, songToDown);
+                try {
+                    localFile = File.createTempFile(songToDown, ".mp3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final File finalLocalFile = new File(storagePath, songToDown);
+                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        finalLocalFile.getAbsolutePath();
+                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
+                        playRef.push().setValue(songToDown);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+            }
+        });
+
         //// TODO: 18/10/2017
         //listeners for comment buttons - NowPlaying Layout
         comment1.setOnClickListener(new View.OnClickListener() {
@@ -1539,6 +3335,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
                 commentarea.setText("");
                 commentsLayout.setVisibility(View.VISIBLE);
                 UserDetails.commentTo = name1.getText().toString();
@@ -1552,6 +3349,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
                 commentarea.setText("");
                 commentsLayout.setVisibility(View.VISIBLE);
                 UserDetails.commentTo = name2.getText().toString();
@@ -1564,6 +3362,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
                 commentarea.setText("");
                 commentsLayout.setVisibility(View.VISIBLE);
                 UserDetails.commentTo = name3.getText().toString();
@@ -1576,6 +3375,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
                 commentarea.setText("");
                 commentsLayout.setVisibility(View.VISIBLE);
                 UserDetails.commentTo = name4.getText().toString();
@@ -1588,10 +3388,76 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
                 commentarea.setText("");
                 commentsLayout.setVisibility(View.VISIBLE);
                 UserDetails.commentTo = name5.getText().toString();
                 UserDetails.commentOn = title5.getText().toString();
+            }
+        });
+
+        comment6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name6.getText().toString();
+                UserDetails.commentOn = title6.getText().toString();
+            }
+        });
+
+        comment7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name7.getText().toString();
+                UserDetails.commentOn = title7.getText().toString();
+            }
+        });
+
+        comment8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name8.getText().toString();
+                UserDetails.commentOn = title8.getText().toString();
+            }
+        });
+
+        comment9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name9.getText().toString();
+                UserDetails.commentOn = title9.getText().toString();
+            }
+        });
+
+        comment10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.setVisibility(View.GONE);
+                fab1.setVisibility(View.GONE);
+                play_toolbar.setVisibility(View.GONE);
+                commentarea.setText("");
+                commentsLayout.setVisibility(View.VISIBLE);
+                UserDetails.commentTo = name10.getText().toString();
+                UserDetails.commentOn = title10.getText().toString();
             }
         });
 
@@ -1617,16 +3483,39 @@ public class SettingsActivity extends AppCompatActivity
         add1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
-                final String song = title1.getText().toString();
-                i.putExtra("Uniqid", "FromNowPlayling");
-                i.putExtra("Song", song);
-                startActivity(i);
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title1.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
             }
         });
+
 
         add2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1770,6 +3659,188 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        add6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title6.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
+            }
+        });
+
+        add7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title7.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
+            }
+        });
+
+        add8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title8.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
+            }
+        });
+
+        add9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title9.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
+            }
+        });
+
+        add10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentsLayout.setVisibility(View.GONE);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
+                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                final String song = title10.getText().toString();
+
+                DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
+                songref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ID)) {
+                            for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                                String key = snapshot.getKey();
+
+                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                                    Firebase playRef = ref.child("MySongs").child(ID);
+                                    playRef.push().setValue(song);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                i.putExtra("Song", song);
+                startActivity(i);
+            }
+        });
+
+
+
         final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -1795,8 +3866,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 String songToLike = title1.getText().toString();
                 Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
                 likedRef.push().setValue(songToLike);
@@ -1812,8 +3885,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 String songToLike = title2.getText().toString();
                 Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
                 likedRef.push().setValue(songToLike);
@@ -1829,8 +3904,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 String songToLike = title3.getText().toString();
                 Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
                 likedRef.push().setValue(songToLike);
@@ -1846,8 +3923,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 String songToLike = title4.getText().toString();
                 Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
                 likedRef.push().setValue(songToLike);
@@ -1863,8 +3942,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 String songToLike = title5.getText().toString();
                 Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
                 likedRef.push().setValue(songToLike);
@@ -1875,14 +3956,108 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        bheart6.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                String songToLike = title6.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart6.setVisibility(View.GONE);
+                rheart6.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart7.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                String songToLike = title7.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart7.setVisibility(View.GONE);
+                rheart7.setVisibility(View.VISIBLE);
+            }
+        });
+
+        bheart8.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                String songToLike = title8.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart8.setVisibility(View.GONE);
+                rheart8.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart9.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                String songToLike = title9.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+
+                bheart9.setVisibility(View.GONE);
+                rheart9.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        bheart10.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                String songToLike = title10.getText().toString();
+                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
+                likedRef.push().setValue(songToLike);
+                bheart5.setVisibility(View.GONE);
+                rheart5.setVisibility(View.VISIBLE);
+            }
+        });
+
         //listeners for dislike buttons - NowPlaying Layout
         rheart1.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 final String songLiked = title1.getText().toString();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
                 mDatabase1.addListenerForSingleValueEvent(
@@ -1912,8 +4087,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 final String songLiked = title2.getText().toString();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
                 mDatabase1.addListenerForSingleValueEvent(
@@ -1943,8 +4120,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 final String songLiked = title3.getText().toString();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
                 mDatabase1.addListenerForSingleValueEvent(
@@ -1974,8 +4153,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 final String songLiked = title4.getText().toString();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
                 mDatabase1.addListenerForSingleValueEvent(
@@ -2005,8 +4186,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 final String songLiked = title5.getText().toString();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
                 mDatabase1.addListenerForSingleValueEvent(
@@ -2030,6 +4213,173 @@ public class SettingsActivity extends AppCompatActivity
                         });
             }
         });
+
+        rheart6.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                final String songLiked = title6.getText().toString();
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart6.setVisibility(View.INVISIBLE);
+                                        bheart6.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart7.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                final String songLiked = title7.getText().toString();
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart7.setVisibility(View.INVISIBLE);
+                                        bheart7.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart8.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                final String songLiked = title8.getText().toString();
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart8.setVisibility(View.INVISIBLE);
+                                        bheart8.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart9.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                final String songLiked = title9.getText().toString();
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart9.setVisibility(View.INVISIBLE);
+                                        bheart9.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+        rheart10.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                commentsLayout.setVisibility(View.GONE);
+                if(!mediaPlayer.isPlaying()) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
+                final String songLiked = title10.getText().toString();
+                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
+                mDatabase1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey();
+                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
+                                        dataSnapshot.child(key).getRef().removeValue();
+                                        rheart10.setVisibility(View.INVISIBLE);
+                                        bheart10.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
+
+
 
         //Firebase references to retrieve data
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Following").child(ID);
@@ -2113,12 +4463,12 @@ public class SettingsActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     text = dataSnapshot.getKey();
-                    names.add(text);
+                    names.add(0, text);
                     String mysong = dataSnapshot.child("Song").getValue().toString();
-                    title.add(mysong);
+                    title.add(0, mysong);
                     String picture = dataSnapshot.child("Picture").getValue().toString();
-                    pictures.add(picture);
-               // }
+                    pictures.add(0, picture);
+
                 for (int i = 0; i <= names.size() - 1; i++) {
                     Toast.makeText(SettingsActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
 
@@ -2229,6 +4579,147 @@ public class SettingsActivity extends AppCompatActivity
 
             }
         });
+
+
+        //listener for Friends Activity Firebase child
+        factref = FirebaseDatabase.getInstance().getReference().child("FriendsActivity").child(ID);
+        factref.orderByChild("Time").addChildEventListener(new com.google.firebase.database.ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                String text = dataSnapshot.getKey();
+                names1.add(0,text);
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                titles1.add(0,mysong);
+                String picture = dataSnapshot.child("Picture").getValue().toString();
+                pictures1.add(0,picture);
+                String time = dataSnapshot.child("Time").getValue().toString();
+                times1.add(0,getTime(time));
+
+
+                for (int i = 0; i <= names1.size() - 1; i++) {
+                    Toast.makeText(SettingsActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
+
+                    ll1[i].setVisibility(View.VISIBLE);
+                    TextView name = (TextView) ll1[i].findViewById(R.id.name);
+                    name.setText(names1.get(i));
+                    TextView song = (TextView) ll1[i].findViewById(R.id.songName);
+                    song.setText(titles1.get(i));
+                    TextView timer = (TextView) ll1[i].findViewById(R.id.time);
+                    timer.setText(times1.get(i));
+                    ImageView pic = (ImageView) ll1[i].findViewById(R.id.friendPic);
+                    Picasso.with(SettingsActivity.this)
+                            .load(pictures1.get(i).toString())
+//                .resize(350, 240)
+//                .centerInside()
+
+                            .fit()
+                            .centerCrop()
+                            .into(pic);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                String text = dataSnapshot.getKey();
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                String fpic = dataSnapshot.child("Picture").getValue().toString();
+                String ctime = dataSnapshot.child("Time").getValue().toString();
+
+
+
+                for (int i = 0; i <= names1.size() - 1; i++) {
+                    if (text.equals(names1.get(i))) {
+                        names1.set(i, text);
+                        titles1.set(i, mysong);
+                        pictures1.set(i,fpic);
+                        times1.set(i,getTime(ctime));
+                        TextView name = (TextView) ll1[i].findViewById(R.id.name);
+                        name.setText(text);
+                        TextView song = (TextView) ll1[i].findViewById(R.id.songName);
+                        song.setText(mysong);
+                        TextView time = (TextView) ll1[i].findViewById(R.id.time);
+                        time.setText(getTime(ctime));
+                        ImageView pict = (ImageView) ll1[i].findViewById(R.id.friendPic);
+                        Picasso.with(SettingsActivity.this)
+                                .load(fpic)
+//                .resize(350, 240)
+//                .centerInside()
+
+                                .fit()
+                                .centerCrop()
+                                .into(pict);
+                    }
+                }
+                // }
+//                for (int i = 0; i <= names.size() - 1; i++) {
+//                    ll[i].setVisibility(View.VISIBLE);
+//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
+//                    name.setText(names.get(i));
+//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
+//                    song.setText(title.get(i));
+//                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
+//                    Picasso.with(SettingsActivity.this)
+//                            .load(pictures.get(i).toString())
+////                .resize(350, 240)jūlo
+////                .centerInside()
+//
+//                            .fit()
+//                            //.centerCrop()
+//                            .into(pic);
+//                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                String text = dataSnapshot.getKey();
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                String time = dataSnapshot.child("Time").getValue().toString();
+
+                String picture = dataSnapshot.child("Picture").getValue().toString();
+                names1.remove(text);
+                titles1.remove(mysong);
+                pictures1.remove(picture);
+                times1.remove(getTime(time));
+
+
+                for (int j = 0; j <= ll1.length - 1; j++) {
+                    // Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                    TextView name = (TextView) ll1[j].findViewById(R.id.name);
+                    TextView timer = (TextView) ll1[j].findViewById(R.id.time);
+                    TextView song = (TextView) ll1[j].findViewById(R.id.songName);
+                    ImageView pict = (ImageView) ll1[j].findViewById(R.id.friendPic);
+
+                    if (name.getText().equals(text)) {
+                        Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                        ll1[j].setVisibility(View.GONE);
+                    }
+
+                }
+                if (mediaPlayer.isPlaying()) {
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    track_title = (TextView) findViewById(R.id.track_title);
+                    track_title.setText(mysong);
+                }
+
+            }
+            // }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         //listener for TimeAnswer Firebase child
         timeref = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
@@ -2509,6 +5000,8 @@ public class SettingsActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 nowPlayingLayout.setVisibility(View.GONE);
+//                recPlayedLayout.setVisibility(View.GONE);
+
                 searchLayout.setVisibility(View.VISIBLE);
                 //searchView.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
@@ -2541,8 +5034,9 @@ public class SettingsActivity extends AppCompatActivity
                 if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
                     List<String> ulistFound = new ArrayList<String>();
                     for (String item : users) {
-                        if (item.toLowerCase().contains(newText.toLowerCase()))
+                        if (item.toLowerCase().contains(newText.toLowerCase())){
                             ulistFound.add(item);
+                        }
                     }
 
                     ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, ulistFound);
@@ -2550,8 +5044,20 @@ public class SettingsActivity extends AppCompatActivity
 
                     List<String> slistFound = new ArrayList<String>();
                     for (String item : songs) {
-                        if (item.toLowerCase().contains(newText.toLowerCase()))
+                        if (item.toLowerCase().contains(newText.toLowerCase())) {
                             slistFound.add(item);
+                        }
+                    }
+
+                    if (ulistFound.isEmpty()){
+                        ptextview.setVisibility(View.GONE);
+                    } else {
+                        ptextview.setVisibility(View.VISIBLE);
+                    }
+                    if(slistFound.isEmpty()){
+                        stextview.setVisibility(View.GONE);
+                    } else {
+                        stextview.setVisibility(View.VISIBLE);
                     }
 
                     ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, slistFound);
@@ -2571,6 +5077,7 @@ public class SettingsActivity extends AppCompatActivity
     //getting followers
     public void getFollowers(String fullname, final String mysong) {
         final ArrayAdapter<String> fadapter;
+        UserDetails.mysong = mysong;
         fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
         DatabaseReference fdb;
         fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
@@ -2585,7 +5092,7 @@ public class SettingsActivity extends AppCompatActivity
                     //addToFirebaseHome(value, mysong);
                     fadapter.notifyDataSetChanged();
                 }
-                addToHome(UserDetails.myFollowers, mysong);
+                eraseFromRecents(mysong);
             }
 
             @Override
@@ -2602,6 +5109,7 @@ public class SettingsActivity extends AppCompatActivity
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //play_toolbar.setVisibility(View.GONE);
 
         Menu nav_Menu = navigationView.getMenu();
 
@@ -2674,6 +5182,31 @@ public class SettingsActivity extends AppCompatActivity
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getTime(String time) {
+        Calendar calendar = Calendar.getInstance();
+        Long longTime = Long.valueOf(time);
+
+        Date today = new Date(System.currentTimeMillis());
+        Date otherDate = new Date(longTime);
+
+
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat hfor = new SimpleDateFormat("HH:mm");
+
+        String todayD = formatter.format(today);
+        String otherDateD = formatter.format(otherDate);
+
+
+
+        if(todayD.equals(otherDateD)){
+
+//            String hm = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toHours(longTime),
+//                    TimeUnit.MILLISECONDS.toMinutes(longTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(longTime)));
+
+            return hfor.format(longTime);
+        } else return otherDateD;
     }
 
     //sliding menu options
@@ -3076,7 +5609,38 @@ public class SettingsActivity extends AppCompatActivity
 
                     }
                 });
+        addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
     }
+
+    public void eraseFromRecents(String mysong) {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
+        mDatabase1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String v;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            v = snapshot.getKey();
+                            //getFulname();
+                            if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+
+                                // dataSnapshot.child(v).getRef().removeValue();
+                                dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+
+                                //names.remove(getMyFullname(ID));
+                                // title.remove()
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        addToHome(UserDetails.myFollowers, mysong);
+    }
+
 
     public void playFromPause(Integer time) {
 
@@ -3199,7 +5763,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
-                Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -3216,7 +5780,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("Song", mysong);
-                Toast.makeText(SettingsActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SettingsActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
                 mDatabase6.child(UserDetails.myname).updateChildren(map);
 
             }
@@ -3246,6 +5810,7 @@ public class SettingsActivity extends AppCompatActivity
 
     public void addToHome(List<String> myvalue, final String mysong) {
 
+
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
 
@@ -3268,17 +5833,58 @@ public class SettingsActivity extends AppCompatActivity
 
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
+
             if(!checkBox.isChecked()) {
                 uinfo.put("Song", mysong);
                 if (!UserDetails.picturelink.equals("")) {
                     uinfo.put("Picture", UserDetails.picturelink);
+
                 } else {
                     uinfo.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
                 }
                 ref4.child(UserDetails.fullname).updateChildren(uinfo);
-
             }
         }
+    }
+
+    public void addToFriendActivity(List<String> myvalue, final String mysong) {
+
+        String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+        mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.myname = dataSnapshot.getValue().toString();
+                me = dataSnapshot.getValue().toString();
+                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+            Firebase refAct = new Firebase("https://tunein-633e5.firebaseio.com/FriendsActivity/" + myvalue.get(i));
+            Map<String, Object> udet = new HashMap<>();
+
+            if(!checkBox.isChecked()) {
+                udet.put("Song", mysong);
+                udet.put("Time", System.currentTimeMillis());
+                if (!UserDetails.picturelink.equals("")) {
+                    udet.put("Picture", UserDetails.picturelink);
+
+                } else {
+                    udet.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+                }
+                refAct.child(UserDetails.fullname).updateChildren(udet);
+            }
+        }
+
     }
 
     private void getFriendFullname(String id) {
@@ -3361,8 +5967,9 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public int getCurrentPlayingTime() {
-        if (mediaPlayer.isPlaying())
-            Toast.makeText(SettingsActivity.this, mediaPlayer.getCurrentPosition() + "it shouldnt be called", Toast.LENGTH_SHORT).show();
+        if (!mediaPlayer.isPlaying()) {
+            Toast.makeText(this, "Music cannot be shared", Toast.LENGTH_SHORT).show();
+        }
         return mediaPlayer.getCurrentPosition();
     }
 

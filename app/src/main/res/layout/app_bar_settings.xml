@@ -29,13 +29,15 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:layout_marginTop="55dp"
         android:clipToPadding="false">
 
@@ -43,11 +45,14 @@
             android:id="@+id/playing"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
             android:layout_marginBottom="2dp"
             android:layout_marginRight="-20dp"
+            android:foregroundGravity="top"
             android:orientation="vertical"
             android:scrollX="@dimen/activity_vertical_margin"
             android:visibility="visible">
+
 
             <include
                 android:id="@+id/np1"
@@ -74,9 +79,36 @@
                 layout="@layout/nowplaying_item"
                 android:visibility="gone" />
 
+            <include
+                android:id="@+id/np6"
+                layout="@layout/recentlyplayed_item"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/np7"
+                layout="@layout/recentlyplayed_item"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/np8"
+                layout="@layout/recentlyplayed_item"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/np9"
+                layout="@layout/recentlyplayed_item"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/np10"
+                layout="@layout/recentlyplayed_item"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </ScrollView>
+
+ </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -208,13 +240,11 @@
         <ListView
             android:id="@+id/slistView"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/stextView"
             android:layout_below="@+id/toolbar"
             android:layout_gravity="bottom"
             android:layout_marginBottom="1dip"
-            android:divider="#806326"
-            android:dividerHeight="1dp"
             android:focusable="true"
             android:isScrollContainer="false"
             android:maxHeight="210dp"
@@ -244,12 +274,10 @@
 
             android:id="@+id/plistView"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
 
             android:layout_weight="0.4"
-            android:divider="#806326"
-            android:dividerHeight="1dp"
             android:isScrollContainer="false"
             android:maxHeight="210dp"
             android:paddingLeft="12dp"

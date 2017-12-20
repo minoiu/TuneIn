@@ -40,6 +40,7 @@ public class UserDetails {
     static String oldIntent = "";
     static String commentOn = "";
     static String commentTo = "";
+    static String mysong = "";
 
 
 

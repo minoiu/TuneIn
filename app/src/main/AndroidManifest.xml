@@ -28,7 +28,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="Now playing"
+            android:label="TuneIn"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
         <activity

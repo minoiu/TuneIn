@@ -267,7 +267,7 @@ public class Conversations extends AppCompatActivity {
 
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        DateFormat hfor = new SimpleDateFormat("hh:mm aa");
+        DateFormat hfor = new SimpleDateFormat("HH:mm");
 
         String todayD = formatter.format(today);
         String otherDateD = formatter.format(otherDate);

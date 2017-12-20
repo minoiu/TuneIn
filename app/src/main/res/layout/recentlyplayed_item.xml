@@ -18,18 +18,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="friend name"
-        android:textAlignment="inherit"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:textSize="@dimen/feed_item_profile_name" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="friend name"
+            android:textAlignment="inherit"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/feed_item_profile_name" />
 
         <TextView
             android:id="@+id/time"
@@ -78,24 +78,28 @@
 
         <LinearLayout
             android:id="@+id/nowPlaying3"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="6dp"
             android:layout_toRightOf="@+id/friendPic"
             android:foregroundGravity="right|center_vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
             <TextView
                 android:id="@+id/songName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:layout_toEndOf="@+id/friendPic"
                 android:layout_toRightOf="@+id/friendPic"
-                android:foregroundGravity="center_vertical"
+                android:foregroundGravity="left|center_vertical"
+                android:gravity="left"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:text="song name"
@@ -103,66 +107,31 @@
                 android:textColor="@color/black" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_toEndOf="@+id/nowPlaying3"
-            android:layout_toRightOf="@+id/nowPlaying3"
-            android:foregroundGravity="right|center_vertical"
-            android:gravity="right"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/syncButton"
-                android:layout_width="71dp"
-                android:layout_height="32dp"
-                android:background="@drawable/tuneinbold"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:onClick="getTimeFromFirebase()"
-                android:textAllCaps="false"
-                android:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/tuneout_btn"
-                android:layout_width="74dp"
-                android:layout_height="33dp"
-                android:background="@drawable/tuneoutpadding"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:textAllCaps="false"
-                android:visibility="gone" />
-        </LinearLayout>
-
 
     </RelativeLayout>
 
-        <!--<android.support.v7.widget.CardView-->
-        <!--android:id="@+id/view2"-->
-        <!--android:layout_width="95dp"-->
-        <!--android:layout_height="95dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginTop="9dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:elevation="12dp"-->
-        <!--android:innerRadius="0dp"-->
-        <!--android:shape="ring"-->
-        <!--android:thicknessRatio="1.9"-->
-        <!--app:cardCornerRadius="40dp">-->
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:id="@+id/view2"-->
+    <!--android:layout_width="95dp"-->
+    <!--android:layout_height="95dp"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="9dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:elevation="12dp"-->
+    <!--android:innerRadius="0dp"-->
+    <!--android:shape="ring"-->
+    <!--android:thicknessRatio="1.9"-->
+    <!--app:cardCornerRadius="40dp">-->
 
 
-        <!--<ImageView-->
-        <!--android:id="@+id/friendPic"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_centerHorizontal="false"-->
-        <!--android:foregroundGravity="left"-->
-        <!--android:src="@drawable/evie_pic"></ImageView>-->
+    <!--<ImageView-->
+    <!--android:id="@+id/friendPic"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="false"-->
+    <!--android:foregroundGravity="left"-->
+    <!--android:src="@drawable/evie_pic"></ImageView>-->
 
     <include
         android:id="@+id/divider1"
