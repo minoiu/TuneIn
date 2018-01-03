@@ -130,7 +130,7 @@
 
             <ImageButton
                 android:id="@+id/tuneout_btn"
-                android:layout_width="74dp"
+                android:layout_width="71dp"
                 android:layout_height="33dp"
                 android:background="@drawable/tuneoutpadding"
                 android:foregroundGravity="center_vertical|center_horizontal"

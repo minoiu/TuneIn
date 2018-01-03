@@ -343,6 +343,9 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         }
+                    } else{
+                        String song = i.getStringExtra("Song");
+                        addSharedSongsToList(song, playlistClicked, "");
                     }
                 }
             }
@@ -371,6 +374,9 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song, playlistClicked, "");
                         }
+                    } else {
+                        String song = i.getStringExtra("Song");
+                        addSongsToSharedList(song, playlistClicked, "");
                     }
                 }
             }

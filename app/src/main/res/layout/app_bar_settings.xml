@@ -50,6 +50,7 @@
             android:layout_marginRight="-20dp"
             android:foregroundGravity="top"
             android:orientation="vertical"
+            android:paddingBottom="70dp"
             android:scrollX="@dimen/activity_vertical_margin"
             android:visibility="visible">
 
@@ -220,6 +221,7 @@
         android:layout_marginTop="55dp"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
+        android:paddingBottom="60dp"
         android:visibility="invisible"
         android:weightSum="1">
 

@@ -24,7 +24,7 @@
     <ListView
         android:id="@+id/convList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="476dp" />
 
     <LinearLayout
         android:id="@+id/play_toolbar"

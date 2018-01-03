@@ -162,11 +162,12 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
             UserDetails.songname = title;
+            //Toast.makeText(this, "title is "+title, Toast.LENGTH_SHORT).show();
             track_title.setText(title);
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
-            track_title.setText(UserDetails.playingSongName);
+           // track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160);
             fab.setLayoutParams(paramsFab);
             paramsFab1.setMargins(0, 0, 53, 160);

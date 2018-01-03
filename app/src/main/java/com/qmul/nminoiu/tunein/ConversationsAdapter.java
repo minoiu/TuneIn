@@ -80,6 +80,7 @@ public class ConversationsAdapter extends BaseAdapter{
 
                 Intent intent = new Intent(mContext, Chat.class);
                 intent.putExtra("Uniqid", "FromConversations");
+                intent.putExtra("Song", Conversations.track_title.getText().toString());
                 intent.putExtra("Friend", rowItem.getTitle().toString());
                 mContext.startActivity(intent);
 

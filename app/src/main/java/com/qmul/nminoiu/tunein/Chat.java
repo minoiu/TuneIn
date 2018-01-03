@@ -106,11 +106,11 @@ public class Chat extends AppCompatActivity {
         //backgroundLayout = (LinearLayout)findViewById(R.id.backgroundLayout);
         final Context context = this;
 
-        if(mediaPlayer.isPlaying()){
-            play_toolbar.setVisibility(View.VISIBLE);
-            track_title.setText(UserDetails.playingSongName);
-        } else play_toolbar.setVisibility(View.GONE);
-
+//        if(mediaPlayer.isPlaying()){
+//            play_toolbar.setVisibility(View.VISIBLE);
+//            track_title.setText(UserDetails.playingSongName);
+//        } else play_toolbar.setVisibility(View.GONE);
+//
 
         Intent i = getIntent();
 
@@ -178,11 +178,11 @@ public class Chat extends AppCompatActivity {
                 getSupportActionBar().setTitle(friend);
             } if(uniqid.equals("FromConversations")) {
                 String friend = i.getStringExtra("Friend");
-                String song = UserDetails.playingSongName;
+                String song = i.getStringExtra("Song");
                 getFullname();
                 UserDetails.chatWith = friend;
                 if(mediaPlayer.isPlaying()){
-                    track_title.setText(UserDetails.playingSongName);
+                    track_title.setText(song);
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 getSupportActionBar().setTitle(friend);

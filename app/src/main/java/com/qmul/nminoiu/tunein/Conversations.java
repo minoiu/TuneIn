@@ -68,7 +68,7 @@ public class Conversations extends AppCompatActivity {
     private List<String> messageList;
 
     private String song;
-    private TextView track_title;
+    public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
     private String url;
@@ -120,11 +120,12 @@ public class Conversations extends AppCompatActivity {
         Intent i = getIntent();
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
-            track_title.setText(UserDetails.playingSongName);
+            track_title.setText(title);
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
-            track_title.setText(UserDetails.playingSongName);
+            play_toolbar.bringToFront();
+            //track_title.setText(UserDetails.playingSongName);
         } else play_toolbar.setVisibility(View.GONE);
 
         db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -286,7 +287,8 @@ public class Conversations extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(Conversations.this, SettingsActivity.class);
-
+        i.putExtra("ID", "FromConversations");
+        i.putExtra("Song", track_title.getText().toString());
         startActivity(i);
         finish();
     }
@@ -311,6 +313,9 @@ public class Conversations extends AppCompatActivity {
             i.putExtra("Uniqid", "FromConversations");
             UserDetails.oldIntent="FromConversations";
             i.putExtra("Myname", UserDetails.username);
+            if(mediaPlayer.isPlaying()){
+                i.putExtra("Song", track_title.getText().toString());
+            }
             startActivity(i);
         }
         else onBackPressed();

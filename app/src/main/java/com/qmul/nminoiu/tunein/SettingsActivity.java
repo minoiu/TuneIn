@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -95,7 +96,6 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 public class SettingsActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
-
 
     private MaterialSearchView searchView;
     private LinearLayout searchLayout;
@@ -224,6 +224,8 @@ public class SettingsActivity extends AppCompatActivity
     public LinearLayout np10;
     public LinearLayout nowPlayingLayout;
     public LinearLayout recPlayedLayout;
+    private ProgressDialog progressDialog;
+
 
     private FirebaseStorage mStorage;
     private ImageButton syncButton;
@@ -429,7 +431,7 @@ public class SettingsActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Now Playing");
+        getSupportActionBar().setTitle("TuneIn");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -492,6 +494,8 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         track_title = (TextView) findViewById(R.id.track_title);
         recents = new ArrayList<>();
+        progressDialog = new ProgressDialog(this);
+
 
         paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
         paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -506,7 +510,7 @@ public class SettingsActivity extends AppCompatActivity
         if (intent != null) {
             if (intent.hasExtra("ID")) {
                 String uniqid = intent.getStringExtra("ID");
-                if (uniqid.equals("FromLibrary")) {
+                if (uniqid.equals("FromLibrary") || uniqid.equals("FromConversations")) {
                     if (mediaPlayer.isPlaying()) {
                         String songFromLib = intent.getStringExtra("Song");
                         play_toolbar.setVisibility(View.VISIBLE);
@@ -952,7 +956,6 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-
         title3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1207,6 +1210,13 @@ public class SettingsActivity extends AppCompatActivity
                 });
             }
         });
+
+//        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+//            @Override
+//            public void onSeekComplete(MediaPlayer mp) {
+//                mediaPlayer.start();
+//            }
+//        });
 
         sl1.setOnClickListener(new OnClickListener() {
             @Override
@@ -1524,7 +1534,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name1.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1542,6 +1552,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1551,7 +1594,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name2.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1569,6 +1612,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1578,7 +1654,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name3.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1596,6 +1672,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1605,7 +1714,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name4.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1623,6 +1732,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1632,7 +1774,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name5.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1650,6 +1792,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1659,7 +1834,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name6.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1677,6 +1852,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1686,7 +1894,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name7.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1704,6 +1912,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1713,7 +1954,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name8.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1731,6 +1972,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1740,7 +2014,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name9.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1758,6 +2032,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1767,7 +2074,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name10.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1785,6 +2092,39 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -1794,7 +2134,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name1.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1812,6 +2152,7 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
             }
         });
 
@@ -1821,7 +2162,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name2.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1839,6 +2180,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1848,7 +2191,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name3.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1866,6 +2209,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1875,7 +2220,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name4.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1893,6 +2238,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1902,7 +2249,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name5.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1920,6 +2267,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1929,7 +2278,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name6.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1947,6 +2296,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1956,7 +2307,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name7.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -1974,6 +2325,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -1983,7 +2336,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name8.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -2001,6 +2354,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -2010,7 +2365,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name9.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -2028,6 +2383,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -2037,7 +2394,7 @@ public class SettingsActivity extends AppCompatActivity
                 final String user = name10.getText().toString();
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -2055,6 +2412,8 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
+                deleteRequest();
+
             }
         });
 
@@ -2111,7 +2470,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
-                dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dr.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
@@ -2145,7 +2504,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                 DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
-                dr.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dr.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
@@ -2230,9 +2589,12 @@ public class SettingsActivity extends AppCompatActivity
 
 
         //synchronisation buttons for Now Playing layout
-        tunein1.setOnClickListener(new View.OnClickListener() {
+        tunein1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+               // progressDialog.setMessage("Synchronising...");
+                //progressDialog.show();
+                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
                 sendTimeRequest(name1.getText().toString(), title1.getText().toString());
                 tunein1.setVisibility(View.GONE);
                 tuneout1.setVisibility(View.VISIBLE);
@@ -2250,9 +2612,11 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tunein2.setOnClickListener(new View.OnClickListener() {
+        tunein2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+
                 sendTimeRequest(name2.getText().toString(), title2.getText().toString());
                 tunein2.setVisibility(View.GONE);
                 tuneout2.setVisibility(View.VISIBLE);
@@ -2270,9 +2634,11 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tunein3.setOnClickListener(new View.OnClickListener() {
+        tunein3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+
                 sendTimeRequest(name3.getText().toString(), title3.getText().toString());
                 tunein3.setVisibility(View.GONE);
                 tuneout3.setVisibility(View.VISIBLE);
@@ -2290,9 +2656,11 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tunein4.setOnClickListener(new View.OnClickListener() {
+        tunein4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+
                 sendTimeRequest(name4.getText().toString(), title4.getText().toString());
                 tunein4.setVisibility(View.GONE);
                 tuneout4.setVisibility(View.VISIBLE);
@@ -2310,9 +2678,11 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tunein5.setOnClickListener(new View.OnClickListener() {
+        tunein5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+
                 sendTimeRequest(name5.getText().toString(), title5.getText().toString());
                 tunein5.setVisibility(View.GONE);
                 tuneout5.setVisibility(View.VISIBLE);
@@ -2372,7 +2742,7 @@ public class SettingsActivity extends AppCompatActivity
 //                .into(profilePic);
 
         //tune out buttons for Now Playing layout
-        tuneout1.setOnClickListener(new View.OnClickListener() {
+        tuneout1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tuneout1.setVisibility(View.GONE);
@@ -2419,7 +2789,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tuneout2.setOnClickListener(new View.OnClickListener() {
+        tuneout2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tuneout2.setVisibility(View.GONE);
@@ -2464,7 +2834,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tuneout3.setOnClickListener(new View.OnClickListener() {
+        tuneout3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tuneout3.setVisibility(View.GONE);
@@ -2509,7 +2879,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tuneout4.setOnClickListener(new View.OnClickListener() {
+        tuneout4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tuneout4.setVisibility(View.GONE);
@@ -2554,7 +2924,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        tuneout5.setOnClickListener(new View.OnClickListener() {
+        tuneout5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tuneout5.setVisibility(View.GONE);
@@ -2600,7 +2970,7 @@ public class SettingsActivity extends AppCompatActivity
         });
 
         //listeners for YouTube buttons - NowPlaying Layout
-        youtube1.setOnClickListener(new View.OnClickListener() {
+        youtube1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title1.getText().toString();
@@ -2618,6 +2988,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2628,7 +3000,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube2.setOnClickListener(new View.OnClickListener() {
+        youtube2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title2.getText().toString();
@@ -2647,6 +3019,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2700,7 +3074,7 @@ public class SettingsActivity extends AppCompatActivity
 //            }
 //        });
 
-        youtube3.setOnClickListener(new View.OnClickListener() {
+        youtube3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title3.getText().toString();
@@ -2719,6 +3093,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2730,7 +3106,7 @@ public class SettingsActivity extends AppCompatActivity
         });
 
 
-        youtube4.setOnClickListener(new View.OnClickListener() {
+        youtube4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title4.getText().toString();
@@ -2749,6 +3125,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2759,7 +3137,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube5.setOnClickListener(new View.OnClickListener() {
+        youtube5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title5.getText().toString();
@@ -2778,6 +3156,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2788,7 +3168,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube6.setOnClickListener(new View.OnClickListener() {
+        youtube6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title6.getText().toString();
@@ -2807,6 +3187,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2817,7 +3199,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube7.setOnClickListener(new View.OnClickListener() {
+        youtube7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title7.getText().toString();
@@ -2836,6 +3218,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2846,7 +3230,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube8.setOnClickListener(new View.OnClickListener() {
+        youtube8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title8.getText().toString();
@@ -2865,6 +3249,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2875,7 +3261,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube9.setOnClickListener(new View.OnClickListener() {
+        youtube9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title9.getText().toString();
@@ -2894,6 +3280,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2904,7 +3292,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        youtube10.setOnClickListener(new View.OnClickListener() {
+        youtube10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String songToView = title10.getText().toString();
@@ -2923,6 +3311,8 @@ public class SettingsActivity extends AppCompatActivity
                                 new Intent("android.intent.action.VIEW",
                                         Uri.parse(link));
                         startActivity(viewIntent);
+                        deleteRequest();
+
                     }
 
                     @Override
@@ -2936,7 +3326,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
         //listeners for download buttons - NowPlaying Layout
-        download1.setOnClickListener(new View.OnClickListener() {
+        download1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
                 final String songToDown = title1.getText().toString();
@@ -2977,7 +3367,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download2.setOnClickListener(new View.OnClickListener() {
+        download2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title2.getText().toString();
@@ -3016,7 +3406,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download3.setOnClickListener(new View.OnClickListener() {
+        download3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title3.getText().toString();
@@ -3055,7 +3445,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download4.setOnClickListener(new View.OnClickListener() {
+        download4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title4.getText().toString();
@@ -3094,7 +3484,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download5.setOnClickListener(new View.OnClickListener() {
+        download5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title5.getText().toString();
@@ -3133,7 +3523,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download6.setOnClickListener(new View.OnClickListener() {
+        download6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title6.getText().toString();
@@ -3172,7 +3562,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download7.setOnClickListener(new View.OnClickListener() {
+        download7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title7.getText().toString();
@@ -3211,7 +3601,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download8.setOnClickListener(new View.OnClickListener() {
+        download8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title8.getText().toString();
@@ -3250,7 +3640,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download9.setOnClickListener(new View.OnClickListener() {
+        download9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title9.getText().toString();
@@ -3289,7 +3679,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        download10.setOnClickListener(new View.OnClickListener() {
+        download10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String songToDown = title10.getText().toString();
@@ -3330,7 +3720,7 @@ public class SettingsActivity extends AppCompatActivity
 
         //// TODO: 18/10/2017
         //listeners for comment buttons - NowPlaying Layout
-        comment1.setOnClickListener(new View.OnClickListener() {
+        comment1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3344,7 +3734,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment2.setOnClickListener(new View.OnClickListener() {
+        comment2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3357,7 +3747,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment3.setOnClickListener(new View.OnClickListener() {
+        comment3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3370,7 +3760,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment4.setOnClickListener(new View.OnClickListener() {
+        comment4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3383,7 +3773,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment5.setOnClickListener(new View.OnClickListener() {
+        comment5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3396,7 +3786,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment6.setOnClickListener(new View.OnClickListener() {
+        comment6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3409,7 +3799,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment7.setOnClickListener(new View.OnClickListener() {
+        comment7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3422,7 +3812,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment8.setOnClickListener(new View.OnClickListener() {
+        comment8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3435,7 +3825,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment9.setOnClickListener(new View.OnClickListener() {
+        comment9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3448,7 +3838,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        comment10.setOnClickListener(new View.OnClickListener() {
+        comment10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 fab.setVisibility(View.GONE);
@@ -3480,7 +3870,7 @@ public class SettingsActivity extends AppCompatActivity
 
         //// TODO: 18/10/2017
         //listeners for add to playlist buttons - NowPlaying Layout
-        add1.setOnClickListener(new View.OnClickListener() {
+        add1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3496,8 +3886,9 @@ public class SettingsActivity extends AppCompatActivity
                         if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
+                                //Toast.makeText(SettingsActivity.this, "key "+key, Toast.LENGTH_SHORT).show();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3513,11 +3904,13 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
 
-        add2.setOnClickListener(new View.OnClickListener() {
+        add2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3533,7 +3926,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3549,10 +3942,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add3.setOnClickListener(new View.OnClickListener() {
+        add3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3568,7 +3963,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3585,10 +3980,12 @@ public class SettingsActivity extends AppCompatActivity
 
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add4.setOnClickListener(new View.OnClickListener() {
+        add4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3604,7 +4001,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3620,10 +4017,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add5.setOnClickListener(new View.OnClickListener() {
+        add5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3640,7 +4039,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3656,10 +4055,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add6.setOnClickListener(new View.OnClickListener() {
+        add6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3676,7 +4077,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3692,10 +4093,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add7.setOnClickListener(new View.OnClickListener() {
+        add7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3712,7 +4115,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3728,10 +4131,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add8.setOnClickListener(new View.OnClickListener() {
+        add8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3748,7 +4153,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3764,10 +4169,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add9.setOnClickListener(new View.OnClickListener() {
+        add9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3784,7 +4191,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3800,10 +4207,12 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
-        add10.setOnClickListener(new View.OnClickListener() {
+        add10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 commentsLayout.setVisibility(View.GONE);
@@ -3820,7 +4229,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
 
-                                if (!dataSnapshot.child(key).getValue().equals(song)) {
+                                if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
                                     playRef.push().setValue(song);
@@ -3836,6 +4245,8 @@ public class SettingsActivity extends AppCompatActivity
                 });
                 i.putExtra("Song", song);
                 startActivity(i);
+                deleteRequest();
+
             }
         });
 
@@ -3861,7 +4272,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
         //listeners for like buttons - NowPlaying Layout
-        bheart1.setOnClickListener(new View.OnClickListener() {
+        bheart1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3880,7 +4291,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart2.setOnClickListener(new View.OnClickListener() {
+        bheart2.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3899,7 +4310,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart3.setOnClickListener(new View.OnClickListener() {
+        bheart3.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3918,7 +4329,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart4.setOnClickListener(new View.OnClickListener() {
+        bheart4.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3937,7 +4348,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart5.setOnClickListener(new View.OnClickListener() {
+        bheart5.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3956,7 +4367,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart6.setOnClickListener(new View.OnClickListener() {
+        bheart6.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3975,7 +4386,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart7.setOnClickListener(new View.OnClickListener() {
+        bheart7.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -3993,7 +4404,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart8.setOnClickListener(new View.OnClickListener() {
+        bheart8.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -4012,7 +4423,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart9.setOnClickListener(new View.OnClickListener() {
+        bheart9.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -4031,7 +4442,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        bheart10.setOnClickListener(new View.OnClickListener() {
+        bheart10.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -4049,7 +4460,7 @@ public class SettingsActivity extends AppCompatActivity
         });
 
         //listeners for dislike buttons - NowPlaying Layout
-        rheart1.setOnClickListener(new View.OnClickListener() {
+        rheart1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4082,7 +4493,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart2.setOnClickListener(new View.OnClickListener() {
+        rheart2.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4115,7 +4526,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart3.setOnClickListener(new View.OnClickListener() {
+        rheart3.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4148,7 +4559,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart4.setOnClickListener(new View.OnClickListener() {
+        rheart4.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4181,7 +4592,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart5.setOnClickListener(new View.OnClickListener() {
+        rheart5.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4214,7 +4625,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart6.setOnClickListener(new View.OnClickListener() {
+        rheart6.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4247,7 +4658,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart7.setOnClickListener(new View.OnClickListener() {
+        rheart7.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4280,7 +4691,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart8.setOnClickListener(new View.OnClickListener() {
+        rheart8.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4313,7 +4724,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart9.setOnClickListener(new View.OnClickListener() {
+        rheart9.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4346,7 +4757,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        rheart10.setOnClickListener(new View.OnClickListener() {
+        rheart10.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -4389,7 +4800,7 @@ public class SettingsActivity extends AppCompatActivity
 
         //getting current user fullname
         mDatabase5 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-        mDatabase5.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+        mDatabase5.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
@@ -4470,7 +4881,9 @@ public class SettingsActivity extends AppCompatActivity
                     pictures.add(0, picture);
 
                 for (int i = 0; i <= names.size() - 1; i++) {
-                    Toast.makeText(SettingsActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
+                    //
+                    //
+                    // Toast.makeText(SettingsActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
 
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
@@ -4555,7 +4968,7 @@ public class SettingsActivity extends AppCompatActivity
                         ImageView pict = (ImageView) ll[j].findViewById(R.id.friendPic);
 
                         if (name.getText().equals(text)) {
-                            Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                             ll[j].setVisibility(View.GONE);
                         }
 
@@ -4564,6 +4977,11 @@ public class SettingsActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(mysong);
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    fab.setLayoutParams(paramsFab);
                 }
 
             }
@@ -4583,7 +5001,7 @@ public class SettingsActivity extends AppCompatActivity
 
         //listener for Friends Activity Firebase child
         factref = FirebaseDatabase.getInstance().getReference().child("FriendsActivity").child(ID);
-        factref.orderByChild("Time").addChildEventListener(new com.google.firebase.database.ChildEventListener() {
+        factref.orderByChild("Time").addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -4599,7 +5017,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
                 for (int i = 0; i <= names1.size() - 1; i++) {
-                    Toast.makeText(SettingsActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SettingsActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
 
                     ll1[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll1[i].findViewById(R.id.name);
@@ -4695,7 +5113,7 @@ public class SettingsActivity extends AppCompatActivity
                     ImageView pict = (ImageView) ll1[j].findViewById(R.id.friendPic);
 
                     if (name.getText().equals(text)) {
-                        Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                         ll1[j].setVisibility(View.GONE);
                     }
 
@@ -4734,14 +5152,16 @@ public class SettingsActivity extends AppCompatActivity
                     newtime = Integer.parseInt(time);
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("URL").child(song);
+                   // Toast.makeText(SettingsActivity.this, "time was added", Toast.LENGTH_SHORT).show();
 
                     songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                         @Override
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 url = String.valueOf(dsp.getValue());
-                                UserDetails.song = url;
-                                playMusic(newtime);
+                                //UserDetails.song = url;
+                                //Toast.makeText(SettingsActivity.this, "url "+url, Toast.LENGTH_SHORT).show();
+                                playMusic(newtime, url);
                             }
                         }
 
@@ -4768,8 +5188,8 @@ public class SettingsActivity extends AppCompatActivity
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 url = String.valueOf(dsp.getValue());
-                                UserDetails.song = url;
-                                playMusic(newtime);
+                                //UserDetails.song = url;
+                                playMusic(newtime, url);
                             }
                         }
 
@@ -4883,7 +5303,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
 
-                dbF.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
@@ -4893,6 +5313,8 @@ public class SettingsActivity extends AppCompatActivity
                         i.putExtra("FriendId", friendID);
                         i.putExtra("FriendName", user);
                         startActivity(i);
+                        deleteRequest();
+
                     }
 
 
@@ -4915,6 +5337,7 @@ public class SettingsActivity extends AppCompatActivity
                     intent_info.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(intent_info);
+                deleteRequest();
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
             }
         });
@@ -4945,6 +5368,40 @@ public class SettingsActivity extends AppCompatActivity
 
                     }
                 });
+
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
         slistView.setAdapter(sadapter);
@@ -4959,7 +5416,7 @@ public class SettingsActivity extends AppCompatActivity
         });
 
         //chat button
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, Conversations.class);
@@ -4968,11 +5425,44 @@ public class SettingsActivity extends AppCompatActivity
                     i.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(i);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
         //library button
-        fab1.setOnClickListener(new View.OnClickListener() {
+        fab1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
@@ -4981,6 +5471,39 @@ public class SettingsActivity extends AppCompatActivity
                     i.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(i);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
         });
 
@@ -5072,6 +5595,42 @@ public class SettingsActivity extends AppCompatActivity
                 return true;
             }
         });
+    }
+
+    private void deleteRequest() {
+        DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+        reqdb.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
+        DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+        reqdb1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            String reqId = snapshot.getKey().toString();
+                            if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                dataSnapshot.child(reqId).getRef().removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
     }
 
     //getting followers
@@ -5219,12 +5778,78 @@ public class SettingsActivity extends AppCompatActivity
             i.putExtra("Uniqid", "FromSettingsMenu");
             UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
+            DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+            reqdb.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+            DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+            reqdb1.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                String reqId = snapshot.getKey().toString();
+                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    dataSnapshot.child(reqId).getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
 
         } else if (id == R.id.nav_following) {
             Intent i = new Intent(SettingsActivity.this, FollowingActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
             UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
+            DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+            reqdb.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+            DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+            reqdb1.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                String reqId = snapshot.getKey().toString();
+                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    dataSnapshot.child(reqId).getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
 
         } else if (id == R.id.profile_pic) {
             {
@@ -5240,6 +5865,39 @@ public class SettingsActivity extends AppCompatActivity
                // picLayout.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
+                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                reqdb.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                reqdb1.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    String reqId = snapshot.getKey().toString();
+                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        dataSnapshot.child(reqId).getRef().removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                            }
+                        });
+
             }
 
         } else if (id == R.id.nav_delete) {
@@ -5264,11 +5922,77 @@ public class SettingsActivity extends AppCompatActivity
                     });
             Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
+            DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+            reqdb.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+            DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+            reqdb1.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                String reqId = snapshot.getKey().toString();
+                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    dataSnapshot.child(reqId).getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
             eraseFromFirebase();
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
             Intent nextActivity = new Intent(this, LoginActivity.class);
             startActivity(nextActivity);
+            DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+            reqdb.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+            DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+            reqdb1.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                String reqId = snapshot.getKey().toString();
+                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    dataSnapshot.child(reqId).getRef().removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
             eraseFromFirebase();
         } else if (id == R.id.nav_private) {
 
@@ -5659,6 +6383,39 @@ public class SettingsActivity extends AppCompatActivity
     public void openPlayerPage(View v) {
         Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
         startActivity(i);
+        DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+        reqdb.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
+        DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+        reqdb1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            String reqId = snapshot.getKey().toString();
+                            if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                dataSnapshot.child(reqId).getRef().removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
     }
 
     public void updateProgressBar() {
@@ -5895,7 +6652,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -5929,7 +6686,7 @@ public class SettingsActivity extends AppCompatActivity
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
-                    Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                     //getTimeFromFirebase();
                 }
             }
@@ -5984,7 +6741,7 @@ public class SettingsActivity extends AppCompatActivity
                 String data = dataSnapshot.getValue().toString();
                 int timeFb = Integer.parseInt(data);
                 //Toast.makeText(SettingsActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
-                playMusic(timeFb);
+               // playMusic(timeFb);
             }
 
             @Override
@@ -6006,8 +6763,6 @@ public class SettingsActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
-
         });
     }
 
@@ -6020,28 +6775,35 @@ public class SettingsActivity extends AppCompatActivity
         return addr;
     }
 
-    public void playMusic(int time) {
+    public void playMusic(final int time, String url) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(UserDetails.song);
+            mediaPlayer.setDataSource(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             mediaPlayer.prepare();
-            mediaPlayer.seekTo(time + 1300);
-        } catch (IOException e) {
+            mediaPlayer.seekTo(time + 3100);
+
+
+    } catch (IOException e) {
             e.printStackTrace();
             //   updateProgressBar();
         }
+        mediaPlayer.start();
+//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//
+//            public void onPrepared(MediaPlayer mp) {
+//                mediaPlayer.seekTo(time + 3100);            }
+//        });
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
-        mediaPlayer.start();
-
-        ////
-
     }
+
+
+
 
 //    public void viewOnYoutube(View v) {
 //
@@ -6294,7 +7056,7 @@ public class SettingsActivity extends AppCompatActivity
                     FirebaseAuth fb;
                     fb = FirebaseAuth.getInstance();
 
-                    String ID;
+                    final String ID;
                     ID = fb.getCurrentUser().getUid();
 
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
@@ -6321,6 +7083,39 @@ public class SettingsActivity extends AppCompatActivity
                                     intent.putExtra("Song", song);
                                     sendTimeRequest(friend, song);
                                     startActivity(intent);
+                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                                    reqdb.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    dataSnapshot.getRef().removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
+                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                                    reqdb1.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                        String reqId = snapshot.getKey().toString();
+                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
 
                                 }
 
@@ -6343,7 +7138,7 @@ public class SettingsActivity extends AppCompatActivity
                     FirebaseAuth fb;
                     fb = FirebaseAuth.getInstance();
 
-                    String ID;
+                    final String ID;
                     ID = fb.getCurrentUser().getUid();
 
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
@@ -6369,6 +7164,39 @@ public class SettingsActivity extends AppCompatActivity
                                     intent.putExtra("Friend", friend);
                                     intent.putExtra("Song", song);
                                     startActivity(intent);
+                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                                    reqdb.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    dataSnapshot.getRef().removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
+                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                                    reqdb1.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                        String reqId = snapshot.getKey().toString();
+                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
 
                                 }
 
@@ -6394,6 +7222,39 @@ public class SettingsActivity extends AppCompatActivity
                     intent.putExtra("openURL", openURL);
                     intent.putExtra("Uniqid", "NotificationShareWith");
                     startActivity(intent);
+                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                    reqdb.addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    dataSnapshot.getRef().removeValue();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
+
+                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                    reqdb1.addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                        String reqId = snapshot.getKey().toString();
+                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
+
 
                 } else if (result.action.actionID.equals("comment")) {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
@@ -6402,7 +7263,7 @@ public class SettingsActivity extends AppCompatActivity
                     FirebaseAuth fb;
                     fb = FirebaseAuth.getInstance();
 
-                    String ID;
+                    final String ID;
                     ID = fb.getCurrentUser().getUid();
 
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
@@ -6428,6 +7289,39 @@ public class SettingsActivity extends AppCompatActivity
                                     intent.putExtra("Friend", friend);
                                     //intent.putExtra("Song", song);
                                     startActivity(intent);
+                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                                    reqdb.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    dataSnapshot.getRef().removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
+                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                                    reqdb1.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                        String reqId = snapshot.getKey().toString();
+                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
 
                                 }
 
