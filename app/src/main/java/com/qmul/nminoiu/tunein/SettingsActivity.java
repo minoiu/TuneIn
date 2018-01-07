@@ -552,8 +552,19 @@ public class SettingsActivity extends AppCompatActivity
                         play_toolbar.setVisibility(View.GONE);
                     }
                 }
+            } else if(intent.hasExtra("Song")){
+                String songFromLib = intent.getStringExtra("Song");
+                fab1.bringToFront();
+                play_toolbar.setVisibility(View.VISIBLE);
+                track_title.setText(songFromLib);
+                btn.setBackgroundResource(R.drawable.ic_media_pause);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
             }
         }
+
 
         //now playing layout - initialising youtube button
         View v1 = findViewById(R.id.np1);
@@ -4895,7 +4906,6 @@ public class SettingsActivity extends AppCompatActivity
                             .load(pictures.get(i).toString())
 //                .resize(350, 240)
 //                .centerInside()
-
                             .fit()
                             .centerCrop()
                             .into(pic);

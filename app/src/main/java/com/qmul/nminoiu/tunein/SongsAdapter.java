@@ -216,6 +216,8 @@ public class SongsAdapter extends BaseAdapter {
                                             UserDetails.oldPlaylist = playlist;
                                             UserDetails.oldIntent="Followers";
                                             newIntent.putExtra("OldPlaylist", playlistName);
+                                            newIntent.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+
                                             mContext.startActivity(newIntent);
                                             break;
 

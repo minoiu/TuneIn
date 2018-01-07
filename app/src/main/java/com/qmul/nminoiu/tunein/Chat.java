@@ -122,7 +122,7 @@ public class Chat extends AppCompatActivity {
                 getSupportActionBar().setTitle(friend);
                 String text = "Here is a song for you:\n" + song;
                 messageArea.setText(text);
-                track_title.setText(UserDetails.playingSongName);
+                track_title.setText(song);
                 if(mediaPlayer.isPlaying()){
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
@@ -135,7 +135,7 @@ public class Chat extends AppCompatActivity {
                 UserDetails.chatWith=friend;
                 getSupportActionBar().setTitle(friend);
                 messageArea.setText(text);
-                track_title.setText(UserDetails.playingSongName);
+                track_title.setText(song);
                 if(mediaPlayer.isPlaying()){
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
@@ -144,7 +144,7 @@ public class Chat extends AppCompatActivity {
                 String friend = i.getStringExtra("FriendName");
                 UserDetails.chatWith=friend;
                 if(mediaPlayer.isPlaying()){
-                    track_title.setText(UserDetails.playingSongName);
+                    track_title.setText(song);
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 getSupportActionBar().setTitle(friend);
@@ -160,7 +160,7 @@ public class Chat extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
 
                 play_toolbar.bringToFront();
-                track_title.setText(UserDetails.playingSongName);
+                track_title.setText(song);
             } if(uniqid.equals("NotificationShareWith")) {
                 String friend = i.getStringExtra("Friend");
                 getFullname();
@@ -170,7 +170,7 @@ public class Chat extends AppCompatActivity {
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
                 play_toolbar.setVisibility(View.VISIBLE);
                 play_toolbar.bringToFront();
-                track_title.setText(UserDetails.playingSongName);
+                track_title.setText(song);
             }if(uniqid.equals("NotificationReply")) {
                 String friend = i.getStringExtra("Friend");
                 getFullname();
@@ -188,11 +188,11 @@ public class Chat extends AppCompatActivity {
                 getSupportActionBar().setTitle(friend);
             } if(uniqid.equals("FromUsers")) {
                 String friend = i.getStringExtra("Friend");
-                String song = UserDetails.playingSongName;
+                String song = i.getStringExtra("Song");;
                 getFullname();
                 UserDetails.chatWith = friend;
                 if(mediaPlayer.isPlaying()){
-                    track_title.setText(UserDetails.playingSongName);
+                    track_title.setText(song);
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 getSupportActionBar().setTitle(friend);
@@ -403,7 +403,7 @@ public class Chat extends AppCompatActivity {
                 intent_info.putExtra("Uniqid", "FromChat");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -1063,7 +1063,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, PlaylistSongs.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
@@ -1072,7 +1072,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, Songs.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
@@ -1083,7 +1083,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, Downloads.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
@@ -1094,7 +1094,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, Favourites.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
@@ -1105,7 +1105,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, LibraryActivity.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
@@ -1116,7 +1116,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, Conversations.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
@@ -1127,7 +1127,7 @@ public class Chat extends AppCompatActivity {
             Intent backMainTest = new Intent(this, Conversations.class);
             if(mediaPlayer.isPlaying()) {
                 backMainTest.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
 //            backMainTest.putExtra("Name", UserDetails.oldPlaylist);

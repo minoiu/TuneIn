@@ -245,7 +245,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
             play_toolbar.setVisibility(View.VISIBLE);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
-            track_title.setText(UserDetails.playingSongName);
+            //track_title.setText(UserDetails.playingSongName);
 
         } else play_toolbar.setVisibility(View.GONE);
 
@@ -264,7 +264,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                 intent_info.putExtra("Uniqid", "FromSharedPlSongs");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -387,7 +387,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                 play_toolbar.setVisibility(View.VISIBLE);
                 paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
                 fab.setLayoutParams(paramsFab);
-                UserDetails.playingSongName = song;
+                //UserDetails.playingSongName = song;
                 track_title.setText(song);
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
@@ -1019,36 +1019,66 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuItem whiteHeart = menu.findItem(R.id.menu_like);
+//        MenuItem redHeart = menu.findItem(R.id.menu_dislike);
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//
+//        if(getIntent().hasExtra("Uniqid") && getIntent().getStringExtra("Uniqid").equals("FromProfile")){
+//
+//        } else {
+//            getMenuInflater().inflate(R.menu.sharedplaylistoptions, menu);
+//            this.menu = menu;
+//
+//            if (UserDetails.lovedPlaylist) {
+//                redHeart.setVisible(true);
+//                whiteHeart.setVisible(false);
+//            } else {
+//                redHeart.setVisible(false);
+//                whiteHeart.setVisible(true);
+//            }
+//
+//            invalidateOptionsMenu();
+//            return true;
+//
+//        }
+//
+//
+//
+//
+////        MenuItem item = menu.findItem(R.id.menu_share);
+////        searchView.setMenuItem(item);
+//
+//        invalidateOptionsMenu();
+//        return true;
+//    }
+//
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.sharedplaylistoptions, menu);
+        this.menu = menu;
+
+
         MenuItem whiteHeart = menu.findItem(R.id.menu_like);
         MenuItem redHeart = menu.findItem(R.id.menu_dislike);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        if(getIntent().getStringExtra("Uniqid").equals("FromProfile")){
+        //searchView.setMenuItem(item);
 
+
+        if (UserDetails.lovedPlaylist) {
+            redHeart.setVisible(true);
+            whiteHeart.setVisible(false);
         } else {
-            getMenuInflater().inflate(R.menu.sharedplaylistoptions, menu);
-            this.menu = menu;
-
-            if (UserDetails.lovedPlaylist) {
-                redHeart.setVisible(true);
-                whiteHeart.setVisible(false);
-            } else {
-                redHeart.setVisible(false);
-                whiteHeart.setVisible(true);
-            }
-
+            redHeart.setVisible(false);
+            whiteHeart.setVisible(true);
         }
-
-
-
-
-//        MenuItem item = menu.findItem(R.id.menu_share);
-//        searchView.setMenuItem(item);
 
         invalidateOptionsMenu();
         return true;
     }
+
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -1572,7 +1602,7 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(getIntent().getStringExtra("Uniqid").equals("FromProfile")){
+        if(getIntent().hasExtra("Uniqid") && getIntent().getStringExtra("Uniqid").equals("FromProfile")){
             String friendID = getIntent().getStringExtra("FriendId");
             String friendName = getIntent().getStringExtra("FriendName");
             Intent backMainTest = new Intent(this, ProfileActivity.class);
@@ -1580,14 +1610,12 @@ public class SharedPlaylistSongs extends AppCompatActivity {
             backMainTest.putExtra("FriendName", friendName);
 
             if(mediaPlayer.isPlaying()) {
-                UserDetails.playingSongName = track_title.getText().toString();
                 backMainTest.putExtra("Song", track_title.getText().toString());
             }
             startActivity(backMainTest);
         } else{
             Intent backMainTest = new Intent(this, MyPlaylists.class);
             if(mediaPlayer.isPlaying()) {
-                UserDetails.playingSongName = track_title.getText().toString();
                 backMainTest.putExtra("Song", track_title.getText().toString());
             }
             startActivity(backMainTest);

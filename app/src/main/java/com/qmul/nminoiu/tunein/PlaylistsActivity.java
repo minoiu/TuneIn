@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -238,82 +239,6 @@ public class PlaylistsActivity extends AppCompatActivity {
 //        });
 
 
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String name = playlistName.getText().toString().trim();
-
-                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase playRef = ref.child("Playlists").child(ID);
-                playRef.push().setValue(name);
-
-                Firebase sref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
-                splayRef.push().setValue(song);
-                newPlaylist.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                Toast.makeText(PlaylistsActivity.this, song + " was added to your new playlist", Toast.LENGTH_SHORT).show();
-                hideSoftKeyboard(PlaylistsActivity.this);
-
-                if(UserDetails.oldIntent.equals("Followers")){
-                    Intent backMainTest = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
-                    backMainTest.putExtra("Name", UserDetails.oldPlaylist);
-                    startActivity(backMainTest);
-                    finish();
-                }else if(UserDetails.oldIntent.equals("MySongs")){
-                    Intent backMainTest = new Intent(PlaylistsActivity.this, Songs.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
-                    backMainTest.putExtra("Name", UserDetails.oldPlaylist);
-                    startActivity(backMainTest);
-                    finish();
-                }
-                else if(UserDetails.oldIntent.equals("Downloads")){
-                    Intent backMainTest = new Intent(PlaylistsActivity.this, Downloads.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
-                    backMainTest.putExtra("Name", UserDetails.oldPlaylist);
-                    startActivity(backMainTest);
-                    finish();
-                }
-                else if(UserDetails.oldIntent.equals("Favourites")){
-                    Intent backMainTest = new Intent(PlaylistsActivity.this, Favourites.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
-                    backMainTest.putExtra("Name", UserDetails.oldPlaylist);
-                    startActivity(backMainTest);
-                    finish();
-                }
-                else if(UserDetails.oldIntent.equals("Recents")){
-                    Intent backMainTest = new Intent(PlaylistsActivity.this, LibraryActivity.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
-                    backMainTest.putExtra("Name", UserDetails.oldPlaylist);
-                    startActivity(backMainTest);
-                    finish();
-                }
-
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newPlaylist.setVisibility(View.GONE);
-                hideSoftKeyboard(PlaylistsActivity.this);
-                fab.setVisibility(View.VISIBLE);
-
-            }
-            });
-
         playlists.setClickable(true);
         playlists.setAdapter(playlistsadapter);
         sharedPlaylists.setClickable(true);
@@ -337,6 +262,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("FromRecents")){
+                            Toast.makeText(PlaylistsActivity.this, "normal pl", Toast.LENGTH_SHORT).show();
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("AdapterAllSongs")) {
@@ -368,6 +294,8 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song,playlistClicked,"");
                         } else if(uniqid.equals("FromRecents")){
+                            Toast.makeText(PlaylistsActivity.this, "shared pl", Toast.LENGTH_SHORT).show();
+
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song,playlistClicked,"");
                         } else if(uniqid.equals("AdapterAllSongs")) {
@@ -513,44 +441,45 @@ public class PlaylistsActivity extends AppCompatActivity {
 
             if(UserDetails.oldIntent.equals("Followers")){
                 Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    getIntent().getStringExtra("Song");
+                    backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }else if(UserDetails.oldIntent.equals("MySongs")){
                 Intent backMainTest = new Intent(this, Songs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Downloads")){
                 Intent backMainTest = new Intent(this, Downloads.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Downloads.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Favourites")){
                 Intent backMainTest = new Intent(this, Favourites.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Favourites.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Recents")){
                 Intent backMainTest = new Intent(this, LibraryActivity.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
@@ -558,44 +487,44 @@ public class PlaylistsActivity extends AppCompatActivity {
         } else {
             if(UserDetails.oldIntent.equals("Followers")){
                 Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }else if(UserDetails.oldIntent.equals("MySongs")){
                 Intent backMainTest = new Intent(this, Songs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Downloads")){
                 Intent backMainTest = new Intent(this, Downloads.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Downloads.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Favourites")){
                 Intent backMainTest = new Intent(this, Favourites.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Favourites.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Recents")){
                 Intent backMainTest = new Intent(this, LibraryActivity.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
@@ -883,7 +812,6 @@ public class PlaylistsActivity extends AppCompatActivity {
                         String key = snapshot.getKey();
                         String mysong = dataSnapshot.child(ID).child(key).getValue().toString();
                         mysongs.add(mysong);
-
                     }
                 }
                 checkSongInMySongs(playlist, song, oldPlaylist);
@@ -900,46 +828,51 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     private void checkSongInMySongs(String playlist, String song, String oldPlaylist) {
         if(!mysongs.contains(song)){
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase playRef = ref.child("MySongs").child(ID);
+            playRef.push().setValue(song);
+
+
             if(UserDetails.oldIntent.equals("Followers")){
                 Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }else if(UserDetails.oldIntent.equals("MySongs")){
                 Intent backMainTest = new Intent(this, Songs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Downloads")){
                 Intent backMainTest = new Intent(this, Downloads.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Downloads.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Favourites")){
                 Intent backMainTest = new Intent(this, Favourites.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Favourites.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }
             else if(UserDetails.oldIntent.equals("Recents")){
                 Intent backMainTest = new Intent(this, LibraryActivity.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
@@ -947,61 +880,61 @@ public class PlaylistsActivity extends AppCompatActivity {
         } else {
             if(UserDetails.oldIntent.equals("Followers")){
                 Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
             }else if(UserDetails.oldIntent.equals("MySongs")){
                 Intent backMainTest = new Intent(this, Songs.class);
-//                if(mediaPlayer.isPlaying()) {
-//                    backMainTest.putExtra("Song", track_title.getText().toString());
-//                }
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
                 finish();
         } else {
                 if(UserDetails.oldIntent.equals("Followers")){
                     Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
+                    if(mediaPlayer.isPlaying()) {
+                        backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                    }
                     backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                     startActivity(backMainTest);
                     finish();
                 }else if(UserDetails.oldIntent.equals("MySongs")){
                     Intent backMainTest = new Intent(this, Songs.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
+                    if(mediaPlayer.isPlaying()) {
+                        backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                    }
                     backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                     startActivity(backMainTest);
                     finish();
                 }
                 else if(UserDetails.oldIntent.equals("Downloads")){
                     Intent backMainTest = new Intent(this, Downloads.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
+                    if(mediaPlayer.isPlaying()) {
+                        backMainTest.putExtra("Song", Downloads.track_title.getText().toString());
+                     }
                     backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                     startActivity(backMainTest);
                     finish();
                 }
                 else if(UserDetails.oldIntent.equals("Favourites")){
                     Intent backMainTest = new Intent(this, Favourites.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
+                    if(mediaPlayer.isPlaying()) {
+                        backMainTest.putExtra("Song", Favourites.track_title.getText().toString());
+                    }
                     backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                     startActivity(backMainTest);
                     finish();
                 }
                 else if(UserDetails.oldIntent.equals("Recents")){
                     Intent backMainTest = new Intent(this, LibraryActivity.class);
-//                    if(mediaPlayer.isPlaying()) {
-//                        backMainTest.putExtra("Song", track_title.getText().toString());
-//                    }
+                    if(mediaPlayer.isPlaying()) {
+                        backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+                    }
                     backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                     startActivity(backMainTest);
                     finish();
@@ -1115,6 +1048,110 @@ public class PlaylistsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(PlaylistsActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.newplaylist, null);
+            final EditText newname = (EditText) mView.findViewById(R.id.editText);
+            Button cancel = (Button) mView.findViewById(R.id.cancel);
+            Button create = (Button) mView.findViewById(R.id.create);
+
+
+//                mBuilder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//
+//                mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+            mBuilder.setView(mView);
+            final AlertDialog dialog = mBuilder.create();
+            dialog.show();
+
+            create.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String name = playlistName.getText().toString().trim();
+
+                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase playRef = ref.child("Playlists").child(ID);
+                    playRef.push().setValue(name);
+
+                    Firebase sref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                    Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
+                    splayRef.push().setValue(song);
+                    newPlaylist.setVisibility(View.GONE);
+                    fab.setVisibility(View.VISIBLE);
+                    Toast.makeText(PlaylistsActivity.this, song + " was added to your new playlist", Toast.LENGTH_SHORT).show();
+                    hideSoftKeyboard(PlaylistsActivity.this);
+
+                    if(UserDetails.oldIntent.equals("Followers")){
+                        Intent backMainTest = new Intent(PlaylistsActivity.this, PlaylistSongs.class);
+                        if(mediaPlayer.isPlaying()) {
+                            backMainTest.putExtra("Song", PlaylistSongs.track_title.getText().toString());
+                        }
+                        backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                        startActivity(backMainTest);
+                        finish();
+                    }else if(UserDetails.oldIntent.equals("MySongs")){
+                        Intent backMainTest = new Intent(PlaylistsActivity.this, Songs.class);
+                        if(mediaPlayer.isPlaying()) {
+                            backMainTest.putExtra("Song", Songs.track_title.getText().toString());
+                        }
+                        backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                        startActivity(backMainTest);
+                        finish();
+                    }
+                    else if(UserDetails.oldIntent.equals("Downloads")){
+                        Intent backMainTest = new Intent(PlaylistsActivity.this, Downloads.class);
+                        if(mediaPlayer.isPlaying()) {
+                            backMainTest.putExtra("Song", Downloads.track_title.getText().toString());
+                        }
+                        backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                        startActivity(backMainTest);
+                        finish();
+                    }
+                    else if(UserDetails.oldIntent.equals("Favourites")){
+                        Intent backMainTest = new Intent(PlaylistsActivity.this, Favourites.class);
+                        if(mediaPlayer.isPlaying()) {
+                            backMainTest.putExtra("Song", Favourites.track_title.getText().toString());
+                        }
+                        backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                        startActivity(backMainTest);
+                        finish();
+                    }
+                    else if(UserDetails.oldIntent.equals("Recents")){
+                        Intent backMainTest = new Intent(PlaylistsActivity.this, LibraryActivity.class);
+                        if(mediaPlayer.isPlaying()) {
+                            backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+                        }
+                        backMainTest.putExtra("Name", UserDetails.oldPlaylist);
+                        startActivity(backMainTest);
+                        finish();
+                    }
+                    dialog.dismiss();
+
+
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    newPlaylist.setVisibility(View.GONE);
+                    hideSoftKeyboard(PlaylistsActivity.this);
+                    fab.setVisibility(View.VISIBLE);
+                    dialog.dismiss();
+
+                }
+
+            });
+
             newPlaylist.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
             playlistName.setText("");
@@ -1132,44 +1169,44 @@ public class PlaylistsActivity extends AppCompatActivity {
 
         if(UserDetails.oldIntent.equals("Followers")){
             Intent backMainTest = new Intent(this, PlaylistSongs.class);
-//            if(mediaPlayer.isPlaying()) {
-//                backMainTest.putExtra("Song", track_title.getText().toString());
-//            }
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+            }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();
         }else if(UserDetails.oldIntent.equals("MySongs")){
             Intent backMainTest = new Intent(this, Songs.class);
-//            if(mediaPlayer.isPlaying()) {
-//                backMainTest.putExtra("Song", track_title.getText().toString());
-//            }
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+            }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();
         }
         else if(UserDetails.oldIntent.equals("Downloads")){
             Intent backMainTest = new Intent(this, Downloads.class);
-//            if(mediaPlayer.isPlaying()) {
-//                backMainTest.putExtra("Song", track_title.getText().toString());
-//            }
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+            }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();
         }
         else if(UserDetails.oldIntent.equals("Favourites")){
             Intent backMainTest = new Intent(this, Favourites.class);
-//            if(mediaPlayer.isPlaying()) {
-//                backMainTest.putExtra("Song", track_title.getText().toString());
-//            }
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+            }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();
         }
         else if(UserDetails.oldIntent.equals("Recents")){
             Intent backMainTest = new Intent(this, LibraryActivity.class);
-//            if(mediaPlayer.isPlaying()) {
-//                backMainTest.putExtra("Song", track_title.getText().toString());
-//            }
+            if(mediaPlayer.isPlaying()) {
+                backMainTest.putExtra("Song", LibraryActivity.track_title.getText().toString());
+            }
             backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();

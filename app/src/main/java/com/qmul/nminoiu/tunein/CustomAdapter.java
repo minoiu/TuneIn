@@ -75,7 +75,7 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
                     Intent intent = new Intent(mContext, PlaylistSongs.class);
                     intent.putExtra("Name", rowItem.getTitle().toString());
                     if(mediaPlayer.isPlaying()) {
-                        intent.putExtra("Song", UserDetails.songname);
+                        intent.putExtra("Song", MyPlaylists.track_title.getText().toString());
                     }
                     mContext.startActivity(intent);
 

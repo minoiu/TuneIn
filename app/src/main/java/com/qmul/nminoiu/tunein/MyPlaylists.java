@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -58,10 +59,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private FirebaseAuth firebaseAuth;
     private DatabaseReference playlistsRef;
     private String playlist;
-    private LinearLayout newPlaylist;
-    private EditText playlistName;
-    private Button create;
-    private Button cancel;
     private CustomAdapter adapter;
     private CustomSharedAdapter adapter1;
 
@@ -70,7 +67,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private FloatingActionButton fab;
     private FloatingActionButton fab1;
 
-    private TextView track_title;
+    public static TextView track_title;
     private LinearLayout play_toolbar;
     private LinearLayout laypl;
     private Button btn;
@@ -117,14 +114,9 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         buttons = (RelativeLayout) findViewById(R.id.buttons);
         sharedWithMeLayout = (RelativeLayout) findViewById(R.id.sharedWithMeLayout);
 
-        newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
-        newPlaylist.bringToFront();
-        playlistName = (EditText) findViewById(R.id.editText);
-        create = (Button) findViewById(R.id.create);
-        cancel = (Button) findViewById(R.id.cancel);
+
         buttons = (RelativeLayout) findViewById(R.id.buttons);
         icon = (ImageView)  findViewById(R.id.icon);
-        create.setEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
@@ -135,7 +127,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(View view) {
                 Intent i = new Intent(MyPlaylists.this, Users.class);
                 if(mediaPlayer.isPlaying()){
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    String song = track_title.getText().toString();
+                    i.putExtra("Song", song);
                 }
                 startActivity(i);
             }
@@ -147,7 +140,8 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(View view) {
                 Intent i = new Intent(MyPlaylists.this, SettingsActivity.class);
                 if(mediaPlayer.isPlaying()){
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    String song = track_title.getText().toString();
+                    i.putExtra("Song", song);
                 }
                 startActivity(i);
             }
@@ -280,7 +274,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 intent_info.putExtra("Uniqid", "FromMyPlaylists");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -520,38 +514,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 //                                                 }
 
 
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String name = playlistName.getText().toString().trim();
-                if(name.equals("")){
-                    Toast.makeText(MyPlaylists.this, "Please enter a name", Toast.LENGTH_LONG).show();
-
-
-                } else {
-                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                    Firebase playRef = ref.child("Playlists").child(ID);
-                    playRef.push().setValue(name);
-                    Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
-                    newPlaylist.setVisibility(View.GONE);
-                    fab.setVisibility(View.VISIBLE);
-
-                    hideSoftKeyboard(MyPlaylists.this);
-                }
-            }
-        });
-
-
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newPlaylist.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                hideSoftKeyboard(MyPlaylists.this);
-            }
-        });
 
         if (adapter1 != null) {
             adapter1.notifyDataSetChanged();
@@ -628,20 +590,68 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
-            newPlaylist.setVisibility(View.VISIBLE);
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(MyPlaylists.this);
+            View mView = getLayoutInflater().inflate(R.layout.newplaylist, null);
+            final EditText newname = (EditText) mView.findViewById(R.id.editText);
+            Button cancel = (Button) mView.findViewById(R.id.cancel);
+            Button create = (Button) mView.findViewById(R.id.create);
+
+
+//                mBuilder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//
+//                mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+            mBuilder.setView(mView);
+            final AlertDialog dialog = mBuilder.create();
+            dialog.show();
             fab.setVisibility(View.GONE);
-            playlistName.setText("");
+
+
+            create.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String name = newname.getText().toString().trim();
+                    if(name.equals("")){
+                        Toast.makeText(MyPlaylists.this, "Please enter a name", Toast.LENGTH_LONG).show();
+                    } else {
+                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                        Firebase playRef = ref.child("Playlists").child(ID);
+                        playRef.push().setValue(name);
+                        Toast.makeText(MyPlaylists.this, "Playlist Created Successfully ", Toast.LENGTH_LONG).show();
+                        fab.setVisibility(View.VISIBLE);
+                        dialog.hide();
+                        hideSoftKeyboard(MyPlaylists.this);
+                    }
+                }
+            });
+
+
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fab.setVisibility(View.VISIBLE);
+                    hideSoftKeyboard(MyPlaylists.this);
+                    dialog.hide();
+                }
+            });
+
         }
         else onBackPressed();
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkEntry() {
-        if(playlistName.getText().toString().trim().equals("")){
-            create.setEnabled(false);
-        } else create.setEnabled(true);
-    }
 
     @Override
     public void onBackPressed() {

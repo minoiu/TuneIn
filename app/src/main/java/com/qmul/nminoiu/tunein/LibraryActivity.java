@@ -54,7 +54,7 @@ public class LibraryActivity extends AppCompatActivity{
     private ArrayAdapter<String> recentsadapter;
     private AdapterRecentlyplayed adapterRecentlyplayed;
     private String song;
-    private TextView track_title;
+    public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
     private String url;

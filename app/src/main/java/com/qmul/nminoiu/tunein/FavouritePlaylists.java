@@ -121,7 +121,7 @@ public class FavouritePlaylists extends AppCompatActivity {
             track_title.setText(title);
         }
         if (mediaPlayer.isPlaying()) {
-            track_title.setText(UserDetails.playingSongName);
+            //track_title.setText(UserDetails.playingSongName);
             play_toolbar.setVisibility(View.VISIBLE);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
@@ -143,7 +143,7 @@ public class FavouritePlaylists extends AppCompatActivity {
                 intent.putExtra("Name", playlist);
                 if(mediaPlayer.isPlaying()) {
                     intent.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
                     startActivity(intent);
 
                 } else startActivity(intent);
@@ -209,7 +209,7 @@ public class FavouritePlaylists extends AppCompatActivity {
                 intent_info.putExtra("Uniqid", "FromLibrary");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
 
                 }
                 startActivity(intent_info);
@@ -234,7 +234,7 @@ public class FavouritePlaylists extends AppCompatActivity {
             Intent intent = new Intent(this, Favourites.class);
             if(mediaPlayer.isPlaying()) {
                 intent.putExtra("Song", track_title.getText().toString());
-                UserDetails.playingSongName = track_title.getText().toString();
+                //UserDetails.playingSongName = track_title.getText().toString();
 
             }
             startActivity(intent);

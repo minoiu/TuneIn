@@ -64,7 +64,7 @@ public class Songs extends AppCompatActivity {
     private AdapterAllSongs adapter;
     private AdapterAllSongs searchadapter;
     private String song;
-    private TextView track_title;
+    public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
     private String url;
@@ -86,7 +86,8 @@ public class Songs extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Songs.this, Users.class);
                 if(mediaPlayer.isPlaying()){
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    String song = track_title.getText().toString();
+                    i.putExtra("Song", song);
                 }
 
                 startActivity(i);
@@ -99,7 +100,8 @@ public class Songs extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Songs.this, SettingsActivity.class);
                 if(mediaPlayer.isPlaying()){
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    String song = track_title.getText().toString();
+                    i.putExtra("Song", song);
                 }
                 startActivity(i);
             }
@@ -141,7 +143,7 @@ public class Songs extends AppCompatActivity {
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
-            track_title.setText(UserDetails.playingSongName);
+            //track_title.setText(UserDetails.playingSongName);
             paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
             fab.setLayoutParams(paramsFab);
             paramsFab1.setMargins(0, 0, 53, 160);
@@ -184,7 +186,7 @@ public class Songs extends AppCompatActivity {
                 paramsFab1.setMargins(0, 0, 53, 160);
                 fab1.setLayoutParams(paramsFab1);
                 track_title.setText(song);
-                UserDetails.playingSongName = song;
+                //UserDetails.playingSongName = song;
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
                 mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -303,7 +305,7 @@ public class Songs extends AppCompatActivity {
                 intent_info.putExtra("Uniqid", "FromSongs");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
-                    UserDetails.playingSongName = track_title.getText().toString();
+                    //UserDetails.playingSongName = track_title.getText().toString();
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -359,7 +361,7 @@ public class Songs extends AppCompatActivity {
         Intent intent = new Intent(this, LibraryActivity.class);
         if(mediaPlayer.isPlaying()) {
             intent.putExtra("Song", track_title.getText().toString());
-            UserDetails.playingSongName = track_title.getText().toString();
+            //UserDetails.playingSongName = track_title.getText().toString();
         }
         startActivity(intent);
 //
@@ -387,6 +389,7 @@ public class Songs extends AppCompatActivity {
 //
 //                }
             }
+
       //  }
        // finish();
 //    }

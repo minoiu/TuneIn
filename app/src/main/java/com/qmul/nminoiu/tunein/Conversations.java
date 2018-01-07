@@ -113,7 +113,7 @@ public class Conversations extends AppCompatActivity {
         String curUser = currentuser.getUid().toString();
 
         if(mediaPlayer.isPlaying()) {
-            UserDetails.playingSongName = track_title.getText().toString();
+            String song = track_title.getText().toString();
         }
         UserDetails.oldIntent="Conversations";
 
@@ -424,7 +424,7 @@ public class Conversations extends AppCompatActivity {
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
-        UserDetails.playingSongName = track_title.getText().toString();
+        //UserDetails.playingSongName = track_title.getText().toString();
 
         String songtitle = title.getText().toString();
         //song = ((TextView) view).getText().toString();

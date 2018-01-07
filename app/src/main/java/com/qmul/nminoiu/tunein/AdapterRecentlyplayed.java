@@ -201,7 +201,7 @@ public class AdapterRecentlyplayed extends BaseAdapter {
                                             //String playlistName = ((PlaylistSongs) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
                                             Intent newIntent = new Intent(mContext, PlaylistsActivity.class);
-                                            newIntent.putExtra("Uniqid","AdapterAllSongs");
+                                            newIntent.putExtra("Uniqid","FromRecents");
                                             newIntent.putExtra("Song", songToAdd);
                                             newIntent.putExtra("Name", "");
                                             UserDetails.oldIntent="Recents";
