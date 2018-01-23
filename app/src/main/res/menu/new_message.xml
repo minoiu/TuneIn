@@ -6,7 +6,7 @@
 
         android:id="@+id/newmessage"
 
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/pencil"
 
         android:orderInCategory="100"
 

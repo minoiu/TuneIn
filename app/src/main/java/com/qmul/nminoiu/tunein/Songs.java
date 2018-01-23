@@ -5,7 +5,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -79,6 +78,8 @@ public class Songs extends AppCompatActivity {
         setContentView(R.layout.activity_songs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        MusicPlayerActivity.songs.clear();
+        MusicPlayerActivity.urls.clear();
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -262,7 +263,11 @@ public class Songs extends AppCompatActivity {
                     String song = dataSnapshot.getValue(String.class);
                    // Toast.makeText(Songs.this, "song is " + song , Toast.LENGTH_SHORT).show();
 
-                    songs.add(song);
+                getUrl(song);
+                MusicPlayerActivity.songs.add(song);
+
+
+                songs.add(song);
 
                     RowItem item = new RowItem(R.drawable.options, song);
 
@@ -301,7 +306,7 @@ public class Songs extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(Songs.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(Songs.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromSongs");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
@@ -312,6 +317,30 @@ public class Songs extends AppCompatActivity {
             }
         });
         }
+
+    public void getUrl(String song) {
+
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("URL").child(song);
+
+        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    url = String.valueOf(dsp.getValue());
+                    MusicPlayerActivity.urls.add(url);
+                    //  Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                    //getTimeFromFirebase();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
 
     private void startMusic(String link, String song) {
         mediaPlayer.reset();
@@ -517,7 +546,7 @@ public class Songs extends AppCompatActivity {
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(Songs.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(Songs.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
@@ -541,9 +570,9 @@ public class Songs extends AppCompatActivity {
 
         mediaPlayer.getCurrentPosition();
 
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {

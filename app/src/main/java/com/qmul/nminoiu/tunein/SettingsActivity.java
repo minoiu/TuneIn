@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -464,7 +463,7 @@ public class SettingsActivity extends AppCompatActivity
         if(i.hasExtra("Email")){
             nav_user.setText(getIntent().getExtras().getString("Email"));
         }
-        toolbar.setTitle("Now Playing");
+        toolbar.setTitle("Friend Activity");
 
 
         ll = new LinearLayout[5];
@@ -540,6 +539,8 @@ public class SettingsActivity extends AppCompatActivity
                 } else if (uniqid.equals("FromPlayer")) {
                     if (mediaPlayer.isPlaying()) {
                         String songFromLib = intent.getStringExtra("Song");
+                        fab1.setVisibility(View.VISIBLE);
+                        fab.setVisibility(View.VISIBLE);
                         fab1.bringToFront();
                         play_toolbar.setVisibility(View.VISIBLE);
                         track_title.setText(songFromLib);
@@ -909,11 +910,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title1.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -941,10 +948,16 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title2.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -971,11 +984,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title3.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1003,11 +1022,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title4.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1035,11 +1060,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title5.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1067,11 +1098,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title6.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1099,11 +1136,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title7.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1131,11 +1174,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title8.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1163,11 +1212,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title9.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1195,11 +1250,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title10.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1233,11 +1294,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title1.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1264,11 +1331,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title2.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1295,11 +1368,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title3.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1326,11 +1405,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title4.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1357,11 +1442,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title5.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1388,11 +1479,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title6.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1419,11 +1516,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title7.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1450,11 +1553,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title8.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1481,11 +1590,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title9.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1512,11 +1627,17 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title10.getText().toString();
-                fab.setVisibility(View.GONE);
-                fab1.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                fab.setLayoutParams(paramsFab);
+                fab.setVisibility(View.VISIBLE);
+                fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -4987,6 +5108,8 @@ public class SettingsActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(mysong);
+                    SongSingleton.getInstance().setSongName(mysong);
+
                     btn.setBackgroundResource(R.drawable.ic_media_pause);
                     paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
                     fab1.setLayoutParams(paramsFab1);
@@ -5132,6 +5255,8 @@ public class SettingsActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(mysong);
+                    SongSingleton.getInstance().setSongName(mysong);
+
                 }
 
             }
@@ -5341,10 +5466,10 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(SettingsActivity.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
-                    intent_info.putExtra("Song", track_title.getText().toString());
+                    SongSingleton.getInstance().setSongName(song);
                 }
                 startActivity(intent_info);
                 deleteRequest();
@@ -5359,6 +5484,7 @@ public class SettingsActivity extends AppCompatActivity
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
                 hideSoftKeyboard(SettingsActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -5432,7 +5558,7 @@ public class SettingsActivity extends AppCompatActivity
                 Intent i = new Intent(SettingsActivity.this, Conversations.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
-                    i.putExtra("Song", track_title.getText().toString());
+                    SongSingleton.getInstance().setSongName(song);
                 }
                 startActivity(i);
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
@@ -5478,7 +5604,7 @@ public class SettingsActivity extends AppCompatActivity
                 Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
-                    i.putExtra("Song", track_title.getText().toString());
+                    SongSingleton.getInstance().setSongName(song);
                 }
                 startActivity(i);
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
@@ -6391,7 +6517,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(SettingsActivity.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(SettingsActivity.this, MusicPlayerActivity.class);
         startActivity(i);
         DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
         reqdb.addListenerForSingleValueEvent(
@@ -6442,14 +6568,14 @@ public class SettingsActivity extends AppCompatActivity
             long currentDuration = mediaPlayer.getCurrentPosition();
 
             // Displaying Total Duration time
-            AndroidBuildingMusicPlayerActivity.songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
+            MusicPlayerActivity.songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
             // Displaying time completed playing
-            AndroidBuildingMusicPlayerActivity.songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
+            MusicPlayerActivity.songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
 
             // Updating progress bar
             int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
-            AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(progress);
+            MusicPlayerActivity.songProgressBar.setProgress(progress);
 
             // Running this thread after 100 milliseconds
             mHandler.postDelayed(this, 100);

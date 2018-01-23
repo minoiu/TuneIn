@@ -28,7 +28,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="TuneIn"
+            android:label="Friend Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AudioPlayer" />
         <activity
@@ -36,7 +36,7 @@
             android:label="Messages"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AndroidBuildingMusicPlayerActivity"
+            android:name=".MusicPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/MPTheme" />

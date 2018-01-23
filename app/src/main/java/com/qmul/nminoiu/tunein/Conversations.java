@@ -4,13 +4,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,20 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -39,12 +28,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
@@ -246,7 +233,7 @@ public class Conversations extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(Conversations.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(Conversations.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromConversations");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
@@ -386,7 +373,7 @@ public class Conversations extends AppCompatActivity {
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(Conversations.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(Conversations.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
@@ -453,9 +440,9 @@ public class Conversations extends AppCompatActivity {
 
         mediaPlayer.getCurrentPosition();
 
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {

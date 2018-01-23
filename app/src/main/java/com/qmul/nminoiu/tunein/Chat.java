@@ -3,22 +3,15 @@ package com.qmul.nminoiu.tunein;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,11 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
-import static android.os.Build.ID;
+
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
-import static com.qmul.nminoiu.tunein.UserDetails.friend;
 
 
 public class Chat extends AppCompatActivity {
@@ -399,7 +388,7 @@ public class Chat extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(Chat.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(Chat.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromChat");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
@@ -994,9 +983,9 @@ public class Chat extends AppCompatActivity {
         }
 
         mediaPlayer.getCurrentPosition();
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {
@@ -1143,7 +1132,7 @@ public class Chat extends AppCompatActivity {
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(Chat.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(Chat.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 

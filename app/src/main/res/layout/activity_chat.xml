@@ -70,6 +70,7 @@
         <TextView
             android:id="@+id/track_title"
             android:layout_width="150dp"
+            android:freezesText="true"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_margin="@dimen/fab_margin"

@@ -205,7 +205,7 @@ public class FavouritePlaylists extends AppCompatActivity {
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(FavouritePlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(FavouritePlaylists.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromLibrary");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
@@ -323,7 +323,7 @@ public class FavouritePlaylists extends AppCompatActivity {
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(FavouritePlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(FavouritePlaylists.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
@@ -414,9 +414,9 @@ public class FavouritePlaylists extends AppCompatActivity {
 
         mediaPlayer.getCurrentPosition();
 
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {

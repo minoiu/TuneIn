@@ -5,15 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -270,7 +266,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(MyPlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(MyPlaylists.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromMyPlaylists");
                 if (mediaPlayer.isPlaying()) {
                     intent_info.putExtra("Song", track_title.getText().toString());
@@ -804,9 +800,9 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 
         mediaPlayer.getCurrentPosition();
 
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {
@@ -888,7 +884,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(MyPlaylists.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(MyPlaylists.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 

@@ -3,18 +3,14 @@ package com.qmul.nminoiu.tunein;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -24,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -92,14 +87,17 @@ public class LibraryActivity extends AppCompatActivity{
         track_title = (TextView) findViewById(R.id.track_title);
         myFollowers = new ArrayList<>();
         rowItems = new ArrayList<RowItem>();
+        MusicPlayerActivity.songs.clear();
+        MusicPlayerActivity.urls.clear();
 
         adapterRecentlyplayed = new AdapterRecentlyplayed(this, rowItems);
 
         Intent i = getIntent();
-        if(i.hasExtra("Song")){
-            String title = i.getStringExtra("Song");
-            track_title.setText(title);
-        }
+//        if(i.hasExtra("Song")){
+//            String title = i.getStringExtra("Song");
+//            track_title.setText(title);
+//        }
+        track_title.setText(SongSingleton.getInstance().getSongName());
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
             //track_title.setText(UserDetails.playingSongName);
@@ -112,6 +110,9 @@ public class LibraryActivity extends AppCompatActivity{
 
                 String recentSongs = dataSnapshot.getValue(String.class);
                 //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+
+                getUrl(recentSongs);
+                MusicPlayerActivity.songs.add(recentSongs);
 
                 recents.add(recentSongs);
 
@@ -147,6 +148,8 @@ public class LibraryActivity extends AppCompatActivity{
         recentsadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recents);
         recentSongs.setAdapter(adapterRecentlyplayed);
         recentSongs.setClickable(true);
+
+
 
         playlists.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,7 +207,13 @@ public class LibraryActivity extends AppCompatActivity{
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 final String song = rowItem.getTitle();
                 play_toolbar.setVisibility(View.VISIBLE);
+
                 track_title.setText(song);
+                SongSingleton.getInstance().setSongName(song);
+
+//                MusicPlayerActivity mp = new MusicPlayerActivity();
+//                TextView tv = mp.getTextView();
+//                tv.setText(song);
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -230,10 +239,10 @@ public class LibraryActivity extends AppCompatActivity{
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+                Intent intent_info = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromLibrary");
                 if (mediaPlayer.isPlaying()) {
-                    intent_info.putExtra("Song", track_title.getText().toString());
+//                    intent_info.putExtra("Song", track_title.getText().toString());
                 }
                 startActivity(intent_info);
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
@@ -294,6 +303,29 @@ public class LibraryActivity extends AppCompatActivity{
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
+    public void getUrl(String song) {
+
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase songRef = ref.child("URL").child(song);
+
+            songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+                @Override
+                public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                    for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        url = String.valueOf(dsp.getValue());
+                        MusicPlayerActivity.urls.add(url);
+                        //  Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                        //getTimeFromFirebase();
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -328,7 +360,7 @@ public class LibraryActivity extends AppCompatActivity{
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(LibraryActivity.this, AndroidBuildingMusicPlayerActivity.class);
+        Intent i = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
@@ -420,9 +452,9 @@ public class LibraryActivity extends AppCompatActivity{
 
         mediaPlayer.getCurrentPosition();
 
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setProgress(0);
-        //AndroidBuildingMusicPlayerActivity.songProgressBar.setMax(100);
-//            new AndroidBuildingMusicPlayerActivity().updateProgressBar();
+        //MusicPlayerActivity.songProgressBar.setProgress(0);
+        //MusicPlayerActivity.songProgressBar.setMax(100);
+//            new MusicPlayerActivity().updateProgressBar();
     }
 
     public void eraseFromFirebase() {
