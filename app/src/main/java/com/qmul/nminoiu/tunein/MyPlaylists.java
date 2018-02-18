@@ -134,7 +134,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MyPlaylists.this, SettingsActivity.class);
+                Intent i = new Intent(MyPlaylists.this, RealTimeActivity.class);
                 if(mediaPlayer.isPlaying()){
                     String song = track_title.getText().toString();
                     i.putExtra("Song", song);
@@ -153,7 +153,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             String title = i.getStringExtra("Song");
             UserDetails.songname = title;
             //Toast.makeText(this, "title is "+title, Toast.LENGTH_SHORT).show();
-            track_title.setText(title);
+//            track_title.setText(title);
         }
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
@@ -163,6 +163,24 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             paramsFab1.setMargins(0, 0, 53, 160);
             fab1.setLayoutParams(paramsFab1);
         } else play_toolbar.setVisibility(View.GONE);
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+                    track_title.setText(song);
+                    Toast.makeText(MyPlaylists.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 //        if(i.hasExtra("Uniqid")){
 //            String uniqid = i.getStringExtra("Uniqid");
@@ -740,7 +758,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 }
 
                 addToHome(UserDetails.myFollowers, mysong);
-                //Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
 
             }
 
@@ -762,7 +780,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -806,7 +824,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     }
 
     public void eraseFromFirebase() {
-        final SettingsActivity sa = new SettingsActivity();
+        final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -815,11 +833,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(RealTimeActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                 // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();

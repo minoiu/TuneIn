@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,14 +18,12 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.OutputStream;
@@ -40,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.qmul.nminoiu.tunein.UserDetails.friend;
 import static com.qmul.nminoiu.tunein.UserDetails.friendID;
 import static com.qmul.nminoiu.tunein.UserDetails.username;
 
@@ -397,7 +393,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent backMainTest = new Intent(this,SettingsActivity.class);
+        Intent backMainTest = new Intent(this,RealTimeActivity.class);
         startActivity(backMainTest);
         finish();
     }
@@ -432,7 +428,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                    if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
                     } else {

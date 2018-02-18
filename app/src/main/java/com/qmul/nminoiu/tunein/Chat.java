@@ -95,6 +95,9 @@ public class Chat extends AppCompatActivity {
         //backgroundLayout = (LinearLayout)findViewById(R.id.backgroundLayout);
         final Context context = this;
 
+//        ID = firebaseAuth.getCurrentUser().getUid();
+        sender = firebaseAuth1.getCurrentUser().getEmail();
+
 //        if(mediaPlayer.isPlaying()){
 //            play_toolbar.setVisibility(View.VISIBLE);
 //            track_title.setText(UserDetails.playingSongName);
@@ -130,6 +133,12 @@ public class Chat extends AppCompatActivity {
                 } else play_toolbar.setVisibility(View.GONE);
             } if(uniqid.equals("FromFollowersListeWith")){
                 String song = i.getStringExtra("Song");
+
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
                 String friend = i.getStringExtra("FriendName");
                 UserDetails.chatWith=friend;
                 if(mediaPlayer.isPlaying()){
@@ -144,6 +153,12 @@ public class Chat extends AppCompatActivity {
                 getFullname();
                 UserDetails.chatWith=friend;
                 String song = i.getStringExtra("Song");
+
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
                 getSupportActionBar().setTitle(friend);
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
                 play_toolbar.setVisibility(View.VISIBLE);
@@ -188,9 +203,28 @@ public class Chat extends AppCompatActivity {
             }
         }
         if(i.hasExtra("Song")){
-            String song = i.getStringExtra("Song");
-            track_title.setText(song);
+//            String song = i.getStringExtra("Song");
+//            track_title.setText(song);
         }
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+                    track_title.setText(song);
+//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -198,8 +232,6 @@ public class Chat extends AppCompatActivity {
         String curUser = currentuser.getUid().toString();
 
 
-        ID = firebaseAuth.getCurrentUser().getUid();
-        sender = firebaseAuth.getCurrentUser().getEmail();
 
         db = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -283,9 +315,9 @@ public class Chat extends AppCompatActivity {
 //            @Override
 //            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
 //                UserDetails.fullname = dataSnapshot.getValue().toString();
-//                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+//                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
 //                //getFollowers(UserDetails.fullname);
-//                //Toast.makeText(SettingsActivity.this, myFollowers.size() + " followers", Toast.LENGTH_LONG).show();
+//                //Toast.makeText(RealTimeActivity.this, myFollowers.size() + " followers", Toast.LENGTH_LONG).show();
 //            }
 //
 //            @Override
@@ -303,7 +335,11 @@ public class Chat extends AppCompatActivity {
         refFriend = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.chatWith +"/"+ UserDetails.chatWith + "_" + UserDetails.username);
         refMe = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.username+"/"+ UserDetails.username + "_" + UserDetails.chatWith);
 
-
+//todo filepath email encode and decode
+        Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/Intent/" + EncodeString(sender));
+        Map<String, Object> uinfo = new HashMap<>();
+        uinfo.put("Intent", "Chat");
+        refsong.updateChildren(uinfo);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,6 +494,16 @@ public class Chat extends AppCompatActivity {
     private void checkPreviousMessages(String chatWith, String username) {
     }
 
+    public static String EncodeString(String string) {
+        String nst = string.replace("@", "");
+        return nst.replace(".", "");
+    }
+
+    public static String DecodeString(String string) {
+        return string.replace("", "@");
+    }
+
+
     private void checkPreviousMessagesInFriend(final String chatWith, String username) {
 
         DatabaseReference reffriend = FirebaseDatabase.getInstance().getReference().child("RecentMessages");
@@ -519,7 +565,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -549,7 +595,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -572,7 +618,8 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.receiver = dataSnapshot.getValue().toString();
-                sendNotification(UserDetails.receiver, myName, message);
+                String receiver = dataSnapshot.getValue().toString();
+                checkReceiverInIntent(receiver, myName, message);
                 }
 
             @Override
@@ -580,6 +627,36 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void checkReceiverInIntent(final String receiver, final String myName, final String message) {
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("Intent");
+        songTitleRef.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(EncodeString(receiver)).exists()){
+                    String intent = dataSnapshot.child(EncodeString(receiver)).child("Intent").getValue().toString();
+                    if(intent.equals("Chat")) {
+
+                    } else{
+                        sendNotification(receiver, myName, message);
+                    }
+//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                } else sendNotification(receiver, myName, message);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void iddFromEmail(String email, String myName, String message) {
+
     }
 
 
@@ -656,31 +733,16 @@ public class Chat extends AppCompatActivity {
                     track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(song);
 
-                    Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                    Firebase songRef = ref.child("URL").child(song);
+                    track_title.setText(song);
 
-                    songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-                        @Override
-                        public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                    Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                    Map<String, Object> uinfo = new HashMap<>();
+                    uinfo.put("Song", song);
+                    refsong.updateChildren(uinfo);
+                    getLink(song);
 
-                            for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                btn.setBackgroundResource(R.drawable.ic_media_pause);
-                                play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
-                                play_toolbar.bringToFront();
-                                play_toolbar.setVisibility(View.VISIBLE);
-                                play_toolbar.requestLayout();
-                                play_toolbar.invalidate();
-                                url = String.valueOf(dsp.getValue());
-                                startMusic(url, song);
-                                getFollowers(UserDetails.fullname, song);
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
 
-                        }
-                    });
                 }
             });
         }
@@ -722,6 +784,34 @@ public class Chat extends AppCompatActivity {
         }
     }
 
+    private void getLink(final String song) {
+        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+        Firebase songRef = ref.child("URL").child(song);
+
+        songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+            @Override
+            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
+                    play_toolbar.bringToFront();
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    play_toolbar.requestLayout();
+                    play_toolbar.invalidate();
+                    url = String.valueOf(dsp.getValue());
+                    startMusic(url, song);
+                    getFollowers(UserDetails.fullname, song);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
     private void sendNotification(final String username, final String sender, final String message) {
 
             AsyncTask.execute(new Runnable() {
@@ -737,7 +827,7 @@ public class Chat extends AppCompatActivity {
                         String send_email;
 
                         //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (SettingsActivity.loggedEmail.equals(username)) {
+                        if (RealTimeActivity.loggedEmail.equals(username)) {
                             send_email = UserDetails.receiver;
 
                         } else {
@@ -841,7 +931,7 @@ public class Chat extends AppCompatActivity {
     }
 
     public void updateProgressBar() {
-        SettingsActivity sa = new SettingsActivity();
+        RealTimeActivity sa = new RealTimeActivity();
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
@@ -866,7 +956,7 @@ public class Chat extends AppCompatActivity {
                 }
 
                 addToHome(UserDetails.myFollowers, mysong);
-                //Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
 
             }
 
@@ -893,7 +983,7 @@ public class Chat extends AppCompatActivity {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
                 UserDetails.username = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -904,6 +994,7 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -913,7 +1004,8 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                String me = dataSnapshot.getValue().toString();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -927,29 +1019,25 @@ public class Chat extends AppCompatActivity {
 
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
-            uinfo.put("Song", mysong);
-            ref4.child(UserDetails.fullname).updateChildren(uinfo);
 
+            if(!RealTimeActivity.checkBox.isChecked()) {
 
+                uinfo.put("Song", mysong);
+                if (!UserDetails.picturelink.equals("")) {
+                    uinfo.put("Picture", UserDetails.picturelink);
+
+                } else {
+                    uinfo.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+                }
+                ref4.child(UserDetails.fullname).updateChildren(uinfo);
+            } else {
+                eraseFromFirebase();
+            }
         }
     }
 
-    public void playFromPause(Integer time, String link) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(link);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-            //  updateProgressBar();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void playFromPause(Integer time) {
+
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
@@ -959,7 +1047,6 @@ public class Chat extends AppCompatActivity {
 
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
-        //nowPlaying(song);
     }
 
     public void playPauseMusic(View v) {
@@ -977,7 +1064,7 @@ public class Chat extends AppCompatActivity {
 
         } else {
             mediaPlayer.seekTo(length);
-            playFromPause(length, url);
+            playFromPause(length);
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
         }
@@ -989,7 +1076,7 @@ public class Chat extends AppCompatActivity {
     }
 
     public void eraseFromFirebase() {
-        final SettingsActivity sa =  new SettingsActivity();
+        final RealTimeActivity sa =  new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -998,11 +1085,11 @@ public class Chat extends AppCompatActivity {
                         String v;
                         for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(RealTimeActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                 // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();
@@ -1045,6 +1132,22 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("Intent");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(EncodeString(sender)).exists()) {
+                    dataSnapshot.child(EncodeString(sender)).getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
        // Toast.makeText(Chat.this, "back to " + UserDetails.oldIntent, Toast.LENGTH_SHORT).show();
 
@@ -1122,19 +1225,18 @@ public class Chat extends AppCompatActivity {
 //            backMainTest.putExtra("Name", UserDetails.oldPlaylist);
             startActivity(backMainTest);
             finish();
+        } else {
+            Intent backMainTest = new Intent(this, Conversations.class);
+            startActivity(backMainTest);
+            finish();
         }
-
-
-
-
-
-
     }
 
     public void openPlayerPage(View v) {
         Intent i = new Intent(Chat.this, MusicPlayerActivity.class);
         startActivity(i);
     }
+
 
 
 }

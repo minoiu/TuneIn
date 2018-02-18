@@ -101,7 +101,7 @@ public class Downloads extends AppCompatActivity {
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Downloads.this, SettingsActivity.class);
+                Intent i = new Intent(Downloads.this, RealTimeActivity.class);
                 if(mediaPlayer.isPlaying()){
                     String song = track_title.getText().toString();
                     i.putExtra("Song", song);
@@ -140,13 +140,13 @@ public class Downloads extends AppCompatActivity {
         Intent i = getIntent();
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
-            track_title.setText(title);
+//            track_title.setText(title);
         }
         if(i.hasExtra("UniqId")){
             String uniqId = i.getStringExtra("UniqId");
             if(uniqId.equals("FromPlayer")){
                 String title = i.getStringExtra("Song");
-                track_title.setText(title);
+//                track_title.setText(title);
             }
         }
 
@@ -167,9 +167,28 @@ public class Downloads extends AppCompatActivity {
         sender = firebaseAuth.getCurrentUser().getEmail();
         songsList.bringToFront();
 
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+                    track_title.setText(song);
+//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         songsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 RowItem rowItem = (RowItem) parent.getItemAtPosition(position);
                 final String song = rowItem.getTitle();
                 play_toolbar.setVisibility(View.VISIBLE);
@@ -177,25 +196,36 @@ public class Downloads extends AppCompatActivity {
                 fab.setLayoutParams(paramsFab);
                 paramsFab1.setMargins(0, 0, 53, 160);
                 fab1.setLayoutParams(paramsFab1);
-                UserDetails.playingSongName = song;
                 track_title.setText(song);
 
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
-                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+                getLink(song);
+
+
+                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+                Firebase songRef = ref.child("URL").child(song);
+                songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        url = dataSnapshot.getValue().toString();
-                        startMusic(url, song);
-                        btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+                        for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            url = String.valueOf(dsp.getValue());
+                            startMusic(url, song);
+                            btn.setBackgroundResource(R.drawable.ic_media_pause);
+                            getFollowers(UserDetails.fullname, song);
+                        }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(FirebaseError firebaseError) {
+
                     }
                 });
             }
-
         });
+
 
         final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -281,6 +311,22 @@ public class Downloads extends AppCompatActivity {
 
     }
 
+    private void getLink(final String song) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("URL").child(song).child("URL");
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                url = dataSnapshot.getValue().toString();
+                startMusic(url, song);
+                btn.setBackgroundResource(R.drawable.ic_media_pause);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void getUrl(String song) {
 
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -292,7 +338,7 @@ public class Downloads extends AppCompatActivity {
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     MusicPlayerActivity.urls.add(url);
-                    //  Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(RealTimeActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                     //getTimeFromFirebase();
                 }
             }
@@ -407,9 +453,9 @@ public class Downloads extends AppCompatActivity {
 
     public void getFollowers(String fullname, final String mysong) {
 
-        final ArrayAdapter<String> fadapter;
         final List<String> myFollowers = new ArrayList<>();
-
+        final ArrayAdapter<String> fadapter;
+        UserDetails.mysong = mysong;
         fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
         DatabaseReference fdb;
         fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
@@ -424,12 +470,8 @@ public class Downloads extends AppCompatActivity {
                     //addToFirebaseHome(value, mysong);
                     fadapter.notifyDataSetChanged();
                 }
-
-                addToHome(UserDetails.myFollowers, mysong);
-                //Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
-
+                eraseFromRecents(mysong);
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -437,6 +479,57 @@ public class Downloads extends AppCompatActivity {
             }
         });
     }
+
+    public void eraseFromRecents(String mysong) {
+        DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
+        mDatabase1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String v;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            v = snapshot.getKey();
+                            //getFulname();
+                            if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+
+                                // dataSnapshot.child(v).getRef().removeValue();
+                                dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+
+                                //names.remove(getMyFullname(ID));
+                                // title.remove()
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        addToHome(UserDetails.myFollowers, mysong);
+    }
+
+    public String getMyFullname(String id) {
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+        return UserDetails.fullname;
+    }
+
+
 
     public void getFullname() {
 
@@ -452,7 +545,7 @@ public class Downloads extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -473,7 +566,7 @@ public class Downloads extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -487,8 +580,20 @@ public class Downloads extends AppCompatActivity {
 
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
-            uinfo.put("Song", mysong);
-            ref4.child(UserDetails.fullname).updateChildren(uinfo);
+
+            if(!RealTimeActivity.checkBox.isChecked()) {
+
+                uinfo.put("Song", mysong);
+                if (!UserDetails.picturelink.equals("")) {
+                    uinfo.put("Picture", UserDetails.picturelink);
+
+                } else {
+                    uinfo.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+                }
+                ref4.child(UserDetails.fullname).updateChildren(uinfo);
+            } else {
+                eraseFromFirebase();
+            }
         }
     }
 
@@ -530,7 +635,7 @@ public class Downloads extends AppCompatActivity {
     }
 
     public void eraseFromFirebase() {
-        final SettingsActivity sa = new SettingsActivity();
+        final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -539,11 +644,11 @@ public class Downloads extends AppCompatActivity {
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(RealTimeActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                 // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();

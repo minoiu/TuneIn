@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -130,6 +131,24 @@ public class Conversations extends AppCompatActivity {
         recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
         UserDetails.username = UserDetails.fullname;
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+                    track_title.setText(song);
+//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -273,7 +292,7 @@ public class Conversations extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(Conversations.this, SettingsActivity.class);
+        Intent i = new Intent(Conversations.this, RealTimeActivity.class);
         i.putExtra("ID", "FromConversations");
         i.putExtra("Song", track_title.getText().toString());
         startActivity(i);
@@ -335,7 +354,7 @@ public class Conversations extends AppCompatActivity {
     }
 
     public void updateProgressBar() {
-        SettingsActivity sa = new SettingsActivity();
+        RealTimeActivity sa = new RealTimeActivity();
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
@@ -360,7 +379,7 @@ public class Conversations extends AppCompatActivity {
                 }
 
                 addToHome(UserDetails.myFollowers, mysong);
-                //Toast.makeText(SettingsActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
 
             }
 
@@ -387,7 +406,7 @@ public class Conversations extends AppCompatActivity {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -446,7 +465,7 @@ public class Conversations extends AppCompatActivity {
     }
 
     public void eraseFromFirebase() {
-        final SettingsActivity sa = new SettingsActivity();
+        final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -455,11 +474,11 @@ public class Conversations extends AppCompatActivity {
                         String v;
                         for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //Toast.makeText(SettingsActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(SettingsActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
                             //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                                // Toast.makeText(SettingsActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(RealTimeActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
 
                                 // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();

@@ -37,13 +37,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.UserDetails.song;
-import static com.qmul.nminoiu.tunein.UserDetails.username;
 
 /**
  * Created by nicoleta on 26/10/2017.
@@ -481,7 +478,7 @@ public class AdapterFollowing extends BaseAdapter {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                    if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
 

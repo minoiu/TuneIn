@@ -2,10 +2,8 @@ package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -76,11 +73,11 @@ public class PlaylistsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlists);
 
-        newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
+//        newPlaylist = (LinearLayout) findViewById(R.id.createPlaylist);
         sharedWithMeLayout = (RelativeLayout) findViewById(R.id.sharedWithMeLayout);
 
 
-        newPlaylist.bringToFront();
+//        .bringToFront();
         playlistName = (EditText) findViewById(R.id.editText);
         create = (Button) findViewById(R.id.create);
         cancel = (Button) findViewById(R.id.cancel);
@@ -988,7 +985,7 @@ public class PlaylistsActivity extends AppCompatActivity {
         });
 
         Toast.makeText(PlaylistsActivity.this, song + " was added to your playlist", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(PlaylistsActivity.this, SettingsActivity.class);
+        Intent intent = new Intent(PlaylistsActivity.this, RealTimeActivity.class);
         intent.putExtra("Uniqid", "FromPlaylistsActivity");
         intent.putExtra("Name", playlist);
         startActivity(intent);
@@ -1048,6 +1045,7 @@ public class PlaylistsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
+
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(PlaylistsActivity.this);
             View mView = getLayoutInflater().inflate(R.layout.newplaylist, null);
             final EditText newname = (EditText) mView.findViewById(R.id.editText);
@@ -1212,7 +1210,7 @@ public class PlaylistsActivity extends AppCompatActivity {
             finish();
         }
         else {
-            Intent backMainTest = new Intent(this, SettingsActivity.class);
+            Intent backMainTest = new Intent(this, RealTimeActivity.class);
             startActivity(backMainTest);
             finish();
         }

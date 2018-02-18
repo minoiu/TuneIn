@@ -1,19 +1,16 @@
 package com.qmul.nminoiu.tunein;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -386,7 +383,7 @@ public class AdapterShared extends BaseAdapter {
                         String send_email;
 
                         //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (SettingsActivity.loggedEmail.equals(sender)) {
+                        if (RealTimeActivity.loggedEmail.equals(sender)) {
                             send_email = UserDetails.receiver;
 
 

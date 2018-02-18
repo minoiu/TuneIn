@@ -7,7 +7,6 @@ import android.util.Log;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotification;
-import com.onesignal.OSNotificationPayload;
 import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
@@ -79,7 +78,7 @@ public class Notification extends Application {
 
             String customKey;
             String openURL = null;
-            Object activityToLaunch = SettingsActivity.class;
+            Object activityToLaunch = RealTimeActivity.class;
 
             if (data != null) {
                 customKey = data.optString("customkey", null);
@@ -96,7 +95,7 @@ public class Notification extends Application {
                 Log.i("OneSignalExample", "Button pressed with id: " + result.action.actionID);
                 if (result.action.actionID.equals("id1")) {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
-                    activityToLaunch = SettingsActivity.class;
+                    activityToLaunch = RealTimeActivity.class;
                 } else {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
                 }

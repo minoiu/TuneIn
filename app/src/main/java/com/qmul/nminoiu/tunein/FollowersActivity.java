@@ -1,23 +1,14 @@
 package com.qmul.nminoiu.tunein;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,7 +32,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
-import static com.qmul.nminoiu.tunein.R.layout.playlist;
 
 /**
  * Created by nicoleta on 11/10/2017.
@@ -161,7 +151,7 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -196,7 +186,7 @@ public class FollowersActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
-                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -301,7 +291,7 @@ public class FollowersActivity extends AppCompatActivity {
                 startActivity(backMainTest);
                 finish();
             } else if (UserDetails.oldIntent.equals("FromSettingsMenu")) {
-                Intent backMainTest = new Intent(this, SettingsActivity.class);
+                Intent backMainTest = new Intent(this, RealTimeActivity.class);
                 if (mediaPlayer.isPlaying()) {
                     // backMainTest.putExtra("Song", track_title.getText().toString());
                 }
@@ -436,7 +426,7 @@ public class FollowersActivity extends AppCompatActivity {
                         String send_email;
 
                         //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (SettingsActivity.loggedEmail.equals(sender)) {
+                        if (RealTimeActivity.loggedEmail.equals(sender)) {
                             send_email = UserDetails.receiver;
 
                         } else {

@@ -3,6 +3,7 @@ package com.qmul.nminoiu.tunein;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import android.app.Activity;
@@ -19,12 +20,20 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 
 public class MusicPlayerActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
 	private ImageButton btnPlay;
+	public String ID;
 	private ImageButton btnForward;
 	private ImageButton btnBackward;
 	private ImageButton btnNext;
@@ -70,6 +79,8 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		setContentView(R.layout.player);
 
 		// All player buttons
+		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+		ID = firebaseAuth.getCurrentUser().getUid();
 		btnPlay = (ImageButton) findViewById(R.id.btnPlay);
 		btnForward = (ImageButton) findViewById(R.id.btnForward);
 		btnBackward = (ImageButton) findViewById(R.id.btnBackward);
@@ -88,6 +99,26 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 //		downarrow.bringToFront();
 		layout = (RelativeLayout) findViewById(R.id.layout);
 		//layout.setBackgroundResource(R.drawable.lastspeacker);
+
+		DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+		songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+
+				if(dataSnapshot.child(ID).exists()){
+					String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+					songTitleLabel.setText(song);
+//					Toast.makeText(MusicPlayerActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+
 
 
 //		layout.post(new Runnable() {
@@ -119,7 +150,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
         i = getIntent();
 //		songTitle = i.getStringExtra("Song");
         Song s = new Song();
-		songTitleLabel.setText(SongSingleton.getInstance().getSongName());
+//		songTitleLabel.setText(SongSingleton.getInstance().getSongName());
 
 		// Mediaplayer
 //		mp = new MediaPlayer();
@@ -140,7 +171,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 					if (i.hasExtra("Uniqid")) {
 						String uniqid = i.getStringExtra("Uniqid");
 						if (uniqid.equals("FromSettings")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -152,15 +183,16 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
-								intent.putExtra("Song", songTitleLabel.getText().toString());
-								UserDetails.playingSongName = songTitleLabel.getText().toString();
+//								intent.putExtra("Song", songTitleLabel.getText().toString());
+								SongSingleton.getInstance().setSongName(songTitleLabel.getText().toString());
+//								UserDetails.playingSongName = songTitleLabel.getText().toString();
 							}
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 							//overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
 							//startActivity(intent);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -187,7 +219,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								intent.putExtra("OldPlaylist", oldP);
 								intent.putExtra("Name", oldP);
-								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
+//								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
 
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
 
@@ -197,7 +229,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 						} else if (uniqid.equals("FromDownloads")) {
 							Intent intent = new Intent(MusicPlayerActivity.this, Downloads.class);
 							intent.putExtra("UniqId", "FromPlayer");
-							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
+//							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
@@ -226,7 +258,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -257,7 +289,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						}
 						else {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromMP");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -280,7 +312,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 					if (i.hasExtra("Uniqid")) {
 						String uniqid = i.getStringExtra("Uniqid");
 						if (uniqid.equals("FromSettings")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -292,15 +324,16 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
-								intent.putExtra("Song", songTitleLabel.getText().toString());
-								UserDetails.playingSongName = songTitleLabel.getText().toString();
+//								intent.putExtra("Song", songTitleLabel.getText().toString());								UserDetails.playingSongName = songTitleLabel.getText().toString();
+								SongSingleton.getInstance().setSongName(songTitleLabel.getText().toString());
+
 							}
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 							//overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
 							//startActivity(intent);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -327,7 +360,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								intent.putExtra("OldPlaylist", oldP);
 								intent.putExtra("Name", oldP);
-								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
+//								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
 
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
 
@@ -337,7 +370,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 						} else if (uniqid.equals("FromDownloads")) {
 							Intent intent = new Intent(MusicPlayerActivity.this, Downloads.class);
 							intent.putExtra("UniqId", "FromPlayer");
-							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
+//							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
@@ -366,7 +399,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -397,7 +430,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						}
 						else {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromMP");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -421,7 +454,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 					if (i.hasExtra("Uniqid")) {
 						String uniqid = i.getStringExtra("Uniqid");
 						if (uniqid.equals("FromSettings")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -433,15 +466,17 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
-								intent.putExtra("Song", songTitleLabel.getText().toString());
-								UserDetails.playingSongName = songTitleLabel.getText().toString();
+//								Toast.makeText(MusicPlayerActivity.this, "sing set to " + songTitleLabel.getText().toString(), Toast.LENGTH_SHORT).show();
+//								intent.putExtra("Song", songTitleLabel.getText().toString());
+								SongSingleton.getInstance().setSongName(songTitleLabel.getText().toString());
 							}
+//							Toast.makeText(MusicPlayerActivity.this, "sing is " + SongSingleton.getInstance().getSongName(), Toast.LENGTH_SHORT).show();
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 							//overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
 							//startActivity(intent);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -468,7 +503,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								intent.putExtra("OldPlaylist", oldP);
 								intent.putExtra("Name", oldP);
-								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
+//								Toast.makeText(MusicPlayerActivity.this, "name is " + oldP, Toast.LENGTH_SHORT).show();
 
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
 
@@ -478,7 +513,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 						} else if (uniqid.equals("FromDownloads")) {
 							Intent intent = new Intent(MusicPlayerActivity.this, Downloads.class);
 							intent.putExtra("UniqId", "FromPlayer");
-							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
+//							Toast.makeText(MusicPlayerActivity.this, "clicked ", Toast.LENGTH_SHORT).show();
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
 								UserDetails.playingSongName = songTitleLabel.getText().toString();
@@ -507,7 +542,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							finish();
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						} else if (uniqid.equals("FromSearch")) {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromPlayer");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -538,7 +573,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 							overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
 						}
 						else {
-							Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
+							Intent intent = new Intent(MusicPlayerActivity.this, RealTimeActivity.class);
 							intent.putExtra("ID", "FromMP");
 							if (mediaPlayer.isPlaying()) {
 								intent.putExtra("Song", songTitleLabel.getText().toString());
@@ -592,97 +627,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			}
 		});
 
-        downarrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (i != null) {
-                    if (i.hasExtra("Uniqid")) {
-                        String uniqid = i.getStringExtra("Uniqid");
-                        if (uniqid.equals("FromSettings")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            finish();
-                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
-                        } else if (uniqid.equals("FromLibrary")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            finish();
-                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
-                            //overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.push_out_to_bottom);
-                            //startActivity(intent);
-                        } else if (uniqid.equals("FromSearch")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                                intent.putExtra("ID", "FromPlayer");
-                            }
-                            startActivity(intent);
-                        } else if (uniqid.equals("FromSongs")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-//                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            startActivity(intent);
-                        } else if (uniqid.equals("FromPlaylistSongs")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, PlaylistSongs.class);
-                            intent.putExtra("Uniqid", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-								intent.putExtra("Name", i.getStringExtra("OldPlaylist"));
 
-							}
-                            startActivity(intent);
-                        } else if (uniqid.equals("FromDownloaded")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            startActivity(intent);
-                        } else if (uniqid.equals("FromChat")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, Chat.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            finish();
-                            overridePendingTransition(R.anim.stay, R.anim.slide_down_info);
-                        } else if (uniqid.equals("FromFavourites")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            startActivity(intent);
-                        } else if (uniqid.equals("FromSearch")) {
-                            Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
-                            intent.putExtra("ID", "FromPlayer");
-                            if (mediaPlayer.isPlaying()) {
-                                intent.putExtra("Song", songTitleLabel.getText().toString());
-                            }
-                            startActivity(intent);
-                        }
-                    } else {
-                        Intent intent = new Intent(MusicPlayerActivity.this, SettingsActivity.class);
-                        intent.putExtra("ID", "FromMP");
-                        if (mediaPlayer.isPlaying()) {
-                            intent.putExtra("Song", songTitleLabel.getText().toString());
-                        }
-                        startActivity(intent);
-                    }
-                   // overridePendingTransition(R.anim.no_change, R.anim.slide_down_info);
-                }
-            }
-        });
-//
 		/**
 		 * Forward button click event
 		 * Forwards song specified seconds
@@ -795,8 +740,8 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			}
 		});
 
-        Toast.makeText(this, "size songs "+ songs.size(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "size urls "+ urls.size(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "size songs "+ songs.size(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "size urls "+ urls.size(), Toast.LENGTH_SHORT).show();
 
 
 //		/**
@@ -871,10 +816,17 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			mediaPlayer.start();
 
 			// Displaying Song title
-			songTitleLabel.setText(songs.get(songIndex));
-            SongSingleton.getInstance().setSongName(songs.get(songIndex));
+//			songTitleLabel.setText(songs.get(songIndex));
+//            SongSingleton.getInstance().setSongName(songs.get(songIndex));
 
-//
+			Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+			Map<String, Object> uinfo = new HashMap<>();
+			uinfo.put("Song", songs.get(songIndex));
+			refsong.updateChildren(uinfo);
+
+
+//			Toast.makeText(this, "singleton is " + SongSingleton.getInstance().getSongName(), Toast.LENGTH_SHORT).show();
+
 			// Changing Button Image to pause image
 			btnPlay.setImageResource(R.drawable.btn_pause);
 //
@@ -905,8 +857,14 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			mediaPlayer.start();
 
 			// Displaying Song title
-			songTitleLabel.setText(songName);
-            SongSingleton.getInstance().setSongName(songName);
+//			songTitleLabel.setText(songName);
+
+			Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+			Map<String, Object> uinfo = new HashMap<>();
+			uinfo.put("Song", songName);
+			refsong.updateChildren(uinfo);
+
+//            SongSingleton.getInstance().setSongName(songName);
 
 //
 			// Changing Button Image to pause image

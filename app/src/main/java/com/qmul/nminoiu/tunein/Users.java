@@ -1,29 +1,17 @@
 package com.qmul.nminoiu.tunein;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -32,23 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.onesignal.OSNotificationAction;
-import com.onesignal.OSNotificationOpenResult;
-import com.onesignal.OneSignal;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
-
-import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 public class Users extends AppCompatActivity {
     TextView noUsersText;
@@ -146,7 +119,7 @@ public class Users extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -211,7 +184,7 @@ public class Users extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(Users.this, SettingsActivity.class);
+        Intent i = new Intent(Users.this, RealTimeActivity.class);
         startActivity(i);
         finish();
     }
@@ -252,7 +225,7 @@ public class Users extends AppCompatActivity {
 //                    String send_email;
 //
 //                    //This is a Simple Logic to Send Notification different Device Programmatically....
-//                    if (SettingsActivity.loggedEmail.equals(sender)) {
+//                    if (RealTimeActivity.loggedEmail.equals(sender)) {
 //                        send_email = UserDetails.receiver;
 //
 //                    } else {

@@ -93,12 +93,12 @@ import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
-public class SettingsActivity extends AppCompatActivity
+public class RealTimeActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
     private MaterialSearchView searchView;
     private LinearLayout searchLayout;
-    private TextView email;
+    private TextView emailTextView;
     private FirebaseAuth firebaseAuth;
     private String username = "";
     private static final String TAG = "MainActivity";
@@ -119,6 +119,8 @@ public class SettingsActivity extends AppCompatActivity
 
     private ImageButton[] syncButtonArray;
     private ImageButton[] tuneoutButtonArray;
+    private ImageButton[] tuneinButtonArray;
+
     private ImageButton[] youtubeArray;
     private ImageButton[] youtubeArray1;
 
@@ -367,7 +369,7 @@ public class SettingsActivity extends AppCompatActivity
     private StorageReference picRef;
     private CoordinatorLayout.LayoutParams paramsFab1;
     private CoordinatorLayout.LayoutParams paramsFab;
-    private CheckBox checkBox;
+    public static CheckBox checkBox;
 
 
     @Override
@@ -375,7 +377,7 @@ public class SettingsActivity extends AppCompatActivity
         //setContentView(savedInstanceState);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_realtime);
 
         //initialising needed variables
         commentsLayout = (LinearLayout) findViewById(R.id.commentLayout);
@@ -458,6 +460,7 @@ public class SettingsActivity extends AppCompatActivity
 
         profilePic = (ImageView) hView.findViewById(R.id.profilePic);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
+        nav_user.setText(sender);
         //email = (TextView) findViewById(R.id.emailProfile);
         Intent i = getIntent();
         if(i.hasExtra("Email")){
@@ -488,6 +491,7 @@ public class SettingsActivity extends AppCompatActivity
         ID = firebaseAuth1.getCurrentUser().getUid();
         sender = firebaseAuth1.getCurrentUser().getEmail();
         OneSignal.sendTag("User_ID", loggedEmail);
+        Toast.makeText(this, loggedEmail, Toast.LENGTH_SHORT).show();
         mStorage = FirebaseStorage.getInstance();
         btn = (Button) findViewById(R.id.button);
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
@@ -906,6 +910,28 @@ public class SettingsActivity extends AppCompatActivity
         timesArray[3] = time9;
         timesArray[4] = time10;
 
+//        emailTextView = (TextView) findViewById(R.id.emailProfile);
+//        emailTextView.setText(sender);
+
+        DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+        songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.child(ID).exists()){
+                    String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+                    track_title.setText(song);
+//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         title1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -919,9 +945,15 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+//                getLink(song);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -956,9 +988,14 @@ public class SettingsActivity extends AppCompatActivity
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -993,9 +1030,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1031,9 +1073,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1069,9 +1116,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1107,9 +1159,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1145,9 +1202,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1183,9 +1245,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1219,11 +1286,16 @@ public class SettingsActivity extends AppCompatActivity
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1259,9 +1331,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1303,9 +1380,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1340,9 +1422,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1377,9 +1464,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1414,9 +1506,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1451,9 +1548,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1488,9 +1590,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1525,9 +1632,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1562,9 +1674,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1599,9 +1716,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1636,9 +1758,14 @@ public class SettingsActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
+//                SongSingleton.getInstance().setSongName(song);
 
-                hideSoftKeyboard(SettingsActivity.this);
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song);
+                refsong.updateChildren(uinfo);
+
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -1680,7 +1807,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -1740,7 +1867,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -1800,7 +1927,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -1860,7 +1987,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -1920,7 +2047,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -1980,7 +2107,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2040,7 +2167,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2100,7 +2227,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2160,7 +2287,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2220,7 +2347,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2280,7 +2407,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2308,7 +2435,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2337,7 +2464,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2366,7 +2493,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2395,7 +2522,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2424,7 +2551,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2453,7 +2580,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2482,7 +2609,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2511,7 +2638,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2540,7 +2667,7 @@ public class SettingsActivity extends AppCompatActivity
                     }
                 });
 
-                final Intent intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+                final Intent intent = new Intent(RealTimeActivity.this, ProfileActivity.class);
                 intent.putExtra("FriendName", user);
                 intent.putExtra("FriendId", UserDetails.friendID);
                 startActivity(intent);
@@ -2617,7 +2744,7 @@ public class SettingsActivity extends AppCompatActivity
                         Menu nav_Menu = navigationView.getMenu();
 
                         nav_Menu.findItem(R.id.nav_private).setVisible(false);
-                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -2647,7 +2774,7 @@ public class SettingsActivity extends AppCompatActivity
                         Map<String,Object> uinfo1 = new HashMap<String, Object>();
                         uinfo1.put(ID,myname);
                         userRef1.updateChildren(uinfo1);
-                        //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -2726,7 +2853,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onClick(View v) {
                // progressDialog.setMessage("Synchronising...");
                 //progressDialog.show();
-                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
                 sendTimeRequest(name1.getText().toString(), title1.getText().toString());
                 tunein1.setVisibility(View.GONE);
                 tuneout1.setVisibility(View.VISIBLE);
@@ -2741,13 +2868,19 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", title1.getText().toString());
+                refsong.updateChildren(uinfo);
             }
         });
 
         tunein2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
 
                 sendTimeRequest(name2.getText().toString(), title2.getText().toString());
                 tunein2.setVisibility(View.GONE);
@@ -2763,13 +2896,15 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
             }
         });
 
         tunein3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
 
                 sendTimeRequest(name3.getText().toString(), title3.getText().toString());
                 tunein3.setVisibility(View.GONE);
@@ -2785,13 +2920,15 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
             }
         });
 
         tunein4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
 
                 sendTimeRequest(name4.getText().toString(), title4.getText().toString());
                 tunein4.setVisibility(View.GONE);
@@ -2807,13 +2944,15 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
             }
         });
 
         tunein5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingsActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
 
                 sendTimeRequest(name5.getText().toString(), title5.getText().toString());
                 tunein5.setVisibility(View.GONE);
@@ -2829,6 +2968,8 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                play_toolbar.setVisibility(View.GONE);
+
             }
         });
 
@@ -2847,7 +2988,7 @@ public class SettingsActivity extends AppCompatActivity
                     String link = dataSnapshot.child(ID).child("Url").getValue().toString();
                     UserDetails.picturelink = link;
 
-                        Picasso.with(SettingsActivity.this)
+                        Picasso.with(RealTimeActivity.this)
                                 .load(link)
 //                .resize(350, 240)
 //                .centerInside()
@@ -2870,7 +3011,8 @@ public class SettingsActivity extends AppCompatActivity
 ////                .centerInside()
 //
 //                .fit()
-//                //.centerCrop()
+//
+// .centerCrop()
 //                .into(profilePic);
 
         //tune out buttons for Now Playing layout
@@ -3179,7 +3321,7 @@ public class SettingsActivity extends AppCompatActivity
 //                        @Override
 //                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 //                            pd.dismiss();
-//                            Toast.makeText(SettingsActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RealTimeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
 //                            picLayout.setVisibility(View.GONE);
 //                            if (mediaPlayer.isPlaying()) {
 //                                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
@@ -3197,11 +3339,11 @@ public class SettingsActivity extends AppCompatActivity
 //                        @Override
 //                        public void onFailure(@NonNull Exception e) {
 //                            pd.dismiss();
-//                            Toast.makeText(SettingsActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RealTimeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
 //                        }
 //                    });
 //                } else {
-//                    Toast.makeText(SettingsActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RealTimeActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
 //                }
 //            }
 //        });
@@ -3992,7 +4134,7 @@ public class SettingsActivity extends AppCompatActivity
                 if(!comment.isEmpty()) {
                     getReceiver(UserDetails.commentOn, UserDetails.commentTo, comment);
                 } else {
-                    Toast.makeText(SettingsActivity.this, "Please write a comment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RealTimeActivity.this, "Please write a comment", Toast.LENGTH_SHORT).show();
                 }
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -4008,7 +4150,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title1.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4018,7 +4160,7 @@ public class SettingsActivity extends AppCompatActivity
                         if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
                                 String key = snapshot.getKey();
-                                //Toast.makeText(SettingsActivity.this, "key "+key, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(RealTimeActivity.this, "key "+key, Toast.LENGTH_SHORT).show();
 
                                 if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -4048,7 +4190,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title2.getText().toString();
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -4085,7 +4227,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title3.getText().toString();
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -4123,7 +4265,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title4.getText().toString();
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
                 songref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -4160,7 +4302,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title5.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4198,7 +4340,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title6.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4236,7 +4378,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title7.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4274,7 +4416,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title8.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4312,7 +4454,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title9.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4350,7 +4492,7 @@ public class SettingsActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                Intent i = new Intent(SettingsActivity.this, PlaylistsActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, PlaylistsActivity.class);
                 final String song = title10.getText().toString();
 
                 DatabaseReference songref = FirebaseDatabase.getInstance().getReference().child("MySongs");
@@ -4966,7 +5108,9 @@ public class SettingsActivity extends AppCompatActivity
                     otherUser = dataSnapshot.getKey();
                     if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
                         String song = dataSnapshot.child("Song").getValue().toString();
-                        addTimeToFirebase(otherUser, song);
+                        if(mediaPlayer.isPlaying()){
+                            addTimeToFirebase(otherUser, song);
+                        }
                     }
                 }
             }
@@ -4978,7 +5122,9 @@ public class SettingsActivity extends AppCompatActivity
                     otherUser = dataSnapshot.getKey();
                     if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
                         String song = dataSnapshot.child("Song").getValue().toString();
-                        addTimeToFirebase(otherUser, song);
+                        if(mediaPlayer.isPlaying()){
+                            addTimeToFirebase(otherUser, song);
+                        }
                     }
                 }
             }
@@ -5015,7 +5161,7 @@ public class SettingsActivity extends AppCompatActivity
                 for (int i = 0; i <= names.size() - 1; i++) {
                     //
                     //
-                    // Toast.makeText(SettingsActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(RealTimeActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
 
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
@@ -5023,7 +5169,7 @@ public class SettingsActivity extends AppCompatActivity
                     TextView song = (TextView) ll[i].findViewById(R.id.songName);
                     song.setText(title.get(i));
                     ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-                    Picasso.with(SettingsActivity.this)
+                    Picasso.with(RealTimeActivity.this)
                             .load(pictures.get(i).toString())
 //                .resize(350, 240)
 //                .centerInside()
@@ -5047,12 +5193,14 @@ public class SettingsActivity extends AppCompatActivity
                             names.set(i, text);
                             title.set(i, mysong);
                             pictures.set(i,fpic);
+                            tuneoutButtonArray[i].setVisibility(View.GONE);
+                            syncButtonArray[i].setVisibility(View.VISIBLE);
                             TextView name = (TextView) ll[i].findViewById(R.id.name);
                             name.setText(text);
                             TextView song = (TextView) ll[i].findViewById(R.id.songName);
                             song.setText(mysong);
                             ImageView pict = (ImageView) ll[i].findViewById(R.id.friendPic);
-                            Picasso.with(SettingsActivity.this)
+                            Picasso.with(RealTimeActivity.this)
                                     .load(fpic)
 //                .resize(350, 240)
 //                .centerInside()
@@ -5062,7 +5210,23 @@ public class SettingsActivity extends AppCompatActivity
                                     .into(pict);
                         }
                     }
-               // }
+
+                if (mediaPlayer.isPlaying()) {
+                    Toast.makeText(RealTimeActivity.this, text+  " changed songs", Toast.LENGTH_SHORT).show();
+
+//                    track_title.setText(mysong);
+//                    SongSingleton.getInstance().setSongName(mysong);
+
+                    play_toolbar.setVisibility(View.VISIBLE);
+
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    fab.setLayoutParams(paramsFab);
+                }
+
+                // }
 //                for (int i = 0; i <= names.size() - 1; i++) {
 //                    ll[i].setVisibility(View.VISIBLE);
 //                    TextView name = (TextView) ll[i].findViewById(R.id.name);
@@ -5070,7 +5234,7 @@ public class SettingsActivity extends AppCompatActivity
 //                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
 //                    song.setText(title.get(i));
 //                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-//                    Picasso.with(SettingsActivity.this)
+//                    Picasso.with(RealTimeActivity.this)
 //                            .load(pictures.get(i).toString())
 ////                .resize(350, 240)jūlo
 ////                .centerInside()
@@ -5093,22 +5257,47 @@ public class SettingsActivity extends AppCompatActivity
                     pictures.remove(picture);
 
                     for (int j = 0; j <= ll.length - 1; j++) {
-                       // Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                         TextView name = (TextView) ll[j].findViewById(R.id.name);
                         TextView song = (TextView) ll[j].findViewById(R.id.songName);
                         ImageView pict = (ImageView) ll[j].findViewById(R.id.friendPic);
 
                         if (name.getText().equals(text)) {
-                            //Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                             ll[j].setVisibility(View.GONE);
+                            tuneoutButtonArray[j].setVisibility(View.GONE);
+                            syncButtonArray[j].setVisibility(View.VISIBLE);
+
                         }
 
                     }
+
                 if (mediaPlayer.isPlaying()) {
+                    Toast.makeText(RealTimeActivity.this, text+  " stopped listening", Toast.LENGTH_SHORT).show();
+
                     play_toolbar.setVisibility(View.VISIBLE);
-                    track_title = (TextView) findViewById(R.id.track_title);
-                    track_title.setText(mysong);
-                    SongSingleton.getInstance().setSongName(mysong);
+//                    track_title = (TextView) findViewById(R.id.track_title);
+//                    track_title.setText(mysong);
+//                    SongSingleton.getInstance().setSongName(mysong);
+
+//                    DatabaseReference st1 = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
+//                    st1.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                            if(dataSnapshot.child(ID).exists()){
+//                                String song = dataSnapshot.child(ID).child("Song").getValue().toString();
+//                                track_title.setText(song);
+////                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//
 
                     btn.setBackgroundResource(R.drawable.ic_media_pause);
                     paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
@@ -5150,7 +5339,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
                 for (int i = 0; i <= names1.size() - 1; i++) {
-                    //Toast.makeText(SettingsActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RealTimeActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
 
                     ll1[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll1[i].findViewById(R.id.name);
@@ -5160,7 +5349,7 @@ public class SettingsActivity extends AppCompatActivity
                     TextView timer = (TextView) ll1[i].findViewById(R.id.time);
                     timer.setText(times1.get(i));
                     ImageView pic = (ImageView) ll1[i].findViewById(R.id.friendPic);
-                    Picasso.with(SettingsActivity.this)
+                    Picasso.with(RealTimeActivity.this)
                             .load(pictures1.get(i).toString())
 //                .resize(350, 240)
 //                .centerInside()
@@ -5195,7 +5384,7 @@ public class SettingsActivity extends AppCompatActivity
                         TextView time = (TextView) ll1[i].findViewById(R.id.time);
                         time.setText(getTime(ctime));
                         ImageView pict = (ImageView) ll1[i].findViewById(R.id.friendPic);
-                        Picasso.with(SettingsActivity.this)
+                        Picasso.with(RealTimeActivity.this)
                                 .load(fpic)
 //                .resize(350, 240)
 //                .centerInside()
@@ -5213,7 +5402,7 @@ public class SettingsActivity extends AppCompatActivity
 //                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
 //                    song.setText(title.get(i));
 //                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-//                    Picasso.with(SettingsActivity.this)
+//                    Picasso.with(RealTimeActivity.this)
 //                            .load(pictures.get(i).toString())
 ////                .resize(350, 240)jūlo
 ////                .centerInside()
@@ -5239,23 +5428,23 @@ public class SettingsActivity extends AppCompatActivity
 
 
                 for (int j = 0; j <= ll1.length - 1; j++) {
-                    // Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                     TextView name = (TextView) ll1[j].findViewById(R.id.name);
                     TextView timer = (TextView) ll1[j].findViewById(R.id.time);
                     TextView song = (TextView) ll1[j].findViewById(R.id.songName);
                     ImageView pict = (ImageView) ll1[j].findViewById(R.id.friendPic);
 
                     if (name.getText().equals(text)) {
-                        //Toast.makeText(SettingsActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                         ll1[j].setVisibility(View.GONE);
                     }
 
                 }
                 if (mediaPlayer.isPlaying()) {
                     play_toolbar.setVisibility(View.VISIBLE);
-                    track_title = (TextView) findViewById(R.id.track_title);
+//                    track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(mysong);
-                    SongSingleton.getInstance().setSongName(mysong);
+//                    SongSingleton.getInstance().setSongName(mysong);
 
                 }
 
@@ -5287,7 +5476,7 @@ public class SettingsActivity extends AppCompatActivity
                     newtime = Integer.parseInt(time);
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("URL").child(song);
-                   // Toast.makeText(SettingsActivity.this, "time was added", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(RealTimeActivity.this, "time was added", Toast.LENGTH_SHORT).show();
 
                     songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                         @Override
@@ -5295,7 +5484,7 @@ public class SettingsActivity extends AppCompatActivity
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 url = String.valueOf(dsp.getValue());
                                 //UserDetails.song = url;
-                                //Toast.makeText(SettingsActivity.this, "url "+url, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(RealTimeActivity.this, "url "+url, Toast.LENGTH_SHORT).show();
                                 playMusic(newtime, url);
                             }
                         }
@@ -5433,7 +5622,7 @@ public class SettingsActivity extends AppCompatActivity
                 play_toolbar.setVisibility(View.GONE);
                 //nowPlayingLayout.setVisibility(View.GONE);
                 play_toolbar.requestLayout();
-                hideSoftKeyboard(SettingsActivity.this);
+                hideSoftKeyboard(RealTimeActivity.this);
                 UserDetails.username = user;
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
@@ -5444,12 +5633,11 @@ public class SettingsActivity extends AppCompatActivity
                         final String friendID = dataSnapshot.getValue().toString();
 //                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
 
-                        Intent i = new Intent(SettingsActivity.this, ProfileActivity.class);
+                        Intent i = new Intent(RealTimeActivity.this, ProfileActivity.class);
                         i.putExtra("FriendId", friendID);
                         i.putExtra("FriendName", user);
                         startActivity(i);
                         deleteRequest();
-
                     }
 
 
@@ -5466,7 +5654,7 @@ public class SettingsActivity extends AppCompatActivity
         play_toolbar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_info = new Intent(SettingsActivity.this, MusicPlayerActivity.class);
+                Intent intent_info = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
                     SongSingleton.getInstance().setSongName(song);
@@ -5484,8 +5672,8 @@ public class SettingsActivity extends AppCompatActivity
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-                SongSingleton.getInstance().setSongName(song);
-                hideSoftKeyboard(SettingsActivity.this);
+//                SongSingleton.getInstance().setSongName(song);
+                hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
                 songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
@@ -5546,7 +5734,7 @@ public class SettingsActivity extends AppCompatActivity
         slistView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                hideSoftKeyboard(SettingsActivity.this);
+                hideSoftKeyboard(RealTimeActivity.this);
                 return false;
             }
         });
@@ -5555,7 +5743,7 @@ public class SettingsActivity extends AppCompatActivity
         fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SettingsActivity.this, Conversations.class);
+                Intent i = new Intent(RealTimeActivity.this, Conversations.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
                     SongSingleton.getInstance().setSongName(song);
@@ -5597,11 +5785,13 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+
+
         //library button
         fab1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SettingsActivity.this, LibraryActivity.class);
+                Intent i = new Intent(RealTimeActivity.this, LibraryActivity.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
                     SongSingleton.getInstance().setSongName(song);
@@ -5698,7 +5888,7 @@ public class SettingsActivity extends AppCompatActivity
                         }
                     }
 
-                    ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, ulistFound);
+                    ArrayAdapter uadapter = new ArrayAdapter(RealTimeActivity.this, android.R.layout.simple_list_item_1, ulistFound);
                     ulistView.setAdapter(uadapter);
 
                     List<String> slistFound = new ArrayList<String>();
@@ -5719,19 +5909,20 @@ public class SettingsActivity extends AppCompatActivity
                         stextview.setVisibility(View.VISIBLE);
                     }
 
-                    ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, slistFound);
+                    ArrayAdapter sadapter = new ArrayAdapter(RealTimeActivity.this, android.R.layout.simple_list_item_1, slistFound);
                     slistView.setAdapter(sadapter);
                 } else {
                     //if search text is null
-                    ArrayAdapter uadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, users);
+                    ArrayAdapter uadapter = new ArrayAdapter(RealTimeActivity.this, android.R.layout.simple_list_item_1, users);
                     ulistView.setAdapter(uadapter);
-                    ArrayAdapter sadapter = new ArrayAdapter(SettingsActivity.this, android.R.layout.simple_list_item_1, songs);
+                    ArrayAdapter sadapter = new ArrayAdapter(RealTimeActivity.this, android.R.layout.simple_list_item_1, songs);
                     slistView.setAdapter(sadapter);
                 }
                 return true;
             }
         });
     }
+
 
     private void deleteRequest() {
         DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
@@ -5854,8 +6045,7 @@ public class SettingsActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            email = (TextView) findViewById(R.id.emailProfile);
-            email.setText(loggedEmail);
+//            emailTextView.setText(loggedEmail);
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -5910,7 +6100,7 @@ public class SettingsActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_followers) {
-            Intent i = new Intent(SettingsActivity.this, FollowersActivity.class);
+            Intent i = new Intent(RealTimeActivity.this, FollowersActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
             UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
@@ -5949,7 +6139,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_following) {
-            Intent i = new Intent(SettingsActivity.this, FollowingActivity.class);
+            Intent i = new Intent(RealTimeActivity.this, FollowingActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
             UserDetails.oldIntent = "FromSettingsMenu";
             startActivity(i);
@@ -6187,7 +6377,7 @@ public class SettingsActivity extends AppCompatActivity
                 final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                 Menu nav_Menu = navigationView.getMenu();
                 nav_Menu.findItem(R.id.nav_private).setChecked(false);
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -6232,7 +6422,7 @@ public class SettingsActivity extends AppCompatActivity
                 Map<String,Object> uinfo1 = new HashMap<String, Object>();
                 uinfo1.put(ID,myname);
                 userRef1.updateChildren(uinfo1);
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -6329,7 +6519,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.receiver = dataSnapshot.getValue().toString();
                 sendCommentNotification(song, user, comment);
-                Toast.makeText(SettingsActivity.this, "Comment to " + user + " was sent.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Comment to " + user + " was sent.", Toast.LENGTH_SHORT).show();
 
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -6373,7 +6563,7 @@ public class SettingsActivity extends AppCompatActivity
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                    if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
                     } else {
@@ -6469,7 +6659,7 @@ public class SettingsActivity extends AppCompatActivity
 
                     }
                 });
-        addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
+        addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong, ID);
     }
 
     public void eraseFromRecents(String mysong) {
@@ -6517,7 +6707,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void openPlayerPage(View v) {
-        Intent i = new Intent(SettingsActivity.this, MusicPlayerActivity.class);
+        Intent i = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
         startActivity(i);
         DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
         reqdb.addListenerForSingleValueEvent(
@@ -6597,7 +6787,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -6616,7 +6806,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -6656,7 +6846,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
-//                Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -6673,7 +6863,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("Song", mysong);
-//                Toast.makeText(SettingsActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RealTimeActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
                 mDatabase6.child(UserDetails.myname).updateChildren(map);
 
             }
@@ -6712,7 +6902,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -6740,9 +6930,8 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
-    public void addToFriendActivity(List<String> myvalue, final String mysong) {
+    public void addToFriendActivity(List<String> myvalue, final String mysong, final String myid) {
 
-        String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
 
         mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -6750,7 +6939,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(SettingsActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -6788,7 +6977,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-               // Toast.makeText(SettingsActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(RealTimeActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -6804,7 +6993,7 @@ public class SettingsActivity extends AppCompatActivity
     //getting the name of the song
     public String getSongName(int layoutno) {
         String songToPlay = titlesArray[layoutno].getText().toString();
-        Toast.makeText(SettingsActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
+        Toast.makeText(RealTimeActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
         return songToPlay;
     }
 
@@ -6822,7 +7011,7 @@ public class SettingsActivity extends AppCompatActivity
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
-                  //  Toast.makeText(SettingsActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(RealTimeActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                     //getTimeFromFirebase();
                 }
             }
@@ -6861,7 +7050,7 @@ public class SettingsActivity extends AppCompatActivity
 
     public int getCurrentPlayingTime() {
         if (!mediaPlayer.isPlaying()) {
-            Toast.makeText(this, "Music cannot be shared", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Music cannot be shared", Toast.LENGTH_SHORT).show();
         }
         return mediaPlayer.getCurrentPosition();
     }
@@ -6876,7 +7065,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String data = dataSnapshot.getValue().toString();
                 int timeFb = Integer.parseInt(data);
-                //Toast.makeText(SettingsActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RealTimeActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
                // playMusic(timeFb);
             }
 
@@ -7171,7 +7360,7 @@ public class SettingsActivity extends AppCompatActivity
 
             String customKey;
             openURL = null;
-            Object activityToLaunch = SettingsActivity.class;
+            Object activityToLaunch = RealTimeActivity.class;
 
             if (data != null) {
                 customKey = data.optString("customkey", null);
@@ -7210,48 +7399,50 @@ public class SettingsActivity extends AppCompatActivity
                                     String friend = dataSnapshot.child("Name").getValue().toString();
                                     String song = dataSnapshot.child("Song").getValue().toString();
 
-                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("openURL", openURL);
-                                    intent.putExtra("Uniqid", "NotificationListenWith");
-                                    UserDetails.chatWith = friend;
-                                    intent.putExtra("Friend", friend);
-                                    intent.putExtra("Song", song);
-                                    sendTimeRequest(friend, song);
-                                    startActivity(intent);
-                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
-                                    reqdb.addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    dataSnapshot.getRef().removeValue();
-                                                }
+                                    checkIfStillListening(friend, song);
 
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                                                }
-                                            });
-
-                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
-                                    reqdb1.addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                                        String reqId = snapshot.getKey().toString();
-                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
-                                                            dataSnapshot.child(reqId).getRef().removeValue();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                                                }
-                                            });
-
+//                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    intent.putExtra("openURL", openURL);
+//                                    intent.putExtra("Uniqid", "NotificationListenWith");
+//                                    UserDetails.chatWith = friend;
+//                                    intent.putExtra("Friend", friend);
+//                                    intent.putExtra("Song", song);
+//                                    sendTimeRequest(friend, song);
+//                                    startActivity(intent);
+//                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+//                                    reqdb.addListenerForSingleValueEvent(
+//                                            new ValueEventListener() {
+//                                                @Override
+//                                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                    dataSnapshot.getRef().removeValue();
+//                                                }
+//
+//                                                @Override
+//                                                public void onCancelled(DatabaseError databaseError) {
+//                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+//                                                }
+//                                            });
+//
+//                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+//                                    reqdb1.addListenerForSingleValueEvent(
+//                                            new ValueEventListener() {
+//                                                @Override
+//                                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                                                        String reqId = snapshot.getKey().toString();
+//                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+//                                                            dataSnapshot.child(reqId).getRef().removeValue();
+//                                                        }
+//                                                    }
+//                                                }
+//
+//                                                @Override
+//                                                public void onCancelled(DatabaseError databaseError) {
+//                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+//                                                }
+//                                            });
+//
 
                                 }
 
@@ -7496,6 +7687,72 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
+    private void checkIfStillListening(final String friend, final String song) {
+        DatabaseReference home = FirebaseDatabase.getInstance().getReference().child("Homepage").child(ID);
+        home.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Toast.makeText(RealTimeActivity.this, friend + " " + song , Toast.LENGTH_SHORT).show();
+                            if (dataSnapshot.hasChild(friend)) {
+                                if(dataSnapshot.child(friend).child("Song").getValue().equals(song)){
+                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("openURL", openURL);
+                                    intent.putExtra("Uniqid", "NotificationListenWith");
+                                    UserDetails.chatWith = friend;
+                                    intent.putExtra("Friend", friend);
+                                    intent.putExtra("Song", song);
+                                    sendTimeRequest(friend, song);
+                                    startActivity(intent);
+                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                                    reqdb.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    dataSnapshot.getRef().removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+
+                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                                    reqdb1.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                        String reqId = snapshot.getKey().toString();
+                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                                }
+                                            });
+                                } else {
+                                    Toast.makeText(RealTimeActivity.this, friend + " is no longer listening", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(RealTimeActivity.this, friend + " is no longer listening", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -7532,7 +7789,7 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         pd.dismiss();
-                        Toast.makeText(SettingsActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RealTimeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
 
                         @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         UserDetails.picturelink = downloadUrl.toString();
@@ -7542,7 +7799,7 @@ public class SettingsActivity extends AppCompatActivity
                         info.put("Url", downloadUrl.toString());
                         picRef.updateChildren(info);
 
-                        Picasso.with(SettingsActivity.this)
+                        Picasso.with(RealTimeActivity.this)
                                 .load(downloadUrl.toString())
 //                .resize(350, 240)
 //                .centerInside()
@@ -7558,11 +7815,11 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         pd.dismiss();
-                        Toast.makeText(SettingsActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RealTimeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(SettingsActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RealTimeActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
             }
         }
 //          //  profilePic.setImageBitmap(bitmap);

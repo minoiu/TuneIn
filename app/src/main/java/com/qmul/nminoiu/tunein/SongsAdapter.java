@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +21,6 @@ import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.qmul.nminoiu.tunein.CustomAdapter;
-import com.qmul.nminoiu.tunein.MyPlaylists;
-import com.qmul.nminoiu.tunein.PlaylistSongs;
-import com.qmul.nminoiu.tunein.R;
-import com.qmul.nminoiu.tunein.RowItem;
-import com.qmul.nminoiu.tunein.UserDetails;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +40,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import android.widget.PopupMenu;
-
-import static com.qmul.nminoiu.tunein.UserDetails.song;
-import static com.qmul.nminoiu.tunein.UserDetails.songname;
 
 /**
  * Created by nminoiu on 21/08/2017.
@@ -479,7 +466,7 @@ public class SongsAdapter extends BaseAdapter {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                    if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
 

@@ -40,9 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.qmul.nminoiu.tunein.UserDetails.song;
-import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
-
 
 /**
  * Created by nicoleta on 16/10/2017.
@@ -467,7 +464,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (SettingsActivity.loggedEmail.equals(sender)) {
+                    if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
 

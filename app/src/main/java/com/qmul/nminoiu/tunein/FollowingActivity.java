@@ -1,12 +1,10 @@
 package com.qmul.nminoiu.tunein;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,8 +20,6 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 /**
  * Created by nicoleta on 26/10/2017.
@@ -141,7 +137,7 @@ public class FollowingActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(FollowingActivity.this, SettingsActivity.class);
+        Intent i = new Intent(FollowingActivity.this, RealTimeActivity.class);
         startActivity(i);
             }
 
