@@ -460,7 +460,7 @@ public class RealTimeActivity extends AppCompatActivity
 
         profilePic = (ImageView) hView.findViewById(R.id.profilePic);
         TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
-        nav_user.setText(sender);
+        nav_user.setText(loggedEmail);
         //email = (TextView) findViewById(R.id.emailProfile);
         Intent i = getIntent();
         if(i.hasExtra("Email")){
@@ -6045,7 +6045,8 @@ public class RealTimeActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            emailTextView.setText(loggedEmail);
+            TextView nav_user = (TextView) drawer.findViewById(R.id.emailProfile);
+            nav_user.setText(sender);
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -6062,8 +6063,9 @@ public class RealTimeActivity extends AppCompatActivity
 //        if(UserDetails.publicProfie) {
 //            nav_Menu.findItem(R.id.nav_private).setChecked(false);
 //        } else nav_Menu.findItem(R.id.nav_private).setChecked(true);
-//
-
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        TextView nav_user = (TextView) drawer.findViewById(R.id.emailProfile);
+        nav_user.setText(sender);
 
 
         return super.onOptionsItemSelected(item);
@@ -6099,6 +6101,7 @@ public class RealTimeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
+
         if (id == R.id.nav_followers) {
             Intent i = new Intent(RealTimeActivity.this, FollowersActivity.class);
             i.putExtra("Uniqid", "FromSettingsMenu");
