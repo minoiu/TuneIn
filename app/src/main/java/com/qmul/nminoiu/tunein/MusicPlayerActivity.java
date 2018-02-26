@@ -3,6 +3,7 @@ package com.qmul.nminoiu.tunein;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -13,6 +14,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,11 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
@@ -70,6 +74,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
     private String songTitle;
     private String activity;
     private Intent i;
+	private List myFollowers;
 
 
 	@Override
@@ -95,6 +100,8 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
 		downarrow = (ImageButton) findViewById(R.id.downarrow);
 		lldwn = (LinearLayout) findViewById(R.id.lldown);
+		myFollowers = new ArrayList<>();
+
 
 //		downarrow.bringToFront();
 		layout = (RelativeLayout) findViewById(R.id.layout);
@@ -804,7 +811,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		 * @param songIndex - index of song
 		 * */
 
-	public void playSong(int songIndex) {
+	public void playSong(final int songIndex) {
 
 		//btnPlay.setImageResource(R.drawable.btn_pause);
 
@@ -823,6 +830,23 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			Map<String, Object> uinfo = new HashMap<>();
 			uinfo.put("Song", songs.get(songIndex));
 			refsong.updateChildren(uinfo);
+
+			Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+			Firebase songRef = ref.child("URL").child(songs.get(songIndex));
+			songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
+				@Override
+				public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
+					for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
+						getFollowers(UserDetails.fullname, songs.get(songIndex));
+					}
+				}
+
+				@Override
+				public void onCancelled(FirebaseError firebaseError) {
+
+				}
+			});
+
 
 
 //			Toast.makeText(this, "singleton is " + SongSingleton.getInstance().getSongName(), Toast.LENGTH_SHORT).show();
@@ -844,6 +868,199 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 			e.printStackTrace();
 		}
 	}
+
+	public void getFollowers(String fullname, final String mysong) {
+
+		///
+		final ArrayAdapter<String> fadapter;
+		UserDetails.mysong = mysong;
+		fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
+		DatabaseReference fdb;
+		fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
+		fdb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+					//myFollowers.clear();
+					String value = snapshot.getKey();
+					myFollowers.add(value);
+					UserDetails.myFollowers.add(value);
+					//addToFirebaseHome(value, mysong);
+					fadapter.notifyDataSetChanged();
+				}
+				eraseFromRecents(mysong);
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+	}
+
+	public void eraseFromRecents(String mysong) {
+		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
+		mDatabase1.addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						String v;
+						for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+							v = snapshot.getKey();
+							//getFulname();
+							if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+
+								// dataSnapshot.child(v).getRef().removeValue();
+								dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+
+								//names.remove(getMyFullname(ID));
+								// title.remove()
+							}
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+
+					}
+				});
+		addToHome(UserDetails.myFollowers, mysong);
+	}
+
+	public String getMyFullname(String id) {
+
+		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
+
+		mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				UserDetails.fullname = dataSnapshot.getValue().toString();
+				//Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+
+		});
+		return UserDetails.fullname;
+	}
+
+
+	public void addToHome(List<String> myvalue, final String mysong) {
+
+		String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+		DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+		mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				UserDetails.myname = dataSnapshot.getValue().toString();
+				String me = dataSnapshot.getValue().toString();
+				//Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+			Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
+			Map<String, Object> uinfo = new HashMap<>();
+
+			if(!RealTimeActivity.checkBox.isChecked()) {
+
+				uinfo.put("Song", mysong);
+				if (!UserDetails.picturelink.equals("")) {
+					uinfo.put("Picture", UserDetails.picturelink);
+
+				} else {
+					uinfo.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+				}
+				ref4.child(UserDetails.fullname).updateChildren(uinfo);
+			} else {
+				eraseFromFirebase();
+			}
+		}
+	}
+
+
+
+	public void eraseFromFirebase() {
+		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
+		mDatabase1.addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						String v;
+						for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+							v = snapshot.getKey();
+							//getFulname();
+							if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+
+								// dataSnapshot.child(v).getRef().removeValue();
+								dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+
+								//names.remove(getMyFullname(ID));
+								// title.remove()
+							}
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+
+					}
+				});
+		addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
+	}
+
+	public void addToFriendActivity(List<String> myvalue, final String mysong) {
+
+		String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+		DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+		mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				UserDetails.myname = dataSnapshot.getValue().toString();
+				String me = dataSnapshot.getValue().toString();
+				//Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+			Firebase refAct = new Firebase("https://tunein-633e5.firebaseio.com/FriendsActivity/" + myvalue.get(i));
+			Map<String, Object> udet = new HashMap<>();
+
+			if(!RealTimeActivity.checkBox.isChecked()) {
+				udet.put("Song", mysong);
+				udet.put("Time", System.currentTimeMillis());
+				if (!UserDetails.picturelink.equals("")) {
+					udet.put("Picture", UserDetails.picturelink);
+
+				} else {
+					udet.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+				}
+				refAct.child(UserDetails.fullname).updateChildren(udet);
+			}
+		}
+
+	}
+
+
 
 	public void repeatSong(int songIndex, String songName) {
 

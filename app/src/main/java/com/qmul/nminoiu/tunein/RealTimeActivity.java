@@ -909,6 +909,43 @@ public class RealTimeActivity extends AppCompatActivity
         timesArray[2] = time8;
         timesArray[3] = time9;
         timesArray[4] = time10;
+        MusicPlayerActivity.songs.clear();
+        MusicPlayerActivity.urls.clear();
+
+        DatabaseReference rec = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+        rec.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String recentSongs = dataSnapshot.getValue(String.class);
+                //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
+
+                getUrl(recentSongs);
+                MusicPlayerActivity.songs.add(0, recentSongs);
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 //        emailTextView = (TextView) findViewById(R.id.emailProfile);
 //        emailTextView.setText(sender);
@@ -3254,6 +3291,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3284,6 +3325,10 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
 
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
@@ -3359,6 +3404,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3391,6 +3440,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3421,6 +3474,10 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
 
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
@@ -3453,6 +3510,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3483,6 +3544,10 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
 
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
@@ -3515,6 +3580,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3546,6 +3615,10 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
+
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
                     public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
@@ -3576,6 +3649,10 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
+
+                if(mediaPlayer.isPlaying()){
+                    pause();
+                }
 
                 videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                     @Override
@@ -5245,6 +5322,8 @@ public class RealTimeActivity extends AppCompatActivity
 //                }
             }
 
+
+
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -6499,6 +6578,22 @@ public class RealTimeActivity extends AppCompatActivity
         mediaPlayer.pause();
     }
 
+    public void pause() {
+        Integer length = mediaPlayer.getCurrentPosition();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_play);
+            eraseFromFirebase();
+        } else {
+            playFromPause(length);
+            Button btn = (Button) this.findViewById(R.id.button);
+            btn.setBackgroundResource(R.drawable.ic_media_pause);
+        }
+        mediaPlayer.getCurrentPosition();
+    }
+
+
     //play song method with signle button background handling
     public void playPauseMusic(View v) {
         Integer length = mediaPlayer.getCurrentPosition();
@@ -7014,7 +7109,9 @@ public class RealTimeActivity extends AppCompatActivity
                 for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
-                  //  Toast.makeText(RealTimeActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
+                    MusicPlayerActivity.urls.add(0, url);
+
+                    //  Toast.makeText(RealTimeActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
                     //getTimeFromFirebase();
                 }
             }
