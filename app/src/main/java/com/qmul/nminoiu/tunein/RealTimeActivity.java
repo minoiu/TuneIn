@@ -19,7 +19,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
+
 
 import com.google.firebase.storage.UploadTask;
 import android.view.View;
@@ -3680,6 +3685,8 @@ public class RealTimeActivity extends AppCompatActivity
         download1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title1.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3721,6 +3728,8 @@ public class RealTimeActivity extends AppCompatActivity
         download2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title2.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3760,6 +3769,8 @@ public class RealTimeActivity extends AppCompatActivity
         download3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title3.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3799,6 +3810,8 @@ public class RealTimeActivity extends AppCompatActivity
         download4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title4.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3838,6 +3851,8 @@ public class RealTimeActivity extends AppCompatActivity
         download5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title5.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3877,6 +3892,8 @@ public class RealTimeActivity extends AppCompatActivity
         download6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title6.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3916,6 +3933,8 @@ public class RealTimeActivity extends AppCompatActivity
         download7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title7.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3955,6 +3974,8 @@ public class RealTimeActivity extends AppCompatActivity
         download8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title8.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -3994,6 +4015,8 @@ public class RealTimeActivity extends AppCompatActivity
         download9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title9.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -4033,6 +4056,8 @@ public class RealTimeActivity extends AppCompatActivity
         download10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+
                 final String songToDown = title10.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
@@ -5938,12 +5963,14 @@ public class RealTimeActivity extends AppCompatActivity
 
             @Override
             public void onSearchViewClosed() {
-                finish();
-                Intent inte = getIntent();
-                inte.putExtra("ID", "FromSearch");
-                inte.putExtra("Song", song);
-                startActivity(inte);
-                overridePendingTransition(0, 0);
+                nowPlayingLayout.setVisibility(View.VISIBLE);
+
+//                finish();
+//                Intent inte = getIntent();
+//                inte.putExtra("ID", "FromSearch");
+//                inte.putExtra("Song", song);
+//                startActivity(inte);
+//                overridePendingTransition(0, 0);
                 searchLayout.setVisibility(View.GONE);
             }
         });
@@ -5953,7 +5980,8 @@ public class RealTimeActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                hideSoftKeyboard(RealTimeActivity.this);
+                return true;
             }
 
             @Override
@@ -5978,12 +6006,14 @@ public class RealTimeActivity extends AppCompatActivity
                     }
 
                     if (ulistFound.isEmpty()){
-                        ptextview.setVisibility(View.GONE);
+                        ulistFound.add("No users found");
+//                        ptextview.setVisibility(View.GONE);
                     } else {
                         ptextview.setVisibility(View.VISIBLE);
                     }
                     if(slistFound.isEmpty()){
-                        stextview.setVisibility(View.GONE);
+                        slistFound.add("No songs found");
+//                        stextview.setVisibility(View.GONE);
                     } else {
                         stextview.setVisibility(View.VISIBLE);
                     }

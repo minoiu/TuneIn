@@ -74,6 +74,54 @@ public class ConversationsAdapter extends BaseAdapter{
 
         //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
 
+        holder.txtTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, Chat.class);
+                intent.putExtra("Uniqid", "FromConversations");
+                intent.putExtra("Song", Conversations.track_title.getText().toString());
+                intent.putExtra("Friend", rowItem.getTitle().toString());
+                mContext.startActivity(intent);
+
+            }
+        });
+
+        holder.subTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, Chat.class);
+                intent.putExtra("Uniqid", "FromConversations");
+                intent.putExtra("Song", Conversations.track_title.getText().toString());
+                intent.putExtra("Friend", rowItem.getTitle().toString());
+                mContext.startActivity(intent);
+
+            }
+        });
+
+        holder.message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, Chat.class);
+                intent.putExtra("Uniqid", "FromConversations");
+                intent.putExtra("Song", Conversations.track_title.getText().toString());
+                intent.putExtra("Friend", rowItem.getTitle().toString());
+                mContext.startActivity(intent);
+
+            }
+        });
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, Chat.class);
+                intent.putExtra("Uniqid", "FromConversations");
+                intent.putExtra("Song", Conversations.track_title.getText().toString());
+                intent.putExtra("Friend", rowItem.getTitle().toString());
+                mContext.startActivity(intent);
+
+            }
+        });
+
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +134,7 @@ public class ConversationsAdapter extends BaseAdapter{
 
             }
         });
+
 
         return convertView;
     }

@@ -157,16 +157,32 @@ public class Conversations extends AppCompatActivity {
             @Override
             public void onChildAdded(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                String message = map.get("message").toString();
                 String from = map.get("user").toString();
                 String time =map.get("time").toString();
+                String message = map.get("message").toString();
+                if(message.length()>=60){
+                    String newmess = message.substring(0,60);
+                    String finmess = newmess+"...";
+                    messageList.add(finmess);
+                    fromList.add(from);
+                    timeList.add(time);
+//                messageList.add(message);
+                    DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), finmess);
+                    drowItem.add(0, item);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    messageList.add(message);
+                    fromList.add(from);
+                    timeList.add(time);
+//                messageList.add(message);
+                    DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), message);
+                    drowItem.add(0, item);
+                    adapter.notifyDataSetChanged();
+
+                }
+
 //                Toast.makeText(Conversations.this, from, Toast.LENGTH_SHORT).show();
-                fromList.add(from);
-                timeList.add(time);
-                messageList.add(message);
-                DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), message);
-                drowItem.add(0, item);
-                adapter.notifyDataSetChanged();
+
 
 
 

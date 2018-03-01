@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.LoginFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -176,8 +177,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     //i.putExtra("Email", )
                     startActivity(i);
                 } else {
+                    progressDialog.hide();
+
+                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                    Toast.makeText(RegisterActivity.this, "Failed Registration: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+
                     Toast.makeText(RegisterActivity.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
                     //progressDialog.hide(RegisterActivity.this,LoginActivity.class);
+                    Log.e("LoginActivity", "Failed Registration", e);
+
+                    return;
 
                 }
             }
