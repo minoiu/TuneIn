@@ -123,7 +123,7 @@ public class Chat extends AppCompatActivity {
             } if (uniqid.equals("FromFollowers")){
                 String song = i.getStringExtra("Song");
                 String text = "Here is a song for you:\n" + song;
-                String friend = i.getStringExtra("FriendName");
+                String friend = i.getStringExtra("Friend");
                 UserDetails.chatWith=friend;
                 getSupportActionBar().setTitle(friend);
                 messageArea.setText(text);
@@ -139,7 +139,7 @@ public class Chat extends AppCompatActivity {
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
 
-                String friend = i.getStringExtra("FriendName");
+                String friend = i.getStringExtra("Friend");
                 UserDetails.chatWith=friend;
                 if(mediaPlayer.isPlaying()){
                     track_title.setText(song);
@@ -326,14 +326,14 @@ public class Chat extends AppCompatActivity {
 //        });
 
         Toast.makeText(Chat.this, "me "+ UserDetails.username, Toast.LENGTH_SHORT).show();
-        Toast.makeText(Chat.this, "friend "+ UserDetails.chatWith, Toast.LENGTH_SHORT).show();
+        Toast.makeText(Chat.this, "friend "+ getIntent().getStringExtra("Friend"), Toast.LENGTH_SHORT).show();
 
 
         Firebase.setAndroidContext(this);
-        reference1 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + UserDetails.username + "_" + UserDetails.chatWith);
-        reference2 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + UserDetails.chatWith + "_" + UserDetails.username);
-        refFriend = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.chatWith +"/"+ UserDetails.chatWith + "_" + UserDetails.username);
-        refMe = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.username+"/"+ UserDetails.username + "_" + UserDetails.chatWith);
+        reference1 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + UserDetails.username + "_" + getIntent().getStringExtra("Friend"));
+        reference2 = new Firebase("https://tunein-633e5.firebaseio.com/Messages/" + getIntent().getStringExtra("Friend") + "_" + UserDetails.username);
+        refFriend = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + getIntent().getStringExtra("Friend") +"/"+ getIntent().getStringExtra("Friend") + "_" + UserDetails.username);
+        refMe = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.username+"/"+ UserDetails.username + "_" + getIntent().getStringExtra("Friend"));
 
 //todo filepath email encode and decode
         Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/Intent/" + EncodeString(sender));
@@ -365,7 +365,7 @@ public class Chat extends AppCompatActivity {
 
                     Map<String, Object> myMap = new HashMap<>();
                     myMap.put("message", messageText);
-                    myMap.put("user", UserDetails.chatWith);
+                    myMap.put("user", getIntent().getStringExtra("Friend"));
                     myMap.put("time", String.valueOf(System.currentTimeMillis()));
 
                     reference1.push().setValue(map);
@@ -415,7 +415,7 @@ public class Chat extends AppCompatActivity {
 //                    refFriend.push().setValue(map1);
                     refMe.updateChildren(myMap);
 
-                    getReceiver(UserDetails.chatWith, UserDetails.username, messageText);
+                    getReceiver(getIntent().getStringExtra("Friend"), UserDetails.username, messageText);
                     messageArea.getText().clear();
                 }
             }
@@ -457,14 +457,14 @@ public class Chat extends AppCompatActivity {
                     if (userName.equals(UserDetails.username)) {
                         addMessageBox("You:\n" + Html.fromHtml(text1), 1);
                     } else {
-                        addMessageBox(UserDetails.chatWith + ":\n" + Html.fromHtml(text1), 2);
+                        addMessageBox(getIntent().getStringExtra("Friend") + ":\n" + Html.fromHtml(text1), 2);
                     }
 
                 } else {
                     if (userName.equals(UserDetails.username)) {
                         addMessageBox("You:\n" + message, 1);
                     } else {
-                        addMessageBox(UserDetails.chatWith + ":\n" + message, 2);
+                        addMessageBox(getIntent().getStringExtra("Friend") + ":\n" + message, 2);
                     }
                 }
             }

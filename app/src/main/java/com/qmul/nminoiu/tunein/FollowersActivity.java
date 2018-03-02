@@ -370,7 +370,7 @@ public class FollowersActivity extends AppCompatActivity {
 
                 Intent goBack = new Intent(FollowersActivity.this, Chat.class);
                 goBack.putExtra("Uniqid", "FromFollowersListeWith");
-                goBack.putExtra("FriendName", user);
+                goBack.putExtra("Friend", user);
                 goBack.putExtra("Song", song);
                 goBack.putExtra("Name", playlist);
                 startActivity(goBack);
@@ -396,7 +396,7 @@ public class FollowersActivity extends AppCompatActivity {
 
                 Intent goBack = new Intent(FollowersActivity.this, Chat.class);
                 goBack.putExtra("Uniqid", "FromFollowersListeWith");
-                goBack.putExtra("FriendName", user);
+                goBack.putExtra("Friend", user);
                 goBack.putExtra("Song", song);
                 startActivity(goBack);
 
