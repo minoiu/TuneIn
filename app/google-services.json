@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "279206932334-oeq64mnvlop841306f7arlicnbi6mp4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qmul.nminoiu.tunein",
+            "certificate_hash": "4c667d7e4eb7f41fdbe1cd347ced09c5a6b4eb38"
+          }
+        },
+        {
           "client_id": "279206932334-crtjkgnnm6qmnk61qo5eg84c5c5k3qh7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
