@@ -1,6 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -16,32 +17,35 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ChatTest {
+public class CollaborativePlaylistsTest {
 
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
     @Test
-    public void chatTest() {
+    public void collaborativePlaylistsTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -56,96 +60,150 @@ public class ChatTest {
                                 3)));
         appCompatButton.perform(scrollTo(), click());
 
-
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.fab),
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.fab1),
                         childAtPosition(
                                 allOf(withId(R.id.cLayout),
                                         childAtPosition(
                                                 withId(R.id.drawer_layout),
                                                 0)),
-                                9),
+                                10),
                         isDisplayed()));
-        floatingActionButton.perform(click());
+        appCompatImageButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.from), withText("Nicoleta Minoiu"),
+        ViewInteraction relativeLayout = onView(
+                allOf(withId(R.id.playlists),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.widget.RelativeLayout")),
+                                        withClassName(is("android.support.design.widget.CoordinatorLayout")),
+                                        0),
+                                0),
+                        isDisplayed()));
+        relativeLayout.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        DataInteraction relativeLayout2 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.playlistsList),
+                        childAtPosition(
+                                withId(R.id.playlistsLayout),
+                                1)))
+                .atPosition(1);
+        relativeLayout2.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction relativeLayout3 = onView(
+                allOf(withId(R.id.collaborators),
+                        childAtPosition(
+                                allOf(withId(R.id.songsLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.design.widget.CoordinatorLayout")),
+                                                3)),
+                                0),
+                        isDisplayed()));
+        relativeLayout3.perform(click());
+
+        ViewInteraction appCompatImageView = onView(
+                allOf(withId(R.id.icon),
+                        childAtPosition(
+                                withParent(withId(R.id.sharedFriends)),
+                                1),
+                        isDisplayed()));
+        appCompatImageView.perform(click());
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.title), withText("Share"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
                                         0),
                                 0),
                         isDisplayed()));
         appCompatTextView.perform(click());
 
+        DataInteraction appCompatTextView2 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.friendsList),
+                        childAtPosition(
+                                withId(R.id.searchLayout),
+                                0)))
+                .atPosition(1);
+        appCompatTextView2.perform(click());
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.share), withText("Share"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.sharePlaylist),
+                                        3),
+                                0),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.messageArea),
+        ViewInteraction relativeLayout4 = onView(
+                allOf(withId(R.id.collaborators),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
+                                allOf(withId(R.id.songsLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.design.widget.CoordinatorLayout")),
+                                                3)),
                                 0),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("hi"), closeSoftKeyboard());
+        relativeLayout4.perform(click());
 
-        ViewInteraction appCompatImageView = onView(
-                allOf(withId(R.id.sendButton),
+        ViewInteraction relativeLayout5 = onView(
+                allOf(withId(R.id.collaborators),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                1),
-                        isDisplayed()));
-        appCompatImageView.perform(click());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.messageArea), withText("hi"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
+                                allOf(withId(R.id.songsLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.design.widget.CoordinatorLayout")),
+                                                3)),
                                 0),
                         isDisplayed()));
-
-        //appCompatEditText2.perform(replaceText(""));
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.messageArea),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-
-        appCompatEditText3.perform(closeSoftKeyboard());
+        relativeLayout5.perform(click());
 
     }
 

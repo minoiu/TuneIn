@@ -30,21 +30,41 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ChatTest {
+public class DeleteAccountTest {
 
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
     @Test
-    public void chatTest() {
+    public void deleteAccountTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
+        ViewInteraction appCompatAutoCompleteTextView4 = onView(
+                allOf(withId(R.id.email), withText("mar@zar.com"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.support.design.widget.TextInputLayout")),
+                                        0),
+                                0)));
+        appCompatAutoCompleteTextView4.perform(scrollTo(), replaceText("fla@tur.com"));
+
+        ViewInteraction appCompatAutoCompleteTextView5 = onView(
+                allOf(withId(R.id.email), withText("fla@tur.com"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.support.design.widget.TextInputLayout")),
+                                        0),
+                                0),
+                        isDisplayed()));
+        appCompatAutoCompleteTextView5.perform(closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.email_sign_in_button), withText("Tune In!"),
@@ -61,91 +81,30 @@ public class ChatTest {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(12000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.fab),
-                        childAtPosition(
-                                allOf(withId(R.id.cLayout),
-                                        childAtPosition(
-                                                withId(R.id.drawer_layout),
-                                                0)),
-                                9),
-                        isDisplayed()));
-        floatingActionButton.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(12000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.from), withText("Nicoleta Minoiu"),
-                        childAtPosition(
+        ViewInteraction appCompatImageButton2 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.toolbar),
                                 childAtPosition(
-                                        withClassName(is("android.widget.RelativeLayout")),
-                                        0),
-                                0),
+                                        withId(R.id.cLayout),
+                                        1)),
+                        1),
                         isDisplayed()));
-        appCompatTextView.perform(click());
+        appCompatImageButton2.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(12000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.messageArea),
-                        childAtPosition(
+        ViewInteraction navigationMenuItemView2 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.design_navigation_view),
                                 childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
+                                        withId(R.id.nav_view),
+                                        0)),
+                        5),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("hi"), closeSoftKeyboard());
-
-        ViewInteraction appCompatImageView = onView(
-                allOf(withId(R.id.sendButton),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                1),
-                        isDisplayed()));
-        appCompatImageView.perform(click());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.messageArea), withText("hi"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-
-        //appCompatEditText2.perform(replaceText(""));
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.messageArea),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-
-        appCompatEditText3.perform(closeSoftKeyboard());
+        navigationMenuItemView2.perform(click());
 
     }
 

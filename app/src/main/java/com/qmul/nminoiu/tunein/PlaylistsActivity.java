@@ -1150,9 +1150,9 @@ public class PlaylistsActivity extends AppCompatActivity {
 
             });
 
-            newPlaylist.setVisibility(View.VISIBLE);
+//            newPlaylist.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
-            playlistName.setText("");
+//            playlistName.setText("");
         }
         else onBackPressed();
 

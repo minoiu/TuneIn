@@ -25,18 +25,18 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LoginTest {
+public class YoutubeTest {
 
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
     @Test
-    public void loginTest() {
+    public void youtubeTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(5000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -50,6 +50,24 @@ public class LoginTest {
                                                 0)),
                                 3)));
         appCompatButton.perform(scrollTo(), click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.youtube),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.np6),
+                                        4),
+                                0)));
+        appCompatImageButton.perform(scrollTo(), click());
 
     }
 
