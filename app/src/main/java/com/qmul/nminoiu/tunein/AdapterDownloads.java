@@ -98,7 +98,7 @@ public class AdapterDownloads extends BaseAdapter {
         return rowItems.indexOf(getItem(position));
     }
 
-    //handling song menu clicks
+    //handling downloads menu clicks
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
