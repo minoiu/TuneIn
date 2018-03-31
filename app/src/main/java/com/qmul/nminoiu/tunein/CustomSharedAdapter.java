@@ -32,9 +32,6 @@ import static com.qmul.nminoiu.tunein.R.id.track_title;
 public class CustomSharedAdapter extends BaseAdapter {
 
     private Context mContext;
-    /**
-     * The Row items.
-     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -53,18 +50,12 @@ public class CustomSharedAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        /**
-         * The Image view.
-         */
         ImageView imageView;
-        /**
-         * The Txt title.
-         */
         TextView txtTitle;
     }
 
+    //handling click on shared playlists
     public View getView(final int position, View convertView, final ViewGroup parent) {
-
         CustomSharedAdapter.ViewHolder holder = null;
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -80,23 +71,12 @@ public class CustomSharedAdapter extends BaseAdapter {
         else {
             holder = (CustomSharedAdapter.ViewHolder) convertView.getTag();
         }
-
         final RowItem rowItem = (RowItem) getItem(position);
-
         holder.txtTitle.setText(rowItem.getTitle());
         holder.imageView.setImageResource(rowItem.getImageId());
-
-        MyPlaylists mp = new MyPlaylists();
-
-
-        // mp.showMenu(holder.imageView);
-
-        //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
-
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getSharingFriend(rowItem.getTitle().toString());
 
             }
@@ -105,21 +85,25 @@ public class CustomSharedAdapter extends BaseAdapter {
         return convertView;
     }
 
+    //return no of rows
     @Override
     public int getCount() {
         return rowItems.size();
     }
 
+    //return row item
     @Override
     public Object getItem(int position) {
         return rowItems.get(position);
     }
 
+    //return row id
     @Override
     public long getItemId(int position) {
         return rowItems.indexOf(getItem(position));
     }
 
+    //get sharing friend and start activity shared playlists songs
     private void getSharingFriend(final String playlist) {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites");
@@ -137,19 +121,13 @@ public class CustomSharedAdapter extends BaseAdapter {
                             String playlistSh = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
                             if (playlistSh.equals(playlist)) {
                                 Toast.makeText(mContext, "the friend " + friend, Toast.LENGTH_LONG).show();
-
                                 UserDetails.friend = friend;
-
                                 Intent intent = new Intent(mContext, SharedPlaylistSongs.class);
                                 intent.putExtra("Name", playlist);
                                 intent.putExtra("Friend", UserDetails.friend);
-//                                if(mediaPlayer.isPlaying()) {
-//                                    intent.putExtra("Song", track_title.getText().toString());
-//                                }
                                 mContext.startActivity(intent);
                             }
                         }
-
                     }
                 }
             }
@@ -160,20 +138,5 @@ public class CustomSharedAdapter extends BaseAdapter {
             }
         });
     }
-
-
-
-//                        if(dataSnapshot.child(friend).child(key).getValue().toString().equals(playlist)){
-//                            Intent intent = new Intent(mContext, SharedPlaylistSongs.class);
-//                            intent.putExtra("Name", playlist);
-//                            intent.putExtra("Friend", snapshot.getKey());
-////                            if(mediaPlayer.isPlaying()) {
-////                                intent.putExtra("Song", track_title.getText().toString());
-////                            }
-//                            mContext.startActivity(intent);
-
-
-
-
 }
 
