@@ -110,7 +110,7 @@ public class Chat extends AppCompatActivity {
             String uniqid = i.getStringExtra("Uniqid");
             if (uniqid.equals("FromFollowersShare")) {
                 String song = i.getStringExtra("Song");
-                String friend = i.getStringExtra("Name");
+                String friend = i.getStringExtra("Friend");
                 getSupportActionBar().setTitle(friend);
                 String text = "Here is a song for you:\n" + song;
                 messageArea.setText(text);
@@ -1236,7 +1236,5 @@ public class Chat extends AppCompatActivity {
         Intent i = new Intent(Chat.this, MusicPlayerActivity.class);
         startActivity(i);
     }
-
-
 
 }

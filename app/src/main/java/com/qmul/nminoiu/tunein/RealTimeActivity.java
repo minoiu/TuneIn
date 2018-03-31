@@ -4238,9 +4238,23 @@ public class RealTimeActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(RealTimeActivity.this, "Please write a comment", Toast.LENGTH_SHORT).show();
                 }
+                if (mediaPlayer.isPlaying()) {
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    fab.setLayoutParams(paramsFab);
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                }
                 commentsLayout.setVisibility(View.GONE);
-                fab.setVisibility(View.VISIBLE);
-                fab1.setVisibility(View.VISIBLE);
+                hideSoftKeyboard(RealTimeActivity.this);
+
+
             }
         });
 
@@ -5847,6 +5861,7 @@ public class RealTimeActivity extends AppCompatActivity
         fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                getFulname();
                 Intent i = new Intent(RealTimeActivity.this, Conversations.class);
                 i.putExtra("Uniqid", "FromSettings");
                 if (mediaPlayer.isPlaying()) {
@@ -5964,6 +5979,22 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onSearchViewClosed() {
                 nowPlayingLayout.setVisibility(View.VISIBLE);
+                if(mediaPlayer.isPlaying()){
+                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    fab.setLayoutParams(paramsFab);
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                    fab1.setVisibility(View.VISIBLE);
+                    paramsFab1.setMargins(0, 0, 43, 43); //bottom margin is 25 here (change it as u wish)
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 53); //bottom margin is 25 here (change it as u wish)
+                    fab.setLayoutParams(paramsFab);
+                }
+
 
 //                finish();
 //                Intent inte = getIntent();

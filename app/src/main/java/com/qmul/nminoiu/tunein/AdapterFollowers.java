@@ -270,7 +270,7 @@ public class AdapterFollowers extends BaseAdapter {
                             String song = i.getStringExtra("Song");
                             Intent intent = new Intent(mContext, Chat.class);
                             intent.putExtra("Uniqid", "FromFollowersShare");
-                            intent.putExtra("Name", user);
+                            intent.putExtra("Friend", user);
                             intent.putExtra("Song", song);
                             mContext.startActivity(intent);
                         } else if (uniqid.equals("FSAdapter")) {

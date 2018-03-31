@@ -127,6 +127,7 @@ public class Conversations extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getFullname();
 
         recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
         UserDetails.username = UserDetails.fullname;
@@ -344,6 +345,32 @@ public class Conversations extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void getFullname() {
+
+        FirebaseAuth fb;
+        fb = FirebaseAuth.getInstance();
+
+        String ID;
+        ID = fb.getCurrentUser().getUid();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
+
+        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserDetails.fullname = dataSnapshot.getValue().toString();
+                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+    }
+
 
     public void startMusic(String link, String song) {
         mediaPlayer.reset();

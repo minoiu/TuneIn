@@ -1074,7 +1074,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    String name = playlistName.getText().toString().trim();
+                    String name = newname.getText().toString().trim();
 
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase playRef = ref.child("Playlists").child(ID);
@@ -1083,7 +1083,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                     Firebase sref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase splayRef = sref.child("PlaylistSongs").child(ID).child(name);
                     splayRef.push().setValue(song);
-                    newPlaylist.setVisibility(View.GONE);
+//                    newPlaylist.setVisibility(View.GONE);
                     fab.setVisibility(View.VISIBLE);
                     Toast.makeText(PlaylistsActivity.this, song + " was added to your new playlist", Toast.LENGTH_SHORT).show();
                     hideSoftKeyboard(PlaylistsActivity.this);
