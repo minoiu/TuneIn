@@ -128,7 +128,6 @@ public class LibraryActivity extends AppCompatActivity{
             }
         });
 
-
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
 //            Toast.makeText(this, "track is "+ SongSingleton.getInstance().getSongName(), Toast.LENGTH_SHORT).show();

@@ -31,7 +31,6 @@
             android:name=".RealTimeActivity"
             android:label="Friend Activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AudioPlayer" />
         <activity
             android:name=".Users"
             android:label="Messages"

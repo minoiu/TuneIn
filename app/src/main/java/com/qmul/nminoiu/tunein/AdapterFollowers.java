@@ -283,7 +283,7 @@ public class AdapterFollowers extends BaseAdapter {
         return convertView;
     }
 
-    //get receiver to send notification
+    //get receiver to send notification and start activity Chat
     private void getReceiver(final String song, final String user, final String playlist) {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
         mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -296,6 +296,7 @@ public class AdapterFollowers extends BaseAdapter {
                 Intent goBack = new Intent(mContext, Chat.class);
                 goBack.putExtra("Uniqid", "FromFollowersListeWith");
                 goBack.putExtra("FriendName", user);
+                goBack.putExtra("Friend", user);
                 goBack.putExtra("Song", song);
                 goBack.putExtra("Name", playlist);
                 mContext.startActivity(goBack);

@@ -47,18 +47,10 @@ import java.util.Scanner;
 public class AdapterSharedWithMe extends BaseAdapter {
 
     private Context mContext;
-    /**
-     * The Row items.
-     */
     List<RowItem> rowItems;
-    private RelativeLayout buttons;
     private FirebaseStorage mStorage;
-    /**
-     * The Storage path.
-     */
     public File storagePath;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private Menu menu;
     private DatabaseReference dwnSongRef;
     private DatabaseReference lovedSongsRef;
     private DatabaseReference delSongRef;
@@ -66,11 +58,7 @@ public class AdapterSharedWithMe extends BaseAdapter {
     private String ID = firebaseAuth.getCurrentUser().getUid();
     private ArrayList<String> dwnList;
     private ArrayList<String> likedList;
-
-
-
     private LinearLayout searchLayout;
-
 
     /**
      * Instantiates a new Adapter shared with me.
@@ -84,31 +72,29 @@ public class AdapterSharedWithMe extends BaseAdapter {
     }
 
     private class ViewHolder {
-        /**
-         * The Image view.
-         */
         ImageView imageView;
-        /**
-         * The Txt title.
-         */
         TextView txtTitle;
     }
 
+    //return no of rows
     @Override
     public int getCount() {
         return rowItems.size();
     }
 
+    //return row from position
     @Override
     public Object getItem(int position) {
         return rowItems.get(position);
     }
 
+    //return id from position
     @Override
     public long getItemId(int position) {
         return rowItems.indexOf(getItem(position));
     }
 
+    //handling menu item click on songs from shared playlists
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
@@ -130,8 +116,6 @@ public class AdapterSharedWithMe extends BaseAdapter {
 
         holder.txtTitle.setText(rowItem.getTitle());
         holder.imageView.setImageResource(rowItem.getImageId());
-
-        MyPlaylists mp = new MyPlaylists();
         UserDetails.dwn = false;
         UserDetails.liked = false;
         dwnList = new ArrayList<String>();
@@ -140,79 +124,52 @@ public class AdapterSharedWithMe extends BaseAdapter {
         sender = firebaseAuth.getCurrentUser().getEmail();
         final String playlist = ((SharedPlaylistSongs) mContext).getBarTitle();
 
-
-
-        // mp.showMenu(holder.imageView);
-
-        //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
         try {
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
                     switch (v.getId()) {
                         case R.id.icon:
-
                             PopupMenu popup = new PopupMenu(mContext.getApplicationContext(), v);
-                            popup.getMenuInflater().inflate(R.menu.sharedplaylistsongs,
-                                    popup.getMenu());
-
-                            final Menu popupMenu = popup.getMenu();
-//
+                            popup.getMenuInflater().inflate(R.menu.sharedplaylistsongs,popup.getMenu());
                             popup.show();
                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
-
                                     switch (item.getItemId()) {
-                                        case R.id.listenwith:
 
+                                        //click on listen with
+                                        case R.id.listenwith:
                                             Intent intent = new Intent(mContext, FollowersActivity.class);
                                             intent.putExtra("Uniqid","FSAdapter");
                                             intent.putExtra("Song", rowItem.getTitle());
                                             intent.putExtra("Name", playlist);
                                             mContext.startActivity(intent);
-
-                                            //Or Some other code you want to put here.. This is just an example.
-                                          //  Toast.makeText(mContext.getApplicationContext(), " Listen clicked " + " : " + rowItem.getTitle(), Toast.LENGTH_LONG).show();
-
                                             break;
 
+                                        //click on download
                                         case R.id.down:
-
                                             ID = firebaseAuth.getCurrentUser().getUid();
                                             String song = rowItem.getTitle();
                                             addDwnToList(song);
-
-//                                            if(UserDetails.dwn){
-//                                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
-//                                            } else {
-//                                                addToDownloads(song);
-//                                                download(song);
-//                                                Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-//                                            }
-
                                             break;
 
+                                        //click on like song
                                         case R.id.like:
-
                                             String songName = rowItem.getTitle();
                                             addToLikedList(songName);
-
                                             break;
 
+                                        //click on share song
                                         case R.id.share:
-
                                             Intent i = new Intent(mContext, FollowersActivity.class);
                                             i.putExtra("Uniqid","FromSongAdapter");
                                             i.putExtra("Name", playlist);
                                             i.putExtra("Song", rowItem.getTitle());
                                             mContext.startActivity(i);
-
                                             break;
 
+                                        //click on add song to playlist
                                         case R.id.addto:
                                             String playlistName = ((SharedPlaylistSongs) mContext).getBarTitle();
                                             String songToAdd = rowItem.getTitle();
@@ -223,22 +180,16 @@ public class AdapterSharedWithMe extends BaseAdapter {
                                             mContext.startActivity(newIntent);
                                             break;
 
+                                        //click on delete song
                                         case R.id.delete:
-
                                             final String songToDelete = rowItem.getTitle();
-                                            PlaylistSongs ps = new PlaylistSongs();
-
                                             String playlist = ((PlaylistSongs) mContext).getBarTitle();
-                                           // Toast.makeText(mContext.getApplicationContext(), "playlist " + ": " + playlist, Toast.LENGTH_LONG).show();
-
-
                                             delSongRef = FirebaseDatabase.getInstance().getReference().child("PlaylistSongs").child(ID).child(playlist);
                                             delSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                         String key = snapshot.getKey();
-
                                                         if (dataSnapshot.child(key).getValue().equals(songToDelete)) {
                                                             delSongRef.child(key).getRef().setValue(null);
                                                             notifyDataSetChanged();
@@ -269,22 +220,18 @@ public class AdapterSharedWithMe extends BaseAdapter {
                         default:
                             break;
                     }
-
-
                 }
             });
 
         }catch(Exception e)
 
         {
-
             e.printStackTrace();
         }
-
-
         return convertView;
     }
 
+        //add song to favourites Firebase node
         private void addToLikedList(final String songName) {
             likedList.clear();
             final DatabaseReference dwnSongRef2 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
@@ -308,247 +255,94 @@ public class AdapterSharedWithMe extends BaseAdapter {
 
         }
 
-    private void checkSongInLiked(String song) {
-        if(likedList.contains(song)){
-            Toast.makeText(mContext, song + " is already in you favourites", Toast.LENGTH_SHORT).show();
-        } else {
-            addToFavourites(song);
+        //check if song is already in favourites
+        private void checkSongInLiked(String song) {
+            if(likedList.contains(song)){
+                Toast.makeText(mContext, song + " is already in you favourites", Toast.LENGTH_SHORT).show();
+            } else {
+                addToFavourites(song);
+            }
         }
-    }
 
-
-
-
-    private void addToFavourites(String songName) {
-        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-        Firebase playRef = ref.child("LovedSongs").child(ID);
-        playRef.push().setValue(songName);
-        Toast.makeText(mContext.getApplicationContext(), songName + " was added to your favourites", Toast.LENGTH_SHORT).show();
-    }
-
-    private void checkLiked(final String songName) {
-        lovedSongsRef = FirebaseDatabase.getInstance().getReference().child("LovedSongs");
-        lovedSongsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
-                    String key = snapshot.getKey().toString();
-                    if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
-                        Toast.makeText(mContext.getApplicationContext(), songName + " is already in your favourites.", Toast.LENGTH_SHORT).show();
-                        UserDetails.liked = true;
-                    } else {
-                        UserDetails.dwn = false;
-                    }
-                }
-                if (!UserDetails.liked) {
-                    addToFavourites(songName);
-                    Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void addDwnToList(final String song) {
-        dwnList.clear();
-        final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
-        dwnSongRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String key = snapshot.getKey().toString();
-                    String dwnsong = dataSnapshot.child(key).getValue().toString();
-                    dwnList.add(dwnsong);
-                }
-                checkSongInDwn(song);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    private void checkSongInDwn(String song) {
-        if(dwnList.contains(song)){
-            Toast.makeText(mContext, song + " is already downloaded", Toast.LENGTH_SHORT).show();
-        } else {
-            addToDownloads(song);
-            download(song);
+        //add song to favourites list
+        private void addToFavourites(String songName) {
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase playRef = ref.child("LovedSongs").child(ID);
+            playRef.push().setValue(songName);
+            Toast.makeText(mContext.getApplicationContext(), songName + " was added to your favourites", Toast.LENGTH_SHORT).show();
         }
-    }
 
+        //add song to downloaded Firebase node
+        private void addDwnToList(final String song) {
+            dwnList.clear();
+            final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
+            dwnSongRef1.addListenerForSingleValueEvent(new ValueEventListener() {
 
-
-    private void checkDownloaded(final String song) {
-        dwnSongRef = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs");
-        dwnSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(ID)) {
-                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String key = snapshot.getKey().toString();
-                        if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
-                            Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_SHORT).show();
-                            UserDetails.dwn = true;
-                        } else {
-                            UserDetails.dwn = false;
-                        }
+                        String dwnsong = dataSnapshot.child(key).getValue().toString();
+                        dwnList.add(dwnsong);
                     }
-                    if (!UserDetails.dwn) {
-                        addToDownloads(song);
-                        download(song);
-                        Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    addToDownloads(song);
-                    download(song);
-                    Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
+                    checkSongInDwn(song);
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
-    }
-
-
-    private void download(String song) {
-        mStorage = FirebaseStorage.getInstance();
-
-        StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-        StorageReference down = storageReference.child(song + ".mp3");
-
-        storagePath = new File(mContext.getFilesDir(), "My_music");
-        File localFile = new File(storagePath, song);
-        try {
-            localFile = File.createTempFile(song, ".mp3");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        final File finalLocalFile = new File(storagePath, song);
-        down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                finalLocalFile.getAbsolutePath();
-                Toast.makeText(mContext.getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
-                //download.setVisibility(View.GONE);
-                //downloadgreen.setVisibility(View.VISIBLE);
-
+        //check if song is in downloads
+        private void checkSongInDwn(String song) {
+            if(dwnList.contains(song)){
+                Toast.makeText(mContext, song + " is already downloaded", Toast.LENGTH_SHORT).show();
+            } else {
+                addToDownloads(song);
+                download(song);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
+        }
 
+        //download song
+        private void download(String song) {
+            mStorage = FirebaseStorage.getInstance();
+
+            StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+            StorageReference down = storageReference.child(song + ".mp3");
+
+            storagePath = new File(mContext.getFilesDir(), "My_music");
+            File localFile = new File(storagePath, song);
+            try {
+                localFile = File.createTempFile(song, ".mp3");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-    }
 
-    private void addToDownloads(String song) {
-        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-        playRef.push().setValue(song);
-    }
+            final File finalLocalFile = new File(storagePath, song);
+            down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    finalLocalFile.getAbsolutePath();
+                    Toast.makeText(mContext.getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
+                    //download.setVisibility(View.GONE);
+                    //downloadgreen.setVisibility(View.VISIBLE);
 
-    /**
-     * Update list.
-     *
-     * @param newlist the newlist
-     */
-    public void updateList(List<RowItem> newlist) {
-        rowItems.clear();
-        rowItems.addAll(newlist);
-        this.notifyDataSetChanged();
-    }
-
-    private void sendNotification()
-    {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                if (SDK_INT > 8) {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                            .permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    String send_email;
-
-                    //This is a Simple Logic to Send Notification different Device Programmatically....
-                    if (RealTimeActivity.loggedEmail.equals(sender)) {
-                        send_email = UserDetails.receiver;
-
-
-                    } else {
-                        send_email = sender;
-                    }
-
-                    try {
-                        String jsonResponse;
-
-                        URL url = new URL("https://onesignal.com/api/v1/notifications");
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setUseCaches(false);
-                        con.setDoOutput(true);
-                        con.setDoInput(true);
-
-                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
-                        con.setRequestMethod("POST");
-
-                        String strJsonBody = "{"
-                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
-
-                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
-
-                                + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"You have a new friend request!\"}"
-                                + "\"button1\": {\"Accept\": \"Decline\"},"
-
-                                + "}";
-
-
-                        System.out.println("strJsonBody:\n" + strJsonBody);
-
-                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                        con.setFixedLengthStreamingMode(sendBytes.length);
-
-                        OutputStream outputStream = con.getOutputStream();
-                        outputStream.write(sendBytes);
-
-                        int httpResponse = con.getResponseCode();
-                        System.out.println("httpResponse: " + httpResponse);
-
-                        if (httpResponse >= HttpURLConnection.HTTP_OK
-                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        } else {
-                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        }
-                        System.out.println("jsonResponse:\n" + jsonResponse);
-
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
                 }
-            }
-        });
-    }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
 
+                }
+            });
+        }
 
+        //add song to downloaded Firebase node
+        private void addToDownloads(String song) {
+            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
+            Firebase playRef = ref.child("DownloadedSongs").child(ID);
+            playRef.push().setValue(song);
+        }
 }
