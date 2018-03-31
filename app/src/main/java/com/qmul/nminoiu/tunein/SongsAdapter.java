@@ -44,13 +44,18 @@ import android.widget.PopupMenu;
 /**
  * Created by nminoiu on 21/08/2017.
  */
-
 public class SongsAdapter extends BaseAdapter {
 
     private Context mContext;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseStorage mStorage;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private String ID = firebaseAuth.getCurrentUser().getUid();
@@ -67,13 +72,25 @@ public class SongsAdapter extends BaseAdapter {
     private LinearLayout searchLayout;
 
 
+    /**
+     * Instantiates a new Songs adapter.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public SongsAdapter(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 
@@ -447,6 +464,11 @@ public class SongsAdapter extends BaseAdapter {
         playRef.push().setValue(song);
     }
 
+    /**
+     * Update list.
+     *
+     * @param newlist the newlist
+     */
     public void updateList(List<RowItem> newlist) {
         rowItems.clear();
         rowItems.addAll(newlist);

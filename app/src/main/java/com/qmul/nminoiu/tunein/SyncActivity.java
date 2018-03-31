@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * Created by nicoledumitrascu on 12/07/2017.
  */
-
 public class SyncActivity extends AppCompatActivity {
     private String myId;
 

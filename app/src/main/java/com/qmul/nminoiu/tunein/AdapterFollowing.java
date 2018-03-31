@@ -45,13 +45,18 @@ import static com.qmul.nminoiu.tunein.UserDetails.song;
 /**
  * Created by nicoleta on 26/10/2017.
  */
-
 public class AdapterFollowing extends BaseAdapter {
 
     private Context mContext;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseStorage mStorage;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private String ID = firebaseAuth.getCurrentUser().getUid();
@@ -67,13 +72,25 @@ public class AdapterFollowing extends BaseAdapter {
     private LinearLayout searchLayout;
 
 
+    /**
+     * Instantiates a new Adapter following.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public AdapterFollowing(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 
@@ -458,6 +475,11 @@ public class AdapterFollowing extends BaseAdapter {
         playRef.push().setValue(song);
     }
 
+    /**
+     * Update list.
+     *
+     * @param newlist the newlist
+     */
     public void updateList(List<RowItem> newlist) {
         rowItems.clear();
         rowItems.addAll(newlist);

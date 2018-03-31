@@ -17,10 +17,15 @@ import java.util.ArrayList;
 /**
  * Created by nminoiu on 27/06/2017.
  */
-
 public class UsersList extends AppCompatActivity {
 
+    /**
+     * The Users list.
+     */
     ListView usersList;
+    /**
+     * The Users.
+     */
     ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> uadapter;
     private DatabaseReference db;

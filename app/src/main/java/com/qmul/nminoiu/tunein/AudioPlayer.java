@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+/**
+ * The type Audio player.
+ */
 public class AudioPlayer extends AppCompatActivity {
 
     @Override

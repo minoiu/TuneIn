@@ -26,13 +26,22 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * The type Synchronisation test.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SynchronisationTest {
 
+    /**
+     * The M activity test rule.
+     */
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
+    /**
+     * Synchronisation test.
+     */
     @Test
     public void synchronisationTest() {
         // Added a sleep statement to match the app's execution delay.

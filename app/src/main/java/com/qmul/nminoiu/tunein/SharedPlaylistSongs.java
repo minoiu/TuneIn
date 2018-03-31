@@ -58,6 +58,9 @@ import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Shared playlist songs.
+ */
 public class SharedPlaylistSongs extends AppCompatActivity {
 
     private DatabaseReference db;
@@ -75,14 +78,32 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     private ArrayAdapter<String> uadapter;
     private DatabaseReference receiverRef;
     private DatabaseReference mDatabase1;
+    /**
+     * The Search view.
+     */
     MaterialSearchView searchView;
+    /**
+     * The Search layout.
+     */
     LinearLayout searchLayout;
+    /**
+     * The Songs layout.
+     */
     LinearLayout songsLayout;
+    /**
+     * The Shared friends.
+     */
     ArrayList<String> sharedFriends = new ArrayList<>();
+    /**
+     * The Delete playlist.
+     */
     LinearLayout deletePlaylist;
     private ListView songs;
     private TextView name;
     private String sender;
+    /**
+     * The Songs list.
+     */
     public List<String> songsList;
     private ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> songssadapter;
@@ -107,6 +128,9 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     private DatabaseReference playlistRef;
     private DatabaseReference lovedPlaylistRef;
     private DatabaseReference sharedRef;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
     private FirebaseStorage mStorage;
     private EditText newName;
@@ -747,6 +771,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Rename.
+     *
+     * @param view the view
+     */
     public void rename(View view){
         newname = playlistName.getText().toString().trim();
         String oldPlaylist = getSupportActionBar().getTitle().toString();
@@ -795,6 +824,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets url.
+     *
+     * @param song the song
+     */
     public void getUrl(String song) {
 
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -1221,6 +1255,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Delete.
+     *
+     * @param view the view
+     */
     public void delete(View view){
 
         getFullname(ID);
@@ -1700,6 +1739,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Show menu.
+     *
+     * @param img the img
+     */
     public void showMenu(ImageView img) {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1709,6 +1753,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -1770,6 +1819,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get bar title string.
+     *
+     * @return the string
+     */
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }
@@ -1798,6 +1852,12 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final List<String> myFollowers = new ArrayList<>();
@@ -1827,6 +1887,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
     public void eraseFromRecents(String mysong) {
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -1856,6 +1921,12 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         addToHome(UserDetails.myFollowers, mysong);
     }
 
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
     public String getMyFullname(String id) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -1877,7 +1948,12 @@ public class SharedPlaylistSongs extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -1919,6 +1995,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -1932,6 +2013,11 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -1956,6 +2042,9 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
@@ -1989,6 +2078,9 @@ public class SharedPlaylistSongs extends AppCompatActivity {
 
     }
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;

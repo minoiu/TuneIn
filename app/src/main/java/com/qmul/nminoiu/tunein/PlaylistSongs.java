@@ -62,6 +62,9 @@ import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Playlist songs.
+ */
 public class PlaylistSongs extends AppCompatActivity {
 
     private DatabaseReference db;
@@ -78,14 +81,32 @@ public class PlaylistSongs extends AppCompatActivity {
     private ArrayAdapter<String> uadapter;
     private DatabaseReference receiverRef;
     private DatabaseReference mDatabase1;
+    /**
+     * The Search view.
+     */
     MaterialSearchView searchView;
+    /**
+     * The Search layout.
+     */
     LinearLayout searchLayout;
+    /**
+     * The Songs layout.
+     */
     LinearLayout songsLayout;
+    /**
+     * The Share ownership.
+     */
     LinearLayout shareOwnership;
+    /**
+     * The Shared friends.
+     */
     ArrayList<String> sharedFriends = new ArrayList<>();
     private ListView songs;
     private TextView name;
     private String sender;
+    /**
+     * The Songs list.
+     */
     public List<String> songsList;
     private ArrayList<String> users = new ArrayList<>();
     private ArrayList<String> recents = new ArrayList<>();
@@ -111,6 +132,9 @@ public class PlaylistSongs extends AppCompatActivity {
     private DatabaseReference playlistRef;
     private DatabaseReference lovedPlaylistRef;
     private DatabaseReference sharedRef;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
     private FirebaseStorage mStorage;
     private EditText newName;
@@ -134,6 +158,9 @@ public class PlaylistSongs extends AppCompatActivity {
 
     private Toolbar toolbar;
     private Menu menu;
+    /**
+     * The constant track_title.
+     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
@@ -1119,6 +1146,11 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Rename.
+     *
+     * @param newPlaylistName the new playlist name
+     */
     public void rename(String newPlaylistName){
         String oldPlaylist = getSupportActionBar().getTitle().toString();
 
@@ -1282,6 +1314,11 @@ public class PlaylistSongs extends AppCompatActivity {
 
     }
 
+    /**
+     * Gets url.
+     *
+     * @param song the song
+     */
     public void getUrl(String song) {
 
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -1743,6 +1780,11 @@ public class PlaylistSongs extends AppCompatActivity {
 
     }
 
+    /**
+     * Delete.
+     *
+     * @param oldPlaylist the old playlist
+     */
     public void delete(String oldPlaylist){
 
         Toast.makeText(PlaylistSongs.this, "Deleting playlist...", Toast.LENGTH_SHORT).show();
@@ -2141,12 +2183,22 @@ public class PlaylistSongs extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(PlaylistSongs.this, MusicPlayerActivity.class);
         i.putExtra("OldPlaylist", getSupportActionBar().getTitle().toString());
         startActivity(i);
     }
 
+    /**
+     * Show menu.
+     *
+     * @param img the img
+     */
     public void showMenu(ImageView img) {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2156,6 +2208,11 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -2225,6 +2282,11 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get bar title string.
+     *
+     * @return the string
+     */
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }
@@ -2253,6 +2315,12 @@ public class PlaylistSongs extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -2281,6 +2349,11 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
     public void eraseFromRecents(String mysong) {
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -2310,6 +2383,12 @@ public class PlaylistSongs extends AppCompatActivity {
         addToHome(UserDetails.myFollowers, mysong);
     }
 
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
     public String getMyFullname(String id) {
 
        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -2331,6 +2410,9 @@ public class PlaylistSongs extends AppCompatActivity {
     }
 
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -2356,6 +2438,12 @@ public class PlaylistSongs extends AppCompatActivity {
         });
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -2398,6 +2486,11 @@ public class PlaylistSongs extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -2411,6 +2504,11 @@ public class PlaylistSongs extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -2435,6 +2533,9 @@ public class PlaylistSongs extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
@@ -2464,6 +2565,12 @@ public class PlaylistSongs extends AppCompatActivity {
         addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
     }
 
+    /**
+     * Add to friend activity.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToFriendActivity(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();

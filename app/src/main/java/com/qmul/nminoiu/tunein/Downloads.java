@@ -41,9 +41,15 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Downloads.
+ */
 public class Downloads extends AppCompatActivity {
 
     private ListView songsList;
+    /**
+     * The Songs.
+     */
     ArrayList<String> songs = new ArrayList<>();
     private ArrayAdapter<String> sadapter;
     private ArrayAdapter<String> songssadapter;
@@ -64,6 +70,9 @@ public class Downloads extends AppCompatActivity {
     private AdapterDownloads adapter;
     private AdapterDownloads searchadapter;
     private String song;
+    /**
+     * The constant track_title.
+     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
@@ -327,6 +336,11 @@ public class Downloads extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets url.
+     *
+     * @param song the song
+     */
     public void getUrl(String song) {
 
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -385,6 +399,11 @@ public class Downloads extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(Downloads.this, MusicPlayerActivity.class);
         startActivity(i);
@@ -451,6 +470,12 @@ public class Downloads extends AppCompatActivity {
     }
 
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final List<String> myFollowers = new ArrayList<>();
@@ -480,6 +505,11 @@ public class Downloads extends AppCompatActivity {
         });
     }
 
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
     public void eraseFromRecents(String mysong) {
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -509,6 +539,12 @@ public class Downloads extends AppCompatActivity {
         addToHome(UserDetails.myFollowers, mysong);
     }
 
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
     public String getMyFullname(String id) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -530,7 +566,9 @@ public class Downloads extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -556,6 +594,12 @@ public class Downloads extends AppCompatActivity {
         });
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -597,6 +641,11 @@ public class Downloads extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -610,6 +659,11 @@ public class Downloads extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -634,6 +688,9 @@ public class Downloads extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");

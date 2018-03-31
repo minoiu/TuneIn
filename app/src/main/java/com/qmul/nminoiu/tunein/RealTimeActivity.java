@@ -98,6 +98,9 @@ import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Real time activity.
+ */
 public class RealTimeActivity extends AppCompatActivity
             implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -160,7 +163,13 @@ public class RealTimeActivity extends AppCompatActivity
     private LinearLayout commentsLayout;
     private LinearLayout makePublic;
     private LinearLayout makePrivate;
+    /**
+     * The Track title.
+     */
     public TextView track_title;
+    /**
+     * The S name.
+     */
     public TextView sName;
     private StorageReference storage;
     private boolean playPause;
@@ -178,13 +187,22 @@ public class RealTimeActivity extends AppCompatActivity
 
     private boolean play;
     private boolean pause;
+    /**
+     * The constant url.
+     */
     public static String url;
     private RelativeLayout picLayout;
     private Handler mResultHandler;
+    /**
+     * The constant song.
+     */
     public static String song;
     private Handler mHandler;
     private FirebaseAuth firebaseAuth1;
     private FirebaseUser user;
+    /**
+     * The constant loggedEmail.
+     */
     public static String loggedEmail;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
@@ -215,20 +233,62 @@ public class RealTimeActivity extends AppCompatActivity
 
     private ArrayList<String> recents;
     private ScrollView ScrollView01;
+    /**
+     * The Myuser.
+     */
     public User myuser;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
+    /**
+     * The Np 1.
+     */
     public LinearLayout np1;
+    /**
+     * The Np 2.
+     */
     public LinearLayout np2;
     private EditText commentarea;
+    /**
+     * The Np 3.
+     */
     public LinearLayout np3;
+    /**
+     * The Np 4.
+     */
     public LinearLayout np4;
+    /**
+     * The Np 5.
+     */
     public LinearLayout np5;
+    /**
+     * The Np 6.
+     */
     public LinearLayout np6;
+    /**
+     * The Np 7.
+     */
     public LinearLayout np7;
+    /**
+     * The Np 8.
+     */
     public LinearLayout np8;
+    /**
+     * The Np 9.
+     */
     public LinearLayout np9;
+    /**
+     * The Np 10.
+     */
     public LinearLayout np10;
+    /**
+     * The Now playing layout.
+     */
     public LinearLayout nowPlayingLayout;
+    /**
+     * The Rec played layout.
+     */
     public LinearLayout recPlayedLayout;
     private ProgressDialog progressDialog;
 
@@ -238,142 +298,508 @@ public class RealTimeActivity extends AppCompatActivity
     private ImageButton tuneOutBtn;
     private TextView ptextview;
     private TextView stextview;
+    /**
+     * The Fullname.
+     */
     public String fullname;
+    /**
+     * The Following.
+     */
     public boolean following;
+    /**
+     * The Song text.
+     */
     public TextView songText;
+    /**
+     * The Name text.
+     */
     public TextView nameText;
+    /**
+     * The Fab.
+     */
     public FloatingActionButton fab;
+    /**
+     * The Fab 1.
+     */
     public ImageButton fab1;
+    /**
+     * The Tunein 1.
+     */
     public ImageButton tunein1;
+    /**
+     * The Tunein 2.
+     */
     public ImageButton tunein2;
+    /**
+     * The Tunein 3.
+     */
     public ImageButton tunein3;
+    /**
+     * The Tunein 4.
+     */
     public ImageButton tunein4;
+    /**
+     * The Tunein 5.
+     */
     public ImageButton tunein5;
+    /**
+     * The Tuneout 1.
+     */
     public ImageButton tuneout1;
+    /**
+     * The Tuneout 2.
+     */
     public ImageButton tuneout2;
+    /**
+     * The Tuneout 3.
+     */
     public ImageButton tuneout3;
+    /**
+     * The Tuneout 4.
+     */
     public ImageButton tuneout4;
+    /**
+     * The Tuneout 5.
+     */
     public ImageButton tuneout5;
+    /**
+     * The Title 1.
+     */
     public TextView title1;
+    /**
+     * The Title 2.
+     */
     public TextView title2;
+    /**
+     * The Title 3.
+     */
     public TextView title3;
+    /**
+     * The Title 4.
+     */
     public TextView title4;
+    /**
+     * The Title 5.
+     */
     public TextView title5;
+    /**
+     * The Title 6.
+     */
     public TextView title6;
+    /**
+     * The Title 7.
+     */
     public TextView title7;
+    /**
+     * The Title 8.
+     */
     public TextView title8;
+    /**
+     * The Title 9.
+     */
     public TextView title9;
+    /**
+     * The Title 10.
+     */
     public TextView title10;
+    /**
+     * The Bheart 1.
+     */
     public ImageButton bheart1;
+    /**
+     * The Bheart 2.
+     */
     public ImageButton bheart2;
+    /**
+     * The Bheart 3.
+     */
     public ImageButton bheart3;
+    /**
+     * The Bheart 4.
+     */
     public ImageButton bheart4;
+    /**
+     * The Bheart 5.
+     */
     public ImageButton bheart5;
+    /**
+     * The Bheart 6.
+     */
     public ImageButton bheart6;
+    /**
+     * The Bheart 7.
+     */
     public ImageButton bheart7;
+    /**
+     * The Bheart 8.
+     */
     public ImageButton bheart8;
+    /**
+     * The Bheart 9.
+     */
     public ImageButton bheart9;
+    /**
+     * The Bheart 10.
+     */
     public ImageButton bheart10;
+    /**
+     * The Rheart 1.
+     */
     public ImageButton rheart1;
+    /**
+     * The Rheart 2.
+     */
     public ImageButton rheart2;
+    /**
+     * The Rheart 3.
+     */
     public ImageButton rheart3;
+    /**
+     * The Rheart 4.
+     */
     public ImageButton rheart4;
+    /**
+     * The Rheart 5.
+     */
     public ImageButton rheart5;
+    /**
+     * The Rheart 6.
+     */
     public ImageButton rheart6;
+    /**
+     * The Rheart 7.
+     */
     public ImageButton rheart7;
+    /**
+     * The Rheart 8.
+     */
     public ImageButton rheart8;
+    /**
+     * The Rheart 9.
+     */
     public ImageButton rheart9;
+    /**
+     * The Rheart 10.
+     */
     public ImageButton rheart10;
+    /**
+     * The Add 1.
+     */
     public ImageButton add1;
+    /**
+     * The Add 2.
+     */
     public ImageButton add2;
+    /**
+     * The Add 3.
+     */
     public ImageButton add3;
+    /**
+     * The Add 4.
+     */
     public ImageButton add4;
+    /**
+     * The Add 5.
+     */
     public ImageButton add5;
+    /**
+     * The Add 6.
+     */
     public ImageButton add6;
+    /**
+     * The Add 7.
+     */
     public ImageButton add7;
+    /**
+     * The Add 8.
+     */
     public ImageButton add8;
+    /**
+     * The Add 9.
+     */
     public ImageButton add9;
+    /**
+     * The Add 10.
+     */
     public ImageButton add10;
+    /**
+     * The Comment 1.
+     */
     public ImageButton comment1;
+    /**
+     * The Comment 2.
+     */
     public ImageButton comment2;
+    /**
+     * The Comment 3.
+     */
     public ImageButton comment3;
+    /**
+     * The Comment 4.
+     */
     public ImageButton comment4;
+    /**
+     * The Comment 5.
+     */
     public ImageButton comment5;
+    /**
+     * The Comment 6.
+     */
     public ImageButton comment6;
+    /**
+     * The Comment 7.
+     */
     public ImageButton comment7;
+    /**
+     * The Comment 8.
+     */
     public ImageButton comment8;
+    /**
+     * The Comment 9.
+     */
     public ImageButton comment9;
+    /**
+     * The Comment 10.
+     */
     public ImageButton comment10;
+    /**
+     * The Download 1.
+     */
     public ImageButton download1;
+    /**
+     * The Download 2.
+     */
     public ImageButton download2;
+    /**
+     * The Download 3.
+     */
     public ImageButton download3;
+    /**
+     * The Download 4.
+     */
     public ImageButton download4;
+    /**
+     * The Download 5.
+     */
     public ImageButton download5;
+    /**
+     * The Download 6.
+     */
     public ImageButton download6;
+    /**
+     * The Download 7.
+     */
     public ImageButton download7;
+    /**
+     * The Download 8.
+     */
     public ImageButton download8;
+    /**
+     * The Download 9.
+     */
     public ImageButton download9;
+    /**
+     * The Download 10.
+     */
     public ImageButton download10;
     private int newtime;
+    /**
+     * The Name 1.
+     */
     public TextView name1;
+    /**
+     * The Name 2.
+     */
     public TextView name2;
+    /**
+     * The Name 3.
+     */
     public TextView name3;
+    /**
+     * The Name 4.
+     */
     public TextView name4;
+    /**
+     * The Name 5.
+     */
     public TextView name5;
+    /**
+     * The Name 6.
+     */
     public TextView name6;
+    /**
+     * The Name 7.
+     */
     public TextView name7;
+    /**
+     * The Name 8.
+     */
     public TextView name8;
+    /**
+     * The Name 9.
+     */
     public TextView name9;
+    /**
+     * The Name 10.
+     */
     public TextView name10;
+    /**
+     * The Time 1.
+     */
     public TextView time1;
+    /**
+     * The Time 2.
+     */
     public TextView time2;
+    /**
+     * The Time 3.
+     */
     public TextView time3;
+    /**
+     * The Time 4.
+     */
     public TextView time4;
+    /**
+     * The Time 5.
+     */
     public TextView time5;
+    /**
+     * The Time 6.
+     */
     public TextView time6;
+    /**
+     * The Time 7.
+     */
     public TextView time7;
+    /**
+     * The Time 8.
+     */
     public TextView time8;
+    /**
+     * The Time 9.
+     */
     public TextView time9;
+    /**
+     * The Time 10.
+     */
     public TextView time10;
+    /**
+     * The Sl 1.
+     */
     public LinearLayout sl1;
+    /**
+     * The Sl 2.
+     */
     public LinearLayout sl2;
+    /**
+     * The Sl 3.
+     */
     public LinearLayout sl3;
+    /**
+     * The Sl 4.
+     */
     public LinearLayout sl4;
+    /**
+     * The Sl 5.
+     */
     public LinearLayout sl5;
+    /**
+     * The Sl 6.
+     */
     public LinearLayout sl6;
+    /**
+     * The Sl 7.
+     */
     public LinearLayout sl7;
+    /**
+     * The Sl 8.
+     */
     public LinearLayout sl8;
+    /**
+     * The Sl 9.
+     */
     public LinearLayout sl9;
+    /**
+     * The Sl 10.
+     */
     public LinearLayout sl10;
 
 
+    /**
+     * The Youtubecoloured.
+     */
     public ImageButton youtubecoloured;
+    /**
+     * The Comment.
+     */
     public ImageButton comment;
+    /**
+     * The Commentblue.
+     */
     public ImageButton commentblue;
+    /**
+     * The Add.
+     */
     public ImageButton add;
+    /**
+     * The Addgreen.
+     */
     public ImageButton addgreen;
+    /**
+     * The Download.
+     */
     public ImageButton download;
+    /**
+     * The Downloadgreen.
+     */
     public ImageButton downloadgreen;
+    /**
+     * The Black heart.
+     */
     public ImageButton blackHeart;
+    /**
+     * The Red heart.
+     */
     public ImageButton redHeart;
     private DatabaseReference fdb;
     private List<String> myFollowers;
+    /**
+     * The Id.
+     */
     public String ID;
+    /**
+     * The Me.
+     */
     public String me;
+    /**
+     * The Text.
+     */
     public String text;
+    /**
+     * The Addr.
+     */
     public String addr;
+    /**
+     * The Picture url.
+     */
     public String pictureUrl;
     private String sender;
 
     private String time;
     private Boolean isTunned = false;
     private int i;
+    /**
+     * The Pick image request.
+     */
     int PICK_IMAGE_REQUEST;
     private Uri filePath;
     private ProgressDialog pd;
     private StorageReference picRef;
     private CoordinatorLayout.LayoutParams paramsFab1;
     private CoordinatorLayout.LayoutParams paramsFab;
+    /**
+     * The constant checkBox.
+     */
     public static CheckBox checkBox;
 
 
@@ -5995,13 +6421,6 @@ public class RealTimeActivity extends AppCompatActivity
                     fab.setLayoutParams(paramsFab);
                 }
 
-
-//                finish();
-//                Intent inte = getIntent();
-//                inte.putExtra("ID", "FromSearch");
-//                inte.putExtra("Song", song);
-//                startActivity(inte);
-//                overridePendingTransition(0, 0);
                 searchLayout.setVisibility(View.GONE);
             }
         });
@@ -6100,7 +6519,13 @@ public class RealTimeActivity extends AppCompatActivity
 
     }
 
-    //getting followers
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
+//getting followers
     public void getFollowers(String fullname, final String mysong) {
         final ArrayAdapter<String> fadapter;
         UserDetails.mysong = mysong;
@@ -6596,7 +7021,12 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    //hide keyboard method
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
+//hide keyboard method
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -6605,7 +7035,13 @@ public class RealTimeActivity extends AppCompatActivity
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
-    //play selected song
+    /**
+     * Start music.
+     *
+     * @param link the link
+     * @param song the song
+     */
+//play selected song
     public void startMusic(String link, String song) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -6629,7 +7065,12 @@ public class RealTimeActivity extends AppCompatActivity
         }
     }
 
-    //stopmusic
+    /**
+     * Stop music.
+     *
+     * @param length the length
+     */
+//stopmusic
     public void stopMusic(Integer length) {
         play_toolbar.setVisibility(View.VISIBLE);
         play_toolbar.bringToFront();
@@ -6639,6 +7080,9 @@ public class RealTimeActivity extends AppCompatActivity
         mediaPlayer.pause();
     }
 
+    /**
+     * Pause.
+     */
     public void pause() {
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
@@ -6655,7 +7099,12 @@ public class RealTimeActivity extends AppCompatActivity
     }
 
 
-    //play song method with signle button background handling
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
+//play song method with signle button background handling
     public void playPauseMusic(View v) {
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
@@ -6791,7 +7240,10 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    //erase from homepage when song stops
+    /**
+     * Erase from firebase.
+     */
+//erase from homepage when song stops
     public void eraseFromFirebase() {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
@@ -6821,6 +7273,11 @@ public class RealTimeActivity extends AppCompatActivity
         addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong, ID);
     }
 
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
     public void eraseFromRecents(String mysong) {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -6851,6 +7308,11 @@ public class RealTimeActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -6865,6 +7327,11 @@ public class RealTimeActivity extends AppCompatActivity
         //nowPlaying(song);
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
         startActivity(i);
@@ -6903,6 +7370,9 @@ public class RealTimeActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Update progress bar.
+     */
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
@@ -6932,6 +7402,9 @@ public class RealTimeActivity extends AppCompatActivity
     };
 
 
+    /**
+     * Gets fulname.
+     */
     public void getFulname() {
 
         FirebaseAuth fb;
@@ -6957,6 +7430,12 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
     public String getMyFullname(String id) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -6977,6 +7456,9 @@ public class RealTimeActivity extends AppCompatActivity
         return UserDetails.fullname;
     }
 
+    /**
+     * Check following.
+     */
     public void checkFollowing() {
 
         mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -7050,6 +7532,12 @@ public class RealTimeActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
 
@@ -7089,6 +7577,13 @@ public class RealTimeActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Add to friend activity.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     * @param myid    the myid
+     */
     public void addToFriendActivity(List<String> myvalue, final String mysong, final String myid) {
 
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -7149,17 +7644,34 @@ public class RealTimeActivity extends AppCompatActivity
 
     //trying to sync song
 
-    //getting the name of the song
+    /**
+     * Gets song name.
+     *
+     * @param layoutno the layoutno
+     * @return the song name
+     */
+//getting the name of the song
     public String getSongName(int layoutno) {
         String songToPlay = titlesArray[layoutno].getText().toString();
         Toast.makeText(RealTimeActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
         return songToPlay;
     }
 
+    /**
+     * Gets person now playing.
+     *
+     * @param layoutno the layoutno
+     * @return the person now playing
+     */
     public String getPersonNowPlaying(int layoutno) {
         return namesArray[layoutno].getText().toString();
     }
 
+    /**
+     * Gets url.
+     *
+     * @param song the song
+     */
     public void getUrl(String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase songRef = ref.child("URL").child(song);
@@ -7184,6 +7696,12 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Send time request.
+     *
+     * @param listenerFullname the listener fullname
+     * @param url              the url
+     */
     public void sendTimeRequest(String listenerFullname, String url) {
 
         String me = firebaseAuth1.getCurrentUser().getUid();
@@ -7197,6 +7715,12 @@ public class RealTimeActivity extends AppCompatActivity
         //getSongName();
     }
 
+    /**
+     * Add time to firebase.
+     *
+     * @param otherUser the other user
+     * @param song      the song
+     */
     public void addTimeToFirebase(String otherUser, String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeAnswer/" + ID);
         Map<String, Object> uinfo = new HashMap<>();
@@ -7209,6 +7733,11 @@ public class RealTimeActivity extends AppCompatActivity
         ref.updateChildren(uinfo);
     }
 
+    /**
+     * Gets current playing time.
+     *
+     * @return the current playing time
+     */
     public int getCurrentPlayingTime() {
         if (!mediaPlayer.isPlaying()) {
 //            Toast.makeText(this, "Music cannot be shared", Toast.LENGTH_SHORT).show();
@@ -7216,6 +7745,9 @@ public class RealTimeActivity extends AppCompatActivity
         return mediaPlayer.getCurrentPosition();
     }
 
+    /**
+     * Gets time from firebase.
+     */
     public void getTimeFromFirebase() {
 
         String myID = firebaseAuth1.getCurrentUser().getUid();
@@ -7252,15 +7784,31 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Sets url value.
+     *
+     * @param address the address
+     */
     public void setUrlValue(String address) {
         addr = address;
     }
 
+    /**
+     * Gets url value.
+     *
+     * @return the url value
+     */
     public String getUrlValue() {
 
         return addr;
     }
 
+    /**
+     * Play music.
+     *
+     * @param time the time
+     * @param url  the url
+     */
     public void playMusic(final int time, String url) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -7363,6 +7911,11 @@ public class RealTimeActivity extends AppCompatActivity
 //        });
 //    }
 
+    /**
+     * Add to playlist.
+     *
+     * @param v the v
+     */
     public void addToPlaylist(View v) {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -7373,6 +7926,11 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Add to playlist again.
+     *
+     * @param v the v
+     */
     public void addToPlaylistAgain(View v) {
         addgreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -7914,6 +8472,11 @@ public class RealTimeActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

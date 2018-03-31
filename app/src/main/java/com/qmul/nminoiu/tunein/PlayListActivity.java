@@ -13,8 +13,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+/**
+ * The type Play list activity.
+ */
 public class PlayListActivity extends ListActivity {
-	// Songs list
+    /**
+     * The Songs list.
+     */
+// Songs list
 	public ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
 
 	@Override

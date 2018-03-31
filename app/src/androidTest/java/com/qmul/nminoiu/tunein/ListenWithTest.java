@@ -30,13 +30,22 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * The type Listen with test.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class ListenWithTest {
 
+    /**
+     * The M activity test rule.
+     */
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
+    /**
+     * Listen with test.
+     */
     @Test
     public void listenWithTest() {
         // Added a sleep statement to match the app's execution delay.

@@ -5,21 +5,32 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The type Songs manager.
+ */
 public class SongsManager {
-	// SDCard Path
+    /**
+     * The Media path.
+     */
+// SDCard Path
 	final String MEDIA_PATH = new String("/sdcard/");
 	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-	
-	// Constructor
+
+    /**
+     * Instantiates a new Songs manager.
+     */
+// Constructor
 	public SongsManager(){
 		
 	}
-	
-	/**
-	 * Function to read all mp3 files from sdcard
-	 * and store the details in ArrayList
-	 * */
-	public ArrayList<HashMap<String, String>> getPlayList(){
+
+    /**
+     * Function to read all mp3 files from sdcard
+     * and store the details in ArrayList
+     *
+     * @return the array list
+     */
+    public ArrayList<HashMap<String, String>> getPlayList(){
 		File home = new File(MEDIA_PATH);
 
 		if (home.listFiles(new FileExtensionFilter()).length > 0) {
@@ -35,11 +46,11 @@ public class SongsManager {
 		// return songs list array
 		return songsList;
 	}
-	
-	/**
-	 * Class to filter files which are having .mp3 extension
-	 * */
-	class FileExtensionFilter implements FilenameFilter {
+
+    /**
+     * Class to filter files which are having .mp3 extension
+     */
+    class FileExtensionFilter implements FilenameFilter {
 		public boolean accept(File dir, String name) {
 			return (name.endsWith(".mp3") || name.endsWith(".MP3"));
 		}

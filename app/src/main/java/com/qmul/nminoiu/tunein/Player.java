@@ -11,7 +11,6 @@ import java.io.IOException;
 /**
  * Created by nicoledumitrascu on 18/06/2017.
  */
-
 class Player extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog progress;
     private MediaPlayer mediaPlayer;
@@ -88,7 +87,10 @@ class Player extends AsyncTask<String, Void, Boolean> {
 
     }
 
-   // @Override
+    /**
+     * On pause.
+     */
+// @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         //super.onPause();

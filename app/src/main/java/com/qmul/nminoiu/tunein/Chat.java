@@ -49,13 +49,46 @@ import java.util.Scanner;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 
+/**
+ * The type Chat.
+ */
 public class Chat extends AppCompatActivity {
+    /**
+     * The Layout.
+     */
     LinearLayout layout;
+    /**
+     * The Send button.
+     */
     ImageView sendButton;
+    /**
+     * The Message area.
+     */
     EditText messageArea;
+    /**
+     * The Scroll view.
+     */
     ScrollView scrollView;
-    Firebase reference1, reference2, reference3, refFriend, refMe;
+    /**
+     * The Reference 1.
+     */
+    Firebase reference1, /**
+     * The Reference 2.
+     */
+    reference2, /**
+     * The Reference 3.
+     */
+    reference3, /**
+     * The Ref friend.
+     */
+    refFriend, /**
+     * The Ref me.
+     */
+    refMe;
     private LinearLayout play_toolbar;
+    /**
+     * The Track title.
+     */
     public TextView track_title;
     private Button btn;
     private FirebaseAuth firebaseAuth1;
@@ -69,6 +102,9 @@ public class Chat extends AppCompatActivity {
     private String value;
     private String sender;
     private String ID;
+    /**
+     * The Active.
+     */
     static boolean active = false;
     private Toolbar toolbar;
     private LinearLayout backgroundLayout;
@@ -494,11 +530,23 @@ public class Chat extends AppCompatActivity {
     private void checkPreviousMessages(String chatWith, String username) {
     }
 
+    /**
+     * Encode string string.
+     *
+     * @param string the string
+     * @return the string
+     */
     public static String EncodeString(String string) {
         String nst = string.replace("@", "");
         return nst.replace(".", "");
     }
 
+    /**
+     * Decode string string.
+     *
+     * @param string the string
+     * @return the string
+     */
     public static String DecodeString(String string) {
         return string.replace("", "@");
     }
@@ -689,6 +737,12 @@ public class Chat extends AppCompatActivity {
 
     }
 
+    /**
+     * Add message box.
+     *
+     * @param message the message
+     * @param type    the type
+     */
     public void addMessageBox(String message, int type){
         TextView textView = new TextView(Chat.this);
 
@@ -896,6 +950,11 @@ public class Chat extends AppCompatActivity {
             });
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -904,6 +963,12 @@ public class Chat extends AppCompatActivity {
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    /**
+     * Start music.
+     *
+     * @param link the link
+     * @param song the song
+     */
     public void startMusic(String link, String song) {
         play_toolbar.setVisibility(View.VISIBLE);
         play_toolbar.bringToFront();
@@ -930,11 +995,20 @@ public class Chat extends AppCompatActivity {
 
     }
 
+    /**
+     * Update progress bar.
+     */
     public void updateProgressBar() {
         RealTimeActivity sa = new RealTimeActivity();
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -968,6 +1042,9 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -995,6 +1072,12 @@ public class Chat extends AppCompatActivity {
     }
 
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -1036,6 +1119,11 @@ public class Chat extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -1049,6 +1137,11 @@ public class Chat extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         play_toolbar.setVisibility(View.VISIBLE);
@@ -1075,6 +1168,9 @@ public class Chat extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa =  new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
@@ -1232,6 +1328,11 @@ public class Chat extends AppCompatActivity {
         }
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(Chat.this, MusicPlayerActivity.class);
         startActivity(i);

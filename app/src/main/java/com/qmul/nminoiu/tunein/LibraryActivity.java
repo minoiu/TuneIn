@@ -39,16 +39,25 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Library activity.
+ */
 public class LibraryActivity extends AppCompatActivity{
 
     private ListView recentSongs;
     private ArrayList<String> recents = new ArrayList<>();
     private DatabaseReference recentsRef;
+    /**
+     * The Id.
+     */
     public String ID;
     private FirebaseAuth firebaseAuth;
     private ArrayAdapter<String> recentsadapter;
     private AdapterRecentlyplayed adapterRecentlyplayed;
     private String song;
+    /**
+     * The constant track_title.
+     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
@@ -62,6 +71,9 @@ public class LibraryActivity extends AppCompatActivity{
     private RelativeLayout favourites;
     private RelativeLayout songs;
     private GestureDetector gestureDetector;
+    /**
+     * The Gesture listener.
+     */
     View.OnTouchListener gestureListener;
     private SimpleGestureFilter detector;
     private DatabaseReference mDatabase;
@@ -291,6 +303,11 @@ public class LibraryActivity extends AppCompatActivity{
         finish();
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -299,6 +316,12 @@ public class LibraryActivity extends AppCompatActivity{
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    /**
+     * Start music.
+     *
+     * @param link the link
+     * @param song the song
+     */
     public void startMusic(String link, String song) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -323,11 +346,19 @@ public class LibraryActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Update progress bar.
+     */
     public void updateProgressBar() {
         RealTimeActivity sa = new RealTimeActivity();
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
+    /**
+     * Gets url.
+     *
+     * @param song the song
+     */
     public void getUrl(String song) {
 
             Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -351,6 +382,12 @@ public class LibraryActivity extends AppCompatActivity{
             });
         }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         ///
@@ -380,6 +417,11 @@ public class LibraryActivity extends AppCompatActivity{
         });
     }
 
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
     public void eraseFromRecents(String mysong) {
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -409,6 +451,12 @@ public class LibraryActivity extends AppCompatActivity{
         addToHome(UserDetails.myFollowers, mysong);
     }
 
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
     public String getMyFullname(String id) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -430,12 +478,20 @@ public class LibraryActivity extends AppCompatActivity{
     }
 
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -461,6 +517,12 @@ public class LibraryActivity extends AppCompatActivity{
         });
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -502,6 +564,11 @@ public class LibraryActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -515,6 +582,11 @@ public class LibraryActivity extends AppCompatActivity{
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -539,6 +611,9 @@ public class LibraryActivity extends AppCompatActivity{
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
@@ -568,6 +643,12 @@ public class LibraryActivity extends AppCompatActivity{
         addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
     }
 
+    /**
+     * Add to friend activity.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToFriendActivity(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -609,6 +690,11 @@ public class LibraryActivity extends AppCompatActivity{
     }
 
 
+    /**
+     * Get bar title string.
+     *
+     * @return the string
+     */
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }

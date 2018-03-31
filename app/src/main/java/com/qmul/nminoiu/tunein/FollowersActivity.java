@@ -36,13 +36,27 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 /**
  * Created by nicoleta on 11/10/2017.
  */
-
 public class FollowersActivity extends AppCompatActivity {
+    /**
+     * The No users text.
+     */
     TextView noUsersText;
+    /**
+     * The Al.
+     */
     ArrayList<String> al = new ArrayList<>();
+    /**
+     * The Total users.
+     */
     int totalUsers = 0;
-    // ProgressDialog pd;
+    /**
+     * The Users list.
+     */
+// ProgressDialog pd;
     ListView usersList;
+    /**
+     * The Users.
+     */
     ArrayList<String> users = new ArrayList<>();
     private AdapterFollowers uadapter;
     private DatabaseReference db;

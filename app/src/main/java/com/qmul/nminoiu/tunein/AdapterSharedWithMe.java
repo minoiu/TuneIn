@@ -44,13 +44,18 @@ import java.util.Scanner;
 /**
  * Created by nicoleta on 16/10/2017.
  */
-
 public class AdapterSharedWithMe extends BaseAdapter {
 
     private Context mContext;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseStorage mStorage;
+    /**
+     * The Storage path.
+     */
     public File storagePath;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Menu menu;
@@ -67,13 +72,25 @@ public class AdapterSharedWithMe extends BaseAdapter {
     private LinearLayout searchLayout;
 
 
+    /**
+     * Instantiates a new Adapter shared with me.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public AdapterSharedWithMe(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 
@@ -445,6 +462,11 @@ public class AdapterSharedWithMe extends BaseAdapter {
         playRef.push().setValue(song);
     }
 
+    /**
+     * Update list.
+     *
+     * @param newlist the newlist
+     */
     public void updateList(List<RowItem> newlist) {
         rowItems.clear();
         rowItems.addAll(newlist);

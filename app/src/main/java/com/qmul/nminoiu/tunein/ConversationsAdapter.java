@@ -17,22 +17,42 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 /**
  * Created by nicoleta on 17/12/2017.
  */
-
 public class ConversationsAdapter extends BaseAdapter{
 
     private Context mContext;
+    /**
+     * The Drow items.
+     */
     List<DoubleRow> drowItems;
     private RelativeLayout buttons;
 
+    /**
+     * Instantiates a new Conversations adapter.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public ConversationsAdapter(Context context, List<DoubleRow> items) {
         mContext = context;
         this.drowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
+        /**
+         * The Sub title.
+         */
         TextView subTitle;
+        /**
+         * The Message.
+         */
         TextView message;
 
 

@@ -27,13 +27,22 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * The type Delete song test.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class DeleteSongTest {
 
+    /**
+     * The M activity test rule.
+     */
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
+    /**
+     * Delete song test.
+     */
     @Test
     public void deleteSongTest() {
         // Added a sleep statement to match the app's execution delay.

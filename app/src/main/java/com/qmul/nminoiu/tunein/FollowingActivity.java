@@ -24,13 +24,27 @@ import java.util.List;
 /**
  * Created by nicoleta on 26/10/2017.
  */
-
 public class FollowingActivity extends AppCompatActivity {
+    /**
+     * The No users text.
+     */
     TextView noUsersText;
+    /**
+     * The Al.
+     */
     ArrayList<String> al = new ArrayList<>();
+    /**
+     * The Total users.
+     */
     int totalUsers = 0;
-    // ProgressDialog pd;
+    /**
+     * The Following list.
+     */
+// ProgressDialog pd;
     ListView followingList;
+    /**
+     * The Users.
+     */
     ArrayList<String> users = new ArrayList<>();
     private AdapterFollowing uadapter;
     private DatabaseReference db;
@@ -40,6 +54,9 @@ public class FollowingActivity extends AppCompatActivity {
     private DatabaseReference mDatabase3;
     private LinearLayout play_toolbar;
     private LinearLayout searchLayout;
+    /**
+     * The Search view.
+     */
     MaterialSearchView searchView;
     private List<RowItem> rowItems;
 

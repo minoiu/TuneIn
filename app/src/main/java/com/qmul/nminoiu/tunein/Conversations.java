@@ -36,12 +36,30 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Conversations.
+ */
 public class Conversations extends AppCompatActivity {
+    /**
+     * The No users text.
+     */
     TextView noUsersText;
+    /**
+     * The Al.
+     */
     ArrayList<String> al = new ArrayList<>();
+    /**
+     * The Total users.
+     */
     int totalUsers = 0;
-    // ProgressDialog pd;
+    /**
+     * The Conv list.
+     */
+// ProgressDialog pd;
     ListView convList;
+    /**
+     * The Conversations ar list.
+     */
     ArrayList<String> conversationsArList = new ArrayList<>();
     private ArrayAdapter<String> cadapter;
     private DatabaseReference db;
@@ -49,6 +67,9 @@ public class Conversations extends AppCompatActivity {
     private DatabaseReference mDatabase1;
     private DatabaseReference ref;
 
+    /**
+     * The Recents ref.
+     */
     Firebase recentsRef;
     private ConversationsAdapter adapter;
     private List<String> fromList;
@@ -56,6 +77,9 @@ public class Conversations extends AppCompatActivity {
     private List<String> messageList;
 
     private String song;
+    /**
+     * The constant track_title.
+     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
@@ -67,6 +91,9 @@ public class Conversations extends AppCompatActivity {
     private String value;
     private String sender;
     private Toolbar toolbar;
+    /**
+     * The Drow item.
+     */
     List<DoubleRow> drowItem;
 
 
@@ -346,6 +373,9 @@ public class Conversations extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -372,6 +402,12 @@ public class Conversations extends AppCompatActivity {
     }
 
 
+    /**
+     * Start music.
+     *
+     * @param link the link
+     * @param song the song
+     */
     public void startMusic(String link, String song) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -396,11 +432,20 @@ public class Conversations extends AppCompatActivity {
 //        }
     }
 
+    /**
+     * Update progress bar.
+     */
     public void updateProgressBar() {
         RealTimeActivity sa = new RealTimeActivity();
         mHandler.postDelayed(sa.mUpdateTimeTask, 100);
     }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -434,11 +479,22 @@ public class Conversations extends AppCompatActivity {
         });
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(Conversations.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -468,6 +524,11 @@ public class Conversations extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -483,6 +544,11 @@ public class Conversations extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -507,6 +573,9 @@ public class Conversations extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
@@ -540,6 +609,11 @@ public class Conversations extends AppCompatActivity {
 
     }
 
+    /**
+     * Get bar title string.
+     *
+     * @return the string
+     */
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }

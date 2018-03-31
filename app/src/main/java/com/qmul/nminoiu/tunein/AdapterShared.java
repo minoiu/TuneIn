@@ -41,14 +41,19 @@ import static com.qmul.nminoiu.tunein.UserDetails.song;
 /**
  * Created by nicoleta on 16/10/2017.
  */
-
 public class AdapterShared extends BaseAdapter {
 
         private Context mContext;
-        List<RowItem> rowItems;
+    /**
+     * The Row items.
+     */
+    List<RowItem> rowItems;
         private RelativeLayout buttons;
         private FirebaseStorage mStorage;
-        public File storagePath;
+    /**
+     * The Storage path.
+     */
+    public File storagePath;
         private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         private String ID = firebaseAuth.getCurrentUser().getUid();
         private Menu menu;
@@ -61,13 +66,25 @@ public class AdapterShared extends BaseAdapter {
         private LinearLayout searchLayout;
 
 
-        public AdapterShared(Context context, List<RowItem> items) {
+    /**
+     * Instantiates a new Adapter shared.
+     *
+     * @param context the context
+     * @param items   the items
+     */
+    public AdapterShared(Context context, List<RowItem> items) {
             mContext = context;
             this.rowItems = items;
         }
 
         private class ViewHolder {
+            /**
+             * The Image view.
+             */
             ImageView imageView;
+            /**
+             * The Txt title.
+             */
             TextView txtTitle;
         }
 
@@ -364,7 +381,12 @@ public class AdapterShared extends BaseAdapter {
             playRef.push().setValue(song);
         }
 
-        public void updateList(List<RowItem> newlist) {
+    /**
+     * Update list.
+     *
+     * @param newlist the newlist
+     */
+    public void updateList(List<RowItem> newlist) {
             rowItems.clear();
             rowItems.addAll(newlist);
             this.notifyDataSetChanged();

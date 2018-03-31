@@ -29,24 +29,37 @@ import static com.qmul.nminoiu.tunein.R.id.track_title;
 /**
  * Created by nicoleta on 16/10/2017.
  */
-
 public class CustomSharedAdapter extends BaseAdapter {
 
     private Context mContext;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private String ID = firebaseAuth.getCurrentUser().getUid();
 
 
-
+    /**
+     * Instantiates a new Custom shared adapter.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public CustomSharedAdapter(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 

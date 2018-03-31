@@ -1,14 +1,20 @@
 package com.qmul.nminoiu.tunein;
 
 
+/**
+ * The type Utilities.
+ */
 public class Utilities {
-	
-	/**
-	 * Function to convert milliseconds time to
-	 * Timer Format
-	 * Hours:Minutes:Seconds
-	 * */
-	public String milliSecondsToTimer(long milliseconds){
+
+    /**
+     * Function to convert milliseconds time to
+     * Timer Format
+     * Hours:Minutes:Seconds
+     *
+     * @param milliseconds the milliseconds
+     * @return the string
+     */
+    public String milliSecondsToTimer(long milliseconds){
 		String finalTimerString = "";
 		String secondsString = "";
 		
@@ -32,13 +38,15 @@ public class Utilities {
 		// return timer string
 		return finalTimerString;
 	}
-	
-	/**
-	 * Function to get Progress percentage
-	 * @param currentDuration
-	 * @param totalDuration
-	 * */
-	public int getProgressPercentage(long currentDuration, long totalDuration){
+
+    /**
+     * Function to get Progress percentage
+     *
+     * @param currentDuration the current duration
+     * @param totalDuration   the total duration
+     * @return the int
+     */
+    public int getProgressPercentage(long currentDuration, long totalDuration){
 		Double percentage = (double) 0;
 		
 		long currentSeconds = (int) (currentDuration / 1000);
@@ -51,13 +59,14 @@ public class Utilities {
 		return percentage.intValue();
 	}
 
-	/**
-	 * Function to change progress to timer
-	 * @param progress - 
-	 * @param totalDuration
-	 * returns current duration in milliseconds
-	 * */
-	public int progressToTimer(int progress, int totalDuration) {
+    /**
+     * Function to change progress to timer
+     *
+     * @param progress      -
+     * @param totalDuration returns current duration in milliseconds
+     * @return the int
+     */
+    public int progressToTimer(int progress, int totalDuration) {
 		int currentDuration = 0;
 		totalDuration = (int) (totalDuration / 1000);
 		currentDuration = (int) ((((double)progress) / 100) * totalDuration);

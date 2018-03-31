@@ -10,6 +10,7 @@ import com.onesignal.OSNotification;
 import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
+
 /**
  * Created by nicoleta on 30/09/2017.
  */

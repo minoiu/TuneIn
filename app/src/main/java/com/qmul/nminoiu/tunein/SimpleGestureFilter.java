@@ -9,15 +9,39 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
+/**
+ * The type Simple gesture filter.
+ */
 public class SimpleGestureFilter extends SimpleOnGestureListener{
 
+    /**
+     * The constant SWIPE_UP.
+     */
     public final static int SWIPE_UP    = 1;
+    /**
+     * The constant SWIPE_DOWN.
+     */
     public final static int SWIPE_DOWN  = 2;
+    /**
+     * The constant SWIPE_LEFT.
+     */
     public final static int SWIPE_LEFT  = 3;
+    /**
+     * The constant SWIPE_RIGHT.
+     */
     public final static int SWIPE_RIGHT = 4;
 
+    /**
+     * The constant MODE_TRANSPARENT.
+     */
     public final static int MODE_TRANSPARENT = 0;
+    /**
+     * The constant MODE_SOLID.
+     */
     public final static int MODE_SOLID       = 1;
+    /**
+     * The constant MODE_DYNAMIC.
+     */
     public final static int MODE_DYNAMIC     = 2;
 
     private final static int ACTION_FAKE = -13; //just an unlikely number
@@ -33,6 +57,12 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
     private GestureDetector detector;
     private SimpleGestureListener listener;
 
+    /**
+     * Instantiates a new Simple gesture filter.
+     *
+     * @param context the context
+     * @param sgl     the sgl
+     */
     public SimpleGestureFilter(Activity context,SimpleGestureListener sgl) {
 
         this.context = context;
@@ -40,6 +70,11 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
         this.listener = sgl;
     }
 
+    /**
+     * On touch event.
+     *
+     * @param event the event
+     */
     public void onTouchEvent(MotionEvent event){
 
         if(!this.running)
@@ -64,38 +99,83 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
         //else just do nothing, it's Transparent
     }
 
+    /**
+     * Set mode.
+     *
+     * @param m the m
+     */
     public void setMode(int m){
         this.mode = m;
     }
 
+    /**
+     * Get mode int.
+     *
+     * @return the int
+     */
     public int getMode(){
         return this.mode;
     }
 
+    /**
+     * Set enabled.
+     *
+     * @param status the status
+     */
     public void setEnabled(boolean status){
         this.running = status;
     }
 
+    /**
+     * Set swipe max distance.
+     *
+     * @param distance the distance
+     */
     public void setSwipeMaxDistance(int distance){
         this.swipe_Max_Distance = distance;
     }
 
+    /**
+     * Set swipe min distance.
+     *
+     * @param distance the distance
+     */
     public void setSwipeMinDistance(int distance){
         this.swipe_Min_Distance = distance;
     }
 
+    /**
+     * Set swipe min velocity.
+     *
+     * @param distance the distance
+     */
     public void setSwipeMinVelocity(int distance){
         this.swipe_Min_Velocity = distance;
     }
 
+    /**
+     * Get swipe max distance int.
+     *
+     * @return the int
+     */
     public int getSwipeMaxDistance(){
         return this.swipe_Max_Distance;
     }
 
+    /**
+     * Get swipe min distance int.
+     *
+     * @return the int
+     */
     public int getSwipeMinDistance(){
         return this.swipe_Min_Distance;
     }
 
+    /**
+     * Get swipe min velocity int.
+     *
+     * @return the int
+     */
     public int getSwipeMinVelocity(){
         return this.swipe_Min_Velocity;
     }
@@ -162,8 +242,20 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
         return false;
     }
 
+    /**
+     * The interface Simple gesture listener.
+     */
     static interface SimpleGestureListener{
+        /**
+         * On swipe.
+         *
+         * @param direction the direction
+         */
         void onSwipe(int direction);
+
+        /**
+         * On double tap.
+         */
         void onDoubleTap();
     }
 

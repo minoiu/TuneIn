@@ -35,6 +35,9 @@ import java.util.List;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Playlists activity.
+ */
 public class PlaylistsActivity extends AppCompatActivity {
 
     private String song;
@@ -1218,6 +1221,11 @@ public class PlaylistsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -1226,6 +1234,11 @@ public class PlaylistsActivity extends AppCompatActivity {
                 new View(this).getWindowToken(), 0);
     }
 
+    /**
+     * Get bar title string.
+     *
+     * @return the string
+     */
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }

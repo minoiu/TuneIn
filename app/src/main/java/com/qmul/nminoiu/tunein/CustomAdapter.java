@@ -21,20 +21,34 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 /**
  * Created by nminoiu on 15/08/2017.
  */
-
-    public class CustomAdapter extends BaseAdapter {
+public class CustomAdapter extends BaseAdapter {
 
         private Context mContext;
-        List<RowItem> rowItems;
+    /**
+     * The Row items.
+     */
+    List<RowItem> rowItems;
         private RelativeLayout buttons;
 
+    /**
+     * Instantiates a new Custom adapter.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public CustomAdapter(Context context, List<RowItem> items) {
             mContext = context;
             this.rowItems = items;
         }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 

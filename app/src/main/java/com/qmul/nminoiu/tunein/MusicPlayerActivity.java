@@ -34,10 +34,16 @@ import com.google.firebase.database.ValueEventListener;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 
+/**
+ * The type Music player activity.
+ */
 public class MusicPlayerActivity extends Activity implements OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
 	private ImageButton btnPlay;
-	public String ID;
+    /**
+     * The Id.
+     */
+    public String ID;
 	private ImageButton btnForward;
 	private ImageButton btnBackward;
 	private ImageButton btnNext;
@@ -52,10 +58,22 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 
 
 	private RelativeLayout layout;
-	public static SeekBar songProgressBar;
-	public static TextView songTitleLabel;
-	public static TextView songCurrentDurationLabel;
-	public static TextView songTotalDurationLabel;
+    /**
+     * The constant songProgressBar.
+     */
+    public static SeekBar songProgressBar;
+    /**
+     * The constant songTitleLabel.
+     */
+    public static TextView songTitleLabel;
+    /**
+     * The constant songCurrentDurationLabel.
+     */
+    public static TextView songCurrentDurationLabel;
+    /**
+     * The constant songTotalDurationLabel.
+     */
+    public static TextView songTotalDurationLabel;
 	// Media Player
 //	makeprivate MediaPlayer mp;
 	// Handler to update UI timer, progress bar etc,.
@@ -69,8 +87,14 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
 	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-	public static ArrayList<String> songs = new ArrayList<>();
-	public static ArrayList<String> urls = new ArrayList<>();
+    /**
+     * The constant songs.
+     */
+    public static ArrayList<String> songs = new ArrayList<>();
+    /**
+     * The constant urls.
+     */
+    public static ArrayList<String> urls = new ArrayList<>();
     private String songTitle;
     private String activity;
     private Intent i;
@@ -806,12 +830,12 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 //        }
 //    }
 
-		/**
-		 * Function to play a song
-		 * @param songIndex - index of song
-		 * */
-
-	public void playSong(final int songIndex) {
+    /**
+     * Function to play a song
+     *
+     * @param songIndex - index of song
+     */
+    public void playSong(final int songIndex) {
 
 		//btnPlay.setImageResource(R.drawable.btn_pause);
 
@@ -869,7 +893,13 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		}
 	}
 
-	public void getFollowers(String fullname, final String mysong) {
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
+    public void getFollowers(String fullname, final String mysong) {
 
 		///
 		final ArrayAdapter<String> fadapter;
@@ -898,7 +928,12 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		});
 	}
 
-	public void eraseFromRecents(String mysong) {
+    /**
+     * Erase from recents.
+     *
+     * @param mysong the mysong
+     */
+    public void eraseFromRecents(String mysong) {
 		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
 		mDatabase1.addListenerForSingleValueEvent(
 				new ValueEventListener() {
@@ -927,7 +962,13 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		addToHome(UserDetails.myFollowers, mysong);
 	}
 
-	public String getMyFullname(String id) {
+    /**
+     * Gets my fullname.
+     *
+     * @param id the id
+     * @return the my fullname
+     */
+    public String getMyFullname(String id) {
 
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
 
@@ -948,7 +989,13 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 	}
 
 
-	public void addToHome(List<String> myvalue, final String mysong) {
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
+    public void addToHome(List<String> myvalue, final String mysong) {
 
 		String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 		DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -990,8 +1037,10 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 	}
 
 
-
-	public void eraseFromFirebase() {
+    /**
+     * Erase from firebase.
+     */
+    public void eraseFromFirebase() {
 		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
 		mDatabase1.addListenerForSingleValueEvent(
 				new ValueEventListener() {
@@ -1020,7 +1069,13 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
 	}
 
-	public void addToFriendActivity(List<String> myvalue, final String mysong) {
+    /**
+     * Add to friend activity.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
+    public void addToFriendActivity(List<String> myvalue, final String mysong) {
 
 		String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 		DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -1061,8 +1116,13 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 	}
 
 
-
-	public void repeatSong(int songIndex, String songName) {
+    /**
+     * Repeat song.
+     *
+     * @param songIndex the song index
+     * @param songName  the song name
+     */
+    public void repeatSong(int songIndex, String songName) {
 
 		//btnPlay.setImageResource(R.drawable.btn_pause);
 
@@ -1102,10 +1162,10 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		}
 	}
 
-	/**
-	 * Update timer on seekbar
-	 */
-	public void updateProgressBar() {
+    /**
+     * Update timer on seekbar
+     */
+    public void updateProgressBar() {
 		mHandler.postDelayed(mUpdateTimeTask, 100);
 	}
 
@@ -1198,7 +1258,10 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		updateProgressBar();
 	}
 
-	public void showSong(){
+    /**
+     * Show song.
+     */
+    public void showSong(){
 
 	}
 

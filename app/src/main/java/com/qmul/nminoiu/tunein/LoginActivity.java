@@ -63,11 +63,17 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Button forgotPassword;
     private FirebaseUser user;
-    //TextView mConditionTextView;
+    /**
+     * The constant loggedEmail.
+     */
+//TextView mConditionTextView;
     public static String loggedEmail;
     private DatabaseReference mDatabase;
     private String ID;
     private Handler mHandler = new Handler();
+    /**
+     * The constant mediaPlayer.
+     */
     public static MediaPlayer mediaPlayer;
 
 
@@ -139,6 +145,11 @@ public class LoginActivity extends AppCompatActivity {
 //        }}
     }
 
+    /**
+     * Forgot password.
+     *
+     * @param v the v
+     */
     public void forgotPassword(View v) {
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -163,6 +174,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Signin.
+     *
+     * @param v the v
+     */
     public void signin(View v) {
 
         final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
@@ -201,6 +217,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Register.
+     *
+     * @param view the view
+     */
     public void register(View view) {
         Intent nextActivity = new Intent(this, RegisterActivity.class);
         startActivity(nextActivity);

@@ -32,13 +32,22 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * The type Collaborative playlists test.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class CollaborativePlaylistsTest {
 
+    /**
+     * The M activity test rule.
+     */
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
+    /**
+     * Collaborative playlists test.
+     */
     @Test
     public void collaborativePlaylistsTest() {
         // Added a sleep statement to match the app's execution delay.

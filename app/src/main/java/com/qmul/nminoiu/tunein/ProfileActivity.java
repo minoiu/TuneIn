@@ -43,9 +43,11 @@ import static com.qmul.nminoiu.tunein.UserDetails.username;
 /**
  * Created by nicoledumitrascu on 30/06/2017.
  */
-
 public class ProfileActivity extends AppCompatActivity {
 
+    /**
+     * The constant fullname.
+     */
     public static String fullname;
     private DatabaseReference mDatabase;
     private DatabaseReference followersdb;
@@ -489,6 +491,11 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get date string.
+     *
+     * @return the string
+     */
     public String getDate(){
         Date date = new Date();
         Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
@@ -498,6 +505,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Gets picture.
+     *
+     * @param friendID the friend id
+     */
     public void getPicture(final String friendID) {
         Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase picture1 = picture.child("ProfilePictures");

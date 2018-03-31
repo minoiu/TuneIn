@@ -29,13 +29,22 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * The type Add to playlist test.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class AddToPlaylistTest {
 
+    /**
+     * The M activity test rule.
+     */
     @Rule
     public ActivityTestRule<LogoActivity> mActivityTestRule = new ActivityTestRule<>(LogoActivity.class);
 
+    /**
+     * Add to playlist test.
+     */
     @Test
     public void addToPlaylistTest() {
         // Added a sleep statement to match the app's execution delay.

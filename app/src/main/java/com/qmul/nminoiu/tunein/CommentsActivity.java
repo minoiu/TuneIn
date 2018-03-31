@@ -18,7 +18,6 @@ import java.util.Calendar;
 /**
  * Created by nminoiu on 05/07/2017.
  */
-
 public class CommentsActivity extends AppCompatActivity {
     private PopupWindow popWindow;
 
@@ -29,7 +28,12 @@ public class CommentsActivity extends AppCompatActivity {
 
     }
 
-    // call this method when required to show popup
+    /**
+     * On show popup.
+     *
+     * @param v the v
+     */
+// call this method when required to show popup
     public void onShowPopup(View v){
 
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,6 +68,11 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Set simple list.
+     *
+     * @param listView the list view
+     */
     void setSimpleList(ListView listView){
 
         ArrayList<String> contactsList = new ArrayList<String>();

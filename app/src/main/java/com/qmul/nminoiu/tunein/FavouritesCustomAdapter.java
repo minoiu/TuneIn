@@ -17,20 +17,34 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 /**
  * Created by nicoleta on 20/10/2017.
  */
-
 public class FavouritesCustomAdapter extends BaseAdapter {
 
     private Context mContext;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
     private RelativeLayout buttons;
 
+    /**
+     * Instantiates a new Favourites custom adapter.
+     *
+     * @param context the context
+     * @param items   the items
+     */
     public FavouritesCustomAdapter(Context context, List<RowItem> items) {
         mContext = context;
         this.rowItems = items;
     }
 
     private class ViewHolder {
+        /**
+         * The Image view.
+         */
         ImageView imageView;
+        /**
+         * The Txt title.
+         */
         TextView txtTitle;
     }
 

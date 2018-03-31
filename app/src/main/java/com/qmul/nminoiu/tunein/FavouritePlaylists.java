@@ -39,9 +39,15 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type Favourite playlists.
+ */
 public class FavouritePlaylists extends AppCompatActivity {
 
     private ListView playlistList;
+    /**
+     * The Songs.
+     */
     ArrayList<String> songs = new ArrayList<>();
     private ArrayAdapter<String> sadapter;
     private ArrayAdapter<String> songssadapter;
@@ -308,6 +314,12 @@ public class FavouritePlaylists extends AppCompatActivity {
         }
 
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -341,12 +353,20 @@ public class FavouritePlaylists extends AppCompatActivity {
         });
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(FavouritePlaylists.this, MusicPlayerActivity.class);
         startActivity(i);
     }
 
 
+    /**
+     * Gets fullname.
+     */
     public void getFullname() {
 
         FirebaseAuth fb;
@@ -372,6 +392,12 @@ public class FavouritePlaylists extends AppCompatActivity {
         });
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -401,6 +427,11 @@ public class FavouritePlaylists extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -414,6 +445,11 @@ public class FavouritePlaylists extends AppCompatActivity {
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -438,6 +474,9 @@ public class FavouritePlaylists extends AppCompatActivity {
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");

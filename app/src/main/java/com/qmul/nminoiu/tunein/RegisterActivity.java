@@ -31,6 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Register activity.
+ */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button signup_button;
@@ -39,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private AutoCompleteTextView email_register;
     private EditText password;
     private TextView textViewSignin;
+    /**
+     * The constant fullname.
+     */
     public static String fullname;
 
     private ProgressDialog progressDialog;
@@ -82,6 +88,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Signin.
+     *
+     * @param view the view
+     */
     public void signin(View view) {
         Intent nextActivity = new Intent(this, LoginActivity.class);
         startActivity(nextActivity);

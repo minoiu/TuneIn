@@ -41,6 +41,9 @@ import java.util.Map;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
+/**
+ * The type My playlists.
+ */
 public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private String playlistname;
@@ -59,10 +62,16 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private CustomSharedAdapter adapter1;
 
     private ImageView icon;
+    /**
+     * The Buttons.
+     */
     public RelativeLayout buttons;
     private FloatingActionButton fab;
     private FloatingActionButton fab1;
 
+    /**
+     * The constant track_title.
+     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private LinearLayout laypl;
@@ -72,15 +81,29 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
     private RelativeLayout sharedWithMeLayout;
 
 
-
+    /**
+     * The constant titles.
+     */
     public static final String[] titles = new String[] { "Strawberry",
             "Banana", "Orange", "Mixed" };
 
+    /**
+     * The constant images.
+     */
     public static final Integer[] images = { R.drawable.options,
             R.drawable.options, R.drawable.options, R.drawable.options };
 
+    /**
+     * The List view.
+     */
     ListView listView;
+    /**
+     * The Row items.
+     */
     List<RowItem> rowItems;
+    /**
+     * The Row items 1.
+     */
     List<RowItem> rowItems1;
 
 
@@ -707,6 +730,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         return super.onMenuOpened(featureId, menu);
     }
 
+    /**
+     * Show menu.
+     *
+     * @param img the img
+     */
     public void showMenu(ImageView img){
        img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -716,6 +744,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    /**
+     * Hide soft keyboard.
+     *
+     * @param activity the activity
+     */
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -724,6 +757,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    /**
+     * Play from pause.
+     *
+     * @param time the time
+     */
     public void playFromPause(Integer time) {
 
         mediaPlayer.seekTo(time);
@@ -737,6 +775,12 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
+    /**
+     * Gets followers.
+     *
+     * @param fullname the fullname
+     * @param mysong   the mysong
+     */
     public void getFollowers(String fullname, final String mysong) {
 
         final ArrayAdapter<String> fadapter;
@@ -770,6 +814,12 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    /**
+     * Add to home.
+     *
+     * @param myvalue the myvalue
+     * @param mysong  the mysong
+     */
     public void addToHome(List<String> myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -799,6 +849,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
+    /**
+     * Play pause music.
+     *
+     * @param v the v
+     */
     public void playPauseMusic(View v) {
 
         Integer length = mediaPlayer.getCurrentPosition();
@@ -823,6 +878,9 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
 //            new MusicPlayerActivity().updateProgressBar();
     }
 
+    /**
+     * Erase from firebase.
+     */
     public void eraseFromFirebase() {
         final RealTimeActivity sa = new RealTimeActivity();
         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
@@ -901,6 +959,11 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    /**
+     * Open player page.
+     *
+     * @param v the v
+     */
     public void openPlayerPage(View v) {
         Intent i = new Intent(MyPlaylists.this, MusicPlayerActivity.class);
         startActivity(i);
