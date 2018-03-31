@@ -44,16 +44,10 @@ import static com.qmul.nminoiu.tunein.UserDetails.song;
 public class AdapterShared extends BaseAdapter {
 
         private Context mContext;
-    /**
-     * The Row items.
-     */
-    List<RowItem> rowItems;
+        List<RowItem> rowItems;
         private RelativeLayout buttons;
         private FirebaseStorage mStorage;
-    /**
-     * The Storage path.
-     */
-    public File storagePath;
+        public File storagePath;
         private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         private String ID = firebaseAuth.getCurrentUser().getUid();
         private Menu menu;
@@ -61,10 +55,7 @@ public class AdapterShared extends BaseAdapter {
         private DatabaseReference lovedSongsRef;
         private DatabaseReference delSongRef;
         private String sender;
-
-
         private LinearLayout searchLayout;
-
 
     /**
      * Instantiates a new Adapter shared.
@@ -78,79 +69,63 @@ public class AdapterShared extends BaseAdapter {
         }
 
         private class ViewHolder {
-            /**
-             * The Image view.
-             */
             ImageView imageView;
-            /**
-             * The Txt title.
-             */
             TextView txtTitle;
         }
 
+        //return no of rown
         @Override
         public int getCount() {
             return rowItems.size();
         }
 
+        //return row from position
         @Override
         public Object getItem(int position) {
             return rowItems.get(position);
         }
 
+        //return index from position
         @Override
         public long getItemId(int position) {
             return rowItems.indexOf(getItem(position));
         }
 
+        //handling click on shared playlists
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent) {
 
             com.qmul.nminoiu.tunein.AdapterShared.ViewHolder holder = null;
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.row, null);
                 holder = new com.qmul.nminoiu.tunein.AdapterShared.ViewHolder();
                 holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
                 holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-
                 convertView.setTag(holder);
             } else {
                 holder = (com.qmul.nminoiu.tunein.AdapterShared.ViewHolder) convertView.getTag();
             }
 
             final RowItem rowItem = (RowItem) getItem(position);
-
             holder.txtTitle.setText(rowItem.getTitle());
             holder.imageView.setImageResource(rowItem.getImageId());
-
-            MyPlaylists mp = new MyPlaylists();
             UserDetails.dwn = false;
             UserDetails.liked = false;
             searchLayout = (LinearLayout) convertView.findViewById(R.id.searchLayout);
             sender = firebaseAuth.getCurrentUser().getEmail();
-            //final String playlist = ((Songs) mContext).getBarTitle();
 
-
-
-            // mp.showMenu(holder.imageView);
-
-            //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
+            //click on shared icon
             try {
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final String playlist = ((PlaylistSongs) mContext).getBarTitle();
-
                             FirebaseAuth fb;
                             fb = FirebaseAuth.getInstance();
-
                             String ID;
                             ID = fb.getCurrentUser().getUid();
-
                             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
                             mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -159,21 +134,18 @@ public class AdapterShared extends BaseAdapter {
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
                                 }
 
                             });
 
-
+                        //retrieve friend id from Firebase
                         final String friend = rowItem.getTitle();
                         DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
 
                         mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                             @Override
                             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                                // UserDetails.fullname = dataSnapshot.getValue().toString();
                                 UserDetails.username = dataSnapshot.getValue().toString();
-                                //Toast.makeText(mContext, "friend id is " + UserDetails.username, Toast.LENGTH_SHORT).show();
                                 DatabaseReference delSharedPlRef = FirebaseDatabase.getInstance().getReference().child("PlaylistsInvites").child(UserDetails.username);
                                 delSharedPlRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -187,20 +159,10 @@ public class AdapterShared extends BaseAdapter {
                                                     String play = s.getValue().toString();
                                                     if(play.equals(playlist)){
                                                         String key1 = s.getKey().toString();
-                                                        //Toast.makeText(mContext, "last key is "+ key1, Toast.LENGTH_SHORT).show();
-
                                                         dataSnapshot.child(UserDetails.fullname).child(key1).getRef().removeValue();
                                                     }
                                                 }
-
                                             }
-//
-// String playlistSh = dataSnapshot.child(ID).child(friend).child(key).getValue().toString();
-//                        if (playlistSh.equals(oldPlaylist)) {
-//                            dataSnapshot.child(ID).child(friend).child(key).getRef().removeValue();
-//
-//                        }
-
                                         }
                                     }
 
@@ -209,7 +171,6 @@ public class AdapterShared extends BaseAdapter {
 
                                     }
                                 });
-                                //
                             }
 
                             @Override
@@ -217,8 +178,9 @@ public class AdapterShared extends BaseAdapter {
 
                             }
                         });
-                        DatabaseReference shared = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID).child(friend);
 
+                        //retrieve shared playlist from Firebase
+                        DatabaseReference shared = FirebaseDatabase.getInstance().getReference().child("SharedPlaylists").child(ID).child(friend);
                         shared.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -233,240 +195,20 @@ public class AdapterShared extends BaseAdapter {
                                         }
                                     }
 
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
                         });
-
                     }
                 });
 
-            }catch(Exception e)
+            } catch(Exception e)
 
             {
-
                 e.printStackTrace();
             }
-
-
             return convertView;
-        }
-
-    private void getID(String friend) {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("ID").child(friend).child("Id");
-
-        mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-               // UserDetails.fullname = dataSnapshot.getValue().toString();
-                UserDetails.username = dataSnapshot.getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-            private void addToFavourites(String songName) {
-            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-            Firebase playRef = ref.child("LovedSongs").child(ID);
-            playRef.push().setValue(songName);
-            Toast.makeText(mContext.getApplicationContext(), songName + " was added to your favourites", Toast.LENGTH_SHORT).show();
-        }
-
-        private void checkLiked(final String songName) {
-            lovedSongsRef = FirebaseDatabase.getInstance().getReference().child("LovedSongs");
-            lovedSongsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
-                        String key = snapshot.getKey().toString();
-                        if (dataSnapshot.child(ID).child(key).getValue().toString().equals(songName)) {
-                            Toast.makeText(mContext.getApplicationContext(), song + " is already in your favourites.", Toast.LENGTH_SHORT).show();
-                            UserDetails.liked = true;
-                        } else {
-                            UserDetails.dwn = false;
-                        }
-                    }
-                    if (!UserDetails.liked) {
-                        addToFavourites(songName);
-                        Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        private void checkDownloaded(final String song) {
-            dwnSongRef = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs");
-            dwnSongRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChild(ID)) {
-                        for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
-                            String key = snapshot.getKey().toString();
-                            if (dataSnapshot.child(ID).child(key).getValue().toString().equals(song)) {
-                                Toast.makeText(mContext.getApplicationContext(), song + " is already downloaded", Toast.LENGTH_LONG).show();
-                                UserDetails.dwn = true;
-                            } else {
-                                UserDetails.dwn = false;
-                            }
-                        }
-                        if (!UserDetails.dwn) {
-                            addToDownloads(song);
-                            download(song);
-                            Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        addToDownloads(song);
-                        download(song);
-                        Toast.makeText(mContext.getApplicationContext(), "Downloading... ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
-
-
-        private void download(String song) {
-            mStorage = FirebaseStorage.getInstance();
-
-            StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-            StorageReference down = storageReference.child(song + ".mp3");
-
-            storagePath = new File(mContext.getFilesDir(), "My_music");
-            File localFile = new File(storagePath, song);
-            try {
-                localFile = File.createTempFile(song, ".mp3");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            final File finalLocalFile = new File(storagePath, song);
-            down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    finalLocalFile.getAbsolutePath();
-                    Toast.makeText(mContext.getApplicationContext(), "Done downloading" , Toast.LENGTH_SHORT).show();
-                    //download.setVisibility(View.GONE);
-                    //downloadgreen.setVisibility(View.VISIBLE);
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-
-                }
-            });
-        }
-
-        private void addToDownloads(String song) {
-            Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-            Firebase playRef = ref.child("DownloadedSongs").child(ID);
-            playRef.push().setValue(song);
-        }
-
-    /**
-     * Update list.
-     *
-     * @param newlist the newlist
-     */
-    public void updateList(List<RowItem> newlist) {
-            rowItems.clear();
-            rowItems.addAll(newlist);
-            this.notifyDataSetChanged();
-        }
-
-        private void sendNotification()
-        {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                    if (SDK_INT > 8) {
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                                .permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                        String send_email;
-
-                        //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (RealTimeActivity.loggedEmail.equals(sender)) {
-                            send_email = UserDetails.receiver;
-
-
-                        } else {
-                            send_email = sender;
-                        }
-
-                        try {
-                            String jsonResponse;
-
-                            URL url = new URL("https://onesignal.com/api/v1/notifications");
-                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                            con.setUseCaches(false);
-                            con.setDoOutput(true);
-                            con.setDoInput(true);
-
-                            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                            con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
-                            con.setRequestMethod("POST");
-
-                            String strJsonBody = "{"
-                                    + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
-
-                                    + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
-
-                                    + "\"data\": {\"foo\": \"bar\"},"
-                                    + "\"contents\": {\"en\": \"You have a new friend request!\"}"
-                                    + "\"button1\": {\"Accept\": \"Decline\"},"
-
-                                    + "}";
-
-
-                            System.out.println("strJsonBody:\n" + strJsonBody);
-
-                            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                            con.setFixedLengthStreamingMode(sendBytes.length);
-
-                            OutputStream outputStream = con.getOutputStream();
-                            outputStream.write(sendBytes);
-
-                            int httpResponse = con.getResponseCode();
-                            System.out.println("httpResponse: " + httpResponse);
-
-                            if (httpResponse >= HttpURLConnection.HTTP_OK
-                                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                                scanner.close();
-                            } else {
-                                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                                scanner.close();
-                            }
-                            System.out.println("jsonResponse:\n" + jsonResponse);
-
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }
-                    }
-                }
-            });
         }
 
         @Override
@@ -480,8 +222,7 @@ public class AdapterShared extends BaseAdapter {
         {
             return true;
         }
-
-
+    
     }
 
 

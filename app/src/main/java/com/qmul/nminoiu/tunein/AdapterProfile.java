@@ -109,7 +109,6 @@ public class AdapterProfile extends BaseAdapter {
         }
 
         final RowItem rowItem = (RowItem) getItem(position);
-
         holder.txtTitle.setText(rowItem.getTitle());
         holder.imageView.setImageResource(rowItem.getImageId());
         UserDetails.dwn = false;
