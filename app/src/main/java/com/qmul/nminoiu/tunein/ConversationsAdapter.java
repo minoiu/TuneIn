@@ -20,9 +20,6 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 public class ConversationsAdapter extends BaseAdapter{
 
     private Context mContext;
-    /**
-     * The Drow items.
-     */
     List<DoubleRow> drowItems;
     private RelativeLayout buttons;
 
@@ -38,26 +35,13 @@ public class ConversationsAdapter extends BaseAdapter{
     }
 
     private class ViewHolder {
-        /**
-         * The Image view.
-         */
         ImageView imageView;
-        /**
-         * The Txt title.
-         */
         TextView txtTitle;
-        /**
-         * The Sub title.
-         */
         TextView subTitle;
-        /**
-         * The Message.
-         */
         TextView message;
-
-
     }
 
+    //handling clicks in conversations list
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         ConversationsAdapter.ViewHolder holder = null;
@@ -71,7 +55,6 @@ public class ConversationsAdapter extends BaseAdapter{
             holder.message = (TextView) convertView.findViewById(R.id.message);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
             UserDetails.menuIcons.add(holder.imageView);
-
             convertView.setTag(holder);
         }
         else {
@@ -79,21 +62,12 @@ public class ConversationsAdapter extends BaseAdapter{
         }
 
         final DoubleRow rowItem = (DoubleRow) getItem(position);
-
         holder.txtTitle.setText(rowItem.getTitle());
         holder.subTitle.setText(rowItem.getSubtitle());
         holder.message.setText(rowItem.getMessage());
-
-
         holder.imageView.setImageResource(rowItem.getImageId());
 
-        MyPlaylists mp = new MyPlaylists();
-
-
-        // mp.showMenu(holder.imageView);
-
-        //buttons=(RelativeLayout) convertView.findViewById(R.id.buttons);
-
+        //handling click on friend name in conversation list
         holder.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +80,7 @@ public class ConversationsAdapter extends BaseAdapter{
             }
         });
 
+        //handling click on the time in conversations list
         holder.subTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +93,7 @@ public class ConversationsAdapter extends BaseAdapter{
             }
         });
 
+        //handling click on the message in conversations list
         holder.message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +106,7 @@ public class ConversationsAdapter extends BaseAdapter{
             }
         });
 
+        //handling click on the icon in conversations list
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,33 +119,34 @@ public class ConversationsAdapter extends BaseAdapter{
             }
         });
 
+        //click on convert view and starting intent Chat
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(mContext, Chat.class);
                 intent.putExtra("Uniqid", "FromConversations");
                 intent.putExtra("Song", Conversations.track_title.getText().toString());
                 intent.putExtra("Friend", rowItem.getTitle().toString());
                 mContext.startActivity(intent);
-
             }
         });
-
 
         return convertView;
     }
 
+    //return no of rows
     @Override
     public int getCount() {
         return drowItems.size();
     }
 
+    //return row
     @Override
     public Object getItem(int position) {
         return drowItems.get(position);
     }
 
+    //return item id form position
     @Override
     public long getItemId(int position) {
         return drowItems.indexOf(getItem(position));

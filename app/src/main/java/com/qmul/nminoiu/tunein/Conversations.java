@@ -37,70 +37,34 @@ import java.util.Map;
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
 /**
- * The type Conversations.
+ * Created by nicoleta on 12/12/2017.
  */
 public class Conversations extends AppCompatActivity {
-    /**
-     * The No users text.
-     */
-    TextView noUsersText;
-    /**
-     * The Al.
-     */
-    ArrayList<String> al = new ArrayList<>();
-    /**
-     * The Total users.
-     */
-    int totalUsers = 0;
-    /**
-     * The Conv list.
-     */
-// ProgressDialog pd;
     ListView convList;
-    /**
-     * The Conversations ar list.
-     */
     ArrayList<String> conversationsArList = new ArrayList<>();
     private ArrayAdapter<String> cadapter;
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
     private DatabaseReference ref;
-
-    /**
-     * The Recents ref.
-     */
     Firebase recentsRef;
     private ConversationsAdapter adapter;
     private List<String> fromList;
     private List<String> timeList;
     private List<String> messageList;
-
-    private String song;
-    /**
-     * The constant track_title.
-     */
     public static TextView track_title;
     private LinearLayout play_toolbar;
     private Button btn;
     private String url;
     private Handler mHandler;
     private String me;
-
     private DatabaseReference db1;
     private String value;
     private String sender;
     private Toolbar toolbar;
-    /**
-     * The Drow item.
-     */
     List<DoubleRow> drowItem;
-
-
     private String ID;
-
     private ArrayAdapter<String> convadapter;
-
     private FirebaseAuth firebaseAuth;
 
 
@@ -110,7 +74,6 @@ public class Conversations extends AppCompatActivity {
         setContentView(R.layout.activity_conversations);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         firebaseAuth = FirebaseAuth.getInstance();
         cadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_2, conversationsArList);
         drowItem = new ArrayList<DoubleRow>();
@@ -118,48 +81,38 @@ public class Conversations extends AppCompatActivity {
         fromList = new ArrayList<>();
         timeList = new ArrayList<>();
         messageList = new ArrayList<>();
-
-
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
         play_toolbar.setClickable(true);
-        btn = (Button) findViewById(R.id.button);
         track_title = (TextView) findViewById(R.id.track_title);
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
-
-        if(mediaPlayer.isPlaying()) {
-            String song = track_title.getText().toString();
-        }
         UserDetails.oldIntent="Conversations";
+        db = FirebaseDatabase.getInstance().getReference().child("Users");
+        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
+        ID = firebaseAuth.getCurrentUser().getUid();
+        sender = firebaseAuth.getCurrentUser().getEmail();
+        convList = (ListView) findViewById(R.id.convList);
+        convList.setAdapter(adapter);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getFullname();
+        recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
+        UserDetails.username = UserDetails.fullname;
 
         Intent i = getIntent();
         if(i.hasExtra("Song")){
             String title = i.getStringExtra("Song");
             track_title.setText(title);
         }
+
+        //checking if media player is playing and setting playing bar visible
         if(mediaPlayer.isPlaying()){
             play_toolbar.setVisibility(View.VISIBLE);
             play_toolbar.bringToFront();
-            //track_title.setText(UserDetails.playingSongName);
         } else play_toolbar.setVisibility(View.GONE);
 
-        db = FirebaseDatabase.getInstance().getReference().child("Users");
-        db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
-        ID = firebaseAuth.getCurrentUser().getUid();
-        sender = firebaseAuth.getCurrentUser().getEmail();
-
-        convList = (ListView) findViewById(R.id.convList);
-        convList.setAdapter(adapter);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getFullname();
-
-        recentsRef = new Firebase("https://tunein-633e5.firebaseio.com/RecentMessages/" + UserDetails.fullname);
-        UserDetails.username = UserDetails.fullname;
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        //getting currently playing song from Firebase
         DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
         songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override
@@ -168,7 +121,6 @@ public class Conversations extends AppCompatActivity {
                 if(dataSnapshot.child(ID).exists()){
                     String song = dataSnapshot.child(ID).child("Song").getValue().toString();
                     track_title.setText(song);
-//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -178,8 +130,7 @@ public class Conversations extends AppCompatActivity {
             }
         });
 
-
-
+        //retrieving recent messages from Firebase
         ref = FirebaseDatabase.getInstance().getReference().child("RecentMessages").child(UserDetails.fullname);
         ref.orderByChild("time").addChildEventListener(new com.google.firebase.database.ChildEventListener() {
             @Override
@@ -194,7 +145,6 @@ public class Conversations extends AppCompatActivity {
                     messageList.add(finmess);
                     fromList.add(from);
                     timeList.add(time);
-//                messageList.add(message);
                     DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), finmess);
                     drowItem.add(0, item);
                     adapter.notifyDataSetChanged();
@@ -202,18 +152,11 @@ public class Conversations extends AppCompatActivity {
                     messageList.add(message);
                     fromList.add(from);
                     timeList.add(time);
-//                messageList.add(message);
                     DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, from, getTime(time), message);
                     drowItem.add(0, item);
                     adapter.notifyDataSetChanged();
 
                 }
-
-//                Toast.makeText(Conversations.this, from, Toast.LENGTH_SHORT).show();
-
-
-
-
             }
 
             @Override
@@ -236,63 +179,8 @@ public class Conversations extends AppCompatActivity {
 
             }
         });
-//        recentsRef.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                Map map = dataSnapshot.getValue(Map.class);
-//                String message = map.get("message").toString();
-//                String from = map.get("user").toString();
-//                String time =map.get("time").toString();
-////                //Toast.makeText(Conversations.this, "from "+ from, Toast.LENGTH_LONG).show();
-//
-//                if(timeList.size() == 1 && Long.valueOf(timeList.get(0)) >= Long.valueOf(time)) {
-//                    timeList.add(0, time);
-//                    fromList.add(0, from);
-//                    messageList.add(0, message);
-//                } else {
-//                    for(int i = 0; i < timeList.size()-1; i++) {
-//                        if(Long.valueOf(time) >= Long.valueOf(timeList.get(i)) && Long.valueOf(time) <= Long.valueOf(timeList.get(i+1))) {
-//                            timeList.add(i, time);
-//                            fromList.add(i, from);
-//                            messageList.add(i, message);
-//
-//                        }
-//                    }
-//                    // number is the largest seen; add it to the end.
-//                     timeList.add(time);
-//                     fromList.add(from);
-//                     messageList.add(message);
-//
-//                 }
-//                for(int i=0; i<=timeList.size()-1;i++){
-//                    DoubleRow item = new DoubleRow(R.drawable.ic_nextblack, fromList.get(i), timeList.get(i), messageList.get(i));
-//                    drowItem.add(item);
-//                    adapter.notifyDataSetChanged();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//
-//            }
-//        });
 
+        //handling click on playbar
         play_toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,35 +193,25 @@ public class Conversations extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
             }
         });
-
-
     }
 
+    //get current time
     private String getTime(String time) {
         Calendar calendar = Calendar.getInstance();
         Long longTime = Long.valueOf(time);
-
         Date today = new Date(System.currentTimeMillis());
         Date otherDate = new Date(longTime);
-
-
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         DateFormat hfor = new SimpleDateFormat("HH:mm");
-
         String todayD = formatter.format(today);
         String otherDateD = formatter.format(otherDate);
 
-
-
         if(todayD.equals(otherDateD)){
-
-//            String hm = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toHours(longTime),
-//                    TimeUnit.MILLISECONDS.toMinutes(longTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(longTime)));
-
             return hfor.format(longTime);
         } else return otherDateD;
     }
 
+    //pressing back arrow and starting previous intent
     @Override
     public void onBackPressed() {
         Intent i = new Intent(Conversations.this, RealTimeActivity.class);
@@ -343,21 +221,19 @@ public class Conversations extends AppCompatActivity {
         finish();
     }
 
+    //creating new message menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.new_message, menu);
         return true;
     }
 
+    // Handle action bar item clicks. The action bar will
+    // automatically handle clicks on the Home/Up
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.newmessage) {
             Intent i = new Intent(this, FollowersActivity.class);
             i.putExtra("Uniqid", "FromConversations");
@@ -377,59 +253,22 @@ public class Conversations extends AppCompatActivity {
      * Gets fullname.
      */
     public void getFullname() {
-
         FirebaseAuth fb;
         fb = FirebaseAuth.getInstance();
-
         String ID;
         ID = fb.getCurrentUser().getUid();
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
-    }
-
-
-    /**
-     * Start music.
-     *
-     * @param link the link
-     * @param song the song
-     */
-    public void startMusic(String link, String song) {
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(link);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-            //   updateProgressBar();
-        }
-        Button btn = (Button) this.findViewById(R.id.button);
-        btn.setBackgroundResource(R.drawable.ic_media_pause);
-        mediaPlayer.start();
-
-//        if (!recents.contains(song)) {
-//            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-//            likedRef.push().setValue(song);
-//        }
     }
 
     /**
@@ -450,7 +289,6 @@ public class Conversations extends AppCompatActivity {
 
         final ArrayAdapter<String> fadapter;
         final List<String> myFollowers = new ArrayList<>();
-
         fadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myFollowers);
         DatabaseReference fdb;
         fdb = FirebaseDatabase.getInstance().getReference().child("Followers").child(fullname);
@@ -458,19 +296,14 @@ public class Conversations extends AppCompatActivity {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    //myFollowers.clear();
                     String value = snapshot.getKey();
                     myFollowers.add(value);
                     UserDetails.myFollowers.add(value);
-                    //addToFirebaseHome(value, mysong);
                     fadapter.notifyDataSetChanged();
                 }
 
                 addToHome(UserDetails.myFollowers, mysong);
-                //Toast.makeText(RealTimeActivity.this, UserDetails.myFollowers.size() + " is the size", Toast.LENGTH_LONG).show();
-
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -499,13 +332,11 @@ public class Conversations extends AppCompatActivity {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
-
         mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -534,12 +365,8 @@ public class Conversations extends AppCompatActivity {
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
-        //UserDetails.playingSongName = track_title.getText().toString();
-
         String songtitle = title.getText().toString();
-        //song = ((TextView) view).getText().toString();
         getFollowers(UserDetails.fullname, songtitle);
-
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
@@ -560,17 +387,12 @@ public class Conversations extends AppCompatActivity {
 
         } else {
 
-            //mediaPlayer.seekTo(length);
             playFromPause(length);
             Button btn = (Button) this.findViewById(R.id.button);
             btn.setBackgroundResource(R.drawable.ic_media_pause);
         }
 
         mediaPlayer.getCurrentPosition();
-
-        //MusicPlayerActivity.songProgressBar.setProgress(0);
-        //MusicPlayerActivity.songProgressBar.setMax(100);
-//            new MusicPlayerActivity().updateProgressBar();
     }
 
     /**
@@ -586,17 +408,8 @@ public class Conversations extends AppCompatActivity {
                         String v;
                         for (com.google.firebase.database.DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //Toast.makeText(RealTimeActivity.this, "in erase" + dataSnapshot.child(snapshot.child(v).getKey().toString()).getKey().toString(), Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(RealTimeActivity.this, "v" + v, Toast.LENGTH_SHORT).show();
-                            //getFulname();
                             if (dataSnapshot.child(v).hasChild(sa.getMyFullname(ID))) {
-                                // Toast.makeText(RealTimeActivity.this, "in if" + snapshot.getValue(), Toast.LENGTH_SHORT).show();
-
-                                // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(sa.getMyFullname(ID)).getRef().removeValue();
-
-                                //names.remove(getMyFullname(ID));
-                                // title.remove()
                             }
                         }
                     }
@@ -606,7 +419,6 @@ public class Conversations extends AppCompatActivity {
 
                     }
                 });
-
     }
 
     /**
@@ -617,7 +429,5 @@ public class Conversations extends AppCompatActivity {
     public String getBarTitle(){
         return getSupportActionBar().getTitle().toString();
     }
-
-
 
 }

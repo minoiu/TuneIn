@@ -125,7 +125,6 @@
             android:name=".SharedPlaylistSongs"
             android:label="@string/title_activity_shared_playlist_songs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CommentActivity" />
         <activity
             android:name=".Conversations"
             android:label="Messages"
