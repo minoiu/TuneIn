@@ -6084,6 +6084,14 @@ public class RealTimeActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Update progress bar.
+     */
+    public void updateProgressBar() {
+        RealTimeActivity sa = new RealTimeActivity();
+        mHandler.postDelayed(sa.mUpdateTimeTask, 100);
+    }
+
     //make account public
     private void makeAccountPublic() {
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
