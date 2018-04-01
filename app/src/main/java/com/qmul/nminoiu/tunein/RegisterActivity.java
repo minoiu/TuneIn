@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The type Register activity.
+ * Created by Nicoleta on 29/09/2017
  */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,13 +42,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private AutoCompleteTextView email_register;
     private EditText password;
     private TextView textViewSignin;
-    /**
-     * The constant fullname.
-     */
     public static String fullname;
-
     private ProgressDialog progressDialog;
-
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
 
@@ -59,19 +54,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         progressDialog = new ProgressDialog(this);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         signup_button = (Button) findViewById(R.id.signup_button);
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);
         email_register = (AutoCompleteTextView) findViewById(R.id.email_register);
         password = (EditText) findViewById(R.id.password);
-
         signup_button.setOnClickListener(this);
-        //textViewSingin.setOnClickListener(this);
         final TextView textViewSignin = (TextView) this.findViewById(R.id.textViewSignin);
         textViewSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    //handle click on register button
     @Override
     public void onClick(View view) {
         if (view == signup_button) {
@@ -98,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         startActivity(nextActivity);
     }
 
-
+    //registe new user
     private void registerUser() {
         final String email = email_register.getText().toString().trim();
         String passwor = password.getText().toString().trim();
@@ -144,11 +135,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (task.isSuccessful()) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     //user is registered
-                    //String username = email_register.getText().toString().trim();
-                    //int index = username.indexOf("@");
-                    //username = username.substring(0, index);
-
-
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase userRef = ref.child("Users");
                     Map<String,Object> uinfo = new HashMap<String, Object>();
@@ -158,14 +144,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Firebase userRef1 = ref1.child("PublicProfiles");
                     Map<String,Object> uinfo1 = new HashMap<String, Object>();
                     uinfo1.put(user.getUid(),fullname);
-
-                   // User newUser = new User(email, fullname);
                     userRef.updateChildren(uinfo);
                     userRef1.updateChildren(uinfo1);
-
-
                     String email = user.getEmail();
-
                     Firebase ref2 = new Firebase("https://tunein-633e5.firebaseio.com/").child("Emails").child(fullname);
                     Map<String,Object> uinfo2 = new HashMap<String, Object>();
                     uinfo2.put("Email",email);
@@ -181,29 +162,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     uinfo4.put("Id",user.getUid());
                     ref4.updateChildren(uinfo4);
 
-
                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     progressDialog.hide();
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                    //i.putExtra("Email", )
                     startActivity(i);
                 } else {
                     progressDialog.hide();
-
                     FirebaseAuthException e = (FirebaseAuthException )task.getException();
                     Toast.makeText(RegisterActivity.this, "Failed Registration: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-
                     Toast.makeText(RegisterActivity.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
-                    //progressDialog.hide(RegisterActivity.this,LoginActivity.class);
                     Log.e("LoginActivity", "Failed Registration", e);
-
                     return;
-
                 }
             }
         });
     }
-
 }
 
 

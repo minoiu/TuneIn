@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 
 import com.google.firebase.storage.UploadTask;
+
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,6 +52,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -77,6 +79,7 @@ import com.onesignal.OneSignal;
 import com.squareup.picasso.Picasso;
 
 import android.view.View.OnClickListener;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -98,11 +101,8 @@ import java.util.Scanner;
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
 
-/**
- * The type Real time activity.
- */
 public class RealTimeActivity extends AppCompatActivity
-            implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private MaterialSearchView searchView;
     private LinearLayout searchLayout;
@@ -114,39 +114,29 @@ public class RealTimeActivity extends AppCompatActivity
     private ArrayList<String> users = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> times1 = new ArrayList<>();
-
     private ArrayList<String> title = new ArrayList<>();
     private ArrayList<String> pictures = new ArrayList<>();
-
     private ArrayList<String> names1 = new ArrayList<>();
     private ArrayList<String> titles1 = new ArrayList<>();
     private ArrayList<String> pictures1 = new ArrayList<>();
-
     private LinearLayout[] ll;
     private LinearLayout[] ll1;
-
     private ImageButton[] syncButtonArray;
     private ImageButton[] tuneoutButtonArray;
     private ImageButton[] tuneinButtonArray;
-
     private ImageButton[] youtubeArray;
     private ImageButton[] youtubeArray1;
-
     private ImageButton[] dwnArray;
-
     private ImageButton[] commentArray;
     private ImageButton[] addArray;
     private ImageButton[] blackHeartArray;
     private ImageButton[] redHeartArray;
     private TextView[] namesArray;
     private TextView[] namesArray1;
-
     private TextView[] timesArray;
     private TextView[] timesArray1;
-
     private TextView[] titlesArray;
     private TextView[] titlesArray1;
-
     private Firebase reference1;
     private Firebase reference2;
     private DatabaseReference reference3;
@@ -163,13 +153,7 @@ public class RealTimeActivity extends AppCompatActivity
     private LinearLayout commentsLayout;
     private LinearLayout makePublic;
     private LinearLayout makePrivate;
-    /**
-     * The Track title.
-     */
     public TextView track_title;
-    /**
-     * The S name.
-     */
     public TextView sName;
     private StorageReference storage;
     private boolean playPause;
@@ -183,26 +167,15 @@ public class RealTimeActivity extends AppCompatActivity
     private Button cancelPrivate;
     private ImageView commentButton;
     private CoordinatorLayout mainL;
-
-
     private boolean play;
     private boolean pause;
-    /**
-     * The constant url.
-     */
     public static String url;
     private RelativeLayout picLayout;
     private Handler mResultHandler;
-    /**
-     * The constant song.
-     */
     public static String song;
     private Handler mHandler;
     private FirebaseAuth firebaseAuth1;
     private FirebaseUser user;
-    /**
-     * The constant loggedEmail.
-     */
     public static String loggedEmail;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
@@ -215,7 +188,6 @@ public class RealTimeActivity extends AppCompatActivity
     private DatabaseReference mDatabase8;
     private DatabaseReference mDatabase9;
     private DatabaseReference factref;
-
     private DatabaseReference timeref;
     private Button uploadImg;
     private ImageView profilePic;
@@ -229,584 +201,166 @@ public class RealTimeActivity extends AppCompatActivity
     private ImageView friendPic8;
     private ImageView friendPic9;
     private ImageView friendPic10;
-
-
     private ArrayList<String> recents;
     private ScrollView ScrollView01;
-    /**
-     * The Myuser.
-     */
     public User myuser;
-    /**
-     * The Storage path.
-     */
     public File storagePath;
-    /**
-     * The Np 1.
-     */
     public LinearLayout np1;
-    /**
-     * The Np 2.
-     */
     public LinearLayout np2;
     private EditText commentarea;
-    /**
-     * The Np 3.
-     */
     public LinearLayout np3;
-    /**
-     * The Np 4.
-     */
     public LinearLayout np4;
-    /**
-     * The Np 5.
-     */
     public LinearLayout np5;
-    /**
-     * The Np 6.
-     */
     public LinearLayout np6;
-    /**
-     * The Np 7.
-     */
     public LinearLayout np7;
-    /**
-     * The Np 8.
-     */
     public LinearLayout np8;
-    /**
-     * The Np 9.
-     */
     public LinearLayout np9;
-    /**
-     * The Np 10.
-     */
     public LinearLayout np10;
-    /**
-     * The Now playing layout.
-     */
     public LinearLayout nowPlayingLayout;
-    /**
-     * The Rec played layout.
-     */
     public LinearLayout recPlayedLayout;
     private ProgressDialog progressDialog;
-
-
     private FirebaseStorage mStorage;
     private ImageButton syncButton;
     private ImageButton tuneOutBtn;
     private TextView ptextview;
     private TextView stextview;
-    /**
-     * The Fullname.
-     */
     public String fullname;
-    /**
-     * The Following.
-     */
     public boolean following;
-    /**
-     * The Song text.
-     */
     public TextView songText;
-    /**
-     * The Name text.
-     */
     public TextView nameText;
-    /**
-     * The Fab.
-     */
     public FloatingActionButton fab;
-    /**
-     * The Fab 1.
-     */
     public ImageButton fab1;
-    /**
-     * The Tunein 1.
-     */
     public ImageButton tunein1;
-    /**
-     * The Tunein 2.
-     */
     public ImageButton tunein2;
-    /**
-     * The Tunein 3.
-     */
     public ImageButton tunein3;
-    /**
-     * The Tunein 4.
-     */
     public ImageButton tunein4;
-    /**
-     * The Tunein 5.
-     */
     public ImageButton tunein5;
-    /**
-     * The Tuneout 1.
-     */
     public ImageButton tuneout1;
-    /**
-     * The Tuneout 2.
-     */
     public ImageButton tuneout2;
-    /**
-     * The Tuneout 3.
-     */
     public ImageButton tuneout3;
-    /**
-     * The Tuneout 4.
-     */
     public ImageButton tuneout4;
-    /**
-     * The Tuneout 5.
-     */
     public ImageButton tuneout5;
-    /**
-     * The Title 1.
-     */
     public TextView title1;
-    /**
-     * The Title 2.
-     */
     public TextView title2;
-    /**
-     * The Title 3.
-     */
     public TextView title3;
-    /**
-     * The Title 4.
-     */
     public TextView title4;
-    /**
-     * The Title 5.
-     */
     public TextView title5;
-    /**
-     * The Title 6.
-     */
     public TextView title6;
-    /**
-     * The Title 7.
-     */
     public TextView title7;
-    /**
-     * The Title 8.
-     */
     public TextView title8;
-    /**
-     * The Title 9.
-     */
     public TextView title9;
-    /**
-     * The Title 10.
-     */
     public TextView title10;
-    /**
-     * The Bheart 1.
-     */
     public ImageButton bheart1;
-    /**
-     * The Bheart 2.
-     */
     public ImageButton bheart2;
-    /**
-     * The Bheart 3.
-     */
     public ImageButton bheart3;
-    /**
-     * The Bheart 4.
-     */
     public ImageButton bheart4;
-    /**
-     * The Bheart 5.
-     */
     public ImageButton bheart5;
-    /**
-     * The Bheart 6.
-     */
     public ImageButton bheart6;
-    /**
-     * The Bheart 7.
-     */
     public ImageButton bheart7;
-    /**
-     * The Bheart 8.
-     */
     public ImageButton bheart8;
-    /**
-     * The Bheart 9.
-     */
     public ImageButton bheart9;
-    /**
-     * The Bheart 10.
-     */
     public ImageButton bheart10;
-    /**
-     * The Rheart 1.
-     */
     public ImageButton rheart1;
-    /**
-     * The Rheart 2.
-     */
     public ImageButton rheart2;
-    /**
-     * The Rheart 3.
-     */
     public ImageButton rheart3;
-    /**
-     * The Rheart 4.
-     */
     public ImageButton rheart4;
-    /**
-     * The Rheart 5.
-     */
     public ImageButton rheart5;
-    /**
-     * The Rheart 6.
-     */
     public ImageButton rheart6;
-    /**
-     * The Rheart 7.
-     */
     public ImageButton rheart7;
-    /**
-     * The Rheart 8.
-     */
     public ImageButton rheart8;
-    /**
-     * The Rheart 9.
-     */
     public ImageButton rheart9;
-    /**
-     * The Rheart 10.
-     */
     public ImageButton rheart10;
-    /**
-     * The Add 1.
-     */
     public ImageButton add1;
-    /**
-     * The Add 2.
-     */
     public ImageButton add2;
-    /**
-     * The Add 3.
-     */
     public ImageButton add3;
-    /**
-     * The Add 4.
-     */
     public ImageButton add4;
-    /**
-     * The Add 5.
-     */
     public ImageButton add5;
-    /**
-     * The Add 6.
-     */
     public ImageButton add6;
-    /**
-     * The Add 7.
-     */
     public ImageButton add7;
-    /**
-     * The Add 8.
-     */
     public ImageButton add8;
-    /**
-     * The Add 9.
-     */
     public ImageButton add9;
-    /**
-     * The Add 10.
-     */
     public ImageButton add10;
-    /**
-     * The Comment 1.
-     */
     public ImageButton comment1;
-    /**
-     * The Comment 2.
-     */
     public ImageButton comment2;
-    /**
-     * The Comment 3.
-     */
     public ImageButton comment3;
-    /**
-     * The Comment 4.
-     */
     public ImageButton comment4;
-    /**
-     * The Comment 5.
-     */
     public ImageButton comment5;
-    /**
-     * The Comment 6.
-     */
     public ImageButton comment6;
-    /**
-     * The Comment 7.
-     */
     public ImageButton comment7;
-    /**
-     * The Comment 8.
-     */
     public ImageButton comment8;
-    /**
-     * The Comment 9.
-     */
     public ImageButton comment9;
-    /**
-     * The Comment 10.
-     */
     public ImageButton comment10;
-    /**
-     * The Download 1.
-     */
     public ImageButton download1;
-    /**
-     * The Download 2.
-     */
     public ImageButton download2;
-    /**
-     * The Download 3.
-     */
     public ImageButton download3;
-    /**
-     * The Download 4.
-     */
     public ImageButton download4;
-    /**
-     * The Download 5.
-     */
     public ImageButton download5;
-    /**
-     * The Download 6.
-     */
     public ImageButton download6;
-    /**
-     * The Download 7.
-     */
     public ImageButton download7;
-    /**
-     * The Download 8.
-     */
     public ImageButton download8;
-    /**
-     * The Download 9.
-     */
     public ImageButton download9;
-    /**
-     * The Download 10.
-     */
     public ImageButton download10;
     private int newtime;
-    /**
-     * The Name 1.
-     */
     public TextView name1;
-    /**
-     * The Name 2.
-     */
     public TextView name2;
-    /**
-     * The Name 3.
-     */
     public TextView name3;
-    /**
-     * The Name 4.
-     */
     public TextView name4;
-    /**
-     * The Name 5.
-     */
     public TextView name5;
-    /**
-     * The Name 6.
-     */
     public TextView name6;
-    /**
-     * The Name 7.
-     */
     public TextView name7;
-    /**
-     * The Name 8.
-     */
     public TextView name8;
-    /**
-     * The Name 9.
-     */
     public TextView name9;
-    /**
-     * The Name 10.
-     */
     public TextView name10;
-    /**
-     * The Time 1.
-     */
     public TextView time1;
-    /**
-     * The Time 2.
-     */
     public TextView time2;
-    /**
-     * The Time 3.
-     */
     public TextView time3;
-    /**
-     * The Time 4.
-     */
     public TextView time4;
-    /**
-     * The Time 5.
-     */
     public TextView time5;
-    /**
-     * The Time 6.
-     */
     public TextView time6;
-    /**
-     * The Time 7.
-     */
     public TextView time7;
-    /**
-     * The Time 8.
-     */
     public TextView time8;
-    /**
-     * The Time 9.
-     */
     public TextView time9;
-    /**
-     * The Time 10.
-     */
     public TextView time10;
-    /**
-     * The Sl 1.
-     */
     public LinearLayout sl1;
-    /**
-     * The Sl 2.
-     */
     public LinearLayout sl2;
-    /**
-     * The Sl 3.
-     */
     public LinearLayout sl3;
-    /**
-     * The Sl 4.
-     */
     public LinearLayout sl4;
-    /**
-     * The Sl 5.
-     */
     public LinearLayout sl5;
-    /**
-     * The Sl 6.
-     */
     public LinearLayout sl6;
-    /**
-     * The Sl 7.
-     */
     public LinearLayout sl7;
-    /**
-     * The Sl 8.
-     */
     public LinearLayout sl8;
-    /**
-     * The Sl 9.
-     */
     public LinearLayout sl9;
-    /**
-     * The Sl 10.
-     */
     public LinearLayout sl10;
-
-
-    /**
-     * The Youtubecoloured.
-     */
     public ImageButton youtubecoloured;
-    /**
-     * The Comment.
-     */
     public ImageButton comment;
-    /**
-     * The Commentblue.
-     */
     public ImageButton commentblue;
-    /**
-     * The Add.
-     */
     public ImageButton add;
-    /**
-     * The Addgreen.
-     */
     public ImageButton addgreen;
-    /**
-     * The Download.
-     */
     public ImageButton download;
-    /**
-     * The Downloadgreen.
-     */
     public ImageButton downloadgreen;
-    /**
-     * The Black heart.
-     */
     public ImageButton blackHeart;
-    /**
-     * The Red heart.
-     */
     public ImageButton redHeart;
     private DatabaseReference fdb;
     private List<String> myFollowers;
-    /**
-     * The Id.
-     */
     public String ID;
-    /**
-     * The Me.
-     */
     public String me;
-    /**
-     * The Text.
-     */
     public String text;
-    /**
-     * The Addr.
-     */
     public String addr;
-    /**
-     * The Picture url.
-     */
     public String pictureUrl;
     private String sender;
-
     private String time;
     private Boolean isTunned = false;
     private int i;
-    /**
-     * The Pick image request.
-     */
     int PICK_IMAGE_REQUEST;
     private Uri filePath;
     private ProgressDialog pd;
     private StorageReference picRef;
     private CoordinatorLayout.LayoutParams paramsFab1;
     private CoordinatorLayout.LayoutParams paramsFab;
-    /**
-     * The constant checkBox.
-     */
     public static CheckBox checkBox;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setContentView(savedInstanceState);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realtime);
 
@@ -814,8 +368,6 @@ public class RealTimeActivity extends AppCompatActivity
         commentsLayout = (LinearLayout) findViewById(R.id.commentLayout);
         commentarea = (EditText) findViewById(R.id.commentArea);
         commentButton = (ImageView) findViewById(R.id.commentButton);
-
-
         songText = (TextView) findViewById(R.id.songName);
         nameText = (TextView) findViewById(R.id.name);
         ptextview = (TextView) findViewById(R.id.ptextView);
@@ -828,7 +380,6 @@ public class RealTimeActivity extends AppCompatActivity
         myFollowers = new ArrayList<>();
         myuser = new User();
         nowPlayingLayout = (LinearLayout) findViewById(R.id.playing);
-        //recPlayedLayout = (LinearLayout) findViewById(R.id.played);
         np1 = (LinearLayout) findViewById(R.id.np1);
         np2 = (LinearLayout) findViewById(R.id.np2);
         np3 = (LinearLayout) findViewById(R.id.np3);
@@ -839,67 +390,26 @@ public class RealTimeActivity extends AppCompatActivity
         np8 = (LinearLayout) findViewById(R.id.np8);
         np9 = (LinearLayout) findViewById(R.id.np9);
         np10 = (LinearLayout) findViewById(R.id.np10);
-
-
-
         makePrivate = (LinearLayout) findViewById(R.id.makePrivate);
         makePublic = (LinearLayout) findViewById(R.id.makePublic);
         mainL = (CoordinatorLayout) findViewById(R.id.cLayout);
-
-
-        //picLayout = (RelativeLayout) findViewById(R.id.picLayout);
         uploadImg = (Button) findViewById(R.id.uploadImg);
         yesPublic = (Button) findViewById(R.id.yesPublic);
         cancelPublic = (Button) findViewById(R.id.cancelPublic);
         yesPrivate = (Button) findViewById(R.id.yesPrivate);
         cancelPrivate = (Button) findViewById(R.id.cancelPrivate);
-
-        // profilePic = (ImageView) findViewById(R.id.profilePic);
-       // profilePic.setClickable(true);
         pd = new ProgressDialog(this);
         pd.setMessage("Uploading....");
         FirebaseStorage storage = FirebaseStorage.getInstance();
         picRef = storage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/ProfilePictures");
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("TuneIn");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-
-
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
         Menu nav_Menu = navigationView.getMenu();
-        //
-        ScrollView01 = (ScrollView) findViewById(R.id.ScrollView01);
-        checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-                        makeAccountPrivate();
-                    } else {
-                        makeAccountPublic();
-                    }
-             }
-
-        });
-
-
-        View hView = navigationView.getHeaderView(0);
-
-        profilePic = (ImageView) hView.findViewById(R.id.profilePic);
-        TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
-        nav_user.setText(loggedEmail);
-        //email = (TextView) findViewById(R.id.emailProfile);
-        Intent i = getIntent();
-        if(i.hasExtra("Email")){
-            nav_user.setText(getIntent().getExtras().getString("Email"));
-        }
-        toolbar.setTitle("Friend Activity");
-
-
         ll = new LinearLayout[5];
         ll[0] = np1;
         ll[1] = np2;
@@ -930,7 +440,36 @@ public class RealTimeActivity extends AppCompatActivity
         recents = new ArrayList<>();
         progressDialog = new ProgressDialog(this);
 
+        //handle menu box checked/unchecked
+        ScrollView01 = (ScrollView) findViewById(R.id.ScrollView01);
+        checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    makeAccountPrivate();
+                } else {
+                    makeAccountPublic();
+                }
+            }
 
+        });
+
+        View hView = navigationView.getHeaderView(0);
+        profilePic = (ImageView) hView.findViewById(R.id.profilePic);
+
+        //set email text as user email
+        TextView nav_user = (TextView) hView.findViewById(R.id.emailProfile);
+        nav_user.setText(loggedEmail);
+
+        //get extra from intent
+        Intent i = getIntent();
+        if (i.hasExtra("Email")) {
+            nav_user.setText(getIntent().getExtras().getString("Email"));
+        }
+        toolbar.setTitle("Friend Activity");
+
+        //set margins for floating buttons
         paramsFab1 = (CoordinatorLayout.LayoutParams) fab1.getLayoutParams();
         paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
 
@@ -950,9 +489,9 @@ public class RealTimeActivity extends AppCompatActivity
                         play_toolbar.setVisibility(View.VISIBLE);
                         track_title.setText(songFromLib);
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
-                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        paramsFab1.setMargins(0, 0, 43, 150);
                         fab1.setLayoutParams(paramsFab1);
-                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        paramsFab.setMargins(53, 0, 0, 160);
                         fab.setLayoutParams(paramsFab);
                     } else {
                         play_toolbar.setVisibility(View.GONE);
@@ -964,9 +503,9 @@ public class RealTimeActivity extends AppCompatActivity
                         play_toolbar.setVisibility(View.VISIBLE);
                         track_title.setText(songFromLib);
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
-                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        paramsFab1.setMargins(0, 0, 43, 150);
                         fab1.setLayoutParams(paramsFab1);
-                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        paramsFab.setMargins(53, 0, 0, 160);
                         fab.setLayoutParams(paramsFab);
                     } else {
                         play_toolbar.setVisibility(View.GONE);
@@ -980,27 +519,26 @@ public class RealTimeActivity extends AppCompatActivity
                         play_toolbar.setVisibility(View.VISIBLE);
                         track_title.setText(songFromLib);
                         btn.setBackgroundResource(R.drawable.ic_media_pause);
-                        paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                        paramsFab1.setMargins(0, 0, 43, 150);
                         fab1.setLayoutParams(paramsFab1);
-                        paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                        paramsFab.setMargins(53, 0, 0, 160);
                         fab.setLayoutParams(paramsFab);
                     } else {
                         play_toolbar.setVisibility(View.GONE);
                     }
                 }
-            } else if(intent.hasExtra("Song")){
+            } else if (intent.hasExtra("Song")) {
                 String songFromLib = intent.getStringExtra("Song");
                 fab1.bringToFront();
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(songFromLib);
                 btn.setBackgroundResource(R.drawable.ic_media_pause);
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
             }
         }
-
 
         //now playing layout - initialising youtube button
         View v1 = findViewById(R.id.np1);
@@ -1024,7 +562,7 @@ public class RealTimeActivity extends AppCompatActivity
         View v10 = findViewById(R.id.np10);
         ImageButton youtube10 = (ImageButton) v10.findViewById(R.id.youtube);
 
-
+        //now playing layout - initialising sublayouts
         View sp1 = findViewById(R.id.np1);
         sl1 = (LinearLayout) sp1.findViewById(R.id.nowPlaying3);
         View sp2 = findViewById(R.id.np2);
@@ -1045,7 +583,6 @@ public class RealTimeActivity extends AppCompatActivity
         sl9 = (LinearLayout) sp9.findViewById(R.id.nowPlaying3);
         View sp10 = findViewById(R.id.np10);
         sl10 = (LinearLayout) sp10.findViewById(R.id.nowPlaying3);
-
 
         //now playing layout - initialising download button
         View a1 = findViewById(R.id.np1);
@@ -1068,7 +605,6 @@ public class RealTimeActivity extends AppCompatActivity
         download9 = (ImageButton) a9.findViewById(R.id.download);
         View a10 = findViewById(R.id.np10);
         download10 = (ImageButton) a10.findViewById(R.id.download);
-
 
         //now playing layout - initialising comment button
         View c1 = findViewById(R.id.np1);
@@ -1134,8 +670,7 @@ public class RealTimeActivity extends AppCompatActivity
         View b9 = findViewById(R.id.np9);
         bheart9 = (ImageButton) b9.findViewById(R.id.blackHeart);
         View b10 = findViewById(R.id.np10);
-        bheart10= (ImageButton) b10.findViewById(R.id.blackHeart);
-
+        bheart10 = (ImageButton) b10.findViewById(R.id.blackHeart);
 
         //now playing layout - initialising dislike button
         View r1 = findViewById(R.id.np1);
@@ -1157,7 +692,7 @@ public class RealTimeActivity extends AppCompatActivity
         View r9 = findViewById(R.id.np9);
         rheart9 = (ImageButton) r9.findViewById(R.id.redHeart);
         View r10 = findViewById(R.id.np10);
-        rheart10= (ImageButton) r10.findViewById(R.id.redHeart);
+        rheart10 = (ImageButton) r10.findViewById(R.id.redHeart);
 
         //now playing layout - initialising synchronisation button
         View ti1 = findViewById(R.id.np1);
@@ -1205,6 +740,7 @@ public class RealTimeActivity extends AppCompatActivity
         View n10 = findViewById(R.id.np10);
         name10 = (TextView) n10.findViewById(R.id.name);
 
+        //now playing layout - initialising time textviews
         View tim1 = findViewById(R.id.np1);
         time1 = (TextView) tim1.findViewById(R.id.name);
         View tim2 = findViewById(R.id.np2);
@@ -1225,9 +761,6 @@ public class RealTimeActivity extends AppCompatActivity
         time9 = (TextView) tim9.findViewById(R.id.name);
         View tim10 = findViewById(R.id.np10);
         time10 = (TextView) tim10.findViewById(R.id.name);
-
-
-
 
         //now playing layout - initialising textView for song name
         View t1 = findViewById(R.id.np1);
@@ -1251,7 +784,7 @@ public class RealTimeActivity extends AppCompatActivity
         View t10 = findViewById(R.id.np10);
         title10 = (TextView) t10.findViewById(R.id.songName);
 
-
+        //now playing layout - initialising picture image view
         View i1 = findViewById(R.id.np1);
         friendPic1 = (ImageView) i1.findViewById(R.id.friendPic);
         View i2 = findViewById(R.id.np2);
@@ -1274,8 +807,6 @@ public class RealTimeActivity extends AppCompatActivity
         friendPic10 = (ImageView) i10.findViewById(R.id.friendPic);
         Firebase.setAndroidContext(this);
 
-
-
         //storing buttons in ButtonArrays
         tuneoutButtonArray = new ImageButton[5];
         tuneoutButtonArray[0] = tuneout1;
@@ -1283,7 +814,6 @@ public class RealTimeActivity extends AppCompatActivity
         tuneoutButtonArray[2] = tuneout3;
         tuneoutButtonArray[3] = tuneout4;
         tuneoutButtonArray[4] = tuneout5;
-
         syncButtonArray = new ImageButton[5];
         syncButtonArray[0] = tunein1;
         syncButtonArray[1] = tunein2;
@@ -1345,18 +875,14 @@ public class RealTimeActivity extends AppCompatActivity
         MusicPlayerActivity.songs.clear();
         MusicPlayerActivity.urls.clear();
 
+        //retrieve recent songs
         DatabaseReference rec = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         rec.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 String recentSongs = dataSnapshot.getValue(String.class);
-                //Toast.makeText(LibraryActivity.this, recentSongs + " recent songs ", Toast.LENGTH_SHORT).show();
-
                 getUrl(recentSongs);
                 MusicPlayerActivity.songs.add(0, recentSongs);
-
-
             }
 
             @Override
@@ -1380,18 +906,15 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-//        emailTextView = (TextView) findViewById(R.id.emailProfile);
-//        emailTextView.setText(sender);
-
+        //retrieve current song
         DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
         songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.child(ID).exists()){
+                if (dataSnapshot.child(ID).exists()) {
                     String song = dataSnapshot.child(ID).child("Song").getValue().toString();
                     track_title.setText(song);
-//                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -1401,28 +924,24 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
+        //handling click on song name
         title1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String song = title1.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
 
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-//                getLink(song);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1445,26 +964,22 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
         title2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String song = title2.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1491,22 +1006,19 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title3.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1534,9 +1046,9 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title4.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
@@ -1577,22 +1089,18 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title5.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1620,16 +1128,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title6.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
 
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
@@ -1663,16 +1170,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title7.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
 
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
@@ -1706,16 +1212,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title8.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
 
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
@@ -1749,9 +1254,9 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title9.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
@@ -1763,7 +1268,6 @@ public class RealTimeActivity extends AppCompatActivity
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
 
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
@@ -1792,22 +1296,19 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title10.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1830,33 +1331,24 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-//        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-//            @Override
-//            public void onSeekComplete(MediaPlayer mp) {
-//                mediaPlayer.start();
-//            }
-//        });
-
+        //handle click on sublayouts on homepage
         sl1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String song = title1.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1883,22 +1375,19 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title2.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
                 refsong.updateChildren(uinfo);
-
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -1925,17 +1414,14 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title3.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -1967,17 +1453,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title4.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2009,17 +1493,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title5.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2051,17 +1533,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title6.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2093,17 +1573,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title7.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2135,17 +1613,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title8.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2177,17 +1653,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title9.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2219,17 +1693,15 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String song = title10.getText().toString();
-                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                paramsFab1.setMargins(0, 0, 43, 150);
                 fab1.setLayoutParams(paramsFab1);
-                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                paramsFab.setMargins(53, 0, 0, 160);
                 fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
 
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
-
                 Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
                 Map<String, Object> uinfo = new HashMap<>();
                 uinfo.put("Song", song);
@@ -2257,6 +1729,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handle click on friend names and go to their profile page
         name1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2267,7 +1740,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2300,9 +1772,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2327,7 +1799,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2360,9 +1831,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2387,7 +1858,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2420,9 +1890,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2447,7 +1917,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2480,9 +1949,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2507,7 +1976,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2540,9 +2008,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2567,7 +2035,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2600,9 +2067,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2627,7 +2094,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2660,9 +2126,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2687,7 +2153,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2720,9 +2185,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2747,7 +2212,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2780,9 +2244,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2807,7 +2271,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2840,9 +2303,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -2857,6 +2320,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handling click on friend profile picture
         friendPic1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2867,7 +2331,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2895,7 +2358,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2924,7 +2386,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2953,7 +2414,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -2982,7 +2442,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3011,7 +2470,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3040,7 +2498,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3069,7 +2526,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3098,7 +2554,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3127,7 +2582,6 @@ public class RealTimeActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String friendID = dataSnapshot.getValue().toString();
-//                      Toast.makeText(PlaylistSongs.this, "my fullname " + UserDetails.fullname , Toast.LENGTH_SHORT).show();
                         UserDetails.friendID = friendID;
                     }
 
@@ -3147,7 +2601,6 @@ public class RealTimeActivity extends AppCompatActivity
         });
 
 
-
         //sliding menu settings
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -3160,19 +2613,19 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(ID)) {
-                        UserDetails.publicProfie = true;
+                    UserDetails.publicProfie = true;
 
                     Menu nav_Menu = navigationView.getMenu();
                     nav_Menu.findItem(R.id.nav_private).setChecked(false);
                     checkBox.setChecked(false);
-                } else{
+                } else {
                     UserDetails.publicProfie = false;
                     Menu nav_Menu = navigationView.getMenu();
                     nav_Menu.findItem(R.id.nav_private).setChecked(true);
                     checkBox.setChecked(true);
 
                 }
-                }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -3194,6 +2647,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handle click on public
         yesPublic.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3204,17 +2658,13 @@ public class RealTimeActivity extends AppCompatActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
                         String myname = dataSnapshot.getValue().toString();
-
                         Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase userRef1 = ref1.child("PublicProfiles");
-                        Map<String,Object> uinfo1 = new HashMap<String, Object>();
-                        uinfo1.put(ID,myname);
+                        Map<String, Object> uinfo1 = new HashMap<String, Object>();
+                        uinfo1.put(ID, myname);
                         userRef1.updateChildren(uinfo1);
-
                         Menu nav_Menu = navigationView.getMenu();
-
                         nav_Menu.findItem(R.id.nav_private).setVisible(false);
-                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -3228,6 +2678,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handle click on private profile
         yesPrivate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3241,10 +2692,9 @@ public class RealTimeActivity extends AppCompatActivity
 
                         Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase userRef1 = ref1.child("PrivateProfiles");
-                        Map<String,Object> uinfo1 = new HashMap<String, Object>();
-                        uinfo1.put(ID,myname);
+                        Map<String, Object> uinfo1 = new HashMap<String, Object>();
+                        uinfo1.put(ID, myname);
                         userRef1.updateChildren(uinfo1);
-                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -3278,6 +2728,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handle clikc on scroll view to hide comments layout
         ScrollView01.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3287,6 +2738,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //handle click on now playing layout to hide comments layout
         nowPlayingLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3296,16 +2748,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-//        recPlayedLayout.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                commentsLayout.setVisibility(View.GONE);
-//                fab.setVisibility(View.VISIBLE);
-//                fab1.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-
+        //handle click on the main layout
         mainL.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3316,13 +2759,10 @@ public class RealTimeActivity extends AppCompatActivity
         });
 
 
-
-        //synchronisation buttons for Now Playing layout
+        //handle click on the synchronisation buttons for the Now Playing layout
         tunein1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // progressDialog.setMessage("Synchronising...");
-                //progressDialog.show();
                 Toast.makeText(RealTimeActivity.this, "Synchronising...", Toast.LENGTH_SHORT).show();
                 sendTimeRequest(name1.getText().toString(), title1.getText().toString());
                 tunein1.setVisibility(View.GONE);
@@ -3443,31 +2883,22 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-//        Glide.with(this /* context */)
-//                .load("https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2FiFisFj7zKLeuzqsg1vBMxf6gWst2.jpg?alt=media&token=4b473216-6251-4d2b-af36-13f9e495d21d")
-//                .into(profilePic);
-
+        //load rpofile picture
         Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase picture1 = picture.child("ProfilePictures");
-
         picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
             @Override
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.hasChild(ID)){
+                if (dataSnapshot.hasChild(ID)) {
                     String link = dataSnapshot.child(ID).child("Url").getValue().toString();
                     UserDetails.picturelink = link;
 
-                        Picasso.with(RealTimeActivity.this)
-                                .load(link)
-//                .resize(350, 240)
-//                .centerInside()
-
-                                .fit()
-                                //.centerCrop()
-                                .into(profilePic);
-
-            }
+                    Picasso.with(RealTimeActivity.this)
+                            .load(link)
+                            .fit()
+                            .into(profilePic);
+                }
             }
 
             @Override
@@ -3475,15 +2906,6 @@ public class RealTimeActivity extends AppCompatActivity
 
             }
         });
-
-//        Picasso.with(this)
-//                .load(UserDetails.picturelink)//                .resize(350, 240)
-////                .centerInside()
-//
-//                .fit()
-//
-// .centerCrop()
-//                .into(profilePic);
 
         //tune out buttons for Now Playing layout
         tuneout1.setOnClickListener(new OnClickListener() {
@@ -3495,7 +2917,6 @@ public class RealTimeActivity extends AppCompatActivity
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 mediaPlayer.pause();
-               // mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -3516,9 +2937,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -3542,7 +2963,6 @@ public class RealTimeActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -3562,9 +2982,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -3587,7 +3007,6 @@ public class RealTimeActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -3607,9 +3026,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -3632,7 +3051,6 @@ public class RealTimeActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -3652,9 +3070,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -3677,7 +3095,6 @@ public class RealTimeActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                //mediaPlayer.release();
 
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
                 reqdb.addListenerForSingleValueEvent(
@@ -3697,9 +3114,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -3724,7 +3141,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3759,7 +3176,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3783,49 +3200,6 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
-//        uploadImg.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (filePath != null) {
-//                    pd.show();
-//
-//                    StorageReference childRef = picRef.child(ID + "_image.jpg");
-//
-//                    //uploading the image
-//                    UploadTask uploadTask = childRef.putFile(filePath);
-//
-//                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            pd.dismiss();
-//                            Toast.makeText(RealTimeActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
-//                            picLayout.setVisibility(View.GONE);
-//                            if (mediaPlayer.isPlaying()) {
-//                                paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
-//                                fab1.setLayoutParams(paramsFab1);
-//                                paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
-//                                fab.setLayoutParams(paramsFab);
-//                                fab1.setVisibility(View.VISIBLE);
-//                                fab.setVisibility(View.VISIBLE);
-//                            } else {
-//                                fab1.setVisibility(View.VISIBLE);
-//                                fab.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            pd.dismiss();
-//                            Toast.makeText(RealTimeActivity.this, "Upload Failed -> " + e, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                } else {
-//                    Toast.makeText(RealTimeActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
         youtube3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -3837,7 +3211,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3873,7 +3247,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3908,7 +3282,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3943,7 +3317,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -3978,7 +3352,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -4013,7 +3387,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -4048,7 +3422,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -4083,7 +3457,7 @@ public class RealTimeActivity extends AppCompatActivity
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
 
-                if(mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     pause();
                 }
 
@@ -4106,7 +3480,6 @@ public class RealTimeActivity extends AppCompatActivity
                 });
             }
         });
-
 
 
         //listeners for download buttons - NowPlaying Layout
@@ -4522,7 +3895,6 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-        //// TODO: 18/10/2017
         //listeners for comment buttons - NowPlaying Layout
         comment1.setOnClickListener(new OnClickListener() {
             @Override
@@ -4655,13 +4027,13 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
+        //handle click on send comment
         commentButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 String comment = commentarea.getText().toString();
 
-                if(!comment.isEmpty()) {
+                if (!comment.isEmpty()) {
                     getReceiver(UserDetails.commentOn, UserDetails.commentTo, comment);
                 } else {
                     Toast.makeText(RealTimeActivity.this, "Please write a comment", Toast.LENGTH_SHORT).show();
@@ -4669,9 +4041,9 @@ public class RealTimeActivity extends AppCompatActivity
                 if (mediaPlayer.isPlaying()) {
                     play_toolbar.setVisibility(View.VISIBLE);
                     btn.setBackgroundResource(R.drawable.ic_media_pause);
-                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    paramsFab1.setMargins(0, 0, 43, 150);
                     fab1.setLayoutParams(paramsFab1);
-                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    paramsFab.setMargins(53, 0, 0, 160);
                     fab.setLayoutParams(paramsFab);
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
@@ -4686,7 +4058,6 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-        //// TODO: 18/10/2017
         //listeners for add to playlist buttons - NowPlaying Layout
         add1.setOnClickListener(new OnClickListener() {
             @Override
@@ -4703,9 +4074,6 @@ public class RealTimeActivity extends AppCompatActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild(ID)) {
                             for (DataSnapshot snapshot : dataSnapshot.child(ID).getChildren()) {
-                                String key = snapshot.getKey();
-                                //Toast.makeText(RealTimeActivity.this, "key "+key, Toast.LENGTH_SHORT).show();
-
                                 if (!snapshot.getValue().equals(song)) {
                                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                                     Firebase playRef = ref.child("MySongs").child(ID);
@@ -5068,8 +4436,7 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
-
+        //retrieve recent songs from Firebase
         final DatabaseReference recentsRef = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
         recentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -5088,14 +4455,13 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
         //listeners for like buttons - NowPlaying Layout
         bheart1.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5114,7 +4480,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5133,7 +4499,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5152,7 +4518,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5171,7 +4537,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5190,7 +4556,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5209,7 +4575,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5227,7 +4593,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5246,7 +4612,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5265,7 +4631,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5283,7 +4649,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5316,7 +4682,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5349,7 +4715,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5382,7 +4748,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5415,7 +4781,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5448,7 +4814,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5481,7 +4847,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5514,7 +4880,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5547,7 +4913,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5580,7 +4946,7 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onClick(final View v) {
                 commentsLayout.setVisibility(View.GONE);
-                if(!mediaPlayer.isPlaying()) {
+                if (!mediaPlayer.isPlaying()) {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 }
@@ -5607,7 +4973,6 @@ public class RealTimeActivity extends AppCompatActivity
                         });
             }
         });
-
 
 
         //Firebase references to retrieve data
@@ -5652,7 +5017,7 @@ public class RealTimeActivity extends AppCompatActivity
                     otherUser = dataSnapshot.getKey();
                     if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
                         String song = dataSnapshot.child("Song").getValue().toString();
-                        if(mediaPlayer.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
                             addTimeToFirebase(otherUser, song);
                         }
                     }
@@ -5666,7 +5031,7 @@ public class RealTimeActivity extends AppCompatActivity
                     otherUser = dataSnapshot.getKey();
                     if (dataSnapshot.child("Name").getValue().toString().equals(UserDetails.fullname)) {
                         String song = dataSnapshot.child("Song").getValue().toString();
-                        if(mediaPlayer.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
                             addTimeToFirebase(otherUser, song);
                         }
                     }
@@ -5694,19 +5059,14 @@ public class RealTimeActivity extends AppCompatActivity
         mDatabase8.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-               // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    text = dataSnapshot.getKey();
-                    names.add(0, text);
-                    String mysong = dataSnapshot.child("Song").getValue().toString();
-                    title.add(0, mysong);
-                    String picture = dataSnapshot.child("Picture").getValue().toString();
-                    pictures.add(0, picture);
+                text = dataSnapshot.getKey();
+                names.add(0, text);
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                title.add(0, mysong);
+                String picture = dataSnapshot.child("Picture").getValue().toString();
+                pictures.add(0, picture);
 
                 for (int i = 0; i <= names.size() - 1; i++) {
-                    //
-                    //
-                    // Toast.makeText(RealTimeActivity.this, "Fullname and size " + names.get(i)+names.size(), Toast.LENGTH_SHORT).show();
-
                     ll[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll[i].findViewById(R.id.name);
                     name.setText(names.get(i));
@@ -5715,8 +5075,6 @@ public class RealTimeActivity extends AppCompatActivity
                     ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
                     Picasso.with(RealTimeActivity.this)
                             .load(pictures.get(i).toString())
-//                .resize(350, 240)
-//                .centerInside()
                             .fit()
                             .centerCrop()
                             .into(pic);
@@ -5725,135 +5083,75 @@ public class RealTimeActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-             //   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                    text = dataSnapshot.getKey();
-                    String mysong = dataSnapshot.child("Song").getValue().toString();
-                    String fpic = dataSnapshot.child("Picture").getValue().toString();
+                text = dataSnapshot.getKey();
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                String fpic = dataSnapshot.child("Picture").getValue().toString();
 
 
-                    for (int i = 0; i <= names.size() - 1; i++) {
-                        if (text.equals(names.get(i))) {
-                            names.set(i, text);
-                            title.set(i, mysong);
-                            pictures.set(i,fpic);
-                            tuneoutButtonArray[i].setVisibility(View.GONE);
-                            syncButtonArray[i].setVisibility(View.VISIBLE);
-                            TextView name = (TextView) ll[i].findViewById(R.id.name);
-                            name.setText(text);
-                            TextView song = (TextView) ll[i].findViewById(R.id.songName);
-                            song.setText(mysong);
-                            ImageView pict = (ImageView) ll[i].findViewById(R.id.friendPic);
-                            Picasso.with(RealTimeActivity.this)
-                                    .load(fpic)
-//                .resize(350, 240)
-//                .centerInside()
-
-                                    .fit()
-                                    .centerCrop()
-                                    .into(pict);
-                        }
+                for (int i = 0; i <= names.size() - 1; i++) {
+                    if (text.equals(names.get(i))) {
+                        names.set(i, text);
+                        title.set(i, mysong);
+                        pictures.set(i, fpic);
+                        tuneoutButtonArray[i].setVisibility(View.GONE);
+                        syncButtonArray[i].setVisibility(View.VISIBLE);
+                        TextView name = (TextView) ll[i].findViewById(R.id.name);
+                        name.setText(text);
+                        TextView song = (TextView) ll[i].findViewById(R.id.songName);
+                        song.setText(mysong);
+                        ImageView pict = (ImageView) ll[i].findViewById(R.id.friendPic);
+                        Picasso.with(RealTimeActivity.this)
+                                .load(fpic)
+                                .fit()
+                                .centerCrop()
+                                .into(pict);
                     }
-
-                if (mediaPlayer.isPlaying()) {
-                    Toast.makeText(RealTimeActivity.this, text+  " changed songs", Toast.LENGTH_SHORT).show();
-
-//                    track_title.setText(mysong);
-//                    SongSingleton.getInstance().setSongName(mysong);
-
-                    play_toolbar.setVisibility(View.VISIBLE);
-
-                    btn.setBackgroundResource(R.drawable.ic_media_pause);
-                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
-                    fab1.setLayoutParams(paramsFab1);
-                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
-                    fab.setLayoutParams(paramsFab);
                 }
 
-                // }
-//                for (int i = 0; i <= names.size() - 1; i++) {
-//                    ll[i].setVisibility(View.VISIBLE);
-//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
-//                    name.setText(names.get(i));
-//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
-//                    song.setText(title.get(i));
-//                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-//                    Picasso.with(RealTimeActivity.this)
-//                            .load(pictures.get(i).toString())
-////                .resize(350, 240)jūlo
-////                .centerInside()
-//
-//                            .fit()
-//                            //.centerCrop()
-//                            .into(pic);
-//                }
+                if (mediaPlayer.isPlaying()) {
+                    Toast.makeText(RealTimeActivity.this, text + " changed songs", Toast.LENGTH_SHORT).show();
+                    play_toolbar.setVisibility(View.VISIBLE);
+                    btn.setBackgroundResource(R.drawable.ic_media_pause);
+                    paramsFab1.setMargins(0, 0, 43, 150);
+                    fab1.setLayoutParams(paramsFab1);
+                    paramsFab.setMargins(53, 0, 0, 160);
+                    fab.setLayoutParams(paramsFab);
+                }
             }
-
 
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-               // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    text = dataSnapshot.getKey();
-                    String mysong = dataSnapshot.child("Song").getValue().toString();
+                text = dataSnapshot.getKey();
+                String mysong = dataSnapshot.child("Song").getValue().toString();
+                String picture = dataSnapshot.child("Picture").getValue().toString();
+                names.remove(text);
+                title.remove(mysong);
+                pictures.remove(picture);
 
-                    String picture = dataSnapshot.child("Picture").getValue().toString();
-                    names.remove(text);
-                    title.remove(mysong);
-                    pictures.remove(picture);
+                for (int j = 0; j <= ll.length - 1; j++) {
+                    TextView name = (TextView) ll[j].findViewById(R.id.name);
+                    TextView song = (TextView) ll[j].findViewById(R.id.songName);
+                    ImageView pict = (ImageView) ll[j].findViewById(R.id.friendPic);
 
-                    for (int j = 0; j <= ll.length - 1; j++) {
-                       // Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
-                        TextView name = (TextView) ll[j].findViewById(R.id.name);
-                        TextView song = (TextView) ll[j].findViewById(R.id.songName);
-                        ImageView pict = (ImageView) ll[j].findViewById(R.id.friendPic);
-
-                        if (name.getText().equals(text)) {
-                            //Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
-                            ll[j].setVisibility(View.GONE);
-                            tuneoutButtonArray[j].setVisibility(View.GONE);
-                            syncButtonArray[j].setVisibility(View.VISIBLE);
-
-                        }
-
+                    if (name.getText().equals(text)) {
+                        ll[j].setVisibility(View.GONE);
+                        tuneoutButtonArray[j].setVisibility(View.GONE);
+                        syncButtonArray[j].setVisibility(View.VISIBLE);
                     }
+                }
 
                 if (mediaPlayer.isPlaying()) {
-                    Toast.makeText(RealTimeActivity.this, text+  " stopped listening", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(RealTimeActivity.this, text + " stopped listening", Toast.LENGTH_SHORT).show();
                     play_toolbar.setVisibility(View.VISIBLE);
-//                    track_title = (TextView) findViewById(R.id.track_title);
-//                    track_title.setText(mysong);
-//                    SongSingleton.getInstance().setSongName(mysong);
-
-//                    DatabaseReference st1 = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
-//                    st1.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                            if(dataSnapshot.child(ID).exists()){
-//                                String song = dataSnapshot.child(ID).child("Song").getValue().toString();
-//                                track_title.setText(song);
-////                    Toast.makeText(LibraryActivity.this, "song is " + song, Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//
-
                     btn.setBackgroundResource(R.drawable.ic_media_pause);
-                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                    paramsFab1.setMargins(0, 0, 43, 150);
                     fab1.setLayoutParams(paramsFab1);
-                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    paramsFab.setMargins(53, 0, 0, 160);
                     fab.setLayoutParams(paramsFab);
                 }
 
             }
-           // }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -5875,18 +5173,16 @@ public class RealTimeActivity extends AppCompatActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                 String text = dataSnapshot.getKey();
-                names1.add(0,text);
+                names1.add(0, text);
                 String mysong = dataSnapshot.child("Song").getValue().toString();
-                titles1.add(0,mysong);
+                titles1.add(0, mysong);
                 String picture = dataSnapshot.child("Picture").getValue().toString();
-                pictures1.add(0,picture);
+                pictures1.add(0, picture);
                 String time = dataSnapshot.child("Time").getValue().toString();
-                times1.add(0,getTime(time));
+                times1.add(0, getTime(time));
 
 
                 for (int i = 0; i <= names1.size() - 1; i++) {
-                    //Toast.makeText(RealTimeActivity.this, "Fullname and size " + names1.get(i)+names1.size(), Toast.LENGTH_SHORT).show();
-
                     ll1[i].setVisibility(View.VISIBLE);
                     TextView name = (TextView) ll1[i].findViewById(R.id.name);
                     name.setText(names1.get(i));
@@ -5897,9 +5193,6 @@ public class RealTimeActivity extends AppCompatActivity
                     ImageView pic = (ImageView) ll1[i].findViewById(R.id.friendPic);
                     Picasso.with(RealTimeActivity.this)
                             .load(pictures1.get(i).toString())
-//                .resize(350, 240)
-//                .centerInside()
-
                             .fit()
                             .centerCrop()
                             .into(pic);
@@ -5908,21 +5201,18 @@ public class RealTimeActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                 String text = dataSnapshot.getKey();
                 String mysong = dataSnapshot.child("Song").getValue().toString();
                 String fpic = dataSnapshot.child("Picture").getValue().toString();
                 String ctime = dataSnapshot.child("Time").getValue().toString();
 
 
-
                 for (int i = 0; i <= names1.size() - 1; i++) {
                     if (text.equals(names1.get(i))) {
                         names1.set(i, text);
                         titles1.set(i, mysong);
-                        pictures1.set(i,fpic);
-                        times1.set(i,getTime(ctime));
+                        pictures1.set(i, fpic);
+                        times1.set(i, getTime(ctime));
                         TextView name = (TextView) ll1[i].findViewById(R.id.name);
                         name.setText(text);
                         TextView song = (TextView) ll1[i].findViewById(R.id.songName);
@@ -5932,40 +5222,18 @@ public class RealTimeActivity extends AppCompatActivity
                         ImageView pict = (ImageView) ll1[i].findViewById(R.id.friendPic);
                         Picasso.with(RealTimeActivity.this)
                                 .load(fpic)
-//                .resize(350, 240)
-//                .centerInside()
-
                                 .fit()
                                 .centerCrop()
                                 .into(pict);
                     }
                 }
-                // }
-//                for (int i = 0; i <= names.size() - 1; i++) {
-//                    ll[i].setVisibility(View.VISIBLE);
-//                    TextView name = (TextView) ll[i].findViewById(R.id.name);
-//                    name.setText(names.get(i));
-//                    TextView song = (TextView) ll[i].findViewById(R.id.songName);
-//                    song.setText(title.get(i));
-//                    ImageView pic = (ImageView) ll[i].findViewById(R.id.friendPic);
-//                    Picasso.with(RealTimeActivity.this)
-//                            .load(pictures.get(i).toString())
-////                .resize(350, 240)jūlo
-////                .centerInside()
-//
-//                            .fit()
-//                            //.centerCrop()
-//                            .into(pic);
-//                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                // for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                 String text = dataSnapshot.getKey();
                 String mysong = dataSnapshot.child("Song").getValue().toString();
                 String time = dataSnapshot.child("Time").getValue().toString();
-
                 String picture = dataSnapshot.child("Picture").getValue().toString();
                 names1.remove(text);
                 titles1.remove(mysong);
@@ -5974,28 +5242,21 @@ public class RealTimeActivity extends AppCompatActivity
 
 
                 for (int j = 0; j <= ll1.length - 1; j++) {
-                    // Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                     TextView name = (TextView) ll1[j].findViewById(R.id.name);
                     TextView timer = (TextView) ll1[j].findViewById(R.id.time);
                     TextView song = (TextView) ll1[j].findViewById(R.id.songName);
                     ImageView pict = (ImageView) ll1[j].findViewById(R.id.friendPic);
 
                     if (name.getText().equals(text)) {
-                        //Toast.makeText(RealTimeActivity.this, "key names " + text, Toast.LENGTH_SHORT).show();
                         ll1[j].setVisibility(View.GONE);
                     }
 
                 }
                 if (mediaPlayer.isPlaying()) {
                     play_toolbar.setVisibility(View.VISIBLE);
-//                    track_title = (TextView) findViewById(R.id.track_title);
                     track_title.setText(mysong);
-//                    SongSingleton.getInstance().setSongName(mysong);
-
                 }
-
             }
-            // }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -6022,15 +5283,12 @@ public class RealTimeActivity extends AppCompatActivity
                     newtime = Integer.parseInt(time);
                     Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                     Firebase songRef = ref.child("URL").child(song);
-                   // Toast.makeText(RealTimeActivity.this, "time was added", Toast.LENGTH_SHORT).show();
 
                     songRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
                         @Override
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 url = String.valueOf(dsp.getValue());
-                                //UserDetails.song = url;
-                                //Toast.makeText(RealTimeActivity.this, "url "+url, Toast.LENGTH_SHORT).show();
                                 playMusic(newtime, url);
                             }
                         }
@@ -6058,7 +5316,6 @@ public class RealTimeActivity extends AppCompatActivity
                         public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
                             for (com.firebase.client.DataSnapshot dsp : dataSnapshot.getChildren()) {
                                 url = String.valueOf(dsp.getValue());
-                                //UserDetails.song = url;
                                 playMusic(newtime, url);
                             }
                         }
@@ -6149,8 +5406,6 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-        //setting title for homepage toolbar
-
         //loading users in plistView
         ulistView = (ListView) findViewById(R.id.plistView);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
@@ -6166,13 +5421,11 @@ public class RealTimeActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String user = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.GONE);
-                //nowPlayingLayout.setVisibility(View.GONE);
                 play_toolbar.requestLayout();
                 hideSoftKeyboard(RealTimeActivity.this);
                 UserDetails.username = user;
 
                 DatabaseReference dbF = FirebaseDatabase.getInstance().getReference().child("ID").child(user).child("Id");
-
                 dbF.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -6218,7 +5471,6 @@ public class RealTimeActivity extends AppCompatActivity
                 song = ((TextView) view).getText().toString();
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
-//                SongSingleton.getInstance().setSongName(song);
                 hideSoftKeyboard(RealTimeActivity.this);
                 Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase songRef = ref.child("URL").child(song);
@@ -6258,9 +5510,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -6315,9 +5567,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -6331,8 +5583,6 @@ public class RealTimeActivity extends AppCompatActivity
 
             }
         });
-
-
 
         //library button
         fab1.setOnClickListener(new OnClickListener() {
@@ -6363,9 +5613,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -6380,11 +5630,6 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
-
-
-
-        //showing user's email on sliding drawer
-
         //search layout and functions
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
@@ -6396,10 +5641,7 @@ public class RealTimeActivity extends AppCompatActivity
                     play_toolbar.setVisibility(View.VISIBLE);
                 } else play_toolbar.setVisibility(View.GONE);
                 nowPlayingLayout.setVisibility(View.GONE);
-//                recPlayedLayout.setVisibility(View.GONE);
-
                 searchLayout.setVisibility(View.VISIBLE);
-                //searchView.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 fab1.setVisibility(View.INVISIBLE);
             }
@@ -6407,19 +5649,19 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onSearchViewClosed() {
                 nowPlayingLayout.setVisibility(View.VISIBLE);
-                if(mediaPlayer.isPlaying()){
-                    paramsFab1.setMargins(0, 0, 43, 150); //bottom margin is 25 here (change it as u wish)
+                if (mediaPlayer.isPlaying()) {
+                    paramsFab1.setMargins(0, 0, 43, 150);
                     fab1.setLayoutParams(paramsFab1);
-                    paramsFab.setMargins(53, 0, 0, 160); //bottom margin is 25 here (change it as u wish)
+                    paramsFab.setMargins(53, 0, 0, 160);
                     fab.setLayoutParams(paramsFab);
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
                 } else {
                     fab.setVisibility(View.VISIBLE);
                     fab1.setVisibility(View.VISIBLE);
-                    paramsFab1.setMargins(0, 0, 43, 43); //bottom margin is 25 here (change it as u wish)
+                    paramsFab1.setMargins(0, 0, 43, 43);
                     fab1.setLayoutParams(paramsFab1);
-                    paramsFab.setMargins(53, 0, 0, 53); //bottom margin is 25 here (change it as u wish)
+                    paramsFab.setMargins(53, 0, 0, 53);
                     fab.setLayoutParams(paramsFab);
                 }
 
@@ -6442,7 +5684,7 @@ public class RealTimeActivity extends AppCompatActivity
                 if (newText.toLowerCase() != null && !newText.toLowerCase().isEmpty()) {
                     List<String> ulistFound = new ArrayList<String>();
                     for (String item : users) {
-                        if (item.toLowerCase().contains(newText.toLowerCase())){
+                        if (item.toLowerCase().contains(newText.toLowerCase())) {
                             ulistFound.add(item);
                         }
                     }
@@ -6457,15 +5699,13 @@ public class RealTimeActivity extends AppCompatActivity
                         }
                     }
 
-                    if (ulistFound.isEmpty()){
+                    if (ulistFound.isEmpty()) {
                         ulistFound.add("No users found");
-//                        ptextview.setVisibility(View.GONE);
                     } else {
                         ptextview.setVisibility(View.VISIBLE);
                     }
-                    if(slistFound.isEmpty()){
+                    if (slistFound.isEmpty()) {
                         slistFound.add("No songs found");
-//                        stextview.setVisibility(View.GONE);
                     } else {
                         stextview.setVisibility(View.VISIBLE);
                     }
@@ -6484,7 +5724,7 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-
+    //delete time request
     private void deleteRequest() {
         DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
         reqdb.addListenerForSingleValueEvent(
@@ -6505,9 +5745,9 @@ public class RealTimeActivity extends AppCompatActivity
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             String reqId = snapshot.getKey().toString();
-                            if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                            if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                 dataSnapshot.child(reqId).getRef().removeValue();
                             }
                         }
@@ -6521,13 +5761,7 @@ public class RealTimeActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Gets followers.
-     *
-     * @param fullname the fullname
-     * @param mysong   the mysong
-     */
-//getting followers
+    //getting followers
     public void getFollowers(String fullname, final String mysong) {
         final ArrayAdapter<String> fadapter;
         UserDetails.mysong = mysong;
@@ -6538,11 +5772,9 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    //myFollowers.clear();
                     String value = snapshot.getKey();
                     myFollowers.add(value);
                     UserDetails.myFollowers.add(value);
-                    //addToFirebaseHome(value, mysong);
                     fadapter.notifyDataSetChanged();
                 }
                 eraseFromRecents(mysong);
@@ -6562,50 +5794,8 @@ public class RealTimeActivity extends AppCompatActivity
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //play_toolbar.setVisibility(View.GONE);
-
-        Menu nav_Menu = navigationView.getMenu();
-
-//        final CheckBox checkBox = (CheckBox) nav_Menu.findItem(R.id.nav_private).getActionView();
-//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked){
-//                    makeAccountPublic();
-//                    checkBox.setChecked(false);
-//                } else {
-//                    makeAccountPrivate();
-//                    checkBox.setChecked(true);
-//                }
-//            }
-//
-//        });
-
         return true;
     }
-
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            MenuItem privateProfile = menu.findItem(R.id.nav_private);
-//            //MenuItem dwnOption = menu.findItem(R.id.menu_dwn);
-//            //MenuItem remDwnOption = menu.findItem(R.id.menu_remdwn);
-//
-//            if (UserDetails.publicProfie) {
-//                checkBox.
-//                privateProfile.setVisible(false);
-//            } else {
-//                privateProfile.setVisible(true);
-//            }
-//
-//        }
-//        return super.onPrepareOptionsMenu(menu);
-//
-//    }
-//
-//
 
     //back button - from search layout
     @Override
@@ -6623,42 +5813,26 @@ public class RealTimeActivity extends AppCompatActivity
     //handling click on menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        Menu nav_Menu = navigationView.getMenu();
-//        nav_Menu.findItem(R.id.nav_private).setVisible(true);
-//        if(UserDetails.publicProfie) {
-//            nav_Menu.findItem(R.id.nav_private).setChecked(false);
-//        } else nav_Menu.findItem(R.id.nav_private).setChecked(true);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         TextView nav_user = (TextView) drawer.findViewById(R.id.emailProfile);
         nav_user.setText(sender);
-
-
         return super.onOptionsItemSelected(item);
     }
 
+    //get time
     private String getTime(String time) {
         Calendar calendar = Calendar.getInstance();
         Long longTime = Long.valueOf(time);
 
         Date today = new Date(System.currentTimeMillis());
         Date otherDate = new Date(longTime);
-
-
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         DateFormat hfor = new SimpleDateFormat("HH:mm");
 
         String todayD = formatter.format(today);
         String otherDateD = formatter.format(otherDate);
 
-
-
-        if(todayD.equals(otherDateD)){
-
-//            String hm = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toHours(longTime),
-//                    TimeUnit.MILLISECONDS.toMinutes(longTime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(longTime)));
-
+        if (todayD.equals(otherDateD)) {
             return hfor.format(longTime);
         } else return otherDateD;
     }
@@ -6693,9 +5867,9 @@ public class RealTimeActivity extends AppCompatActivity
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String reqId = snapshot.getKey().toString();
-                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                     dataSnapshot.child(reqId).getRef().removeValue();
                                 }
                             }
@@ -6732,9 +5906,9 @@ public class RealTimeActivity extends AppCompatActivity
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String reqId = snapshot.getKey().toString();
-                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                     dataSnapshot.child(reqId).getRef().removeValue();
                                 }
                             }
@@ -6754,11 +5928,8 @@ public class RealTimeActivity extends AppCompatActivity
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/*");
                 Intent chooserIntent = Intent.createChooser(intent, "Pick an image.");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-//                intent.setAction(Intent.ACTION_PICK);
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
                 startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
-               // picLayout.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.GONE);
                 fab1.setVisibility(View.GONE);
                 DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
@@ -6780,9 +5951,9 @@ public class RealTimeActivity extends AppCompatActivity
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     String reqId = snapshot.getKey().toString();
-                                    if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                         dataSnapshot.child(reqId).getRef().removeValue();
                                     }
                                 }
@@ -6837,9 +6008,9 @@ public class RealTimeActivity extends AppCompatActivity
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String reqId = snapshot.getKey().toString();
-                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                     dataSnapshot.child(reqId).getRef().removeValue();
                                 }
                             }
@@ -6875,9 +6046,9 @@ public class RealTimeActivity extends AppCompatActivity
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String reqId = snapshot.getKey().toString();
-                                if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                     dataSnapshot.child(reqId).getRef().removeValue();
                                 }
                             }
@@ -6891,26 +6062,8 @@ public class RealTimeActivity extends AppCompatActivity
 
             eraseFromFirebase();
         } else if (id == R.id.nav_private) {
-
-            final CheckBox checkBox= (CheckBox) item.getActionView();
-
-//            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    if (isChecked) {
-//                        // perform logic
-//                        makeAccountPublic();
-//                        item.setChecked(false);
-//                        checkBox.setChecked(false);
-//                    } else {
-//                        makeAccountPrivate();
-//                        item.setChecked(true);
-//                        checkBox.setChecked(true);
-//                    }
-//                }
-//            });
-
-            if(item.isChecked()){
+            final CheckBox checkBox = (CheckBox) item.getActionView();
+            if (item.isChecked()) {
                 makeAccountPublic();
                 item.setChecked(false);
                 checkBox.setChecked(false);
@@ -6919,9 +6072,6 @@ public class RealTimeActivity extends AppCompatActivity
                 item.setChecked(true);
                 checkBox.setChecked(true);
             }
-
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -6929,6 +6079,7 @@ public class RealTimeActivity extends AppCompatActivity
         return true;
     }
 
+    //make account public
     private void makeAccountPublic() {
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
@@ -6940,14 +6091,13 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase userRef1 = ref1.child("PublicProfiles");
-                Map<String,Object> uinfo1 = new HashMap<String, Object>();
-                uinfo1.put(ID,myname);
+                Map<String, Object> uinfo1 = new HashMap<String, Object>();
+                uinfo1.put(ID, myname);
                 userRef1.updateChildren(uinfo1);
 
                 final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                 Menu nav_Menu = navigationView.getMenu();
                 nav_Menu.findItem(R.id.nav_private).setChecked(false);
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -6978,6 +6128,7 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    //set account to private
     private void makeAccountPrivate() {
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
 
@@ -6989,8 +6140,8 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Firebase ref1 = new Firebase("https://tunein-633e5.firebaseio.com/");
                 Firebase userRef1 = ref1.child("PrivateProfiles");
-                Map<String,Object> uinfo1 = new HashMap<String, Object>();
-                uinfo1.put(ID,myname);
+                Map<String, Object> uinfo1 = new HashMap<String, Object>();
+                uinfo1.put(ID, myname);
                 userRef1.updateChildren(uinfo1);
                 //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
@@ -7023,12 +6174,7 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Hide soft keyboard.
-     *
-     * @param activity the activity
-     */
-//hide keyboard method
+    //hide keyboard method
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
@@ -7037,13 +6183,7 @@ public class RealTimeActivity extends AppCompatActivity
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
-    /**
-     * Start music.
-     *
-     * @param link the link
-     * @param song the song
-     */
-//play selected song
+    //play selected song
     public void startMusic(String link, String song) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -7056,7 +6196,6 @@ public class RealTimeActivity extends AppCompatActivity
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
-            //   updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
@@ -7067,24 +6206,7 @@ public class RealTimeActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Stop music.
-     *
-     * @param length the length
-     */
-//stopmusic
-    public void stopMusic(Integer length) {
-        play_toolbar.setVisibility(View.VISIBLE);
-        play_toolbar.bringToFront();
-        length = mediaPlayer.getCurrentPosition();
-        Button btn = (Button) this.findViewById(R.id.button);
-        btn.setBackgroundResource(R.drawable.ic_media_play);
-        mediaPlayer.pause();
-    }
-
-    /**
-     * Pause.
-     */
+    //pause song
     public void pause() {
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
@@ -7101,12 +6223,7 @@ public class RealTimeActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Play pause music.
-     *
-     * @param v the v
-     */
-//play song method with signle button background handling
+    //play song method with signle button background handling
     public void playPauseMusic(View v) {
         Integer length = mediaPlayer.getCurrentPosition();
         if (mediaPlayer.isPlaying()) {
@@ -7122,6 +6239,7 @@ public class RealTimeActivity extends AppCompatActivity
         mediaPlayer.getCurrentPosition();
     }
 
+    //get receiver
     private void getReceiver(final String song, final String user, final String comment) {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
         mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -7144,14 +6262,13 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
+    //send notification when commenting
     private void sendCommentNotification(final String songToJoin, String user, final String comment) {
-
         DatabaseReference dbC = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
         dbC.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.receiver = dataSnapshot.getValue().toString();
-                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -7165,14 +6282,10 @@ public class RealTimeActivity extends AppCompatActivity
             public void run() {
                 int SDK_INT = android.os.Build.VERSION.SDK_INT;
                 if (SDK_INT > 8) {
-                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
-
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                             .permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     String send_email;
-
-                    //This is a Simple Logic to Send Notification different Device Programmatically....
                     if (RealTimeActivity.loggedEmail.equals(sender)) {
                         send_email = UserDetails.receiver;
 
@@ -7192,21 +6305,14 @@ public class RealTimeActivity extends AppCompatActivity
                         con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
                         con.setRequestMethod("POST");
-
-//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
-//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
-                        //"'headings': {'en': 'Notification Title'}, " +
-                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
-
                         String strJsonBody = "{"
                                 + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
 
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
                                 + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " commented on '" + songToJoin + "': "+ comment +" \"},"
+                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " commented on '" + songToJoin + "': " + comment + " \"},"
                                 + "\"buttons\":[{\"id\": \"comment\", \"text\": \"\"}]"
-                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
                                 + "}";
 
                         System.out.println("strJsonBody:\n" + strJsonBody);
@@ -7242,10 +6348,7 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Erase from firebase.
-     */
-//erase from homepage when song stops
+    //erase from homepage when song stops
     public void eraseFromFirebase() {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
         mDatabase1.addListenerForSingleValueEvent(
@@ -7255,14 +6358,8 @@ public class RealTimeActivity extends AppCompatActivity
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
-
-                                // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
-
-                                //names.remove(getMyFullname(ID));
-                                // title.remove()
                             }
                         }
                     }
@@ -7275,11 +6372,7 @@ public class RealTimeActivity extends AppCompatActivity
         addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong, ID);
     }
 
-    /**
-     * Erase from recents.
-     *
-     * @param mysong the mysong
-     */
+    //erase song from recents
     public void eraseFromRecents(String mysong) {
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("FriendsActivity");
         mDatabase1.addListenerForSingleValueEvent(
@@ -7289,14 +6382,8 @@ public class RealTimeActivity extends AppCompatActivity
                         String v;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             v = snapshot.getKey();
-                            //getFulname();
                             if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
-
-                                // dataSnapshot.child(v).getRef().removeValue();
                                 dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
-
-                                //names.remove(getMyFullname(ID));
-                                // title.remove()
                             }
                         }
                     }
@@ -7309,31 +6396,18 @@ public class RealTimeActivity extends AppCompatActivity
         addToHome(UserDetails.myFollowers, mysong);
     }
 
-
-    /**
-     * Play from pause.
-     *
-     * @param time the time
-     */
+    //play song from pause
     public void playFromPause(Integer time) {
-
         mediaPlayer.seekTo(time);
         mediaPlayer.start();
         TextView title = (TextView) findViewById(R.id.track_title);
         String songtitle = title.getText().toString();
-        //song = ((TextView) view).getText().toString();
         getFollowers(UserDetails.fullname, songtitle);
-
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
-        //nowPlaying(song);
     }
 
-    /**
-     * Open player page.
-     *
-     * @param v the v
-     */
+    //slide up player page
     public void openPlayerPage(View v) {
         Intent i = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
         startActivity(i);
@@ -7356,9 +6430,9 @@ public class RealTimeActivity extends AppCompatActivity
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             String reqId = snapshot.getKey().toString();
-                            if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                            if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                 dataSnapshot.child(reqId).getRef().removeValue();
                             }
                         }
@@ -7372,16 +6446,6 @@ public class RealTimeActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Update progress bar.
-     */
-    public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
-    }
-
-    /**
-     * Background Runnable thread
-     */
     public Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             Utilities utils = new Utilities();
@@ -7403,15 +6467,10 @@ public class RealTimeActivity extends AppCompatActivity
         }
     };
 
-
-    /**
-     * Gets fulname.
-     */
+    //get fullname
     public void getFulname() {
-
         FirebaseAuth fb;
         fb = FirebaseAuth.getInstance();
-
         String ID;
         ID = fb.getCurrentUser().getUid();
 
@@ -7421,7 +6480,6 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -7432,12 +6490,6 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Gets my fullname.
-     *
-     * @param id the id
-     * @return the my fullname
-     */
     public String getMyFullname(String id) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -7446,7 +6498,6 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -7458,28 +6509,7 @@ public class RealTimeActivity extends AppCompatActivity
         return UserDetails.fullname;
     }
 
-    /**
-     * Check following.
-     */
-    public void checkFollowing() {
-
-        mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(fullname)) {
-                    //Toast.makeText(RequestActivity.this, "Already following " + UserDetails.username, Toast.LENGTH_SHORT).show();
-                    UserDetails.following = true;
-                } else {
-                    UserDetails.following = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
+    //add to homepage Firebase node
     private void addToFirebaseHome(String myvalue, final String mysong) {
 
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -7489,8 +6519,6 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
-//                Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -7506,7 +6534,6 @@ public class RealTimeActivity extends AppCompatActivity
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("Song", mysong);
-//                Toast.makeText(RealTimeActivity.this, UserDetails.myname + " id to get fullname for", Toast.LENGTH_SHORT).show();
                 mDatabase6.child(UserDetails.myname).updateChildren(map);
 
             }
@@ -7533,16 +6560,8 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-
-    /**
-     * Add to home.
-     *
-     * @param myvalue the myvalue
-     * @param mysong  the mysong
-     */
+    //add to homepage
     public void addToHome(List<String> myvalue, final String mysong) {
-
-
         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
 
@@ -7566,7 +6585,7 @@ public class RealTimeActivity extends AppCompatActivity
             Firebase ref4 = new Firebase("https://tunein-633e5.firebaseio.com/Homepage/" + myvalue.get(i));
             Map<String, Object> uinfo = new HashMap<>();
 
-            if(!checkBox.isChecked()) {
+            if (!checkBox.isChecked()) {
                 uinfo.put("Song", mysong);
                 if (!UserDetails.picturelink.equals("")) {
                     uinfo.put("Picture", UserDetails.picturelink);
@@ -7579,13 +6598,7 @@ public class RealTimeActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Add to friend activity.
-     *
-     * @param myvalue the myvalue
-     * @param mysong  the mysong
-     * @param myid    the myid
-     */
+    //add to friend activity
     public void addToFriendActivity(List<String> myvalue, final String mysong, final String myid) {
 
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
@@ -7595,8 +6608,6 @@ public class RealTimeActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.myname = dataSnapshot.getValue().toString();
                 me = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, UserDetails.myname + " is finally my fullname", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -7610,7 +6621,7 @@ public class RealTimeActivity extends AppCompatActivity
             Firebase refAct = new Firebase("https://tunein-633e5.firebaseio.com/FriendsActivity/" + myvalue.get(i));
             Map<String, Object> udet = new HashMap<>();
 
-            if(!checkBox.isChecked()) {
+            if (!checkBox.isChecked()) {
                 udet.put("Song", mysong);
                 udet.put("Time", System.currentTimeMillis());
                 if (!UserDetails.picturelink.equals("")) {
@@ -7625,6 +6636,7 @@ public class RealTimeActivity extends AppCompatActivity
 
     }
 
+    //get friend fullname
     private void getFriendFullname(String id) {
 
         mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(id).child("Name");
@@ -7633,8 +6645,6 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-               // Toast.makeText(RealTimeActivity.this, UserDetails.fullname + " follower fullname", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -7644,36 +6654,7 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    //trying to sync song
-
-    /**
-     * Gets song name.
-     *
-     * @param layoutno the layoutno
-     * @return the song name
-     */
-//getting the name of the song
-    public String getSongName(int layoutno) {
-        String songToPlay = titlesArray[layoutno].getText().toString();
-        Toast.makeText(RealTimeActivity.this, songToPlay, Toast.LENGTH_SHORT).show();
-        return songToPlay;
-    }
-
-    /**
-     * Gets person now playing.
-     *
-     * @param layoutno the layoutno
-     * @return the person now playing
-     */
-    public String getPersonNowPlaying(int layoutno) {
-        return namesArray[layoutno].getText().toString();
-    }
-
-    /**
-     * Gets url.
-     *
-     * @param song the song
-     */
+    //get song URL
     public void getUrl(String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase songRef = ref.child("URL").child(song);
@@ -7685,9 +6666,6 @@ public class RealTimeActivity extends AppCompatActivity
                     url = String.valueOf(dsp.getValue());
                     UserDetails.song = url;
                     MusicPlayerActivity.urls.add(0, url);
-
-                    //  Toast.makeText(RealTimeActivity.this, UserDetails.song + " is the url", Toast.LENGTH_SHORT).show();
-                    //getTimeFromFirebase();
                 }
             }
 
@@ -7698,48 +6676,28 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Send time request.
-     *
-     * @param listenerFullname the listener fullname
-     * @param url              the url
-     */
+    //send time request for synchronisation
     public void sendTimeRequest(String listenerFullname, String url) {
 
         String me = firebaseAuth1.getCurrentUser().getUid();
-
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeRequest/" + me);
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Name", listenerFullname);
         uinfo.put("Song", url);
         ref.updateChildren(uinfo);
-
-        //getSongName();
     }
 
-    /**
-     * Add time to firebase.
-     *
-     * @param otherUser the other user
-     * @param song      the song
-     */
+    //add time to Firebase to synchronise song
     public void addTimeToFirebase(String otherUser, String song) {
         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/TimeAnswer/" + ID);
         Map<String, Object> uinfo = new HashMap<>();
         uinfo.put("Time", getCurrentPlayingTime());
         uinfo.put("IDReq", otherUser);
-
-        //777
-        //getUrl(song);
         uinfo.put("Song", song);
         ref.updateChildren(uinfo);
     }
 
-    /**
-     * Gets current playing time.
-     *
-     * @return the current playing time
-     */
+    //get current playing time
     public int getCurrentPlayingTime() {
         if (!mediaPlayer.isPlaying()) {
 //            Toast.makeText(this, "Music cannot be shared", Toast.LENGTH_SHORT).show();
@@ -7747,21 +6705,16 @@ public class RealTimeActivity extends AppCompatActivity
         return mediaPlayer.getCurrentPosition();
     }
 
-    /**
-     * Gets time from firebase.
-     */
+    //get time from Firebase
     public void getTimeFromFirebase() {
 
         String myID = firebaseAuth1.getCurrentUser().getUid();
-
         DatabaseReference timeref = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(myID).child("Time");
         timeref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String data = dataSnapshot.getValue().toString();
                 int timeFb = Integer.parseInt(data);
-                //Toast.makeText(RealTimeActivity.this, timeFb + " time in ", Toast.LENGTH_SHORT).show();
-               // playMusic(timeFb);
             }
 
             @Override
@@ -7786,31 +6739,12 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Sets url value.
-     *
-     * @param address the address
-     */
-    public void setUrlValue(String address) {
-        addr = address;
-    }
-
-    /**
-     * Gets url value.
-     *
-     * @return the url value
-     */
+    //get URL
     public String getUrlValue() {
-
         return addr;
     }
 
-    /**
-     * Play music.
-     *
-     * @param time the time
-     * @param url  the url
-     */
+    //play music
     public void playMusic(final int time, String url) {
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -7824,100 +6758,15 @@ public class RealTimeActivity extends AppCompatActivity
             mediaPlayer.seekTo(time + 3100);
 
 
-    } catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            //   updateProgressBar();
         }
         mediaPlayer.start();
-//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//
-//            public void onPrepared(MediaPlayer mp) {
-//                mediaPlayer.seekTo(time + 3100);            }
-//        });
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
     }
 
-
-
-
-//    public void viewOnYoutube(View v) {
-//
-//        youtube.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String songToView = getSongName();
-//
-//                //youtube.setVisibility(View.GONE);
-//                //youtubecoloured.setVisibility(View.VISIBLE);
-//
-//                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-//                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
-//
-//                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-//                        String link = dataSnapshot.getValue().toString();
-//                        Intent viewIntent =
-//                                new Intent("android.intent.action.VIEW",
-//                                        Uri.parse(link));
-//                        startActivity(viewIntent);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(FirebaseError firebaseError) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
-
-//    public void viewOnYoutubeAgain(View v) {
-//        youtubecoloured.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String songToView = getSongName();
-//
-//                youtubecoloured.setVisibility(View.VISIBLE);
-//
-//                Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-//                Firebase videoRef = ref.child("Youtube").child(songToView).child("Link");
-//
-//                videoRef.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-//                        String link = dataSnapshot.getValue().toString();
-//                        Intent viewIntent =
-//                                new Intent("android.intent.action.VIEW",
-//                                        Uri.parse(link));
-//                        startActivity(viewIntent);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(FirebaseError firebaseError) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
-
-//    public void comment(View v) {
-//        comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //comment.setVisibility(View.GONE);
-//                //commentblue.setVisibility(View.VISIBLE);
-//            }
-//        });
-//    }
-
-    /**
-     * Add to playlist.
-     *
-     * @param v the v
-     */
+    //add to playlist
     public void addToPlaylist(View v) {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -7928,157 +6777,14 @@ public class RealTimeActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Add to playlist again.
-     *
-     * @param v the v
-     */
-    public void addToPlaylistAgain(View v) {
-        addgreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Already added to your playlist", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-//    public void download(View v){
-//        download.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String songToDown = getSongName();
-//
-//                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-//                StorageReference down = storageReference.child(songToDown + ".mp3");
-//
-//                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-//                File localFile = new File(storagePath, "track1.mp3");
-//                try {
-//                    localFile = File.createTempFile("Audio", "mp3");
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                final File finalLocalFile = new File(storagePath, "track1.mp3");
-//                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                        finalLocalFile.getAbsolutePath();
-//                        Toast.makeText(getApplicationContext(), "Downloded at location: " + finalLocalFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-//                        UserDetails.song = finalLocalFile.getAbsolutePath();
-//                        //download.setVisibility(View.GONE);
-//                        //downloadgreen.setVisibility(View.VISIBLE);
-//
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
-//
-//    public void downloadAgain(View v){
-//        downloadgreen.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getApplicationContext(), "Already downloaded at location: " + UserDetails.song, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-//    public void likeSong(View v){
-//        blackHeart.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                String songToLike = getSongName();
-//                Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("LovedSongs").child(ID);
-//                likedRef.push().setValue(songToLike);
-//
-//                blackHeart.setVisibility(View.GONE);
-//                redHeart.setVisibility(View.VISIBLE);
-//
-//            }
-//        });
-//    }
-//
-//    public void dislikeSong(View v){
-//        redHeart.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(final View v) {
-//
-//                final String songLiked = getSongName();
-//
-//                mDatabase1 = FirebaseDatabase.getInstance().getReference().child("LovedSongs").child(ID);
-//
-//                mDatabase1.addListenerForSingleValueEvent(
-//                        new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                    String key = snapshot.getKey();
-//
-//                                    Toast.makeText(getApplicationContext(), "the key: " + key, Toast.LENGTH_SHORT).show();
-//
-//
-//                                    if (dataSnapshot.child(key).getValue().equals(songLiked)) {
-//                                        Toast.makeText(getApplicationContext(), "in if: " + songLiked, Toast.LENGTH_SHORT).show();
-//
-//                                        dataSnapshot.child(key).getRef().removeValue();
-//                                        redHeart.setVisibility(View.INVISIBLE);
-//                                        blackHeart.setVisibility(View.VISIBLE);
-//                                    }
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//            }
-//        });
-//    }
-
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//
-//            case R.id.oneButton:
-//                // do your code
-//                break;
-//
-//            case R.id.twoButton:
-//                // do your code
-//                break;
-//
-//            case R.id.threeButton:
-//                // do your code
-//                break;
-//
-//            default:
-//                break;
-//        }
-//    }
-
-
+    //send notification
     private class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
-        // This fires when a notification is opened by tapping on it.
-
 
         @Override
         public void notificationOpened(OSNotificationOpenResult result) {
             OSNotificationAction.ActionType actionType = result.action.type;
             JSONObject data = result.notification.payload.additionalData;
             String launchUrl = result.notification.payload.launchURL; // update docs launchUrl
-
             String customKey;
             openURL = null;
             Object activityToLaunch = RealTimeActivity.class;
@@ -8119,52 +6825,7 @@ public class RealTimeActivity extends AppCompatActivity
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     String friend = dataSnapshot.child("Name").getValue().toString();
                                     String song = dataSnapshot.child("Song").getValue().toString();
-
                                     checkIfStillListening(friend, song);
-
-//                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
-//                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    intent.putExtra("openURL", openURL);
-//                                    intent.putExtra("Uniqid", "NotificationListenWith");
-//                                    UserDetails.chatWith = friend;
-//                                    intent.putExtra("Friend", friend);
-//                                    intent.putExtra("Song", song);
-//                                    sendTimeRequest(friend, song);
-//                                    startActivity(intent);
-//                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
-//                                    reqdb.addListenerForSingleValueEvent(
-//                                            new ValueEventListener() {
-//                                                @Override
-//                                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                                    dataSnapshot.getRef().removeValue();
-//                                                }
-//
-//                                                @Override
-//                                                public void onCancelled(DatabaseError databaseError) {
-//                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-//                                                }
-//                                            });
-//
-//                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
-//                                    reqdb1.addListenerForSingleValueEvent(
-//                                            new ValueEventListener() {
-//                                                @Override
-//                                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                                                        String reqId = snapshot.getKey().toString();
-//                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
-//                                                            dataSnapshot.child(reqId).getRef().removeValue();
-//                                                        }
-//                                                    }
-//                                                }
-//
-//                                                @Override
-//                                                public void onCancelled(DatabaseError databaseError) {
-//                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-//                                                }
-//                                            });
-//
-
                                 }
 
                                 @Override
@@ -8231,9 +6892,9 @@ public class RealTimeActivity extends AppCompatActivity
                                             new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                         String reqId = snapshot.getKey().toString();
-                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                        if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                                             dataSnapshot.child(reqId).getRef().removeValue();
                                                         }
                                                     }
@@ -8262,9 +6923,6 @@ public class RealTimeActivity extends AppCompatActivity
                         }
 
                     });
-
-
-                    ///
                     Intent intent = new Intent(getApplicationContext(), Chat.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("openURL", openURL);
@@ -8289,9 +6947,9 @@ public class RealTimeActivity extends AppCompatActivity
                             new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String reqId = snapshot.getKey().toString();
-                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                        if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                             dataSnapshot.child(reqId).getRef().removeValue();
                                         }
                                     }
@@ -8306,8 +6964,7 @@ public class RealTimeActivity extends AppCompatActivity
 
                 } else if (result.action.actionID.equals("comment")) {
                     Log.i("OneSignalExample", "button id called: " + result.action.actionID);
-                }
-                else if (result.action.actionID.equals("reply")) {
+                } else if (result.action.actionID.equals("reply")) {
                     FirebaseAuth fb;
                     fb = FirebaseAuth.getInstance();
 
@@ -8356,9 +7013,9 @@ public class RealTimeActivity extends AppCompatActivity
                                             new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                         String reqId = snapshot.getKey().toString();
-                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
+                                                        if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
                                                             dataSnapshot.child(reqId).getRef().removeValue();
                                                         }
                                                     }
@@ -8391,80 +7048,67 @@ public class RealTimeActivity extends AppCompatActivity
                 }
 
             }
-            // The following can be used to open an Activity of your choice.
-            // Replace - getApplicationContext() - with any Android Context.
-            // Intent intent = new Intent(getApplicationContext(), YourActivity.class);
-
-
-            // Add the following to your AndroidManifest.xml to prevent the launching of your main Activity
-            //   if you are calling startActivity above.
-     /*
-        <application ...>
-          <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
-        </application>
-     */
-
-
         }
     }
 
+    //check if friend is still listening
     private void checkIfStillListening(final String friend, final String song) {
         DatabaseReference home = FirebaseDatabase.getInstance().getReference().child("Homepage").child(ID);
         home.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Toast.makeText(RealTimeActivity.this, friend + " " + song , Toast.LENGTH_SHORT).show();
-                            if (dataSnapshot.hasChild(friend)) {
-                                if(dataSnapshot.child(friend).child("Song").getValue().equals(song)){
-                                    Intent intent = new Intent(getApplicationContext(), Chat.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("openURL", openURL);
-                                    intent.putExtra("Uniqid", "NotificationListenWith");
-                                    UserDetails.chatWith = friend;
-                                    intent.putExtra("Friend", friend);
-                                    intent.putExtra("Song", song);
-                                    sendTimeRequest(friend, song);
-                                    startActivity(intent);
-                                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
-                                    reqdb.addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    dataSnapshot.getRef().removeValue();
-                                                }
+                        Toast.makeText(RealTimeActivity.this, friend + " " + song, Toast.LENGTH_SHORT).show();
+                        if (dataSnapshot.hasChild(friend)) {
+                            if (dataSnapshot.child(friend).child("Song").getValue().equals(song)) {
+                                Intent intent = new Intent(getApplicationContext(), Chat.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("openURL", openURL);
+                                intent.putExtra("Uniqid", "NotificationListenWith");
+                                UserDetails.chatWith = friend;
+                                intent.putExtra("Friend", friend);
+                                intent.putExtra("Song", song);
+                                sendTimeRequest(friend, song);
+                                startActivity(intent);
+                                DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                                reqdb.addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                dataSnapshot.getRef().removeValue();
+                                            }
 
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                                                }
-                                            });
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                            }
+                                        });
 
-                                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
-                                    reqdb1.addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                                        String reqId = snapshot.getKey().toString();
-                                                        if(dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)){
-                                                            dataSnapshot.child(reqId).getRef().removeValue();
-                                                        }
+                                DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                                reqdb1.addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                    String reqId = snapshot.getKey().toString();
+                                                    if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
+                                                        dataSnapshot.child(reqId).getRef().removeValue();
                                                     }
                                                 }
+                                            }
 
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                                                }
-                                            });
-                                } else {
-                                    Toast.makeText(RealTimeActivity.this, friend + " is no longer listening", Toast.LENGTH_SHORT).show();
-                                }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                            }
+                                        });
                             } else {
                                 Toast.makeText(RealTimeActivity.this, friend + " is no longer listening", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(RealTimeActivity.this, friend + " is no longer listening", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
 
                     @Override
@@ -8474,11 +7118,7 @@ public class RealTimeActivity extends AppCompatActivity
                 });
     }
 
-    /**
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
+    //handling on activity result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -8498,10 +7138,6 @@ public class RealTimeActivity extends AppCompatActivity
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-//            Picasso.with(this)
-//                    .load("gs://tunein-633e5.appspot.com/ProfilePictures/iFisFj7zKLeuzqsg1vBMxf6gWst2_image.jpg")
-//                    .into(profilePic);
-
 
             if (filePath != null) {
                 pd.show();
@@ -8521,20 +7157,14 @@ public class RealTimeActivity extends AppCompatActivity
                         UserDetails.picturelink = downloadUrl.toString();
                         Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
                         Firebase picRef = ref.child("ProfilePictures").child(ID);
-                        Map<String,Object> info = new HashMap<String, Object>();
+                        Map<String, Object> info = new HashMap<String, Object>();
                         info.put("Url", downloadUrl.toString());
                         picRef.updateChildren(info);
 
                         Picasso.with(RealTimeActivity.this)
                                 .load(downloadUrl.toString())
-//                .resize(350, 240)
-//                .centerInside()
-
                                 .fit()
-                                //.centerCrop()
                                 .into(profilePic);
-
-
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -8548,25 +7178,8 @@ public class RealTimeActivity extends AppCompatActivity
                 Toast.makeText(RealTimeActivity.this, "Select an image", Toast.LENGTH_SHORT).show();
             }
         }
-//          //  profilePic.setImageBitmap(bitmap);
-            //pictureFlag = 1;
-//
-//
-//
-//            try {
-//                //getting image from gallery
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-//               // Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//
-//                Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);//this bitmap2 you can use only for display
-//
-//                //Setting image to ImageView
-//                profilePic.setImageBitmap(bitmap2);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-        }
     }
+}
 
 
 
