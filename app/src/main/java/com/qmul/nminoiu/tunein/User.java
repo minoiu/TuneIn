@@ -1,7 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 /**
- * Created by nminoiu on 14/06/2017.
+ * Created by nicoleta on 14/11/2017.
  */
 public class User {
 

@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 /**
- * The type User details.
+ * Created by nicoleta on 17/12/2017
  */
 public class UserDetails {
     /**
@@ -140,8 +140,7 @@ public class UserDetails {
      * The Mysong.
      */
     static String mysong = "";
-
-
+    
     /**
      * The constant playlist.
      */
