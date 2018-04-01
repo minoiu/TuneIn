@@ -144,7 +144,7 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MyPlaylists.this, Users.class);
+                Intent i = new Intent(MyPlaylists.this, Conversations.class);
                 if(mediaPlayer.isPlaying()){
                     String song = track_title.getText().toString();
                     i.putExtra("Song", song);

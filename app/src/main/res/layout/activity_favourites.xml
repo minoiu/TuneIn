@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
         app:backgroundTint="@color/colorAccent"
         app:elevation="1dp"
         app:fabSize="mini"

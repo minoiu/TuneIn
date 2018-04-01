@@ -185,7 +185,7 @@ public class PlaylistSongs extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(PlaylistSongs.this, Users.class);
+                Intent i = new Intent(PlaylistSongs.this, Conversations.class);
                 if(mediaPlayer.isPlaying()){
                     String song = track_title.getText().toString();
                     i.putExtra("Song", song);
@@ -2174,13 +2174,21 @@ public class PlaylistSongs extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent backMainTest = new Intent(this, MyPlaylists.class);
-        if(mediaPlayer.isPlaying()) {
-            backMainTest.putExtra("Song", track_title.getText().toString());
-            //UserDetails.playingSongName = track_title.getText().toString();
-        }
-        startActivity(backMainTest);
-        finish();
+            if(getIntent().getStringExtra("Uniqid").equals("favplaylists")){
+                Intent backMainTest = new Intent(this, FavouritePlaylists.class);
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(backMainTest);
+                finish();
+            } else {
+                Intent backMainTest = new Intent(this, MyPlaylists.class);
+                if(mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(backMainTest);
+                finish();
+            }
     }
 
     /**

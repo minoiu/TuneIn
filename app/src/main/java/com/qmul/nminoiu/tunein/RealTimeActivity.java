@@ -1272,6 +1272,8 @@ public class RealTimeActivity extends AppCompatActivity
         friendPic9 = (ImageView) i9.findViewById(R.id.friendPic);
         View i10 = findViewById(R.id.np10);
         friendPic10 = (ImageView) i10.findViewById(R.id.friendPic);
+        Firebase.setAndroidContext(this);
+
 
 
         //storing buttons in ButtonArrays

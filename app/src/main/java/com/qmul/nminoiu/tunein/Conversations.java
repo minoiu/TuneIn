@@ -422,6 +422,7 @@ public class Conversations extends AppCompatActivity {
     }
 
     /**
+    /**
      * Get bar title string.
      *
      * @return the string

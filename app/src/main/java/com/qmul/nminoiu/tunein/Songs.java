@@ -94,7 +94,7 @@ public class Songs extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Songs.this, Users.class);
+                Intent i = new Intent(Songs.this, Conversations.class);
                 if(mediaPlayer.isPlaying()){
                     String song = track_title.getText().toString();
                     i.putExtra("Song", song);

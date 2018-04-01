@@ -166,6 +166,7 @@ public class FavouritePlaylists extends AppCompatActivity {
                 String playlist = rowItem.getTitle();
                 Intent intent = new Intent(FavouritePlaylists.this, PlaylistSongs.class);
                 intent.putExtra("Name", playlist);
+                intent.putExtra("Uniqid","favplaylists");
                 if(mediaPlayer.isPlaying()) {
                     intent.putExtra("Song", track_title.getText().toString());
                     //UserDetails.playingSongName = track_title.getText().toString();

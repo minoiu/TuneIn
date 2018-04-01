@@ -37,54 +37,19 @@ import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
  * Created by nicoleta on 11/10/2017.
  */
 public class FollowersActivity extends AppCompatActivity {
-    /**
-     * The No users text.
-     */
-    TextView noUsersText;
-    /**
-     * The Al.
-     */
     ArrayList<String> al = new ArrayList<>();
-    /**
-     * The Total users.
-     */
-    int totalUsers = 0;
-    /**
-     * The Users list.
-     */
-// ProgressDialog pd;
     ListView usersList;
-    /**
-     * The Users.
-     */
     ArrayList<String> users = new ArrayList<>();
     private AdapterFollowers uadapter;
-    private DatabaseReference db;
-    private DatabaseReference mDatabase;
-    private DatabaseReference mDatabase1;
-
     private DatabaseReference mDatabase2;
     private DatabaseReference mDatabase3;
-    private LinearLayout play_toolbar;
     private List<RowItem> rowItems;
-
-
-
-
-
     private LinearLayout searchLayout;
-
-
-
-
     private DatabaseReference db1;
     private String value;
     private String sender;
     private String ID;
-
-
     private FirebaseAuth firebaseAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,14 +60,10 @@ public class FollowersActivity extends AppCompatActivity {
         ID = firebaseAuth.getCurrentUser().getUid();
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
         rowItems = new ArrayList<RowItem>();
-
         firebaseAuth = FirebaseAuth.getInstance();
-
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
-
         Intent i = getIntent();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -110,8 +71,8 @@ public class FollowersActivity extends AppCompatActivity {
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
 
+        //retrieve followers from Firebase
         DatabaseReference mDb = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
         mDb.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,7 +85,6 @@ public class FollowersActivity extends AppCompatActivity {
                         String value = dataSnapshot.getValue(String.class);
                         users.add(value);
                         RowItem item = new RowItem(R.drawable.options, value);
-
                         rowItems.add(item);
                         uadapter.notifyDataSetChanged();
                     }
@@ -159,24 +119,22 @@ public class FollowersActivity extends AppCompatActivity {
                 }
             });
 
+        //retrieve fullname from Firebase
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
         mDatabase2.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
 
+        //retrieve email from Firebase
         mDatabase3 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
-
         mDatabase3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -190,77 +148,21 @@ public class FollowersActivity extends AppCompatActivity {
             }
         });
 
-                usersList = (ListView) findViewById(R.id.ulistView);
-                uadapter = new AdapterFollowers(this, rowItems);
-                usersList.setAdapter(uadapter);
-
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
-                mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        UserDetails.fullname = dataSnapshot.getValue().toString();
-                        //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-                });
-
+        usersList = (ListView) findViewById(R.id.ulistView);
+        uadapter = new AdapterFollowers(this, rowItems);
+        usersList.setAdapter(uadapter);
         searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
-        //searchView.bringToFront();//
+    }
 
-//        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        String user = ((TextView) view).getText().toString();
-//                        UserDetails.chatWith = user;
-//                        Intent i = getIntent();
-//                        if (i != null) {
-//                            if (i.hasExtra("Uniqid")) {
-//                                String uniqid = i.getStringExtra("Uniqid");
-//
-//                                if (uniqid.equals("FromSongAdapter")) {
-//                                   // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-//                                    String song = i.getStringExtra("Song");
-//                                    Intent intent = new Intent(FollowersActivity.this, Chat.class);
-//                                    intent.putExtra("Uniqid", "FromFollowersShare");
-//                                    intent.putExtra("Name", user);
-//                                    intent.putExtra("Song", song);
-//                                    startActivity(intent);
-//                                } else if (uniqid.equals("FSAdapter")) {
-//                                    String songToJoin = i.getStringExtra("Song");
-//                                    String playlist = i.getStringExtra("Name");
-//                                    getReceiver(songToJoin, user, playlist);
-//                                    //Toast.makeText(FollowersActivity.this, "from sadapterfor notification " + songToJoin + user, Toast.LENGTH_SHORT).show();
-//                                } else if (uniqid.equals("AdapterAllSongs")) {
-//                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-//                                    String songToJoin = i.getStringExtra("Song");
-//                                    getReceiver(songToJoin, user, "");
-//                                } else if (uniqid.equals("FromConversations")) {
-//                                    // Toast.makeText(FollowersActivity.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-//                                    String myname = i.getStringExtra("Myname");
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                });
-            }
-
+    // Handle actifon bar item clicks. The action bar will
+    // automatically handle clicks on the Home/Up button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle actifon bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
+    //handle click on back button and start previous activity
     @Override
     public void onBackPressed() {
         Intent i = getIntent();
@@ -275,7 +177,6 @@ public class FollowersActivity extends AppCompatActivity {
             } else if (UserDetails.oldIntent.equals("MySongs")) {
                 Intent backMainTest = new Intent(this, Songs.class);
                 if (mediaPlayer.isPlaying()) {
-                    //backMainTest.putExtra("Song", track_title.getText().toString());
                 }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
@@ -283,7 +184,6 @@ public class FollowersActivity extends AppCompatActivity {
             } else if (UserDetails.oldIntent.equals("Downloads")) {
                 Intent backMainTest = new Intent(this, Downloads.class);
                 if (mediaPlayer.isPlaying()) {
-                   // backMainTest.putExtra("Song", track_title.getText().toString());
                 }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
@@ -291,7 +191,6 @@ public class FollowersActivity extends AppCompatActivity {
             } else if (UserDetails.oldIntent.equals("Favourites")) {
                 Intent backMainTest = new Intent(this, Favourites.class);
                 if (mediaPlayer.isPlaying()) {
-                   // backMainTest.putExtra("Song", track_title.getText().toString());
                 }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
@@ -299,7 +198,6 @@ public class FollowersActivity extends AppCompatActivity {
             } else if (UserDetails.oldIntent.equals("Recents")) {
                 Intent backMainTest = new Intent(this, LibraryActivity.class);
                 if (mediaPlayer.isPlaying()) {
-                   // backMainTest.putExtra("Song", track_title.getText().toString());
                 }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
@@ -307,7 +205,6 @@ public class FollowersActivity extends AppCompatActivity {
             } else if (UserDetails.oldIntent.equals("FromSettingsMenu")) {
                 Intent backMainTest = new Intent(this, RealTimeActivity.class);
                 if (mediaPlayer.isPlaying()) {
-                    // backMainTest.putExtra("Song", track_title.getText().toString());
                 }
                 backMainTest.putExtra("Name", UserDetails.oldPlaylist);
                 startActivity(backMainTest);
@@ -317,12 +214,10 @@ public class FollowersActivity extends AppCompatActivity {
                 startActivity(backMainTest);
                 finish();
             }
-
-
-
         }
     }
 
+    //handle menu open
     @Override
     public boolean onMenuOpened(int featureId, Menu menu)
     {
@@ -343,172 +238,6 @@ public class FollowersActivity extends AppCompatActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
-
-
-
-
-//    @Override
-//    public boolean onMenuOpened(int featureId, Menu menu) {
-//        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
-//            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-//                try {
-//                    Method m = menu.getClass().getDeclaredMethod(
-//                            "setOptionalIconsVisible", Boolean.TYPE);
-//                    m.setAccessible(true);
-//                    m.invoke(menu, true);
-//                } catch (NoSuchMethodException e) {
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }
-//        return super.onMenuOpened(featureId, menu);
-//    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_item, menu);
-//        MenuItem item = menu.findItem(R.id.action_search);
-//        searchView.setMenuItem(item);
-//        return true;
-//    }
-
-    private void getReceiver(final String song, final String user, final String playlist) {
-        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
-        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserDetails.receiver = dataSnapshot.getValue().toString();
-                sendListenWithNotification(song, user);
-                Toast.makeText(FollowersActivity.this, "The invitation to " + user + " was sent.", Toast.LENGTH_SHORT).show();
-
-                Intent goBack = new Intent(FollowersActivity.this, Chat.class);
-                goBack.putExtra("Uniqid", "FromFollowersListeWith");
-                goBack.putExtra("Friend", user);
-                goBack.putExtra("Song", song);
-                goBack.putExtra("Name", playlist);
-                startActivity(goBack);
-
-                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void getReceiver1(final String song, final String user) {
-        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
-        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserDetails.receiver = dataSnapshot.getValue().toString();
-                sendListenWithNotification(song, user);
-                Toast.makeText(FollowersActivity.this, "The invitation to " + user + " was sent.", Toast.LENGTH_SHORT).show();
-
-                Intent goBack = new Intent(FollowersActivity.this, Chat.class);
-                goBack.putExtra("Uniqid", "FromFollowersListeWith");
-                goBack.putExtra("Friend", user);
-                goBack.putExtra("Song", song);
-                startActivity(goBack);
-
-                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    private void sendListenWithNotification(final String songToJoin, String user) {
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                    if (SDK_INT > 8) {
-                        //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
-
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                                .permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                        String send_email;
-
-                        //This is a Simple Logic to Send Notification different Device Programmatically....
-                        if (RealTimeActivity.loggedEmail.equals(sender)) {
-                            send_email = UserDetails.receiver;
-
-                        } else {
-                            send_email = sender;
-                        }
-
-                        try {
-                            String jsonResponse;
-
-                            URL url = new URL("https://onesignal.com/api/v1/notifications");
-                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                            con.setUseCaches(false);
-                            con.setDoOutput(true);
-                            con.setDoInput(true);
-
-                            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                            con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
-                            con.setRequestMethod("POST");
-
-//                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
-//                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
-                            //"'headings': {'en': 'Notification Title'}, " +
-                            //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
-
-                            String strJsonBody = "{"
-                                    + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
-
-                                    + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
-
-                                    + "\"data\": {\"foo\": \"bar\"},"
-                                    + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
-                                    + "\"buttons\":[{\"id\": \"listenwith\", \"text\": \"Join\"}]"
-                                    //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
-                                    + "}";
-
-                            System.out.println("strJsonBody:\n" + strJsonBody);
-
-                            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                            con.setFixedLengthStreamingMode(sendBytes.length);
-
-                            OutputStream outputStream = con.getOutputStream();
-                            outputStream.write(sendBytes);
-
-                            int httpResponse = con.getResponseCode();
-                            System.out.println("httpResponse: " + httpResponse);
-
-                            if (httpResponse >= HttpURLConnection.HTTP_OK
-                                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-
-                                scanner.close();
-                            } else {
-                                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                                scanner.close();
-                            }
-
-                            System.out.println("jsonResponse:\n" + jsonResponse);
-
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }
-                    }
-                }
-            });
-    }
-
 }
 
 
