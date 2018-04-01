@@ -231,7 +231,6 @@ public class ProfileActivity extends AppCompatActivity {
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ProfileActivity.this, "fullname: " + fullname, Toast.LENGTH_SHORT).show();
                 mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(toolbar.getTitle().toString()).child("Email");
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("Following").child(user);
                 mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
@@ -281,7 +280,6 @@ public class ProfileActivity extends AppCompatActivity {
                 final Map<String, Object> map = new HashMap<String, Object>();
                 map.put("Date", getDate());
                 followersdb.child(me).updateChildren(map);
-                Toast.makeText(ProfileActivity.this, "You are now a follower for " + username, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -298,7 +296,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserDetails.fullname = dataSnapshot.getValue().toString();
-                        Toast.makeText(ProfileActivity.this, "Friend ID" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

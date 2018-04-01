@@ -5487,10 +5487,6 @@ public class RealTimeActivity extends AppCompatActivity
                             btn.setBackgroundResource(R.drawable.ic_media_pause);
                             getFollowers(UserDetails.fullname, song);
                         }
-                        if (!recents.contains(song)) {
-                            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
-                            likedRef.push().setValue(song);
-                        }
                     }
 
                     @Override
