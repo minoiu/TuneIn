@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The type Songs manager.
+ * Created by Nicoleta on 18/12/2017
  */
 public class SongsManager {
     /**
@@ -19,9 +19,7 @@ public class SongsManager {
     /**
      * Instantiates a new Songs manager.
      */
-// Constructor
 	public SongsManager(){
-		
 	}
 
     /**
@@ -38,7 +36,6 @@ public class SongsManager {
 				HashMap<String, String> song = new HashMap<String, String>();
 				song.put("songTitle", file.getName().substring(0, (file.getName().length() - 4)));
 				song.put("songPath", file.getPath());
-				
 				// Adding each song to SongList
 				songsList.add(song);
 			}

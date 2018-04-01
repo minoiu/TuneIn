@@ -55,9 +55,6 @@
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SyncActivity"
-            android:theme="@android:style/Theme.NoDisplay" />
-        <activity
             android:name=".LogoActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

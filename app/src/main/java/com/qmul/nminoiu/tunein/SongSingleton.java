@@ -8,7 +8,6 @@ import android.app.Application;
 public class SongSingleton extends Application{
     private volatile static SongSingleton mInstance = null;
     private String songName;
-
     private SongSingleton() {
         songName = "";
     }
@@ -38,5 +37,4 @@ public class SongSingleton extends Application{
      * @param s the s
      */
     public void setSongName(String s){songName = s;}
-
 }
