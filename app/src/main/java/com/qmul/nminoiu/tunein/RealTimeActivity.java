@@ -5469,6 +5469,11 @@ public class RealTimeActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 song = ((TextView) view).getText().toString();
+                String song1 = ((TextView) view).getText().toString();
+                Firebase refsong = new Firebase("https://tunein-633e5.firebaseio.com/CurrentSong/" + ID);
+                Map<String, Object> uinfo = new HashMap<>();
+                uinfo.put("Song", song1);
+                refsong.updateChildren(uinfo);
                 play_toolbar.setVisibility(View.VISIBLE);
                 track_title.setText(song);
                 hideSoftKeyboard(RealTimeActivity.this);
