@@ -1,7 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 /**
- * Created by nminoiu on 15/08/2017.
+ * Created by nminoiu on 15/10/2017.
  */
 public class RowItem {
     private int imageId;

@@ -86,10 +86,6 @@
             android:name=".MyPlaylists"
             android:label="@string/title_activity_my_playlists"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ShareActivity"
-            android:label="Share With..."
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.onesignal.NotificationAccentColor.DEFAULT"
