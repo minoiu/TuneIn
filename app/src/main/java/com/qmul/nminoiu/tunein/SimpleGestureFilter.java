@@ -1,16 +1,12 @@
 package com.qmul.nminoiu.tunein;
 
-/**
- * Created by nicoleta on 03/10/2017.
- */
-
 import android.app.Activity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
 /**
- * The type Simple gesture filter.
+ * created by nicoleta on 26/02/2018
  */
 public class SimpleGestureFilter extends SimpleOnGestureListener{
 
@@ -96,7 +92,6 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
             }
 
         }
-        //else just do nothing, it's Transparent
     }
 
     /**
@@ -234,8 +229,8 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
     @Override
     public boolean onSingleTapConfirmed(MotionEvent arg) {
 
-        if(this.mode == MODE_DYNAMIC){        // we owe an ACTION_UP, so we fake an
-            arg.setAction(ACTION_FAKE);      //action which will be converted to an ACTION_UP later.
+        if(this.mode == MODE_DYNAMIC){
+            arg.setAction(ACTION_FAKE);
             this.context.dispatchTouchEvent(arg);
         }
 
