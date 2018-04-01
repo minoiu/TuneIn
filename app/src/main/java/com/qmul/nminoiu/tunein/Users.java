@@ -24,46 +24,24 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 /**
- * The type Users.
+ * created by Nicoleta on 10/10/2017
  */
 public class Users extends AppCompatActivity {
-    /**
-     * The No users text.
-     */
     TextView noUsersText;
-    /**
-     * The Al.
-     */
     ArrayList<String> al = new ArrayList<>();
-    /**
-     * The Total users.
-     */
     int totalUsers = 0;
-    /**
-     * The Users list.
-     */
-// ProgressDialog pd;
     ListView usersList;
-    /**
-     * The Users.
-     */
     ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> uadapter;
     private DatabaseReference db;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabase1;
-
-
     private DatabaseReference db1;
     private String value;
     private String sender;
     private Toolbar toolbar;
-
     private String ID;
-
-
     private FirebaseAuth firebaseAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,23 +49,20 @@ public class Users extends AppCompatActivity {
         setContentView(R.layout.activity_users);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         FirebaseUser currentuser = firebaseAuth.getCurrentUser();
         String curUser = currentuser.getUid().toString();
-
         db = FirebaseDatabase.getInstance().getReference().child("Users");
         db1 = FirebaseDatabase.getInstance().getReference().child("Users").child(curUser);
         ID = firebaseAuth.getCurrentUser().getUid();
         sender = firebaseAuth.getCurrentUser().getEmail();
-
         usersList = (ListView) findViewById(R.id.usersList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         usersList.setAdapter(uadapter);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //retrieve users from Firebase
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -117,6 +92,7 @@ public class Users extends AppCompatActivity {
             }
         });
 
+        //retrieve emails
         db1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -130,14 +106,12 @@ public class Users extends AppCompatActivity {
             }
         });
 
-
+        //retrieve names
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
-
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserDetails.fullname = dataSnapshot.getValue().toString();
-                //Toast.makeText(RealTimeActivity.this, "Fullname" + UserDetails.fullname, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -147,7 +121,7 @@ public class Users extends AppCompatActivity {
 
         });
 
-
+        //handle click on users
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -165,7 +139,6 @@ public class Users extends AppCompatActivity {
                             startActivity(intent);
                         } else if (uniqid.equals("FromSongAdapter")) {
                             Toast.makeText(Users.this, "from songsadapter ", Toast.LENGTH_SHORT).show();
-
                             String song = i.getStringExtra("Song");
                             Intent intent = new Intent(Users.this, Chat.class);
                             intent.putExtra("Uniqid", "FromUsers");
@@ -190,130 +163,23 @@ public class Users extends AppCompatActivity {
         });
     }
 
+
+    // Handle actifon bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle actifon bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
+    //handle click on back
     @Override
     public void onBackPressed() {
         Intent i = new Intent(Users.this, RealTimeActivity.class);
         startActivity(i);
         finish();
     }
-
-//    private void getReceiver(final String song, final String user, final String playlist) {
-//        mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Emails").child(user).child("Email");
-//        mDatabase1.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                UserDetails.receiver = dataSnapshot.getValue().toString();
-//                sendNotification(song, user);
-//                Intent goBack = new Intent(Users.this, PlaylistSongs.class);
-//                goBack.putExtra("FriendName", user);
-//                goBack.putExtra("Name", playlist);
-//                startActivity(goBack);
-//
-//                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-//
-//    private void sendNotification(final String songToJoin, String user) {
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-//                if (SDK_INT > 8) {
-//                    //notificationBuilder.setSmallIcon(R.drawable.ic_aphla_logo);
-//
-//                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-//                            .permitAll().build();
-//                    StrictMode.setThreadPolicy(policy);
-//                    String send_email;
-//
-//                    //This is a Simple Logic to Send Notification different Device Programmatically....
-//                    if (RealTimeActivity.loggedEmail.equals(sender)) {
-//                        send_email = UserDetails.receiver;
-//
-//                    } else {
-//                        send_email = sender;
-//                    }
-//
-//                    try {
-//                        String jsonResponse;
-//
-//                        URL url = new URL("https://onesignal.com/api/v1/notifications");
-//                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                        con.setUseCaches(false);
-//                        con.setDoOutput(true);
-//                        con.setDoInput(true);
-//
-//                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-//                        con.setRequestProperty("Authorization", "Basic NmMxZDRiNjAtMzY5Ni00NDRhLThhZGEtODRkNmIzZTEzOWVm");
-//                        con.setRequestMethod("POST");
-//
-////                        String strJsonBody = "{'contents': {'en': 'The notification message or body'}," +
-////                                "'app_id': ['99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00']'}" ;
-//                        //"'headings': {'en': 'Notification Title'}, " +
-//                        //"'big_picture': 'http://i.imgur.com/DKw1J2F.gif'}";
-//
-//                        String strJsonBody = "{"
-//                                + "\"app_id\": \"99ce9cc9-d20d-4e6b-ba9b-de2e95d3ec00\","
-//
-//                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
-//
-//                                + "\"data\": {\"foo\": \"bar\"},"
-//                                + "\"contents\": {\"en\": \"" + UserDetails.fullname + " invited you to listen to '" + songToJoin + "' together!\"},"
-//                                + "\"buttons\":[{\"id\": \"id1\", \"text\": \"Join\"}]"
-//                                //+ "\"small_picture\": {\"@android:drawable/buttonorg.png\"}"
-//                                + "}";
-//
-//                        System.out.println("strJsonBody:\n" + strJsonBody);
-//
-//                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-//                        con.setFixedLengthStreamingMode(sendBytes.length);
-//
-//                        OutputStream outputStream = con.getOutputStream();
-//                        outputStream.write(sendBytes);
-//
-//                        int httpResponse = con.getResponseCode();
-//                        System.out.println("httpResponse: " + httpResponse);
-//
-//                        if (httpResponse >= HttpURLConnection.HTTP_OK
-//                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-//                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-//                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-//
-//                            scanner.close();
-//                        } else {
-//                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-//                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-//                            scanner.close();
-//                        }
-//
-//                        System.out.println("jsonResponse:\n" + jsonResponse);
-//
-//                    } catch (Throwable t) {
-//                        t.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-//    }
-
-
-
 }
 
 

@@ -15,33 +15,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 /**
- * Created by nminoiu on 27/06/2017.
+ * Created by nicoleta on 27/12/2017.
  */
 public class UsersList extends AppCompatActivity {
 
-    /**
-     * The Users list.
-     */
     ListView usersList;
-    /**
-     * The Users.
-     */
     ArrayList<String> users = new ArrayList<>();
     private ArrayAdapter<String> uadapter;
     private DatabaseReference db;
-
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
         db = FirebaseDatabase.getInstance().getReference().child("Users");
-
         usersList = (ListView) findViewById(R.id.usersList);
         uadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
         usersList.setAdapter(uadapter);
 
+        //retrieve users from Firebase
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

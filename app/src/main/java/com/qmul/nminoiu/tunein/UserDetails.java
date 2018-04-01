@@ -140,7 +140,7 @@ public class UserDetails {
      * The Mysong.
      */
     static String mysong = "";
-    
+
     /**
      * The constant playlist.
      */

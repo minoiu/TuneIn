@@ -2,7 +2,7 @@ package com.qmul.nminoiu.tunein;
 
 
 /**
- * The type Utilities.
+ * Created by Nicoleta on 04/01/2018
  */
 public class Utilities {
 
@@ -48,7 +48,6 @@ public class Utilities {
      */
     public int getProgressPercentage(long currentDuration, long totalDuration){
 		Double percentage = (double) 0;
-		
 		long currentSeconds = (int) (currentDuration / 1000);
 		long totalSeconds = (int) (totalDuration / 1000);
 		
