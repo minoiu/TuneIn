@@ -7,17 +7,16 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by nminoiu on 17/07/2017.
+ * Created by nminoiu on 17/09/2017.
  */
 public class LogoActivity extends AppCompatActivity {
 
-    private static int TIME_OUT =4000; //Time to launch the another activity
+    private static int TIME_OUT =4000; //Time to launch the next activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logo);
-        //final View myLayout = findViewById(R.id.startscreen);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
