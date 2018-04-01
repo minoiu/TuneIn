@@ -12,7 +12,7 @@ import com.onesignal.OneSignal;
 import org.json.JSONObject;
 
 /**
- * Created by nicoleta on 30/09/2017.
+ * Created by nicoleta on 30/11/2017.
  */
 
 public class Notification extends Application {
@@ -20,9 +20,7 @@ public class Notification extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Logging set to help debug issues, remove before releasing your app.
-        //OneSignal.setLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.WARN);
-
+        //Logging set to help debug issues
         OneSignal.startInit(this)
                 .autoPromptLocation(false) // default call promptLocation later
                 .setNotificationReceivedHandler(new ExampleNotificationReceivedHandler())
@@ -30,10 +28,6 @@ public class Notification extends Application {
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init();
-
-        // Call syncHashedEmail anywhere in your app if you have the user's email.
-        // This improves the effectiveness of OneSignal's "best-time" notification scheduling feature.
-        // OneSignal.syncHashedEmail(userEmail);
     }
 
     private class ExampleNotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
@@ -55,11 +49,9 @@ public class Notification extends Application {
             String fromProjectNumber = notification.payload.fromProjectNumber;
             //BackgroundImageLayout backgroundImageLayout = notification.payload.backgroundImageLayout;
             String rawPayload = notification.payload.rawPayload;
-
             String customKey;
 
             Log.i("OneSignalExample", "NotificationID received: " + notificationID);
-
             if (data != null) {
                 customKey = data.optString("customkey", null);
                 if (customKey != null)
@@ -68,15 +60,13 @@ public class Notification extends Application {
         }
     }
 
-
+    // This fires when a notification is opened by tapping on it.
     private class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
-        // This fires when a notification is opened by tapping on it.
         @Override
         public void notificationOpened(OSNotificationOpenResult result) {
             OSNotificationAction.ActionType actionType = result.action.type;
             JSONObject data = result.notification.payload.additionalData;
             String launchUrl = result.notification.payload.launchURL; // update docs launchUrl
-
             String customKey;
             String openURL = null;
             Object activityToLaunch = RealTimeActivity.class;
@@ -84,10 +74,8 @@ public class Notification extends Application {
             if (data != null) {
                 customKey = data.optString("customkey", null);
                 openURL = data.optString("openURL", null);
-
                 if (customKey != null)
                     Log.i("OneSignalExample", "customkey set with value: " + customKey);
-
                 if (openURL != null)
                     Log.i("OneSignalExample", "openURL to webview with URL value: " + openURL);
             }
@@ -102,28 +90,12 @@ public class Notification extends Application {
                 }
 
             }
-            // The following can be used to open an Activity of your choice.
-            // Replace - getApplicationContext() - with any Android Context.
-            // Intent intent = new Intent(getApplicationContext(), YourActivity.class);
+            // The following opens corresponding activity
             Intent intent = new Intent(getApplicationContext(), (Class<?>) activityToLaunch);
-            // intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("openURL", openURL);
             Log.i("OneSignalExample", "openURL = " + openURL);
-            // startActivity(intent);
             startActivity(intent);
-
-            // Add the following to your AndroidManifest.xml to prevent the launching of your main Activity
-            //   if you are calling startActivity above.
-     /*
-        <application ...>
-          <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
-        </application>
-     */
-
-
-
-
         }
     }
 }
