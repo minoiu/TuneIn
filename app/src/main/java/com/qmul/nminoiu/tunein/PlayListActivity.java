@@ -14,25 +14,16 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 /**
- * The type Play list activity.
+ * Created by nicoleta on 28/12/2017
  */
 public class PlayListActivity extends ListActivity {
-    /**
-     * The Songs list.
-     */
-// Songs list
 	public ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.playlist);
-
 		ArrayList<HashMap<String, String>> songsListData = new ArrayList<HashMap<String, String>>();
-
-//		SongsManager plm = new SongsManager();
-//		// get all songs from sdcard
-//		this.songsList = plm.getPlayList();
 
 		// looping through playlist
 		for (int i = 0; i < songsList.size(); i++) {
@@ -48,6 +39,7 @@ public class PlayListActivity extends ListActivity {
 				R.layout.playlist_item, new String[] { "songTitle" }, new int[] {
 						R.id.songTitle });
 
+		//setting custom adapter to list
 		setListAdapter(adapter);
 
 		// selecting single ListView item
@@ -71,6 +63,5 @@ public class PlayListActivity extends ListActivity {
 				finish();
 			}
 		});
-
 	}
 }
