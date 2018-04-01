@@ -167,7 +167,6 @@ public class MyPlaylists extends AppCompatActivity implements AdapterView.OnItem
                 if(dataSnapshot.child(ID).exists()){
                     String song = dataSnapshot.child(ID).child("Song").getValue().toString();
                     track_title.setText(song);
-                    Toast.makeText(MyPlaylists.this, "song is " + song, Toast.LENGTH_SHORT).show();
                 }
             }
 

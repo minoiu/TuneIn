@@ -432,7 +432,6 @@ public class RealTimeActivity extends AppCompatActivity
         ID = firebaseAuth1.getCurrentUser().getUid();
         sender = firebaseAuth1.getCurrentUser().getEmail();
         OneSignal.sendTag("User_ID", loggedEmail);
-        Toast.makeText(this, loggedEmail, Toast.LENGTH_SHORT).show();
         mStorage = FirebaseStorage.getInstance();
         btn = (Button) findViewById(R.id.button);
         play_toolbar = (LinearLayout) findViewById(R.id.play_toolbar);
@@ -5488,6 +5487,10 @@ public class RealTimeActivity extends AppCompatActivity
                             btn.setBackgroundResource(R.drawable.ic_media_pause);
                             getFollowers(UserDetails.fullname, song);
                         }
+                        if (!recents.contains(song)) {
+                            Firebase likedRef = new Firebase("https://tunein-633e5.firebaseio.com/").child("RecentlyPlayed").child(ID);
+                            likedRef.push().setValue(song);
+                        }
                     }
 
                     @Override
@@ -6265,7 +6268,6 @@ public class RealTimeActivity extends AppCompatActivity
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
-                //Toast.makeText(RequestActivity.this, receiver, Toast.LENGTH_SHORT).show();
             }
 
             @Override

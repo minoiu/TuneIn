@@ -53,11 +53,7 @@ public class FavouritePlaylists extends AppCompatActivity {
     private ArrayAdapter<String> songssadapter;
     private String me;
     private View bar;
-
-
-
     private DatabaseReference db;
-
     private LinearLayout searchLayout;
     private MaterialSearchView searchView;
     private DatabaseReference db1;
@@ -74,14 +70,10 @@ public class FavouritePlaylists extends AppCompatActivity {
     private String url;
     private LinearLayout dwnLay;
     private RelativeLayout favPlaylistsLayout;
-
-
     private List<RowItem> rowItems;
     private ImageView img;
     private TextView name;
     private RelativeLayout dwnPlaylistsLayout;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

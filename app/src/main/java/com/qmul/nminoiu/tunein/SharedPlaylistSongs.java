@@ -180,7 +180,6 @@ public class SharedPlaylistSongs extends AppCompatActivity {
         UserDetails.privatePlaylist = false;
         UserDetails.dwnPlaylist = false;
         UserDetails.lovedPlaylist = false;
-        final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
         firebaseAuth = FirebaseAuth.getInstance();
         ID = firebaseAuth.getCurrentUser().getUid();
         songsList = new ArrayList<>();
@@ -196,6 +195,8 @@ public class SharedPlaylistSongs extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        final CoordinatorLayout.LayoutParams paramsFab = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
 
         //get extras from intent
         Intent i = getIntent();

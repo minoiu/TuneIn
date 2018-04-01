@@ -7,23 +7,10 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.qmul.nminoiu.tunein.MyPlaylists"
     tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="0dp">
+    tools:layout_editor_absoluteY="0dp"><![CDATA[
     >
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-
-    </android.support.design.widget.AppBarLayout>
+    ]]>
 
     <LinearLayout
         android:id="@+id/myplaylistsLayout"
@@ -34,7 +21,8 @@
         android:clipToPadding="false"
         android:orientation="vertical"
         android:padding="16dp"
-        android:weightSum="1">
+        android:weightSum="1"
+        tools:layout_editor_absoluteY="14dp">
 
 
         <RelativeLayout
@@ -85,9 +73,11 @@
             <ListView
                 android:id="@+id/playlistsList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView3"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="35dp"
                 android:choiceMode="singleChoice"
                 android:clickable="true"
                 android:visibility="visible"

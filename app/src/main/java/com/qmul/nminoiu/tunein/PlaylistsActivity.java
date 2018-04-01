@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -108,6 +109,16 @@ public class PlaylistsActivity extends AppCompatActivity {
             }
         });
 
+        //handle click on homepage
+        final FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PlaylistsActivity.this, RealTimeActivity.class);
+                startActivity(i);
+            }
+        });
+
         //retrieve playlists from Firebase
         playlistsRef = FirebaseDatabase.getInstance().getReference().child("Playlists").child(ID);
         playlistsRef.addChildEventListener(new ChildEventListener() {
@@ -116,6 +127,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                 String playlist = dataSnapshot.getValue(String.class);
                 playlistsList.add(playlist);
                 playlistsadapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -188,7 +200,6 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("FromRecents")){
-                            Toast.makeText(PlaylistsActivity.this, "normal pl", Toast.LENGTH_SHORT).show();
                             String song = i.getStringExtra("Song");
                             addSharedSongsToList(song, playlistClicked, "");
                         } else if(uniqid.equals("AdapterAllSongs")) {
@@ -220,7 +231,6 @@ public class PlaylistsActivity extends AppCompatActivity {
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song,playlistClicked,"");
                         } else if(uniqid.equals("FromRecents")){
-                            Toast.makeText(PlaylistsActivity.this, "shared pl", Toast.LENGTH_SHORT).show();
                             String song = i.getStringExtra("Song");
                             addSongsToSharedList(song,playlistClicked,"");
                         } else if(uniqid.equals("AdapterAllSongs")) {
@@ -731,7 +741,6 @@ public class PlaylistsActivity extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    newPlaylist.setVisibility(View.GONE);
                     hideSoftKeyboard(PlaylistsActivity.this);
                     fab.setVisibility(View.VISIBLE);
                     dialog.dismiss();

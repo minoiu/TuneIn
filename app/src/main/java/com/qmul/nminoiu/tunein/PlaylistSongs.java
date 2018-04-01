@@ -307,7 +307,6 @@ public class PlaylistSongs extends AppCompatActivity {
                 if (dataSnapshot.child(ID).exists()) {
                     String song = dataSnapshot.child(ID).child("Song").getValue().toString();
                     track_title.setText(song);
-                    Toast.makeText(PlaylistSongs.this, "song is " + song, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -1694,13 +1693,22 @@ public class PlaylistSongs extends AppCompatActivity {
     //handle click on back arrow
     @Override
     public void onBackPressed() {
-        if (getIntent().getStringExtra("Uniqid").equals("favplaylists")) {
-            Intent backMainTest = new Intent(this, FavouritePlaylists.class);
-            if (mediaPlayer.isPlaying()) {
-                backMainTest.putExtra("Song", track_title.getText().toString());
+        if (getIntent().hasExtra("Uniqid")) {
+            if (getIntent().getStringExtra("Uniqid").equals("favplaylists")) {
+                Intent backMainTest = new Intent(this, FavouritePlaylists.class);
+                if (mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(backMainTest);
+                finish();
+            } else {
+                Intent backMainTest = new Intent(this, MyPlaylists.class);
+                if (mediaPlayer.isPlaying()) {
+                    backMainTest.putExtra("Song", track_title.getText().toString());
+                }
+                startActivity(backMainTest);
+                finish();
             }
-            startActivity(backMainTest);
-            finish();
         } else {
             Intent backMainTest = new Intent(this, MyPlaylists.class);
             if (mediaPlayer.isPlaying()) {
