@@ -54,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String ID;
     private ImageView friendPic;
+    private ImageView back;
     private Toolbar toolbar;
     private TextView followersNo;
     private TextView followingNo;
@@ -81,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         adapterProfile = new AdapterProfile(this, rowItems);
         fullname = UserDetails.chatWith;
         friendPic = (ImageView) findViewById(R.id.friendPicture);
+        back = (ImageView) findViewById(R.id.back);
         final String friendName = getIntent().getStringExtra("FriendName");
         UserDetails.friend = friendName;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -111,17 +113,23 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
+        Picasso.with(ProfileActivity.this)
+                .load(R.drawable.backs)
+                .fit()
+                .into(back);
+
         //load profile picture from Firebase with Picasso library
         Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");
         Firebase picture1 = picture.child("ProfilePictures");
         picture1.addListenerForSingleValueEvent(new com.firebase.client.ValueEventListener() {
             @Override
             public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(friendID)){
-                    String link = dataSnapshot.child(friendID).child("Url").getValue().toString();
+                if(dataSnapshot.hasChild(UserDetails.friendID)){
+                    String link = dataSnapshot.child(UserDetails.friendID).child("Url").getValue().toString();
                     Picasso.with(ProfileActivity.this)
                             .load(link)
-                            .fit()
+                            .resize(170,220)
+                            .centerCrop()
                             .noFade()
                             .into(friendPic);
                 }

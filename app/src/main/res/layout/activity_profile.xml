@@ -38,23 +38,46 @@
     <!--android:layout_height="match_parent"-->
     <!--android:fitsSystemWindows="true">-->
 
-
-    <ImageView
-        android:id="@+id/friendPicture"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_marginTop="50dp"
-        android:cropToPadding="false" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="417dp"
+            android:layout_height="236dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            app:srcCompat="@drawable/backs"
+            tools:layout_editor_absoluteX="3dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friendPicture"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="78dp"
+            android:adjustViewBounds="false"
+            android:foregroundGravity="center_vertical|center_horizontal|center"
+            app:border_color="@color/black"
+            app:border_width="2dp" />
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="100dp"
         android:src="@drawable/ic_person_add_black_24dp"
         app:fabSize="mini"
         app:layout_anchor="@id/friendPicture"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="center_vertical|center_horizontal|end" />
 
 
     <!--</android.support.design.widget.CollapsingToolbarLayout>-->
@@ -62,12 +85,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="293dp"
+        android:layout_height="300dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="-20dp"
         android:isScrollContainer="false"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:layout_editor_absoluteY="332dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -150,13 +174,15 @@
 
         <ListView
             android:id="@+id/publicPlaylists"
-            android:layout_width="match_parent"
+            android:layout_width="313dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center_vertical|center_horizontal|center"
             android:layout_marginTop="10dp"
             android:layout_weight="0.71"
             android:divider="@null"
             android:dividerHeight="0dp"
-            android:minHeight="30dp" />
+            android:minHeight="30dp"
+            android:transitionGroup="false" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
