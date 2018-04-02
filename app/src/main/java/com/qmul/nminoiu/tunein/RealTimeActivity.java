@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -5972,61 +5973,85 @@ public class RealTimeActivity extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_delete) {
-            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            AuthCredential credential = EmailAuthProvider
-                    .getCredential("user@example.com", "password1234");
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(RealTimeActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.deleteaccount, null);
+            Button cancel = (Button) mView.findViewById(R.id.cancel);
+            Button delete = (Button) mView.findViewById(R.id.delete);
+            mBuilder.setView(mView);
+            final AlertDialog dialog = mBuilder.create();
+            dialog.show();
 
-            user.reauthenticate(credential)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            user.delete()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d(TAG, "User account deleted.");
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-            Intent nextActivity = new Intent(this, LoginActivity.class);
-            startActivity(nextActivity);
-            DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
-            reqdb.addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            dataSnapshot.getRef().removeValue();
-                        }
+            //handle click on delete
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    AuthCredential credential = EmailAuthProvider
+                            .getCredential("user@example.com", "password1234");
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                        }
-                    });
-
-            DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
-            reqdb1.addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                String reqId = snapshot.getKey().toString();
-                                if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
-                                    dataSnapshot.child(reqId).getRef().removeValue();
+                    user.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    user.delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d(TAG, "User account deleted.");
+                                                    }
+                                                }
+                                            });
                                 }
-                            }
-                        }
+                            });
+                    Intent nextActivity = new Intent(RealTimeActivity.this, LoginActivity.class);
+                    startActivity(nextActivity);
+                    DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+                    reqdb.addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    dataSnapshot.getRef().removeValue();
+                                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                        }
-                    });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
 
-            eraseFromFirebase();
+                    DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+                    reqdb1.addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        String reqId = snapshot.getKey().toString();
+                                        if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
+                                            dataSnapshot.child(reqId).getRef().removeValue();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
+
+                    eraseFromFirebase();
+                }
+            });
+
+            //handle click on cancel
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideSoftKeyboard(RealTimeActivity.this);
+                    dialog.hide();
+                }
+            });
+
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
             Intent nextActivity = new Intent(this, LoginActivity.class);

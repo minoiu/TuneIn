@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String ID;
     private ImageView friendPic;
-    private ImageView back;
     private Toolbar toolbar;
     private TextView followersNo;
     private TextView followingNo;
@@ -82,7 +81,6 @@ public class ProfileActivity extends AppCompatActivity {
         adapterProfile = new AdapterProfile(this, rowItems);
         fullname = UserDetails.chatWith;
         friendPic = (ImageView) findViewById(R.id.friendPicture);
-        back = (ImageView) findViewById(R.id.back);
         final String friendName = getIntent().getStringExtra("FriendName");
         UserDetails.friend = friendName;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -112,11 +110,6 @@ public class ProfileActivity extends AppCompatActivity {
             });
 
         }
-
-        Picasso.with(ProfileActivity.this)
-                .load(R.drawable.backs)
-                .fit()
-                .into(back);
 
         //load profile picture from Firebase with Picasso library
         Firebase picture = new Firebase("https://tunein-633e5.firebaseio.com/");

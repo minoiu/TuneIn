@@ -42,16 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="417dp"
-            android:layout_height="236dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:foregroundGravity="center_vertical|center_horizontal"
-            app:srcCompat="@drawable/backs"
-            tools:layout_editor_absoluteX="3dp" />
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friendPicture"
             android:layout_width="180dp"
@@ -65,7 +55,7 @@
             android:adjustViewBounds="false"
             android:foregroundGravity="center_vertical|center_horizontal|center"
             app:border_color="@color/black"
-            app:border_width="2dp" />
+            app:border_width="1dp" />
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -85,13 +75,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="304dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="-20dp"
         android:isScrollContainer="false"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:layout_editor_absoluteY="332dp">
+        tools:layout_editor_absoluteY="354dp">
+
+        <include
+            layout="@layout/item_divider"
+            android:layout_width="match_parent" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,6 +93,7 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="8dp">
+
 
             <TextView
                 android:id="@+id/followers"

@@ -74,7 +74,7 @@
             android:layout_marginTop="6dp"
             android:foregroundGravity="left|center_vertical"
             app:border_color="@color/black"
-            app:border_width="2dp" />
+            app:border_width="1dp" />
 
         <LinearLayout
             android:id="@+id/nowPlaying3"
