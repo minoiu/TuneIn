@@ -299,6 +299,7 @@ public class LibraryActivity extends AppCompatActivity{
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
+            updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);

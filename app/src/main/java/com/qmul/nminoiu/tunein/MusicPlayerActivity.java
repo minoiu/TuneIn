@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -59,7 +60,7 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
     public static TextView songTotalDurationLabel;
 	private Handler mHandler = new Handler();
 	private SongsManager songManager;
-	private Utilities utils;
+	public static Utilities utils;
 	private int seekForwardTime = 5000; // 5000 milliseconds
 	private int seekBackwardTime = 5000; // 5000 milliseconds
 	private int currentSongIndex = 0;
@@ -97,6 +98,40 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		myFollowers = new ArrayList<>();
 		layout = (RelativeLayout) findViewById(R.id.layout);
 
+		DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
+		reqdb.addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						dataSnapshot.getRef().removeValue();
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+					}
+				});
+
+		DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
+		reqdb1.addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+							String reqId = snapshot.getKey().toString();
+							if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
+								dataSnapshot.child(reqId).getRef().removeValue();
+							}
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
+					}
+				});
+
+
 		//retrieve current song from Firebase
 		DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
 		songTitleRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
@@ -122,8 +157,9 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		songProgressBar.setOnSeekBarChangeListener(this);
 		mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.getCurrentPosition();
-        songProgressBar.setProgress(mediaPlayer.getCurrentPosition());
-        songProgressBar.setMax(100);
+        mediaPlayer.getDuration();
+        songProgressBar.setProgress(mediaPlayer.getCurrentPosition()-mediaPlayer.getDuration());
+//        songProgressBar.setMax(100);
 
         //handle slide down player page into previous activity
         i = getIntent();
@@ -962,9 +998,8 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 	/**
 	 * Background Runnable thread
 	 */
-	private Runnable mUpdateTimeTask = new Runnable() {
+	public Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-
 				long totalDuration = mediaPlayer.getDuration();
 				long currentDuration = mediaPlayer.getCurrentPosition();
 

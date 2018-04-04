@@ -404,6 +404,7 @@ public class RealTimeActivity extends AppCompatActivity
         FirebaseStorage storage = FirebaseStorage.getInstance();
         picRef = storage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/ProfilePictures");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mHandler = new Handler();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("TuneIn");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
@@ -5455,11 +5456,7 @@ public class RealTimeActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent_info = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
                 intent_info.putExtra("Uniqid", "FromSettings");
-                if (mediaPlayer.isPlaying()) {
-                    SongSingleton.getInstance().setSongName(song);
-                }
                 startActivity(intent_info);
-                deleteRequest();
                 overridePendingTransition(R.anim.slide_up_info, R.anim.no_change);
             }
         });
@@ -6108,14 +6105,6 @@ public class RealTimeActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Update progress bar.
-     */
-    public void updateProgressBar() {
-        RealTimeActivity sa = new RealTimeActivity();
-        mHandler.postDelayed(sa.mUpdateTimeTask, 100);
-    }
-
     //make account public
     private void makeAccountPublic() {
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("Fullname").child(ID).child("Name");
@@ -6233,6 +6222,7 @@ public class RealTimeActivity extends AppCompatActivity
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
+            updateProgressBar();
         }
         Button btn = (Button) this.findViewById(R.id.button);
         btn.setBackgroundResource(R.drawable.ic_media_pause);
@@ -6259,6 +6249,12 @@ public class RealTimeActivity extends AppCompatActivity
         mediaPlayer.getCurrentPosition();
     }
 
+    /**
+     * Update progress bar.
+     */
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
 
     //play song method with signle button background handling
     public void playPauseMusic(View v) {
@@ -6447,39 +6443,6 @@ public class RealTimeActivity extends AppCompatActivity
     public void openPlayerPage(View v) {
         Intent i = new Intent(RealTimeActivity.this, MusicPlayerActivity.class);
         startActivity(i);
-        DatabaseReference reqdb = FirebaseDatabase.getInstance().getReference().child("TimeRequest").child(ID);
-        reqdb.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        dataSnapshot.getRef().removeValue();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                    }
-                });
-
-        DatabaseReference reqdb1 = FirebaseDatabase.getInstance().getReference().child("TimeAnswer");
-        reqdb1.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String reqId = snapshot.getKey().toString();
-                            if (dataSnapshot.child(reqId).child("IDReq").getValue().toString().equals(ID)) {
-                                dataSnapshot.child(reqId).getRef().removeValue();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
-                    }
-                });
-
     }
 
     public Runnable mUpdateTimeTask = new Runnable() {
@@ -7094,7 +7057,7 @@ public class RealTimeActivity extends AppCompatActivity
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Toast.makeText(RealTimeActivity.this, friend + " " + song, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RealTimeActivity.this, friend + " " + song, Toast.LENGTH_SHORT).show();
                         if (dataSnapshot.hasChild(friend)) {
                             if (dataSnapshot.child(friend).child("Song").getValue().equals(song)) {
                                 Intent intent = new Intent(getApplicationContext(), Chat.class);
