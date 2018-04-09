@@ -3516,31 +3516,15 @@ public class RealTimeActivity extends AppCompatActivity
 
         //retrieve downloaded songs
         final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
-        dwnSongRef1.addChildEventListener(new ChildEventListener() {
+        dwnSongRef1.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey().toString();
                     String dwnsong = dataSnapshot.child(key).getValue().toString();
                     dwnList.add(dwnsong);
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
