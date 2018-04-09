@@ -10,7 +10,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-<android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -23,8 +23,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_downloads" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -50,15 +48,16 @@
     <LinearLayout
         android:id="@+id/downloadsLayout"
         android:layout_width="match_parent"
-        android:layout_height="512dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="-30dp"
+        android:layout_marginTop="55dp"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:visibility="visible"
-        android:weightSum="1"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        android:weightSum="1">
+
 
         <ListView
             android:id="@+id/songsList"
@@ -73,6 +72,7 @@
             android:visibility="visible"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
+
 
     </LinearLayout>
 

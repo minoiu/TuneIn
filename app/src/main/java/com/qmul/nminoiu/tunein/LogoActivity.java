@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by nminoiu on 17/09/2017.
+ * The logo was created on https://www.freelogoservices.com
  */
 public class LogoActivity extends AppCompatActivity {
 

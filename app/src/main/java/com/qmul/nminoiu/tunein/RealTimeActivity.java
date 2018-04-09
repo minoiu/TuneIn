@@ -1,6 +1,7 @@
 package com.qmul.nminoiu.tunein;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +12,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -85,6 +87,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -101,6 +104,12 @@ import java.util.Scanner;
 
 
 import static com.qmul.nminoiu.tunein.LoginActivity.mediaPlayer;
+
+/**
+ * Created by Nicoleta on 03/10/2017
+ * The icons used for the real-time layout were downloaded from https://www.flaticon.com and https://www.iconfinder.com/free_icons
+ *
+ */
 
 public class RealTimeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,6 +129,8 @@ public class RealTimeActivity extends AppCompatActivity
     private ArrayList<String> names1 = new ArrayList<>();
     private ArrayList<String> titles1 = new ArrayList<>();
     private ArrayList<String> pictures1 = new ArrayList<>();
+    private ArrayList<String> dwnList = new ArrayList<>();
+
     private LinearLayout[] ll;
     private LinearLayout[] ll1;
     private ImageButton[] syncButtonArray;
@@ -440,6 +451,7 @@ public class RealTimeActivity extends AppCompatActivity
         track_title = (TextView) findViewById(R.id.track_title);
         recents = new ArrayList<>();
         progressDialog = new ProgressDialog(this);
+        dwnList.clear();
 
         //handle menu box checked/unchecked
         ScrollView01 = (ScrollView) findViewById(R.id.ScrollView01);
@@ -876,36 +888,36 @@ public class RealTimeActivity extends AppCompatActivity
         MusicPlayerActivity.songs.clear();
         MusicPlayerActivity.urls.clear();
 
-        //retrieve recent songs
-        DatabaseReference rec = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
-        rec.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String recentSongs = dataSnapshot.getValue(String.class);
-                getUrl(recentSongs);
-                MusicPlayerActivity.songs.add(0, recentSongs);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        //retrieve recent songs
+//        DatabaseReference rec = FirebaseDatabase.getInstance().getReference().child("RecentlyPlayed").child(ID);
+//        rec.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                String recentSongs = dataSnapshot.getValue(String.class);
+//                getUrl(recentSongs);
+//                MusicPlayerActivity.songs.add(0, recentSongs);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         //retrieve current song
         DatabaseReference songTitleRef = FirebaseDatabase.getInstance().getReference().child("CurrentSong");
@@ -2777,6 +2789,10 @@ public class RealTimeActivity extends AppCompatActivity
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
                 commentsLayout.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 43);
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 53);
+                fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -2805,6 +2821,10 @@ public class RealTimeActivity extends AppCompatActivity
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
                 commentsLayout.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 43);
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 53);
+                fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -2829,6 +2849,10 @@ public class RealTimeActivity extends AppCompatActivity
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
                 commentsLayout.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 43);
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 53);
+                fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -2853,6 +2877,10 @@ public class RealTimeActivity extends AppCompatActivity
                 tuneout5.setVisibility(View.GONE);
                 tunein5.setVisibility(View.VISIBLE);
                 commentsLayout.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 43);
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 53);
+                fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -2877,6 +2905,10 @@ public class RealTimeActivity extends AppCompatActivity
                 tuneout4.setVisibility(View.GONE);
                 tunein4.setVisibility(View.VISIBLE);
                 commentsLayout.setVisibility(View.GONE);
+                paramsFab1.setMargins(0, 0, 43, 43);
+                fab1.setLayoutParams(paramsFab1);
+                paramsFab.setMargins(53, 0, 0, 53);
+                fab.setLayoutParams(paramsFab);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
                 play_toolbar.setVisibility(View.GONE);
@@ -3482,417 +3514,413 @@ public class RealTimeActivity extends AppCompatActivity
             }
         });
 
+        //retrieve downloaded songs
+        final DatabaseReference dwnSongRef1 = FirebaseDatabase.getInstance().getReference().child("DownloadedSongs").child(ID);
+        dwnSongRef1.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey().toString();
+                    String dwnsong = dataSnapshot.child(key).getValue().toString();
+                    dwnList.add(dwnsong);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         //listeners for download buttons - NowPlaying Layout
         download1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title1.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                        UserDetails.song = finalLocalFile.getAbsolutePath();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title2.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title3.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title4.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title5.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download6.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title6.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download7.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title7.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
+
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download8.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title8.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
+
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download9.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title9.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if(dwnList.contains(songToDown)){
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
-
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
         download10.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
-
                 final String songToDown = title10.getText().toString();
                 commentsLayout.setVisibility(View.GONE);
                 fab.setVisibility(View.VISIBLE);
                 fab1.setVisibility(View.VISIBLE);
+                long queueid;
 
-                StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
-                StorageReference down = storageReference.child(songToDown + ".mp3");
+                if (dwnList.contains(songToDown)) {
+                    Toast.makeText(RealTimeActivity.this, songToDown + " is already downloaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
-                storagePath = new File(view.getContext().getFilesDir(), "My_music");
-                File localFile = new File(storagePath, songToDown);
-                try {
-                    localFile = File.createTempFile(songToDown, ".mp3");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    StorageReference storageReference = mStorage.getReferenceFromUrl("gs://tunein-633e5.appspot.com/bad boi muzik");
+                    StorageReference down = storageReference.child(songToDown + ".mp3");
+
+                    down.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                            long queueid = dm.enqueue(request);
+                            Toast.makeText(RealTimeActivity.this, "Done downloading", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(RealTimeActivity.this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dwnList.add(songToDown);
                 }
 
-                final File finalLocalFile = new File(storagePath, songToDown);
-                down.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        finalLocalFile.getAbsolutePath();
-                        Toast.makeText(getApplicationContext(), "Done downloading", Toast.LENGTH_SHORT).show();
-                        Firebase ref = new Firebase("https://tunein-633e5.firebaseio.com/");
-                        Firebase playRef = ref.child("DownloadedSongs").child(ID);
-                        playRef.push().setValue(songToDown);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-
-                    }
-                });
             }
         });
 
@@ -4447,6 +4475,8 @@ public class RealTimeActivity extends AppCompatActivity
                     String key = snapshot.getKey().toString();
                     String recentsong = dataSnapshot.child(key).getValue().toString();
                     recents.add(recentsong);
+                    getUrl(recentsong);
+                    MusicPlayerActivity.songs.add(0, recentsong);
                 }
             }
 

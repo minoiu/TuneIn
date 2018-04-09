@@ -573,12 +573,15 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 						mediaPlayer.pause();
 						// Changing button image to play button
 						btnPlay.setImageResource(R.drawable.btn_play);
+						eraseFromFirebase();
 					}
 				} else {
 					// Resume song
 					if (mediaPlayer != null) {
 						mediaPlayer.start();
 						// Changing button image to pause button
+						String songtitle = songTitleLabel.getText().toString();
+						getFollowers(UserDetails.fullname, songtitle);
 						btnPlay.setImageResource(R.drawable.btn_pause);
 					}
 				}
@@ -888,33 +891,6 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
 		}
 	}
 
-
-    /**
-     * Erase from firebase.
-     */
-    public void eraseFromFirebase() {
-		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
-		mDatabase1.addListenerForSingleValueEvent(
-				new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnapshot) {
-						String v;
-						for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-							v = snapshot.getKey();
-							if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
-                                dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
-							}
-						}
-					}
-
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-
-					}
-				});
-		addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong);
-	}
-
     /**
      * Add to friend activity.
      *
@@ -1077,5 +1053,69 @@ public class MusicPlayerActivity extends Activity implements OnCompletionListene
     protected void onPause() {
         super.onPause();
     }
+
+	//erase from homepage when song stops
+	public void eraseFromFirebase() {
+		DatabaseReference mDatabase1 = FirebaseDatabase.getInstance().getReference().child("Homepage");
+		mDatabase1.addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						String v;
+						for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+							v = snapshot.getKey();
+							if (dataSnapshot.child(v).hasChild(getMyFullname(ID))) {
+								dataSnapshot.child(v).child(getMyFullname(ID)).getRef().removeValue();
+							}
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+
+					}
+				});
+		addToFriendActivity(UserDetails.myFollowers, UserDetails.mysong, ID);
+	}
+
+	//add to friend activity
+	public void addToFriendActivity(List<String> myvalue, final String mysong, final String myid) {
+
+		DatabaseReference mDatabase7 = FirebaseDatabase.getInstance().getReference().child("Fullname").child(myid).child("Name");
+
+		mDatabase7.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				UserDetails.myname = dataSnapshot.getValue().toString();
+				String me = dataSnapshot.getValue().toString();
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		for (int i = 0; i <= myvalue.size() - 1; i++) {
+
+			Firebase refAct = new Firebase("https://tunein-633e5.firebaseio.com/FriendsActivity/" + myvalue.get(i));
+			Map<String, Object> udet = new HashMap<>();
+
+			if (!RealTimeActivity.checkBox.isChecked()) {
+				udet.put("Song", mysong);
+				udet.put("Time", System.currentTimeMillis());
+				if (!UserDetails.picturelink.equals("")) {
+					udet.put("Picture", UserDetails.picturelink);
+
+				} else {
+					udet.put("Picture", "https://firebasestorage.googleapis.com/v0/b/tunein-633e5.appspot.com/o/ProfilePictures%2Fdefault-user.png?alt=media&token=98996406-225b-4572-a494-b6306ce9a288");
+				}
+				refAct.child(UserDetails.fullname).updateChildren(udet);
+			}
+		}
+
+	}
+
+
 }
 

@@ -32,7 +32,7 @@
         <activity
             android:name=".RealTimeActivity"
             android:screenOrientation="portrait"
-            android:label="Friend Activity"
+            android:label="Friends Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Users"
@@ -45,7 +45,9 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/MPTheme" />
-        <activity android:name=".PlayListActivity" />
+        <activity android:name=".PlayListActivity"
+            android:label="Playlists"
+            />
         <activity
             android:name=".Chat"
             android:screenOrientation="portrait"
@@ -76,16 +78,16 @@
         <activity
             android:name=".LibraryActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_library"
+            android:label="Music Library"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FollowersActivity"
-            android:label="Your Followers"
+            android:label="Followers"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PlaylistsActivity"
-            android:label="@string/title_activity_playlists"
+            android:label="Playlists"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -95,7 +97,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyPlaylists"
-            android:label="@string/title_activity_my_playlists"
+            android:label="Playlists"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -130,19 +132,20 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FavouritePlaylists"
-            android:label="@string/title_activity_favourite_playlists"
+            android:label="Favourite Playlists"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SharedPlaylistSongs"
-            android:label="@string/title_activity_shared_playlist_songs"
+            android:label="Playlist Songs"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Conversations"
             android:label="Messages"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

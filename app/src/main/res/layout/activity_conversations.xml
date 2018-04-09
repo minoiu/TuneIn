@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.qmul.nminoiu.tunein.Conversations"
-    android:orientation="vertical">
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,11 +23,23 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/myplaylistsLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="55dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-    <ListView
-        android:id="@+id/convList"
-        android:layout_width="match_parent"
-        android:layout_height="476dp" />
+
+        <ListView
+            android:id="@+id/convList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="40dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/play_toolbar"
@@ -34,9 +49,10 @@
         android:animateLayoutChanges="true"
         android:background="#333333"
         android:clickable="true"
+        android:foregroundGravity="bottom"
+        android:gravity="bottom"
         android:onClick="openPlayerPage"
-        android:visibility="gone"
-        android:weightSum="1">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -50,12 +66,12 @@
 
         <TextView
             android:id="@+id/track_title"
-            android:freezesText="true"
             android:layout_width="150dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_margin="@dimen/fab_margin"
             android:layout_weight="0.82"
+            android:freezesText="true"
             android:textAlignment="center"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
             android:textSize="13sp"
@@ -75,4 +91,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
