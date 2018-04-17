@@ -58,8 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Emails");
         firebaseAuth = FirebaseAuth.getInstance();
         mPasswordView = (EditText) findViewById(R.id.password);
-        mEmailView.setText("mar@zar.com");
-        mPasswordView.setText("123456");
 
         //initialise One Signal library for notifications
         OneSignal.startInit(this).init();
